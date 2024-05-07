@@ -6,6 +6,7 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Zapisz"</string>
+    <string name="update">"Zaktualizuj"</string>
     <string name="cancel">"Anuluj"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Usuń"</string>
@@ -14,7 +15,10 @@
     <string name="open">"Otwórz"</string>
     <string name="cont">"Kontynuuj"</string>
     <string name="website">"Strona WWW"</string>
+    <string name="latitude">"Szerokość geograficzna"</string>
+    <string name="longitude">"Długość geograficzna"</string>
     <string name="unlink">"Rozłącz"</string>
+    <string name="off">"Wyłączony"</string>
     <string name="location_permission_denied">"Brak dostępu do lokalizacji"</string>
     <string name="permissions">"Uprawnienia"</string>
     <string name="current_location">"Bieżąca lokalizacja"</string>
@@ -38,6 +42,7 @@
     <string name="attendee_role_chair">"Przewodniczący"</string>
     <string name="attendee_role_required_participant">"Uczestnik wymagany"</string>
     <string name="attendee_role_optional_participant">"Uczestnik opcjonalny"</string>
+    <string name="attendee_role_non_participant">"Nieuczestniczący / Info"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Otwórz panel nawigacyjny"</string>
     <string name="navigation_drawer_close">"Zamknij panel nawigacyjny"</string>
@@ -46,6 +51,7 @@
     <string name="navigation_drawer_about">"O autorze / Licencja"</string>
     <string name="navigation_drawer_subtitle">"dzienniki, notatki i zadania"</string>
     <string name="navigation_drawer_settings">"Ustawienia"</string>
+    <string name="navigation_drawer_news_updates">"Aktualności &amp; aktualizacji"</string>
     <string name="navigation_drawer_external_links">"Linki zewnętrzne"</string>
     <string name="navigation_drawer_website">"Strona"</string>
     <string name="navigation_drawer_support">"Wsparcie"</string>
@@ -58,6 +64,8 @@
     <string name="list_due_tomorrow">"Termin na jutro"</string>
     <string name="list_due_within_7_days">"Termin w ciągu 7 dni"</string>
     <string name="list_due_inXhours">"Termin za %d godzin"</string>
+    <string name="list_due_on_weekday">"Do dnia %s"</string>
+    <string name="list_start_past">"Zaczęte w przeszłości"</string>
     <string name="list_start_shortly">"Rozpoczyna się wkrótce"</string>
     <string name="list_start_today">"Planowany start dzisiaj"</string>
     <string name="list_start_tomorrow">"Start jutro"</string>
@@ -86,6 +94,7 @@
     <string name="view_last_modified_text">"Ostatnio zmodyfikowano: %1$s"</string>
     <string name="view_due">"Termin"</string>
     <string name="view_completed">"Ukończone"</string>
+    <string name="view_started">"Rozpocznij/Rozpoczęto"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_comment_helper">"Dodaj komentarz"</string>
     <string name="edit_attachment_button_text">"Dodaj załącznik"</string>
@@ -98,25 +107,66 @@
     <string name="edit_recur_repeat_every_x">"Powtarzaj każdego"</string>
     <string name="edit_recur_on_weekday">"w"</string>
     <string name="edit_recur_on_the_x_day_of_month">"w dniu"</string>
+    <string name="edit_recur_x_day_of_the_month">"dzień miesiąca"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"ostatni"</string>
     <string name="edit_recur_x_times">"razy"</string>
+    <string name="edit_recur_toast_requires_start_date">"Powtarzanie wymaga ustawienia daty rozpoczęcia!"</string>
     <string name="edit_datepicker_dialog_select_date">"Wybierz datę"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Wybierz zakres dat"</string>
+    <string name="edit_datepicker_dialog_add_time">"Dodaj czas"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Edytuj czas"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Dodaj strefę czasową"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Edytuj strefę czasową"</string>
     <string name="edit_dialog_sure_to_delete_title">"Usunąć \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Porzucić ten wpis?"</string>
+    <string name="dialog_delete_done_title">"Usunąć wszystkie ukończone zadania?"</string>
+    <string name="dialog_delete_done_message">"Uwaga: Podzadania są usuwane niezależnie od statusu ich wykonania, jeżeli zadanie główne, którego są częścią zostanie oznaczone jako ukończone. Tej operacji nie można cofnąć!"</string>
+    <string name="edit_dialog_sure_to_delete_message">"Czy jesteś pewny, że chcesz usunąć \"%1$s\"?"</string>
+    <string name="edit_dialog_sure_to_discard_message">"Na pewno chcesz odrzucić ten wpis? Nie zostanie on zapisany."</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."</string>
     <string name="edit_fragment_app_permission">"Uprawnienia aplikacji"</string>
+    <string name="edit_fragment_app_permission_message">"jtx Board może sugerować dane uczestników korzystając z Twoich kontaktów jako wartości wejściowych dla Twoich wpisów. Aby włączyć tę funkcję, potrzebne są uprawnienia do odczytu kontaktów."</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Tłumaczenia"</string>
     <string name="about_tabitem_libraries">"Biblioteki"</string>
+    <string name="about_tabitem_contributors">"Współtwórcy"</string>
     <string name="about_special_thanks">"Specjalne podziękowania"</string>
     <string name="about_app_version">"Wersja: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nazwa kodowa: %1$s"</string>
     <string name="about_app_build_date">"Skompilowano dnia %s"</string>
+    <string name="about_app_terms">"Zasady &amp; Warunki Użytkowania"</string>
+    <string name="about_thanks_ffg">"Szczególne podziękowania dla FFG za ich zaufanie i wsparcie finansowe w realizacji tego projektu."</string>
     <!-- menus -->
+    <string name="menu_list_gotodate">"Przejdź do daty"</string>
+    <string name="menu_list_quick_journal">"Szybki dziennik"</string>
     <string name="menu_list_quick_note">"Szybka notatka"</string>
+    <string name="menu_list_quick_todo">"Szybkie zadanie"</string>
+    <string name="menu_view_share_ics">"Udostępnij jako .ics"</string>
+    <string name="menu_view_copy_as_journal">"Skopiuj jako Dziennik"</string>
+    <string name="menu_view_copy_as_todo">"Skopiuj jako Zadanie"</string>
+    <string name="menu_view_copy_as_note">"Skopiuj jako Notatkę"</string>
+    <string name="menu_view_copy_item">"Utwórz kopię"</string>
+    <string name="notification_channel_alarms_name">"Alarmy"</string>
+    <string name="notification_channel_geofences_name">"Geofensy"</string>
     <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">"Dodaj Dziennik"</string>
+    <string name="shortcut_addNote_longLabel">"Dodaj Notatkę"</string>
+    <string name="shortcut_addTodo_longLabel">"Dodaj zadanie"</string>
     <!-- Settings fragment -->
+    <string name="settings_list">"Ustawienia listy przedmiotów"</string>
+    <string name="settings_show_progress_for_subtasks">Pokaż postęp podzadań</string>
+    <string name="settings_show_progress_for_maintasks">Pokaż postęp dla zadań głównych</string>
     <string name="settings_app">"Ustawienia aplikacji"</string>
+    <string name="settings_select_mimetype_for_audio">"Wybierz typ MIME dla notatek audio"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"Synchronizuj z %1$s"</string>
+    <string name="sync_basic_info">"jtx Board nie zapewnia synchronizacji serwera, ale obsługuje synchronizację za pośrednictwem DAVx⁵. Ta metoda pozwala na korzystanie z wybranego przez Ciebie serwera CalDAV, aby przechowywać, tworzyć kopię zapasową i synchronizować dane."</string>
+    <string name="sync_ksync_basic_info">"kSync jest aplikacją bazującą na DAVx⁵ stworzoną przez Infomaniak, szczególnie dla ich usług. Podczas gdy DAVx⁵ jest otwarty dla dowolnego kompatybilnego serwera CalDAV, kSync pozwala tylko na synchronizację kont Infomaniak."</string>
+    <string name="sync_manageddavx5_basic_info">"Managed DAVx⁵ udostępnia funkcje DAVx⁵ organizacjom i posiada dodatkowe funkcje dla przedsiębiorstw, takie jak masowy deployment, branding firmy i ustawienia prekonfigurowalne."</string>
     <string name="sync_congratulations">"Gratulacje! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Wykryliśmy %1$s na Twoim telefonie."</string>
+    <string name="sync_setup_instructions">"Instrukcja konfiguracji"</string>
+    <string name="sync_check_out_sync_app">"Sprawdź %1$s!"</string>
     <string name="sync_sync_app_not_found">"Nie wykryliśmy %1$s na Twoim telefonie."</string>
     <string name="sync_more_about_sync_app">"Więcej o %1$s"</string>
     <string name="sync_download_sync_app">"Pobierz %1$s"</string>
@@ -136,16 +186,27 @@
     <string name="about_translations_contribution_info">"Jeśli chcesz edytować/dodawać tłumaczenia lub dodawać nowe języki do tej aplikacji, możesz dołączyć do projektu jtx Board na platformie tłumaczeniowej Crowdin:"</string>
     <string name="about_translations_contribution_button">"Dołącz do POEditor.com"</string>
     <string name="list_welcome_entry_journal_summary">"Gratulacje, to Twój pierwszy wpis dziennika :-)"</string>
+    <string name="list_welcome_entry_journal_description">"Dzienniki mogą być używane do przypisywania notatek do konkretnej daty. Użyj tej funkcji na przykład dla protokołów, relacji ze spotkań, codziennych wpisów itd. Jeśli edytujesz ten wpis, zobaczysz opcje dodawania kategorii, uczestników, załączników, … Możesz usunąć ten wpis, kiedy tylko chcesz!"</string>
     <string name="list_welcome_entry_note_summary">"Gratulacje, to Twoja pierwsza notatka :-)"</string>
+    <string name="list_welcome_entry_note_description">"Notatki to tradycyjne notatki, które nie są związane z konkretną datą. Tak jak do Dzienników, możesz dodawać załączniki, uczestników i więcej podczas edycji lub dodawania wpisu. W ten sposób możesz również dodawać podzadania do każdego wpisu, niezależnie od tego, czy jest to dziennik, notatka czy zadanie!"</string>
     <string name="list_welcome_entry_todo_summary">"Gratulacje, to Twoje pierwsze zadanie :-)"</string>
+    <string name="list_welcome_entry_todo_description">"Dodatkowo, w porównaniu do dzienników i notatek, zadania mogą mieć zaplanowany początek, czas trwania i datę zakończenia. Mogą być oznaczone jako wykonane, gdy zostaną ukończone lub można ustawić mierzenie progresu. Edytuj ten wpis, aby wypróbować wszystkie opcje :-)"</string>
     <string name="list_welcome_category">"#PierwszeKroki"</string>
+    <string name="save_and_edit">"Zapisz &amp; Edytuj"</string>
+    <string name="save_and_new">"Zapisz &amp; Nowy"</string>
+    <string name="save_and_close">"Zapisz &amp; zamknij"</string>
+    <string name="list_quickadd_add_audio_attachment">"Nagraj załącznik audio"</string>
     <!-- Permissions -->
+    <string name="intent_dialog_title">"Dodać zawartość do dziennika, notatki czy zadania?"</string>
     <string name="add">"Dodaj"</string>
     <string name="edit">"Edytuj"</string>
     <string name="reset">"Zresetuj"</string>
     <string name="apply">"Zastosuj"</string>
     <string name="not_available_abbreviation">"niedostępny"</string>
     <string name="collection">"Kolekcja"</string>
+    <string name="collection_owner_displayname">"Właściciel: %1$s"</string>
+    <string name="link_to_parent">"Połącz z zadaniem głównym"</string>
+    <string name="link_selected_as_parent">"Zadanie główne"</string>
     <string name="navigation_drawer_collections">"Kolekcje"</string>
     <!-- alarms -->
     <string name="alarms_hours">"Godzina(-ny)"</string>
