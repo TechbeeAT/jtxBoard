@@ -6,6 +6,7 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Zapisz"</string>
+    <string name="update">"Zaktualizuj"</string>
     <string name="cancel">"Anuluj"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Usuń"</string>
@@ -14,7 +15,10 @@
     <string name="open">"Otwórz"</string>
     <string name="cont">"Kontynuuj"</string>
     <string name="website">"Strona WWW"</string>
+    <string name="latitude">"Szerokość geograficzna"</string>
+    <string name="longitude">"Długość geograficzna"</string>
     <string name="unlink">"Rozłącz"</string>
+    <string name="off">"Wyłączony"</string>
     <string name="location_permission_denied">"Brak dostępu do lokalizacji"</string>
     <string name="permissions">"Uprawnienia"</string>
     <string name="current_location">"Bieżąca lokalizacja"</string>
@@ -38,6 +42,7 @@
     <string name="attendee_role_chair">"Przewodniczący"</string>
     <string name="attendee_role_required_participant">"Uczestnik wymagany"</string>
     <string name="attendee_role_optional_participant">"Uczestnik opcjonalny"</string>
+    <string name="attendee_role_non_participant">"Nieuczestniczący / Info"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Otwórz panel nawigacyjny"</string>
     <string name="navigation_drawer_close">"Zamknij panel nawigacyjny"</string>
@@ -46,6 +51,7 @@
     <string name="navigation_drawer_about">"O autorze / Licencja"</string>
     <string name="navigation_drawer_subtitle">"dzienniki, notatki i zadania"</string>
     <string name="navigation_drawer_settings">"Ustawienia"</string>
+    <string name="navigation_drawer_news_updates">"Aktualności &amp; aktualizacji"</string>
     <string name="navigation_drawer_external_links">"Linki zewnętrzne"</string>
     <string name="navigation_drawer_website">"Strona"</string>
     <string name="navigation_drawer_support">"Wsparcie"</string>
@@ -58,6 +64,8 @@
     <string name="list_due_tomorrow">"Termin na jutro"</string>
     <string name="list_due_within_7_days">"Termin w ciągu 7 dni"</string>
     <string name="list_due_inXhours">"Termin za %d godzin"</string>
+    <string name="list_due_on_weekday">"Do dnia %s"</string>
+    <string name="list_start_past">"Zaczęte w przeszłości"</string>
     <string name="list_start_shortly">"Rozpoczyna się wkrótce"</string>
     <string name="list_start_today">"Planowany start dzisiaj"</string>
     <string name="list_start_tomorrow">"Start jutro"</string>
@@ -86,6 +94,7 @@
     <string name="view_last_modified_text">"Ostatnio zmodyfikowano: %1$s"</string>
     <string name="view_due">"Termin"</string>
     <string name="view_completed">"Ukończone"</string>
+    <string name="view_started">"Rozpocznij/Rozpoczęto"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_comment_helper">"Dodaj komentarz"</string>
     <string name="edit_attachment_button_text">"Dodaj załącznik"</string>
@@ -98,10 +107,19 @@
     <string name="edit_recur_repeat_every_x">"Powtarzaj każdego"</string>
     <string name="edit_recur_on_weekday">"w"</string>
     <string name="edit_recur_on_the_x_day_of_month">"w dniu"</string>
+    <string name="edit_recur_x_day_of_the_month">"dzień miesiąca"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"ostatni"</string>
     <string name="edit_recur_x_times">"razy"</string>
+    <string name="edit_recur_toast_requires_start_date">"Powtarzanie wymaga ustawienia daty rozpoczęcia!"</string>
     <string name="edit_datepicker_dialog_select_date">"Wybierz datę"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Wybierz zakres dat"</string>
+    <string name="edit_datepicker_dialog_add_time">"Dodaj czas"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Edytuj czas"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Dodaj strefę czasową"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Edytuj strefę czasową"</string>
     <string name="edit_dialog_sure_to_delete_title">"Usunąć \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Porzucić ten wpis?"</string>
+    <string name="dialog_delete_done_title">"Usunąć wszystkie ukończone zadania?"</string>
     <string name="edit_fragment_app_permission">"Uprawnienia aplikacji"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Tłumaczenia"</string>
