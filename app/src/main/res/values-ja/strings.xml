@@ -566,9 +566,9 @@
     <string name="collections_biometric_protected_entries_locked_subtitle">認証してもう一度お試しください</string>
     <string name="list_biometric_protected_entries_unlocked">生体認証で保護されたエントリーはロック解除されています</string>
     <string name="settings_auto_alarm">"自動アラーム"</string>
-    <string name="alarms_always_ondue">"締切日時に通知"</string>
-    <string name="alarms_always_on_save">"常に保存時（実験的）"</string>
-    <string name="settings_auto_alarm_sub">"オンにすると自動でアラームを作成します。「締切日時に通知」を選択するとアラームを作成せずに、締切日時に通知します。"</string>
+    <string name="alarms_always_ondue">"常に締切日時に"</string>
+    <string name="alarms_always_on_save">"常に保存時に (試験的)"</string>
+    <string name="settings_auto_alarm_sub">"オンにすると自動でアラームを作成します。「常に締切日時に」を選択するとアラームを作成せずに、締切日時に通知します。"</string>
     <string name="settings_protect_biometric">"エントリーを生体認証で保護"</string>
     <string name="settings_protect_biometric_sub">"この機能は、選択されたエントリーを生体認証でロック解除されるまで非表示にしますが、バックグラウンドでデータを暗号化/復号するものではありません。"</string>
     <!-- Strings for values in properties of an ICalObject -->
