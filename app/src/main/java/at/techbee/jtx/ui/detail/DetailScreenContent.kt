@@ -352,7 +352,7 @@ fun DetailScreenContent(
 
                     DetailsCardCollections(
                         iCalObject = iCalObject,
-                        isEditMode = isEditMode.value,
+                        seriesElement = seriesElement,
                         isChild = isChild.value,
                         originalCollection = collection,
                         color = color,
@@ -368,7 +368,7 @@ fun DetailScreenContent(
 
                     DetailsCardDates(
                         icalObject = iCalObject,
-                        isEditMode = isEditMode.value,
+                        isReadOnly = collection?.readonly?:true,
                         enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] ?: true || iCalObject.getModuleFromString() == Module.JOURNAL,
                         enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] ?: true,
                         enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED]
@@ -397,7 +397,6 @@ fun DetailScreenContent(
                             }
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
-                        toggleEditMode = { isEditMode.value = !isEditMode.value },
                         modifier = detailElementModifier
                     )
                 }
@@ -793,7 +792,7 @@ fun DetailScreenContent(
                     if(iCalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] == true || showAllOptions))) {
                         DetailsCardContact(
                             initialContact = iCalObject.contact ?: "",
-                            isEditMode = isEditMode.value,
+                            isReadOnly = collection?.readonly?:true,
                             onContactUpdated = { newContact ->
                                 iCalObject.contact = newContact.ifEmpty { null }
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
@@ -806,7 +805,7 @@ fun DetailScreenContent(
                     if(iCalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] == true || showAllOptions))) {
                         DetailsCardUrl(
                             initialUrl = iCalObject.url ?: "",
-                            isEditMode = isEditMode.value,
+                            isReadOnly = collection?.readonly?:true,
                             onUrlUpdated = { newUrl ->
                                 iCalObject.url = newUrl.ifEmpty { null }
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
@@ -855,7 +854,7 @@ fun DetailScreenContent(
                     if(attachments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] == true || showAllOptions))) {
                         DetailsCardAttachments(
                             attachments = attachments,
-                            isEditMode = isEditMode.value,
+                            isReadOnly = collection?.readonly?:true,
                             isRemoteCollection = collection?.accountType != LOCAL_ACCOUNT_TYPE,
                             player = player,
                             onAttachmentsUpdated = {
@@ -870,7 +869,7 @@ fun DetailScreenContent(
                         DetailsCardAlarms(
                             alarms = alarms,
                             icalObject = iCalObject,
-                            isEditMode = isEditMode.value,
+                            isReadOnly = collection?.readonly?:true,
                             onAlarmsUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                             },

@@ -14,8 +14,12 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
@@ -55,7 +59,11 @@ fun CollectionSelectorDialog(
                         includeReadOnly = false,
                         includeVJOURNAL = if(module == Module.JOURNAL || module == Module.NOTE) true else null,
                         includeVTODO = if(module == Module.TODO) true else null,
-                        onSelectionChanged = { selected -> selectedCollection = selected }
+                        onSelectionChanged = { selected -> selectedCollection = selected },
+                        showSyncButton = false,
+                        showColorPicker = false,
+                        enableSelector = true,
+                        onColorPicked = { }
                     )
                 }
             }

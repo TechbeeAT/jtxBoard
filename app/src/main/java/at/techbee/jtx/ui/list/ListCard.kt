@@ -13,7 +13,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.Forum
@@ -417,29 +415,10 @@ fun ListCard(
             AnimatedVisibility(visible = isAttachmentsExpanded) {
                 Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        attachments.asReversed().filter { it.fmttype?.startsWith("image/") == true }
-                            .forEach { attachment ->
-                                AttachmentCard(
-                                    attachment = attachment,
-                                    isEditMode = false,
-                                    isRemoteCollection = false,   // ATTENTION: We pass false here, because the warning for large file sizes is only relevant for edit mode
-                                    player = player,
-                                    onAttachmentDeleted = { /* nothing to do, no edit here */ },
-                                    modifier = Modifier.size(100.dp, 140.dp)
-                                )
-                            }
-                    }
-
-                    attachments.asReversed().filter { it.fmttype == null || it.fmttype?.startsWith("image/") == false }.forEach { attachment ->
+                    attachments.asReversed().forEach { attachment ->
                         AttachmentCard(
                             attachment = attachment,
-                            isEditMode = false,
+                            isReadOnly = true,
                             isRemoteCollection = false,   // ATTENTION: We pass false here, because the warning for large file sizes is only relevant for edit mode
                             player = player,
                             onAttachmentDeleted = { /* nothing to do, no edit here */ },

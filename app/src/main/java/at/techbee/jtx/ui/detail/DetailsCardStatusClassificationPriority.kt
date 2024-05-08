@@ -73,15 +73,47 @@ fun DetailsCardStatusClassificationPriority(
 
             if(!isEditMode && (icalObject.status?.isNotEmpty() == true || icalObject.xstatus?.isNotEmpty() == true)) {
                 ElevatedAssistChip(
+                    enabled = allowStatusChange,
                     label = {
                         if(icalObject.xstatus?.isNotEmpty() == true)
                             Text(icalObject.xstatus!!)
                         else
                             Text(
-                                text = Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "",
+                                text = Status.entries.find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "",
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
+
+                        DropdownMenu(
+                            expanded = statusMenuExpanded,
+                            onDismissRequest = { statusMenuExpanded = false }
+                        ) {
+
+                            Status.valuesFor(icalObject.getModuleFromString()).forEach { status ->
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = status.stringResource)) },
+                                    onClick = {
+                                        icalObject.status = status.status
+                                        icalObject.xstatus = null
+                                        statusMenuExpanded = false
+                                        onStatusChanged(status)
+                                    }
+                                )
+                            }
+                            extendedStatuses
+                                .filter { it.module == icalObject.getModuleFromString() }
+                                .forEach { storedStatus ->
+                                    DropdownMenuItem(
+                                        text = { Text(storedStatus.xstatus) },
+                                        onClick = {
+                                            icalObject.xstatus = storedStatus.xstatus
+                                            icalObject.status = storedStatus.rfcStatus.status
+                                            statusMenuExpanded = false
+                                            onStatusChanged(storedStatus.rfcStatus)
+                                        }
+                                    )
+                                }
+                        }
                     },
                     leadingIcon = {
                         Icon(
@@ -89,17 +121,21 @@ fun DetailsCardStatusClassificationPriority(
                             stringResource(id = R.string.status)
                         )
                     },
-                    onClick = { },
+                    onClick = {  statusMenuExpanded = true },
                     modifier = Modifier.weight(0.33f)
                 )
             } else if(isEditMode && (enableStatus || !icalObject.status.isNullOrEmpty() || !icalObject.xstatus.isNullOrEmpty())) {
                 AssistChip(
                     enabled = allowStatusChange,
                     label = {
-                        if(!icalObject.xstatus.isNullOrEmpty())
+                        if(icalObject.xstatus?.isNotEmpty() == true)
                             Text(icalObject.xstatus!!)
                         else
-                            Text(Status.values().find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "")
+                            Text(
+                                text = Status.entries.find { it.status == icalObject.status }?.stringResource?.let { stringResource(id = it) }?: icalObject.status ?: "",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
 
                         DropdownMenu(
                             expanded = statusMenuExpanded,
@@ -147,22 +183,8 @@ fun DetailsCardStatusClassificationPriority(
             if(!isEditMode && !icalObject.classification.isNullOrEmpty()) {
                 ElevatedAssistChip(
                     label = {
-                        Text( Classification.values().find { it.classification == icalObject.classification}?.stringResource?.let { stringResource(id = it)}?: icalObject.classification ?:"", maxLines = 1, overflow = TextOverflow.Ellipsis)
-                            },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.GppMaybe,
-                            stringResource(id = R.string.classification)
-                        )
-                    },
-                    onClick = { },
-                    modifier = Modifier.weight(0.33f)
-                )
-            } else if(isEditMode && (enableClassification || !icalObject.classification.isNullOrEmpty())) {
-                AssistChip(
-                    label = {
                         Text(
-                            Classification.values().find { it.classification == icalObject.classification }?.stringResource?.let { stringResource(id = it) }?: icalObject.classification ?: "",
+                            Classification.entries.find { it.classification == icalObject.classification }?.stringResource?.let { stringResource(id = it) }?: icalObject.classification ?: "",
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -172,7 +194,42 @@ fun DetailsCardStatusClassificationPriority(
                             onDismissRequest = { classificationMenuExpanded = false }
                         ) {
 
-                            Classification.values().forEach { clazzification ->
+                            Classification.entries.forEach { clazzification ->
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(id = clazzification.stringResource)) },
+                                    onClick = {
+                                        icalObject.classification = clazzification.classification
+                                        classificationMenuExpanded = false
+                                        onClassificationChanged(clazzification)
+                                    }
+                                )
+                            }
+                        }
+                    },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Outlined.GppMaybe,
+                            stringResource(id = R.string.classification)
+                        )
+                    },
+                    onClick = { classificationMenuExpanded = true },
+                    modifier = Modifier.weight(0.33f)
+                )
+            } else if(isEditMode && (enableClassification || !icalObject.classification.isNullOrEmpty())) {
+                AssistChip(
+                    label = {
+                        Text(
+                            Classification.entries.find { it.classification == icalObject.classification }?.stringResource?.let { stringResource(id = it) }?: icalObject.classification ?: "",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+
+                        DropdownMenu(
+                            expanded = classificationMenuExpanded,
+                            onDismissRequest = { classificationMenuExpanded = false }
+                        ) {
+
+                            Classification.entries.forEach { clazzification ->
                                 DropdownMenuItem(
                                     text = { Text(stringResource(id = clazzification.stringResource)) },
                                     onClick = {
@@ -209,6 +266,22 @@ fun DetailsCardStatusClassificationPriority(
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
+
+                            DropdownMenu(
+                                expanded = priorityMenuExpanded,
+                                onDismissRequest = { priorityMenuExpanded = false }
+                            ) {
+                                stringArrayResource(id = R.array.priority).forEachIndexed { index, prio ->
+                                    DropdownMenuItem(
+                                        text = { Text(prio) },
+                                        onClick = {
+                                            icalObject.priority = if(index == 0) null else index
+                                            priorityMenuExpanded = false
+                                            onPriorityChanged(icalObject.priority)
+                                        }
+                                    )
+                                }
+                            }
                         },
                         leadingIcon = {
                             Icon(
@@ -216,7 +289,7 @@ fun DetailsCardStatusClassificationPriority(
                                 stringResource(id = R.string.priority)
                             )
                         },
-                        onClick = { },
+                        onClick = { priorityMenuExpanded = true },
                         modifier = Modifier.weight(0.33f)
                     )
                 } else if(isEditMode && (enablePriority || icalObject.priority in 1..9)) {

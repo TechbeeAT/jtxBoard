@@ -17,16 +17,22 @@ import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.EventNote
 import androidx.compose.material.icons.automirrored.outlined.Note
 import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.AddTask
+import androidx.compose.material.icons.outlined.ChevronRight
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.ContentPaste
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.TaskAlt
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -314,6 +320,9 @@ fun DetailsScreen(
                 onAddSubtask = { subtaskText -> newSubtaskTextToProcess = subtaskText },
                 actions = {
                     val menuExpanded = remember { mutableStateOf(false) }
+                    val shareOptionsExpanded = remember { mutableStateOf(false) }
+                    val copyConvertOptionsExpanded = remember { mutableStateOf(false) }
+
 
                     OverflowMenu(menuExpanded = menuExpanded) {
 
@@ -372,60 +381,82 @@ fun DetailsScreen(
                         HorizontalDivider()
 
                         if (!isEditMode.value) {
+
                             DropdownMenuItem(
-                                text = { Text(text = stringResource(id = R.string.menu_view_share_mail)) },
-                                onClick = {
-                                    detailViewModel.shareAsText(context)
-                                    menuExpanded.value = false
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Mail,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
+                                text = { Text(text = stringResource(R.string.menu_view_share)) },
+                                onClick = { shareOptionsExpanded.value = !shareOptionsExpanded.value },
+                                trailingIcon = { Icon(if(shareOptionsExpanded.value) Icons.Outlined.KeyboardArrowDown else Icons.Outlined.ChevronRight, null)  }
                             )
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
-                                onClick = {
-                                    detailViewModel.shareAsICS(context)
-                                    menuExpanded.value = false
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Description,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurface
-                                    )
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
-                                onClick = {
-                                    scope.launch(Dispatchers.IO) {
-                                        ICalDatabase
-                                            .getInstance(context)
-                                            .iCalDatabaseDao()
-                                            .getSync(iCalObject.value?.id!!)
-                                            ?.let {
-                                                val text = it.getShareText(context)
-                                                val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-                                                clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
-                                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
-                                                    detailViewModel.toastMessage.value = context.getString(R.string.menu_view_copy_to_clipboard_copied)
-                                            }
+
+                            AnimatedVisibility(shareOptionsExpanded.value) {
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.menu_view_share_mail)) },
+                                    onClick = {
+                                        detailViewModel.shareAsText(context)
+                                        menuExpanded.value = false
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Mail,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
                                     }
-                                    menuExpanded.value = false
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Outlined.ContentPaste,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                            AnimatedVisibility(shareOptionsExpanded.value) {
+
+                                DropdownMenuItem(
+                                        text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
+                                        onClick = {
+                                            detailViewModel.shareAsICS(context)
+                                            menuExpanded.value = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Outlined.Description,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
                                     )
-                                }
-                            )
+                            }
+                            AnimatedVisibility(shareOptionsExpanded.value) {
+
+                                DropdownMenuItem(
+                                    text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
+                                    onClick = {
+                                        scope.launch(Dispatchers.IO) {
+                                            ICalDatabase
+                                                .getInstance(context)
+                                                .iCalDatabaseDao()
+                                                .getSync(iCalObject.value?.id!!)
+                                                ?.let {
+                                                    val text = it.getShareText(context)
+                                                    val clipboardManager =
+                                                        context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                                    clipboardManager.setPrimaryClip(
+                                                        ClipData.newPlainText(
+                                                            "",
+                                                            text
+                                                        )
+                                                    )
+                                                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
+                                                        detailViewModel.toastMessage.value =
+                                                            context.getString(R.string.menu_view_copy_to_clipboard_copied)
+                                                }
+                                        }
+                                        menuExpanded.value = false
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Outlined.ContentPaste,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurface
+                                        )
+                                    }
+                                )
+                            }
                         }
 
 
@@ -442,6 +473,128 @@ fun DetailsScreen(
 
                         HorizontalDivider()
 
+                        if(!isEditMode.value
+                            && collection.value?.readonly == false
+                            && isProActionAvailable) {
+
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(R.string.menu_view_copy_convert)) },
+                                onClick = { copyConvertOptionsExpanded.value = !copyConvertOptionsExpanded.value },
+                                trailingIcon = { Icon(if(copyConvertOptionsExpanded.value) Icons.Outlined.KeyboardArrowDown else Icons.Outlined.ChevronRight, null)  }
+                            )
+
+
+                            if(collection.value?.supportsVJOURNAL == true) {
+                                AnimatedVisibility (copyConvertOptionsExpanded.value && iCalObject.value?.getModuleFromString() != Module.JOURNAL) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(id = R.string.menu_view_convert_to_journal)) },
+                                        onClick = {
+                                            detailViewModel.convertTo(Module.JOURNAL)
+                                            menuExpanded.value = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.AutoMirrored.Outlined.EventNote,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
+                                    )
+                                }
+                                AnimatedVisibility (copyConvertOptionsExpanded.value && iCalObject.value?.getModuleFromString() != Module.NOTE) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(id = R.string.menu_view_convert_to_note)) },
+                                        onClick = {
+                                            detailViewModel.convertTo(Module.NOTE)
+                                            menuExpanded.value = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.AutoMirrored.Outlined.Note,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                            if(collection.value?.supportsVTODO == true) {
+                                AnimatedVisibility(copyConvertOptionsExpanded.value && iCalObject.value?.getModuleFromString() != Module.TODO) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = stringResource(id = R.string.menu_view_convert_to_task)) },
+                                        onClick = {
+                                            detailViewModel.convertTo(Module.TODO)
+                                            menuExpanded.value = false
+                                        },
+                                        leadingIcon = {
+                                            Icon(
+                                                imageVector = Icons.Outlined.TaskAlt,
+                                                contentDescription = null,
+                                                tint = MaterialTheme.colorScheme.onSurface
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+
+                            AnimatedVisibility (copyConvertOptionsExpanded.value) {
+                                HorizontalDivider()
+                            }
+
+                            AnimatedVisibility (copyConvertOptionsExpanded.value && collection.value?.supportsVJOURNAL == true) {
+                                DropdownMenuItem(
+                                    leadingIcon = { Icon(Icons.Outlined.ContentCopy, null)  },
+                                    text = { Text(stringResource(id = R.string.menu_view_copy_as_journal)) },
+                                    onClick = {
+                                        detailViewModel.createCopy(Module.JOURNAL)
+                                        menuExpanded.value = false
+                                    }
+                                )
+                            }
+                            AnimatedVisibility (copyConvertOptionsExpanded.value && collection.value?.supportsVJOURNAL == true) {
+
+                                DropdownMenuItem(
+                                    leadingIcon = { Icon(Icons.Outlined.ContentCopy, null) },
+                                    text = { Text(stringResource(id = R.string.menu_view_copy_as_note)) },
+                                    onClick = {
+                                        detailViewModel.createCopy(Module.NOTE)
+                                        menuExpanded.value = false
+                                    }
+                                )
+                            }
+                            AnimatedVisibility (copyConvertOptionsExpanded.value && collection.value?.supportsVTODO == true) {
+                                DropdownMenuItem(
+                                    leadingIcon = { Icon(Icons.Outlined.ContentCopy, null)  },
+                                    text = { Text(stringResource(id = R.string.menu_view_copy_as_todo)) },
+                                    onClick = {
+                                        detailViewModel.createCopy(Module.TODO)
+                                        menuExpanded.value = false
+                                    }
+                                )
+                            }
+
+                            HorizontalDivider()
+
+                        }
+
+                        if(
+                            collection.value?.readonly == false
+                            && isProActionAvailable
+                            && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
+                        ) {
+                            DropdownMenuItem(
+                                leadingIcon = { Icon(Icons.Outlined.Delete, null)  },
+                                text = { Text(stringResource(id = R.string.delete)) },
+                                onClick = {
+                                    showDeleteDialog = true
+                                    menuExpanded.value = false
+                                }
+                            )
+
+                            HorizontalDivider()
+                        }
+
+
                         CheckboxWithText(
                             text = stringResource(id = R.string.menu_view_markdown_formatting),
                             onCheckedChange = {
@@ -453,49 +606,19 @@ fun DetailsScreen(
 
                         HorizontalDivider()
 
-                        if(collection.value?.readonly == false && collection.value?.supportsVJOURNAL == true) {
-                            if (iCalObject.value?.module != Module.JOURNAL.name) {
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.menu_view_convert_to_journal)) },
-                                    onClick = { detailViewModel.convertTo(Module.JOURNAL) },
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Outlined.EventNote,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    }
-                                )
-                            }
-                            if (iCalObject.value?.module != Module.NOTE.name) {
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.menu_view_convert_to_note)) },
-                                    onClick = { detailViewModel.convertTo(Module.NOTE) },
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Outlined.Note,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    }
-                                )
-                            }
-                        }
-                        if(collection.value?.readonly == false && collection.value?.supportsVTODO == true) {
-                            if(iCalObject.value?.module != Module.TODO.name) {
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.menu_view_convert_to_task)) },
-                                    onClick = { detailViewModel.convertTo(Module.TODO) },
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Outlined.TaskAlt,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    }
-                                )
-                            }
-                        }
+                        DropdownMenuItem(
+                            leadingIcon = { Icon(Icons.Outlined.Visibility, null)  },
+                            onClick = {
+                                scope.launch {
+                                    if (detailsBottomSheetState.isVisible)
+                                        detailsBottomSheetState.hide()
+                                    else
+                                        detailsBottomSheetState.show()
+                                }
+                                menuExpanded.value = false
+                            },
+                            text = { Text(stringResource(id = R.string.preferences)) }
+                        )
                     }
                 }
             )
@@ -583,16 +706,12 @@ fun DetailsScreen(
         },
         bottomBar = {
             DetailBottomAppBar(
-                icalObject = iCalObject.value,
-                seriesElement = seriesElement.value,
+                iCalObject = iCalObject.value,
                 collection = collection.value,
                 isEditMode = isEditMode,
                 markdownState = markdownState,
                 isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,
-                detailsBottomSheetState = detailsBottomSheetState,
-                onDeleteClicked = { showDeleteDialog = true },
-                onCopyRequested = { newModule -> detailViewModel.createCopy(newModule) },
                 onRevertClicked = { showRevertDialog = true }
             )
         }

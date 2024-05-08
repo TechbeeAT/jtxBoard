@@ -13,8 +13,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,15 +37,14 @@ import java.time.ZonedDateTime
 @Composable
 fun DetailsCardDates(
     icalObject: ICalObject,
-    isEditMode: Boolean,
     enableDtstart: Boolean,
     enableDue: Boolean,
     enableCompleted: Boolean,
     allowCompletedChange: Boolean,
+    isReadOnly: Boolean,
     onDtstartChanged: (Long?, String?) -> Unit,
     onDueChanged: (Long?, String?) -> Unit,
     onCompletedChanged: (Long?, String?) -> Unit,
-    toggleEditMode: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -63,17 +60,16 @@ fun DetailsCardDates(
     var completed by remember { mutableStateOf(icalObject.completed) }
     var completedTimezone by remember { mutableStateOf(icalObject.completedTimezone) }
 
-    ElevatedCard(modifier = modifier) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(if(isEditMode) 4.dp else 0.dp),
+            modifier = modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if((icalObject.module == Module.JOURNAL.name || icalObject.module == Module.TODO.name)
-                && (dtstart != null || (isEditMode && (enableDtstart || icalObject.getModuleFromString() == Module.JOURNAL)))) {
+                && (dtstart != null || (enableDtstart || icalObject.getModuleFromString() == Module.JOURNAL))) {
                 HorizontalDateCard(
                     datetime = dtstart,
                     timezone = dtstartTimezone,
-                    isEditMode = isEditMode,
+                    isReadOnly = isReadOnly,
                     onDateTimeChanged = { datetime, timezone ->
                         if((due ?: Long.MAX_VALUE) <= (datetime ?: Long.MIN_VALUE)) {
                             Toast.makeText(context, context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart), Toast.LENGTH_LONG).show()
@@ -106,16 +102,15 @@ fun DetailsCardDates(
                         null,
                     allowNull = icalObject.module == Module.TODO.name,
                     dateOnly = false,
-                    toggleEditMode = toggleEditMode
                 )
             }
 
             AnimatedVisibility (icalObject.module == Module.TODO.name
-                && (due != null || (isEditMode && enableDue))) {
+                && (due != null || enableDue)) {
                 HorizontalDateCard(
                     datetime = due,
                     timezone = dueTimezone,
-                    isEditMode = isEditMode,
+                    isReadOnly = isReadOnly,
                     onDateTimeChanged = { datetime, timezone ->
                         if((datetime ?: Long.MAX_VALUE) <= (dtstart ?: Long.MIN_VALUE)) {
                             Toast.makeText(
@@ -144,16 +139,15 @@ fun DetailsCardDates(
                     pickerMinDate = dtstart?.let { Instant.ofEpochMilli(it).atZone(DateTimeUtils.requireTzId(dtstartTimezone)) },
                     labelTop = stringResource(id = R.string.due),
                     allowNull = icalObject.module == Module.TODO.name,
-                    dateOnly = false,
-                    toggleEditMode = toggleEditMode
+                    dateOnly = false
                 )
             }
             AnimatedVisibility (icalObject.module == Module.TODO.name
-                && (completed != null || (isEditMode && enableCompleted))) {
+                && (completed != null || enableCompleted)) {
                 HorizontalDateCard(
                     datetime = completed,
                     timezone = completedTimezone,
-                    isEditMode = isEditMode,
+                    isReadOnly = isReadOnly && allowCompletedChange,
                     onDateTimeChanged = { datetime, timezone ->
                         completed = datetime
                         completedTimezone = timezone
@@ -162,13 +156,11 @@ fun DetailsCardDates(
                     pickerMinDate = dtstart?.let { Instant.ofEpochMilli(it).atZone(DateTimeUtils.requireTzId(dtstartTimezone)) },
                     labelTop = stringResource(id = R.string.completed),
                     allowNull = icalObject.module == Module.TODO.name,
-                    dateOnly = false,
-                    enabled = allowCompletedChange,
-                    toggleEditMode = toggleEditMode
+                    dateOnly = false
                 )
             }
         }
-    }
+
 }
 
 @Preview(showBackground = true)
@@ -177,15 +169,14 @@ fun DetailsCardDates_Journal_Preview() {
     MaterialTheme {
         DetailsCardDates(
             icalObject = ICalObject.createJournal(),
-            isEditMode = false,
+            isReadOnly = false,
             enableDtstart = true,
             enableDue = false,
             enableCompleted = false,
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> },
-            toggleEditMode = {}
+            onCompletedChanged = { _, _ -> }
         )
     }
 }
@@ -203,15 +194,14 @@ fun DetailsCardDates_Todo_Preview() {
                 this.completed = System.currentTimeMillis()
                 this.completedTimezone = TZ_ALLDAY
             },
-            isEditMode = false,
+            isReadOnly = false,
             enableDtstart = true,
             enableDue = false,
             enableCompleted = false,
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> },
-            toggleEditMode = {}
+            onCompletedChanged = { _, _ -> }
         )
     }
 }
@@ -224,15 +214,14 @@ fun DetailsCardDates_Journal_edit_Preview() {
     MaterialTheme {
         DetailsCardDates(
             icalObject = ICalObject.createJournal(),
-            isEditMode = true,
+            isReadOnly = false,
             enableDtstart = true,
             enableDue = true,
             enableCompleted = false,
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> },
-            toggleEditMode = {}
+            onCompletedChanged = { _, _ -> }
         )
     }
 }
@@ -248,15 +237,14 @@ fun DetailsCardDates_Todo_edit_Preview() {
                 this.due = System.currentTimeMillis()
                 this.dueTimezone = TZ_ALLDAY
             },
-            isEditMode = true,
+            isReadOnly = false,
             enableDtstart = true,
             enableDue = false,
             enableCompleted = true,
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> },
-            toggleEditMode = {}
+            onCompletedChanged = { _, _ -> }
         )
     }
 }
@@ -271,15 +259,14 @@ fun DetailsCardDates_Todo_edit_Preview_completed_hidden() {
                 this.due = System.currentTimeMillis()
                 this.dueTimezone = TZ_ALLDAY
             },
-            isEditMode = true,
+            isReadOnly = false,
             enableDtstart = true,
             enableDue = false,
             enableCompleted = false,
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> },
-            toggleEditMode = {}
+            onCompletedChanged = { _, _ -> }
         )
     }
 }
@@ -290,15 +277,14 @@ fun DetailsCardDates_Note_edit_Preview() {
     MaterialTheme {
         DetailsCardDates(
             icalObject = ICalObject.createNote(),
-            isEditMode = true,
+            isReadOnly = false,
             enableDtstart = true,
             enableDue = true,
             enableCompleted = true,
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> },
-            toggleEditMode = {}
+            onCompletedChanged = { _, _ -> }
         )
     }
 }
@@ -309,15 +295,14 @@ fun DetailsCardDates_Note_Preview() {
     MaterialTheme {
         DetailsCardDates(
             icalObject = ICalObject.createNote(),
-            isEditMode = false,
+            isReadOnly = false,
             enableDtstart = true,
             enableDue = true,
             enableCompleted = true,
             allowCompletedChange = true,
             onDtstartChanged = { _, _ -> },
             onDueChanged = { _, _ -> },
-            onCompletedChanged = { _, _ -> },
-            toggleEditMode = {}
+            onCompletedChanged = { _, _ -> }
         )
     }
 }

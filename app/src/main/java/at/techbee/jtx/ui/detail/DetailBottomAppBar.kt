@@ -8,15 +8,9 @@
 
 package at.techbee.jtx.ui.detail
 
-import android.accounts.Account
-import android.content.ContentResolver
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.keyframes
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,46 +23,28 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.EditOff
-import androidx.compose.material.icons.outlined.CloudSync
 import androidx.compose.material.icons.outlined.Code
-import androidx.compose.material.icons.outlined.ContentCopy
-import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DriveFileRenameOutline
 import androidx.compose.material.icons.outlined.FormatBold
 import androidx.compose.material.icons.outlined.FormatItalic
 import androidx.compose.material.icons.outlined.FormatStrikethrough
 import androidx.compose.material.icons.outlined.HorizontalRule
-import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.TextFormat
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -77,63 +53,24 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.Module
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.util.SyncApp
-import at.techbee.jtx.util.SyncUtil
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailBottomAppBar(
-    icalObject: ICalObject?,
-    seriesElement: ICalObject?,
+    iCalObject: ICalObject?,
     collection: ICalCollection?,
     isEditMode: MutableState<Boolean>,
     markdownState: MutableState<MarkdownState>,
     isProActionAvailable: Boolean,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
-    detailsBottomSheetState: SheetState,
-    onDeleteClicked: () -> Unit,
-    onCopyRequested: (Module) -> Unit,
-    onRevertClicked: () -> Unit,
+    onRevertClicked: () -> Unit
 ) {
 
-    if (icalObject == null || collection == null)
+    if (iCalObject == null || collection == null)
         return
 
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    var copyOptionsExpanded by remember { mutableStateOf(false) }
-
-    val syncIconAnimation = rememberInfiniteTransition(label = "syncIconAnimation")
-    val angle by syncIconAnimation.animateFloat(
-        initialValue = 0f,
-        targetValue = -360f,
-        animationSpec = infiniteRepeatable(
-            animation = keyframes {
-                durationMillis = 2000
-            }
-        ), label = "syncIconAnimationAngle"
-    )
-
-    val isPreview = LocalInspectionMode.current
-    val lifecycleOwner = LocalLifecycleOwner.current
-    var isSyncInProgress by remember { mutableStateOf(false) }
-    DisposableEffect(lifecycleOwner) {
-
-        val listener = if (isPreview)
-            null
-        else {
-            ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-                isSyncInProgress = SyncUtil.isJtxSyncRunningFor(setOf(Account(collection.accountName, collection.accountType)))
-            }
-        }
-        onDispose {
-            if (!isPreview)
-                ContentResolver.removeStatusChangeListener(listener)
-        }
-    }
 
 
     BottomAppBar(
@@ -143,82 +80,6 @@ fun DetailBottomAppBar(
                     Icon(
                         Icons.Outlined.TextFormat,
                         contentDescription = stringResource(id = R.string.menu_view_markdown_formatting)
-                    )
-                }
-            }
-
-            AnimatedVisibility(
-                isEditMode.value
-                        && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
-            ) {
-                IconButton(onClick = {
-                    scope.launch {
-                        if (detailsBottomSheetState.isVisible)
-                            detailsBottomSheetState.hide()
-                        else
-                            detailsBottomSheetState.show()
-                    }
-                }
-                ) {
-                    Icon(
-                        Icons.Outlined.Settings,
-                        contentDescription = stringResource(id = R.string.preferences)
-                    )
-                }
-            }
-
-            AnimatedVisibility(
-                !isEditMode.value
-                        && !collection.readonly
-                        && isProActionAvailable
-            ) {
-                IconButton(onClick = { copyOptionsExpanded = true }) {
-                    Icon(
-                        Icons.Outlined.ContentCopy,
-                        contentDescription = stringResource(id = R.string.menu_view_copy_item),
-                    )
-                    DropdownMenu(
-                        expanded = copyOptionsExpanded,
-                        onDismissRequest = { copyOptionsExpanded = false }
-                    ) {
-                        if (collection.supportsVJOURNAL) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.menu_view_copy_as_journal)) },
-                                onClick = {
-                                    onCopyRequested(Module.JOURNAL)
-                                    copyOptionsExpanded = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.menu_view_copy_as_note)) },
-                                onClick = {
-                                    onCopyRequested(Module.NOTE)
-                                    copyOptionsExpanded = false
-                                }
-                            )
-                        }
-                        if (collection.supportsVTODO) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.menu_view_copy_as_todo)) },
-                                onClick = {
-                                    onCopyRequested(Module.TODO)
-                                    copyOptionsExpanded = false
-                                }
-                            )
-                        }
-                    }
-                }
-            }
-
-            if(
-                !collection.readonly
-                && isProActionAvailable
-                && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
-            ) {
-                IconButton(onClick = { onDeleteClicked() }) {
-                    Icon(
-                        Icons.Outlined.Delete,
-                        contentDescription = stringResource(id = R.string.delete),
                     )
                 }
             }
@@ -236,41 +97,6 @@ fun DetailBottomAppBar(
                 }
             }
 
-            AnimatedVisibility(
-                collection.accountType != LOCAL_ACCOUNT_TYPE
-                    && (isSyncInProgress || seriesElement?.dirty ?: icalObject.dirty)
-                    && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
-            ) {
-                IconButton(
-                    onClick = {
-                        if (!isSyncInProgress) {
-                            collection.getAccount().let { SyncUtil.syncAccounts(setOf(it)) }
-                            SyncUtil.showSyncRequestedToast(context)
-                        }
-                    },
-                    enabled = seriesElement?.dirty ?: icalObject.dirty && !isSyncInProgress
-                ) {
-                    Crossfade(isSyncInProgress, label = "isSyncInProgress") { synchronizing ->
-                        if (synchronizing) {
-                            Icon(
-                                Icons.Outlined.Sync,
-                                contentDescription = stringResource(id = R.string.sync_in_progress),
-                                modifier = Modifier
-                                    .graphicsLayer {
-                                        rotationZ = angle
-                                    }
-                                    .alpha(0.3f),
-                                tint = MaterialTheme.colorScheme.primary,
-                                )
-                        } else {
-                            Icon(
-                                Icons.Outlined.CloudSync,
-                                contentDescription = stringResource(id = R.string.upload_pending),
-                            )
-                        }
-                    }
-                }
-            }
 
             AnimatedVisibility((changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING
@@ -396,7 +222,6 @@ fun DetailBottomAppBar(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View() {
@@ -408,23 +233,18 @@ fun DetailBottomAppBar_Preview_View() {
         }
 
         DetailBottomAppBar(
-            icalObject = ICalObject.createNote().apply { dirty = true },
-            seriesElement = null,
+            iCalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
-            detailsBottomSheetState = rememberModalBottomSheetState(),
-            onDeleteClicked = { },
-            onCopyRequested = { },
             onRevertClicked = { }
         )
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_edit() {
@@ -436,22 +256,17 @@ fun DetailBottomAppBar_Preview_edit() {
         }
 
         DetailBottomAppBar(
-            icalObject = ICalObject.createNote().apply { dirty = true },
-            seriesElement = null,
+            iCalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            detailsBottomSheetState = rememberModalBottomSheetState(),
-            onDeleteClicked = { },
-            onCopyRequested = { },
             onRevertClicked = { }
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_edit_markdown() {
@@ -463,22 +278,17 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
         }
 
         DetailBottomAppBar(
-            icalObject = ICalObject.createNote().apply { dirty = true },
-            seriesElement = null,
+            iCalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(true) },
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            detailsBottomSheetState = rememberModalBottomSheetState(),
-            onDeleteClicked = { },
-            onCopyRequested = { },
             onRevertClicked = { }
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_readonly() {
@@ -490,22 +300,17 @@ fun DetailBottomAppBar_Preview_View_readonly() {
         }
 
         DetailBottomAppBar(
-            icalObject = ICalObject.createNote().apply { dirty = false },
-            seriesElement = null,
+            iCalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
-            detailsBottomSheetState = rememberModalBottomSheetState(),
-            onDeleteClicked = { },
-            onCopyRequested = { },
             onRevertClicked = { }
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_proOnly() {
@@ -517,23 +322,18 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
         }
 
         DetailBottomAppBar(
-            icalObject = ICalObject.createNote().apply { dirty = false },
-            seriesElement = null,
+            iCalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = false,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
-            detailsBottomSheetState = rememberModalBottomSheetState(),
-            onDeleteClicked = { },
-            onCopyRequested = { },
             onRevertClicked = { }
         )
     }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 fun DetailBottomAppBar_Preview_View_local() {
@@ -547,16 +347,12 @@ fun DetailBottomAppBar_Preview_View_local() {
         BillingManager.getInstance().initialise(LocalContext.current.applicationContext)
 
         DetailBottomAppBar(
-            icalObject = ICalObject.createNote().apply { dirty = true },
-            seriesElement = null,
+            iCalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
             isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            detailsBottomSheetState = rememberModalBottomSheetState(),
-            onDeleteClicked = { },
-            onCopyRequested = { },
             onRevertClicked = { }
         )
     }
