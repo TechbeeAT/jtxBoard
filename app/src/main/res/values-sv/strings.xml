@@ -10,9 +10,16 @@
     <string name="cont">"Fortsätt"</string>
     <string name="latitude">"Latitud"</string>
     <string name="longitude">"Longitud"</string>
+    <string name="permissions">"Behörigheter"</string>
+    <string name="current_location">"Nuvarande plats"</string>
+    <string name="toolbar_text_add_task">"Lägg till Uppgift"</string>
     <string name="toast_sync_requested">"Synkronisering begärd"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Utkast"</string>
+    <string name="todo_status_needsaction">"Kräver åtgärd"</string>
+    <string name="todo_status_completed">"Slutförd"</string>
+    <string name="todo_status_inprocess">"Pågående"</string>
+    <string name="todo_status_cancelled">"Avbruten"</string>
     <string name="classification_private">"Privat"</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_synchronization">"Synkronisering"</string>
@@ -22,25 +29,56 @@
     <string name="navigation_drawer_donate">"Donera"</string>
     <string name="navigation_drawer_privacy_policy">"Integritetspolicy"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_shortly">"Förfaller inom kort"</string>
+    <string name="list_due_today">"Förfaller idag"</string>
+    <string name="list_due_tomorrow">"Förfaller imorgon"</string>
     <string name="list_due_within_7_days">"Förfaller inom 7 dagar"</string>
+    <string name="list_due_inXhours">"Förfaller om %d timmar"</string>
+    <string name="list_due_on_weekday">"Förfaller på %s"</string>
+    <string name="list_start_past">"Börjar i det förflutna"</string>
+    <string name="list_start_shortly">"Börjar inom kort"</string>
+    <string name="list_start_today">"Planerad start idag"</string>
+    <string name="list_start_tomorrow">"Börjar i morgon"</string>
+    <string name="list_start_inXhours">"Planerad start om %d timmar"</string>
+    <string name="list_start_on_weekday">"Planerad start på %s"</string>
+    <string name="list_tabitem_notes">"Anteckningar"</string>
     <!-- fragment_ical_view -->
+    <string name="view_completed">"Slutförd"</string>
+    <string name="view_started">"Start(ad)"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_comment_helper">"Lägg till en kommentar"</string>
+    <string name="edit_attachment_button_text">"Lägg till bilaga"</string>
+    <string name="edit_take_picture_button_text">"Ta bild"</string>
+    <string name="edit_add_link_button_text">"Lägg till länk till bilaga"</string>
+    <string name="edit_subtasks_add_helper">"Lägg till en deluppgift"</string>
+    <string name="edit_attachment_add_link_dialog">"Lägg till länk till bilaga"</string>
+    <string name="edit_recur_repeat_every_x">"Upprepa var"</string>
     <string name="edit_recur_x_times">"gånger"</string>
+    <string name="edit_datepicker_dialog_select_date">"Välj datum"</string>
+    <string name="edit_datepicker_dialog_add_time">"Lägg till tid"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Redigera tid"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Lägg till tidszon"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Redigera tidszon"</string>
+    <string name="edit_dialog_sure_to_delete_title">"Ta bort \"%1$s\"?"</string>
+    <string name="dialog_delete_done_title">"Ta bort alla slutförda uppgifter?"</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Översättningar"</string>
     <string name="about_tabitem_libraries">"Bibliotek"</string>
+    <string name="about_special_thanks">"Särskilt tack till"</string>
     <string name="about_app_version">"Version: %1$s (%2$d)"</string>
+    <string name="about_app_build_date">"Kompilerad %s"</string>
     <!-- menus -->
     <string name="menu_view_share_ics">"Dela som .ics"</string>
     <!-- Shortcuts -->
+    <string name="shortcut_addNote_longLabel">"Lägg till Anteckning"</string>
+    <string name="shortcut_addTodo_longLabel">"Lägg till Uppgift"</string>
     <!-- Settings fragment -->
     <!-- Sync fragment -->
     <!-- Donate fragment -->
     <string name="donate_donate_with">"Donera med"</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Tack till"</string>
+    <string name="about_translations_contribution_button">"Gå med på Crowdin.com"</string>
     <!-- Permissions -->
     <string name="add">"Lägg till"</string>
     <string name="edit">"Redigera"</string>
@@ -93,6 +131,7 @@
     <string name="list_date_today">"I dag"</string>
     <string name="list_date_tomorrow">"I morgon"</string>
     <string name="list_date_within_7_days">"Inom 7 dagar"</string>
+    <string name="list_hide_completed_tasks">"Dölj slutförda uppgifter"</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">Vänligen autentisera och försök igen</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="next">"Nästa"</string>
