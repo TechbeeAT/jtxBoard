@@ -319,6 +319,7 @@
     <string name="filter_no_resource">Bez zdrojů</string>
     <string name="filter_subtasks_order_by">Řadit dílčí úkoly podle</string>
     <string name="filter_subnotes_order_by">Řadit propojené poznámky podle</string>
+    <string name="order_by_drag_and_drop">"Přetáhnout"</string>
     <string name="filter_no_filter">"Žádný filtr"</string>
     <string name="filter_options_more_entries">"Více (%1$d)"</string>
     <string name="filter_options_less_entries">"Méně"</string>
@@ -441,6 +442,7 @@ Děkujeme vám!"</string>
     <string name="details_go_to_series">"Přejít na sérii"</string>
     <string name="details_detach_from_series">"Odpojit od série"</string>
     <string name="details_detach_all_instances">"Odpojit všechny instance"</string>
+    <string name="details_show_all_instances">"Zobrazit všechny instance (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Zrušit propojení od nadřazené položky"</string>
     <string name="dialog_unlink_from_parent_message">"Odebrat vztah jako dílčí záznam? Záznam zůstane jako samostatný záznam."</string>
     <string name="edit_comment">"Upravit komentář"</string>
@@ -514,6 +516,7 @@ Děkujeme vám!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Ponechat stav, průběh a dokončení při synchronizaci"</string>
     <string name="settings_attention_experimental_feature">"Pozor: Toto je experimentální funkce"</string>
     <string name="settings_create_with_current_location">"Vytvořit nové záznamy s aktuální polohou"</string>
+    <string name="settings_create_with_current_location_sub">"Pro použití této funkce povolte přístup k vaší poloze při používání této aplikace."</string>
     <string name="settings_sticky_alarms">"Rychlé budíky"</string>
     <string name="settings_sticky_alarms_sub">"Ponechat oznámení dokud není dokončeno nebo odloženo"</string>
     <string name="settings_fullscreen_alarms">"Budíky přes celou obrazovku"</string>
@@ -608,6 +611,7 @@ Děkujeme vám!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualizace widgetu"</string>
     <string name="widget_list_opacity_warning">"Poznámka: Toto je experimentální funkce! Změny snížení průhlednosti v barevném motivu se nemusí projevit okamžitě!"</string>
     <string name="widget_list_color_warning">"Poznámka: Toto je experimentální funkce! Změny v barevném motivu se neprojeví! Pro návrat k výchozímu nastavení systému, zvolte možnost bez barvy."</string>
+    <string name="widget_list_default_categories">"Nastavit výchozí kategorie pro nové položky z widgetu"</string>
     <string name="opacity">"Neprůhlednost"</string>
     <string name="general">"Obecné"</string>
     <string name="list_collapse">"Sbalit"</string>
@@ -666,4 +670,10 @@ Děkujeme vám!"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board potřebuje oprávnění k plánování přesných budíků, jinak může dojít ke zpoždění oznámení z budíků. Pro použití funkce udělte toto oprávnění."</string>
     <string name="call_contact">"Zavolat %1$s"</string>
     <string name="email_contact">"E-mail pro %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Hromadné vytvoření dílčích úkolů</string>
+    <string name="dialog_create_multiple_subnotes">Hromadné vytvoření propojených poznámek</string>
+    <string name="dialog_detected_multiple_subtasks">Text pravděpodobně obsahuje více dílčích úkolů. Chcete vytvořit %d dílčích úkolů?</string>
+    <string name="dialog_detected_multiple_subnotes">Text pravděpodobně obsahuje více propojených poznámek. Chcete vytvořit %d propojených poznámek?</string>
+    <string name="dialog_confirm_create_multiple">Vytvořit více pložek</string>
+    <string name="dialog_confirm_create_single">Vytvořit jednu položku</string>
 </resources>
