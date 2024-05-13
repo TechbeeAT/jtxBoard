@@ -19,6 +19,7 @@
     <string name="longitude">"Zeměpisná délka"</string>
     <string name="unlink">"Zrušit propojení"</string>
     <string name="off">"Vypnuto"</string>
+    <string name="location_permission_denied">"Oprávnění k poloze zamítnuto"</string>
     <string name="permissions">"Oprávnění"</string>
     <string name="current_location">"Současná poloha"</string>
     <string name="toolbar_text_add_journal">"Přidat Deník"</string>
