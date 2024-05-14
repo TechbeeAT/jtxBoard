@@ -821,7 +821,7 @@ fun DetailScreenContent(
                             initialGeoLat = iCalObject.geoLat,
                             initialGeoLong = iCalObject.geoLong,
                             initialGeofenceRadius = iCalObject.geofenceRadius,
-                            isEditMode = isEditMode.value,
+                            isReadOnly = collection?.readonly?:true,
                             onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
                                 if (newGeoLat != null && newGeoLong != null) {
                                     iCalObject.geoLat = newGeoLat

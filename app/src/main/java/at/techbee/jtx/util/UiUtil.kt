@@ -188,4 +188,10 @@ object UiUtil {
         println(color.toString() + " " + a*100)
         return a > 0.5
     }
+
+    /**
+     * @param double number to format
+     * @return the double number as a string with 5 decimals
+     */
+    fun doubleTo5DecimalString(double: Double?) = double?.let { String.format(Locale.getDefault(), "%.5f", it) }
 }
