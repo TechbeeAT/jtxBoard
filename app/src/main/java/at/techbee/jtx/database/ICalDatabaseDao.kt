@@ -126,7 +126,7 @@ interface ICalDatabaseDao {
      *
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_READONLY = 0 AND ($COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1 OR $COLUMN_COLLECTION_SUPPORTSVTODO = 1) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_READONLY = 0 AND ($COLUMN_COLLECTION_SUPPORTSVJOURNAL = true OR $COLUMN_COLLECTION_SUPPORTSVTODO = true) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllWriteableCollections(): LiveData<List<ICalCollection>>
 
     /**
@@ -581,10 +581,10 @@ interface ICalDatabaseDao {
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun updateCollection(collection: ICalCollection)
 
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:id)")
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = true, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = true WHERE $COLUMN_ID in (:id)")
     suspend fun updateToDeleted(id: Long, lastModified: Long)
 
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = true WHERE $COLUMN_ID = :id")
     suspend fun updateSetDirty(id: Long, lastModified: Long)
 
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SUBTASKS_EXPANDED = :isSubtasksExpanded, $COLUMN_SUBNOTES_EXPANDED = :isSubnotesExpanded, $COLUMN_ATTACHMENTS_EXPANDED = :isAttachmentsExpanded, $COLUMN_PARENTS_EXPANDED = :isParentsExpanded WHERE $COLUMN_ID = :id")
@@ -687,7 +687,7 @@ interface ICalDatabaseDao {
     @Query("SELECT $COLUMN_EXDATE from $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :originalId")
     fun getRecurExceptions(originalId: Long): String?
 
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_EXDATE = :exceptions, $COLUMN_DIRTY = 1, $COLUMN_LAST_MODIFIED = :lastUpdated, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1 WHERE $COLUMN_ID = :originalId")
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_EXDATE = :exceptions, $COLUMN_DIRTY = true, $COLUMN_LAST_MODIFIED = :lastUpdated, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1 WHERE $COLUMN_ID = :originalId")
     fun setRecurExceptions(
         originalId: Long,
         exceptions: String?,
@@ -815,8 +815,8 @@ interface ICalDatabaseDao {
         if (id == 0L)
             return // do nothing, the item was never saved in DB
 
-        val item = getSync(id)
-            ?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
+        // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
+        val item = getSync(id) ?: return
         val children = getRelatedChildren(id)
         children.forEach { child ->
             deleteICalObjectWithChildren(
@@ -858,7 +858,7 @@ interface ICalDatabaseDao {
 
     @Transaction
     suspend fun moveToCollection(iCalObjectIds: List<Long>, newCollectionId: Long): List<Long> {
-            val newEntries = mutableListOf<Long>()
+        val newEntries = mutableListOf<Long>()
 
         iCalObjectIds.forEach { iCalObjectId ->
                 try {
@@ -1070,7 +1070,7 @@ interface ICalDatabaseDao {
             "$COLUMN_PERCENT = :progress, " +
             "$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
             "$COLUMN_LAST_MODIFIED = :lastModified, " +
-            "$COLUMN_DIRTY = 1 " +
+            "$COLUMN_DIRTY = true " +
             "WHERE $COLUMN_ID = :id")
     suspend fun updateProgressNotSync(id: Long, progress: Int?, lastModified: Long = System.currentTimeMillis())
 
@@ -1078,7 +1078,7 @@ interface ICalDatabaseDao {
             "$COLUMN_PERCENT = :progress, " +
             "$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
             "$COLUMN_LAST_MODIFIED = :lastModified, " +
-            "$COLUMN_DIRTY = 1, " +
+            "$COLUMN_DIRTY = true, " +
             "$COLUMN_STATUS = :status, " +
             "$COLUMN_COMPLETED = :completed " +
             "WHERE $COLUMN_ID = :id")
@@ -1149,7 +1149,7 @@ interface ICalDatabaseDao {
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET " +
             "$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
             "$COLUMN_LAST_MODIFIED = :lastModified, " +
-            "$COLUMN_DIRTY = 1 " +
+            "$COLUMN_DIRTY = true " +
             "WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL")
     suspend fun makeSeriesDirty(uid: String, lastModified: Long = System.currentTimeMillis())
 
