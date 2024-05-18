@@ -48,7 +48,7 @@ android {
         }
 
         //don't forget to update locales_config.xml when changing the languages!
-        def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu", "vi"]
+        def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu", "vi", "sv"]
         buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         resourceConfigurations += locales
 
