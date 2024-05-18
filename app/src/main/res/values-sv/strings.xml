@@ -506,5 +506,7 @@
     <string name="geofence_radius_meter">"Radie %1$d m"</string>
     <string name="geofence_radius_feet">"Radie %1$d ft"</string>
     <string name="geofence_selection">"Geostaket: %1$s"</string>
+    <string name="geofence_options">"Geostaket-alternativ"</string>
+    <string name="geofence_notification_summary">"Geostaket aktiverat"</string>
     <string name="call_contact">"Ring %1$s"</string>
 </resources>
