@@ -887,7 +887,7 @@ fun DetailScreenContent(
                             icalObject = iCalObject,
                             seriesInstances = seriesInstances.value,
                             seriesElement = seriesElement,
-                            isEditMode = isEditMode.value,
+                            isReadOnly = collection?.readonly ?: true,
                             hasChildren = subtasks.value.isNotEmpty() || subnotes.value.isNotEmpty(),
                             onRecurUpdated = { updatedRRule ->
                                 iCalObject.rrule = updatedRRule?.toString()

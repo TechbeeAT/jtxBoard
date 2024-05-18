@@ -90,6 +90,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"The first line is interpreted as summary, the rest as description. Hashtags are interpreted as categories (eg #category)."</string>
     <string name="list_item_recurring">"Recurring entry"</string>
     <string name="list_item_edited_recurring">"Edited recurring entry"</string>
+    <string name="list_item_remove_recurrence">"Remove recurrence"</string>
     <string name="list_scroll_to_top">"Scroll to top"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"App Permission"</string>
@@ -451,6 +452,7 @@ Thank you!"</string>
     <string name="details_entry_could_not_be_loaded">"This entry was either deleted in the background or could not be loaded."</string>
     <string name="details_attachment_beta_info">"* Synchronizing attachments is an experimental feature. We strongly encourage to use only small attachments (up to 100 KB) as larger ones could lead to long synchronization times and unexpected behaviour."</string>
     <string name="details_unchanged_part_of_series">"This entry is part of a series. This entry will copy any changes made for the series."</string>
+    <string name="recur_not_set">"No reccurrence rule set."</string>
     <string name="details_changed_part_of_series">"This entry is part of a series but was changed. This entry will not be affected by changes of the series."</string>
     <string name="details_series_attention_subentries">"Attention: Series-elements mirror the subtasks and linked notes from the series. If you would like to change subtasks and linked notes only for a series-element, please unlink it from the series first."</string>
     <string name="details_go_to_series">"Go to series"</string>
