@@ -202,6 +202,7 @@
     <string name="edit">"Redigera"</string>
     <string name="reset">"Återställ"</string>
     <string name="apply">"Tillämpa"</string>
+    <string name="not_available_abbreviation">"i.u."</string>
     <string name="collection">"Samling"</string>
     <string name="collection_owner_displayname">"Ägare: %1$s"</string>
     <string name="link_to_parent">"Länka till förälder"</string>
@@ -308,6 +309,7 @@
     <string name="list_without_start_date">"Utan startdatum"</string>
     <string name="list_without_due_date">"Utan förfallodatum"</string>
     <string name="list_without_completed_date">"Utan datum för slutförande"</string>
+    <string name="list_show_only_search_matching_subentries">"Visa endast sökresultat som matchar underposter"</string>
     <string name="filter_order_by">"Sortera efter"</string>
     <string name="filter_asc">"Stigande"</string>
     <string name="filter_desc">"Fallande"</string>
@@ -322,6 +324,7 @@
     <string name="filter_options_more_entries">"Mer (%1$d)"</string>
     <string name="filter_options_less_entries">"Mindre"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Klicka på den samling till vilken posten/posterna ska läggas till!"</string>
+    <string name="collections_snackbar_x_items_added">"%1$d tillagda, %2$d hoppades över. (Exklusiva instanser av återkommande poster.)"</string>
     <string name="collections_toast_x_items_added">"%1$d poster tillagda!"</string>
     <string name="menu_collection_popup_import_from_ics">"Importera från .ics"</string>
     <string name="menu_collection_popup_import_from_textfile">"Importera från textfil"</string>
@@ -425,6 +428,7 @@ Tack!"</string>
     <string name="details_link_existing_parent_dialog_title">"Länka föräldrar"</string>
     <string name="details_link_existing_subentry_dialog_info">"Välj de underposter som ska länkas."</string>
     <string name="details_link_existing_parent_dialog_info">"Välj en föräldrapost som ska länkas."</string>
+    <string name="details_app_bar_behaviour">"Appens beteende"</string>
     <string name="details_show_all_options">"Visa alla alternativ"</string>
     <string name="details_show_hide_elements">Visa/dölj element</string>
     <string name="details_attendees_processing_info">"Observera: Servrar kan automatiskt hantera deltagare t.ex. genom att skicka iMIP-meddelanden."</string>
@@ -441,6 +445,7 @@ Tack!"</string>
     <string name="details_detach_all_instances">"Koppla bort alla instanser"</string>
     <string name="details_show_all_instances">"Visa alla instanser (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Ta bort länk till förälder"</string>
+    <string name="dialog_unlink_from_parent_message">"Ta bort underpost-relationen? Posten kommer att finnas kvar som en självständig post."</string>
     <string name="edit_comment">"Redigera kommentar"</string>
     <string name="edit_subnote_add_helper">"Lägg till en underanteckning"</string>
     <string name="edit_subtask">"Redigera underaktivitet"</string>
@@ -513,6 +518,7 @@ Tack!"</string>
     <string name="settings_attention_experimental_feature">"Observera: Detta är en experimentell funktion"</string>
     <string name="settings_create_with_current_location">"Skapa nya poster med nuvarande plats"</string>
     <string name="settings_create_with_current_location_sub">"Vänligen ge åtkomst till din plats medan du använder den här appen för att använda den här funktionen."</string>
+    <string name="settings_sticky_alarms">"Fasta alarm"</string>
     <string name="settings_sticky_alarms_sub">"Behåll aviseringar tills de är klara eller uppskjutna"</string>
     <string name="settings_fullscreen_alarms">"Helskärmsalarm"</string>
     <string name="settings_fullscreen_alarms_sub">"Visar alarm i helskärm när enheten är låst"</string>
@@ -608,6 +614,8 @@ Tack!"</string>
     <string name="widget_list_color_warning">"Obs: Detta är en experimentell funktion! Ändringar i färgtemat kommer inte att återspeglas! Välj ingen färg att återgå till systemstandard."</string>
     <string name="widget_list_default_categories">"Ange standardkategorier för nya poster från widgeten"</string>
     <string name="opacity">"Opacitet"</string>
+    <string name="general">"Allmänt"</string>
+    <string name="list_collapse">"Fäll ihop"</string>
     <string name="edit_recur_second">"sekund(er)"</string>
     <string name="edit_recur_minute">"minut(er)"</string>
     <string name="edit_recur_hour">"timma(r)"</string>
