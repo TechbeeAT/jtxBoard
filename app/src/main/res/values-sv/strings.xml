@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board synkar Dagboksanteckningar, Anteckningar &amp; Uppgifter"</string>
     <string name="app_permission_desc">"synkronisera innehåll i jtx Board med hjälp av andra program, som DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
@@ -17,9 +18,11 @@
     <string name="latitude">"Latitud"</string>
     <string name="longitude">"Longitud"</string>
     <string name="unlink">"Ta bort länk"</string>
+    <string name="off">"Av"</string>
     <string name="location_permission_denied">"Platsbehörighet nekad"</string>
     <string name="permissions">"Behörigheter"</string>
     <string name="current_location">"Nuvarande plats"</string>
+    <string name="toolbar_text_add_journal">"Lägg till Dagboksanteckning"</string>
     <string name="toolbar_text_add_note">"Lägg till Anteckning"</string>
     <string name="toolbar_text_add_task">"Lägg till Uppgift"</string>
     <string name="toast_sync_requested">"Synkronisering begärd"</string>
@@ -41,9 +44,12 @@
     <string name="attendee_role_optional_participant">"Frivillig deltagare"</string>
     <string name="attendee_role_non_participant">"Icke-deltagare / Info"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Öppna navigationspanel"</string>
+    <string name="navigation_drawer_close">"Stäng navigationspanel"</string>
     <string name="navigation_drawer_board">"Tavla"</string>
     <string name="navigation_drawer_synchronization">"Synkronisering"</string>
     <string name="navigation_drawer_about">"Om / Licens"</string>
+    <string name="navigation_drawer_subtitle">"dagboksanteckningar, anteckningar &amp; uppgifter"</string>
     <string name="navigation_drawer_settings">"Inställningar"</string>
     <string name="navigation_drawer_news_updates">"Nyheter &amp; uppdateringar"</string>
     <string name="navigation_drawer_external_links">"Externa länkar"</string>
@@ -65,6 +71,7 @@
     <string name="list_start_tomorrow">"Börjar i morgon"</string>
     <string name="list_start_inXhours">"Planerad start om %d timmar"</string>
     <string name="list_start_on_weekday">"Planerad start på %s"</string>
+    <string name="list_tabitem_journals">"Dagboksanteckningar"</string>
     <string name="list_tabitem_notes">"Anteckningar"</string>
     <string name="list_tabitem_todos">"Uppgifter"</string>
     <string name="list_expand">"Expandera"</string>
@@ -72,11 +79,16 @@
     <string name="list_dialog_delete_selected_message">Denna åtgärd tar bort alla markerade poster (%1$d). Är du säker på att du vill fortsätta? Denna åtgärd kan inte ångras!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Sammanfattning/Beskrivning"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"Första raden tolkas som sammanfattning, resten som beskrivning. Hashtags tolkas som kategorier (t. ex. #kategori)."</string>
+    <string name="list_item_recurring">"Återkommande post"</string>
+    <string name="list_item_edited_recurring">"Redigerade återkommande post"</string>
     <string name="list_scroll_to_top">"Skrolla till toppen"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Appbehörighet"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board behöver behörigheten för att spela in ljud eller använda tal-till-text-funktioner. För att använda denna funktion, vänligen ge denna behörighet."</string>
+    <string name="view_reccurrence_note_is_exception">"Detta objekt är ett undantag från en återkommande post."</string>
+    <string name="view_feedback_linked_notes">"Återkoppling / Länkade anteckningar"</string>
     <string name="view_subtask_of">"Deluppgift av"</string>
+    <string name="view_linked_note_of">"Länkad anteckning hos"</string>
     <string name="view_add_audio_note">"Lägg till ljud"</string>
     <string name="view_created_text">"Skapad: %1$s"</string>
     <string name="view_last_modified_text">"Senast ändrad: %1$s"</string>
@@ -96,7 +108,9 @@
     <string name="edit_recur_on_weekday">"på"</string>
     <string name="edit_recur_on_the_x_day_of_month">"på den"</string>
     <string name="edit_recur_x_day_of_the_month">"dagen i månaden"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"sista"</string>
     <string name="edit_recur_x_times">"gånger"</string>
+    <string name="edit_recur_toast_requires_start_date">"Återkomst kräver att ett startdatum är satt!"</string>
     <string name="edit_datepicker_dialog_select_date">"Välj datum"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Välj datumspann"</string>
     <string name="edit_datepicker_dialog_add_time">"Lägg till tid"</string>
@@ -111,25 +125,31 @@
     <string name="edit_dialog_sure_to_discard_message">"Är du säker på att du vill kasta denna post? Denna post kommer inte att sparas."</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Förfallodatumet kan inte vara före startdatumet."</string>
     <string name="edit_fragment_app_permission">"Appbehörighet"</string>
+    <string name="edit_fragment_app_permission_message">"jtx Board kan föreslå Deltagar-data baserat på dina kontakter som indatavärden för dina poster. Läsbehörighet för dina kontakter behövs för att aktivera den här funktionen."</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Översättningar"</string>
     <string name="about_tabitem_libraries">"Bibliotek"</string>
+    <string name="about_tabitem_contributors">"Bidragsgivare"</string>
     <string name="about_special_thanks">"Särskilt tack till"</string>
     <string name="about_app_version">"Version: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Kodnamn: %1$s"</string>
     <string name="about_app_build_date">"Kompilerad %s"</string>
+    <string name="about_app_terms">"Allmänna villkor"</string>
     <string name="about_thanks_ffg">"Särskilt tack till FFG för deras förtroende och ekonomiska stöd för att förverkliga detta projekt."</string>
     <!-- menus -->
     <string name="menu_list_gotodate">"Gå till datum"</string>
+    <string name="menu_list_quick_journal">"Snabb Dagboksanteckning"</string>
     <string name="menu_list_quick_note">"Snabb Anteckning"</string>
     <string name="menu_list_quick_todo">"Snabb Uppgift"</string>
     <string name="menu_view_share_ics">"Dela som .ics"</string>
+    <string name="menu_view_copy_as_journal">"Kopiera som Dagboksanteckning"</string>
     <string name="menu_view_copy_as_todo">"Kopiera som Uppgift"</string>
     <string name="menu_view_copy_as_note">"Kopiera som Anteckning"</string>
     <string name="menu_view_copy_item">"Skapa kopia"</string>
     <string name="notification_channel_alarms_name">"Alarm"</string>
     <string name="notification_channel_geofences_name">"Geostaket"</string>
     <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">"Lägg till Dagboksanteckning"</string>
     <string name="shortcut_addNote_longLabel">"Lägg till Anteckning"</string>
     <string name="shortcut_addTodo_longLabel">"Lägg till Uppgift"</string>
     <!-- Settings fragment -->
@@ -142,6 +162,8 @@
     <string name="sync_with_sync_app_heading">"Synkronisera med %1$s"</string>
     <string name="sync_basic_info">"jtx Board tillhandahåller inte själv serversynkronisering, men stöder synkronisering via DAVx⁵. Denna metod låter dig använda valfri kompatibel CalDAV-server för att lagra, säkerhetskopiera och synkronisera dina data."</string>
     <string name="sync_ksync_basic_info">"kSync är en app baserad på DAVx⁵ utvecklad av Infomaniak speciellt för deras tjänster. Medan DAVx⁵ är öppen för alla kompatibla CalDAV-servrar, är det med kSync bara möjligt att synkronisera Infomaniak-konton."</string>
+    <string name="sync_manageddavx5_basic_info">"Managed DAVx⁵ gör funktionaliteten i DAVx⁵ tillgänglig för organisationer och kommer med ytterligare företagsfunktioner som massidriftsättning, förseende med företagets varumärke och förkonfigurerbara inställningar."</string>
+    <string name="sync_congratulations">"Grattis! :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"Vi har hittat %1$s på din telefon."</string>
     <string name="sync_setup_instructions">"Installationsinstruktioner"</string>
     <string name="sync_check_out_sync_app">"Kolla in %1$s!"</string>
@@ -156,19 +178,26 @@
     <string name="donate_donate_with">"Donera med"</string>
     <string name="donate_other_donation_methods">"Om du vill överväga någon annan donationsmetod, vänligen besök vår webbplats:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Ingen app hittades för att öppna denna fil/URL."</string>
+    <string name="toast_item_is_now_recu_exception">"Återkommande objekt är nu ett undantag."</string>
     <string name="toast_done_tasks_deleted">"Slutförda uppgifter borttagna (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Tack till"</string>
+    <string name="about_translations_basic_info">"jtx Board är en öppen källkods-app som uppskattar deltagandet och bidragen från öppen källkod-gemenskapen. På denna sida skulle vi vilja uppmärksamma gemenskapens medlemmars översättningsinsatser."</string>
     <string name="about_translations_contribution_info">"Om du vill redigera/lägga till översättningar eller lägga till nya språk i den här appen, gå gärna med i jtx Board-projektet på översättningsplattformen Crowdin:"</string>
     <string name="about_translations_contribution_button">"Gå med på Crowdin.com"</string>
+    <string name="list_welcome_entry_journal_summary">"Grattis, detta är din första dagboksanteckning :-)"</string>
+    <string name="list_welcome_entry_journal_description">"Dagboksanteckningar kan användas för att föra anteckningar för ett specifikt datum. Använd denna funktionalitet för t. ex. protokoll, minnesanteckningar från möten, föra dagbok o. s. v. Om du redigerar denna post kommer du att få möjligheten att lägga till kategorier, deltagare, bilagor, … Ta gärna bort denna post när du känner för det!"</string>
     <string name="list_welcome_entry_note_summary">"Grattis, detta är din första anteckningspost :-)"</string>
+    <string name="list_welcome_entry_note_description">"Anteckningar är traditionella anteckningar och inte bundna till ett specifikt datum. Som med dagboksanteckningar kan du lägga till bilagor, deltagare och mer när du redigerar eller lägger till en post. Förresten kan du också lägga till deluppgifter till alla poster, oavsett om det är en dagboksanteckning, anteckning eller uppgift!"</string>
     <string name="list_welcome_entry_todo_summary">"Grattis, detta är din första uppgiftspost :-)"</string>
+    <string name="list_welcome_entry_todo_description">"Utöver vad dagboksanteckningar och anteckningar kan ha, kan uppgifter också ha en planerad start, en förfallotid och ett datum för slutförandet. De kan markeras som slutförda och man kan ange hur stor del av en uppgift som är slutförd. Redigera denna post för att kolla in alla alternativ :-)"</string>
     <string name="list_welcome_category">"#FörstaSteg"</string>
     <string name="save_and_edit">"Spara &amp; redigera"</string>
     <string name="save_and_new">"Spara &amp; ny"</string>
     <string name="save_and_close">"Spara &amp; stäng"</string>
     <string name="list_quickadd_add_audio_attachment">"Spela in ljudbilaga"</string>
     <!-- Permissions -->
+    <string name="intent_dialog_title">"Lägg till innehåll i en dagboksanteckning, anteckning eller uppgift?"</string>
     <string name="add">"Lägg till"</string>
     <string name="edit">"Redigera"</string>
     <string name="reset">"Återställ"</string>
@@ -194,13 +223,18 @@
     <string name="alarms_hours">"Timma(r)"</string>
     <string name="alarms_days">"Dag(ar)"</string>
     <!-- fragment_collections -->
+    <string name="collections_journals_num">"Dagboksanteckningar: %1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Anteckningar: %1$s"</string>
     <string name="collections_tasks_num">"Uppgifter: %1$s"</string>
+    <string name="collections_info">"Samlingar är en ansamling poster, som kan liknas med mappar med filer. Du ska skapa nya, lokala samlingar genom menyn eller, om du har en synk-app installerat (t.ex. DAVx⁵), konfigurera synkronisering av nya fjärrsamlingar."</string>
+    <string name="collections_collection_menu">"Menyn för Samlingar"</string>
     <string name="collections_dialog_add_local_collection_title">"Lägg till lokal Samling"</string>
     <string name="collections_dialog_edit_local_collection_title">"Redigera lokal Samling"</string>
     <string name="collections_dialog_delete_local_title">"Ta bort \"%1$s\"?"</string>
+    <string name="collections_dialog_delete_local_message">"Borttagning av en samling raderar också alla dagboksanteckningar, anteckningar och uppgifter i denna samling. Detta kan inte ångras. Är du säker på att du vill fortsätta?"</string>
     <string name="menu_collections_add_local">"Lägg till lokal Samling"</string>
+    <string name="navigation_drawer_website_news">"Nyheter &amp; Kommentarer till utgåvan"</string>
     <string name="color">"Färg"</string>
     <string name="priority_0_no_priority">"Ingen prioritet"</string>
     <string name="priority_1_highest">"1 - Högsta"</string>
@@ -213,10 +247,12 @@
     <string name="edit_recur_week">"vecka/-or"</string>
     <string name="edit_recur_month">"månad(er)"</string>
     <string name="edit_recur_year">"år"</string>
+    <string name="attachment_export_saved_successfully">"Sparades"</string>
     <string name="attachment_export_error_error_occurred">"Ett fel inträffade vid sparandet av filen!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Lägg till Fjärrsamling (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Visa i %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Exportera som .ics"</string>
+    <string name="journal">"Dagboksanteckningar"</string>
     <string name="note">"Anteckning"</string>
     <string name="task">"Uppgift"</string>
     <string name="account">"Konto"</string>
@@ -225,23 +261,30 @@
     <string name="category">"Kategori"</string>
     <string name="resource">"Resurs"</string>
     <string name="priority">"Prioritet"</string>
+    <string name="readyonly">"Skrivskyddad"</string>
     <string name="upload_pending">"Uppladdning väntar"</string>
     <string name="url">"URL"</string>
     <string name="location">"Plats"</string>
     <string name="attendees">"Deltagare"</string>
     <string name="resources">"Resurser"</string>
+    <string name="organizer">"Arrangör"</string>
+    <string name="contact">"Kontakt"</string>
+    <string name="relatedto">"Relaterad till"</string>
     <string name="comments">"Kommentarer"</string>
     <string name="attachments">"Bilagor"</string>
     <string name="alarms">"Alarm"</string>
+    <string name="recurrence">"Återkomst"</string>
     <string name="recurrence_exceptions">"Undantag"</string>
     <string name="recurrence_additions">"Tillägg"</string>
     <string name="summary">"Sammanfattning"</string>
     <string name="description">"Beskrivning"</string>
     <string name="search">"Sök"</string>
+    <string name="search_journals">Sök i dagboksanteckningar</string>
     <string name="search_notes">Sök i anteckningar</string>
     <string name="search_todos">Sök i uppgifter</string>
     <string name="filter">"Filter"</string>
     <string name="visibility">"Synlighet"</string>
+    <string name="order">"Ordning"</string>
     <string name="sync_now">"Synkronisera nu"</string>
     <string name="due">"Förfallotid"</string>
     <string name="completed">"Slutförda"</string>
@@ -258,9 +301,13 @@
     <string name="view_share_part_of_series">"Denna post är en del av en serie."</string>
     <string name="view_share_repeats">"Denna post upprepas varje"</string>
     <string name="collections_dialog_move_title">"Flytta alla poster från \"%1$s\" till"</string>
+    <string name="collection_dialog_move_info">"Observera: Endast skrivbara samlingar och samlingar med stöd för samma komponenter (Dagboksanteckningar, Anteckningar, Uppgifter) kan väljas."</string>
     <string name="menu_collections_popup_move_entries">"Flytta poster"</string>
+    <string name="setting_no_time">"Ingen tid"</string>
+    <string name="list_no_dates_set">"Inga datum satta"</string>
     <string name="list_without_start_date">"Utan startdatum"</string>
     <string name="list_without_due_date">"Utan förfallodatum"</string>
+    <string name="list_without_completed_date">"Utan datum för slutförande"</string>
     <string name="filter_order_by">"Sortera efter"</string>
     <string name="filter_asc">"Stigande"</string>
     <string name="filter_desc">"Fallande"</string>
@@ -278,6 +325,7 @@
     <string name="collections_toast_x_items_added">"%1$d poster tillagda!"</string>
     <string name="menu_collection_popup_import_from_ics">"Importera från .ics"</string>
     <string name="menu_collection_popup_import_from_textfile">"Importera från textfil"</string>
+    <string name="notification_done">"Slutförd"</string>
     <string name="notification_add_1h">"+ 1 timme"</string>
     <string name="notification_add_1d">"+ 1 dag"</string>
     <string name="edit_recur_ends_never">"slutar aldrig"</string>
@@ -301,12 +349,18 @@
     <string name="settings_protect_biometric_private_confidential">"Privata &amp; konfidentiella"</string>
     <string name="settings_protect_biometric_confidential">"Konfidentiella"</string>
     <string name="settings_protect_biometric_all">"Alla"</string>
+    <string name="settings_protect_biometric_info_on_settings_unlock">"Vänligen autentisera för att ändra denna inställning!"</string>
+    <string name="settings_protect_biometric_info_on_unlock">"Vänligen autentisera för att visa skyddade poster!"</string>
+    <string name="settings_timezone_display">"Välj hur tid med tidszon ska visas"</string>
     <string name="settings_timezone_display_local">"Visa tid i lokal tidszon"</string>
     <string name="settings_timezone_display_original">"Visa tid i ursprunglig tidszon"</string>
     <string name="settings_timezone_display_local_and_original">"Visa tid i lokal och i ursprunglig tidszon (endast detaljvy)"</string>
     <string name="settings_font">"Typsnitt"</string>
     <string name="donate_dialog_title">"Gillar du jtx Board?"</string>
+    <string name="donate_dialog_message">"Utvecklingen av en app är ett komplext ämne och utveckling, underhåll och stöd är hårt arbete. Om du gillar den här appen och om du vill säkerställa en fortlöpande utveckling, överväg att göra en donation :-)
+Tack!"</string>
     <!-- Buy Pro fragment -->
+    <string name="buypro_text">"Utvecklingen av en app är ett komplext ämne och utveckling, underhåll och stöd är hårt arbete. Om du skulle vilja använda Pro-funktioner eller stödja vårt projekt kan du göra följande köp i appen:"</string>
     <string name="buypro_purchase_header">"Uppgradera till jtx Board Pro"</string>
     <string name="buypro_purchase_date">"Köpt %1$s"</string>
     <string name="buypro_order_id">"Order-ID: %1$s"</string>
