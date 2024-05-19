@@ -462,6 +462,7 @@ Thank you!"</string>
     <string name="dialog_unlink_from_parent_title">"Unlink from parent"</string>
     <string name="dialog_unlink_from_parent_message">"Remove the relation as a sub-entry? The entry will remain as a standalone entry."</string>
     <string name="edit_comment">"Edit comment"</string>
+    <string name="add_comment">"Add comment"</string>
     <string name="edit_subnote_add_helper">"Add a subnote"</string>
     <string name="edit_subtask">"Edit subtask"</string>
     <string name="edit_subnote">"Edit subnote"</string>

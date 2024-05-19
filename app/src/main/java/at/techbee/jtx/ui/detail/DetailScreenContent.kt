@@ -842,7 +842,7 @@ fun DetailScreenContent(
                     if(comments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] == true || showAllOptions))) {
                         DetailsCardComments(
                             comments = comments,
-                            isEditMode = isEditMode.value,
+                            isReadOnly = collection?.readonly?:true,
                             onCommentsUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                             },

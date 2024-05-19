@@ -53,7 +53,7 @@ fun DetailsCardUrl(
 
     val headline = stringResource(id = R.string.url)
     var url by rememberSaveable { mutableStateOf(initialUrl) }
-    val isValidURL = url.isNotEmpty() && UiUtil.isValidURL(url)
+    val isValidURL = UiUtil.isValidURL(url)
     val uriHandler = LocalUriHandler.current
     val focusRequester = remember { FocusRequester() }
 
@@ -85,7 +85,7 @@ fun DetailsCardUrl(
                         .focusRequester(focusRequester)
                 )
 
-                AnimatedVisibility(!isValidURL) {
+                AnimatedVisibility(!isReadOnly && url.isNotBlank() && !isValidURL) {
                     Text(
                         text = stringResource(id = R.string.invalid_url_message),
                         style = MaterialTheme.typography.labelSmall,
@@ -128,11 +128,11 @@ fun DetailsCardUrl_Preview() {
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardUrl_Preview_edit() {
+fun DetailsCardUrl_Preview_emptyUrl() {
     MaterialTheme {
         DetailsCardUrl(
-            initialUrl = "www.bitfire.at",
-            isReadOnly = true,
+            initialUrl = "",
+            isReadOnly = false,
             onUrlUpdated = {  }
         )
     }
@@ -145,7 +145,7 @@ fun DetailsCardUrl_Preview_invalid_URL() {
     MaterialTheme {
         DetailsCardUrl(
             initialUrl = "invalid url",
-            isReadOnly = true,
+            isReadOnly = false,
             onUrlUpdated = {  }
         )
     }

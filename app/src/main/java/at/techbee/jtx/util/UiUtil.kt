@@ -25,11 +25,11 @@ import java.util.regex.Matcher
 object UiUtil {
 
     fun isValidURL(urlString: String?): Boolean {
-        return PatternsCompat.WEB_URL.matcher(urlString.toString()).matches()
+        return !urlString.isNullOrEmpty() && PatternsCompat.WEB_URL.matcher(urlString).matches()
     }
 
     fun isValidEmail(emailString: String?): Boolean {
-        return emailString?.isNotEmpty() == true && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()
+        return !emailString.isNullOrEmpty() && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()
     }
 
 
