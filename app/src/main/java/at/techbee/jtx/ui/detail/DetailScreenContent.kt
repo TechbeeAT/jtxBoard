@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
 import androidx.compose.material.icons.automirrored.outlined.NavigateNext
@@ -30,9 +28,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -49,24 +45,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -99,9 +85,7 @@ import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
-import com.arnyminerz.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
-import org.apache.commons.lang3.StringUtils
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -217,22 +201,26 @@ fun DetailScreenContent(
     }
 
     val color = rememberSaveable { mutableStateOf(iCalObject.color) }
-    var summary by rememberSaveable { mutableStateOf(iCalObject.summary ?:"") }
-    var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(iCalObject.description ?: "")) }
+    //var summary by rememberSaveable { mutableStateOf(iCalObject.summary ?:"") }
+    //var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(iCalObject.description ?: "")) }
 
 
     // make sure the values get propagated in the iCalObject again when the orientation changes
+    /*
     if(iCalObject.summary != summary.ifEmpty { null } || iCalObject.description != description.text.ifEmpty { null } || iCalObject.color != color.value) {
         iCalObject.summary = summary.ifEmpty { null }
         iCalObject.description = description.text.ifEmpty { null }
         iCalObject.color = color.value
     }
+     */
 
     // Apply Markdown on recomposition if applicable, then set back to OBSERVING
+    /* TODO
     if (markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
         description = markdownState.value.format(description)
         markdownState.value = MarkdownState.OBSERVING
     }
+     */
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val allPossibleCollections = allWriteableCollections.value.filter {
@@ -401,155 +389,33 @@ fun DetailScreenContent(
                     )
                 }
 
-                DetailsScreenSection.SUMMARYDESCRIPTION -> {
-                    if(!isEditMode.value && (summary.isNotBlank() || description.text.isNotBlank())) {
-                        SelectionContainer(modifier = detailElementModifier) {
-                            ElevatedCard(
-                                onClick = {
-                                    if (collection?.readonly == false)
-                                        isEditMode.value = true
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .testTag("benchmark:DetailSummary")
-                            ) {
-
-                                if (summary.isNotBlank())
-                                    Text(
-                                        summary.trim(),
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(8.dp),
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-
-                                if (description.text.isNotBlank()) {
-                                    if (detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false)
-                                        MarkdownText(
-                                            markdown = description.text.trim(),
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(8.dp),
-                                            style = TextStyle(
-                                                textDirection = TextDirection.Content,
-                                                fontFamily = LocalTextStyle.current.fontFamily
-                                                ),
-                                            onClick = {
-                                                if (collection?.readonly == false)
-                                                    isEditMode.value = true
-                                            }
-                                        )
-                                    else
-                                        Text(
-                                            text = description.text.trim(),
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(8.dp),
-                                        )
-                                }
-                            }
-                        }
-                    }
-
-                    if(isEditMode.value) {
-                        ElevatedCard(
-                            modifier = detailElementModifier
-                                .fillMaxWidth()
-                                .testTag("benchmark:DetailSummaryCardEdit")
-                        ) {
-
-                            if(summary.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] == true || showAllOptions) {
-                                OutlinedTextField(
-                                    value = summary,
-                                    onValueChange = {
-                                        summary = it
-                                        iCalObject.summary = it.ifEmpty { null }
-                                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                                    },
-                                    label = { Text(stringResource(id = R.string.summary)) },
-                                    keyboardOptions = KeyboardOptions(
-                                        capitalization = KeyboardCapitalization.Sentences,
-                                        keyboardType = KeyboardType.Text,
-                                        imeAction = ImeAction.Default
-                                    ),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                )
-                            }
-
-                            if(description.text.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] == true || showAllOptions) {
-                                OutlinedTextField(
-                                    value = description,
-                                    onValueChange = {
-
-                                        // START Create bulletpoint if previous line started with a bulletpoint
-                                        val enteredCharIndex =
-                                            StringUtils.indexOfDifference(it.text, description.text)
-                                        val enteredCharIsReturn =
-                                            enteredCharIndex >= 0
-                                                    && it.text.substring(enteredCharIndex)
-                                                .startsWith(System.lineSeparator())
-                                                    && it.text.length > description.text.length  // excludes backspace!
-
-                                        val before = it.getTextBeforeSelection(Int.MAX_VALUE)
-                                        val after =
-                                            if (it.selection.start < it.annotatedString.lastIndex) it.annotatedString.subSequence(
-                                                it.selection.start,
-                                                it.annotatedString.lastIndex + 1
-                                            ) else AnnotatedString("")
-                                        val lines = before.split(System.lineSeparator())
-                                        val previous =
-                                            if (lines.lastIndex > 1) lines[lines.lastIndex - 1] else before
-                                        val nextLineStartWith = when {
-                                            previous.startsWith("- [ ] ") || previous.startsWith("- [x]") -> "- [ ] "
-                                            previous.startsWith("* ") -> "* "
-                                            previous.startsWith("- ") -> "- "
-                                            else -> null
-                                        }
-
-                                        description =
-                                            if (description.text != it.text && (nextLineStartWith != null) && enteredCharIsReturn)
-                                                TextFieldValue(
-                                                    annotatedString = before.plus(
-                                                        AnnotatedString(
-                                                            nextLineStartWith
-                                                        )
-                                                    ).plus(after),
-                                                    selection = TextRange(it.selection.start + nextLineStartWith.length)
-                                                )
-                                            else
-                                                it
-                                        // END Create bulletpoint if previous line started with a bulletpoint
-
-                                        iCalObject.description = it.text.ifEmpty { null }
-                                        changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
-                                    },
-                                    label = { Text(stringResource(id = R.string.description)) },
-                                    keyboardOptions = KeyboardOptions(
-                                        capitalization = KeyboardCapitalization.Sentences,
-                                        keyboardType = KeyboardType.Text,
-                                        imeAction = ImeAction.Default
-                                    ),
-                                    minLines = 3,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp)
-                                        .onFocusChanged { focusState ->
-                                            if (
-                                                focusState.hasFocus
-                                                && markdownState.value == MarkdownState.DISABLED
-                                                && detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false
-                                            )
-                                                markdownState.value = MarkdownState.OBSERVING
-                                            else if (!focusState.hasFocus)
-                                                markdownState.value = MarkdownState.DISABLED
-                                        }
-                                )
-                            }
-                        }
-                    }
+                DetailsScreenSection.SUMMARY -> {
+                    DetailsCardSummary(
+                        initialSummary = iCalObject.summary,
+                        isReadOnly = collection?.readonly?:true,
+                        onSummaryUpdated = {
+                            iCalObject.summary = it
+                            changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                        },
+                        modifier = detailElementModifier.testTag("benchmark:DetailSummary")
+                    )
                 }
+
+                DetailsScreenSection.DESCRIPTION -> {
+                    DetailsCardDescription(
+                        initialDescription = iCalObject.description,
+                        isReadOnly = collection?.readonly?:true,
+                        onDescriptionUpdated = {
+                            iCalObject.description = it
+                            changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                        },
+                        markdownState = markdownState,
+                        isMarkdownEnabled = detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false,
+                        modifier = detailElementModifier
+                    )
+                }
+
+
 
                 DetailsScreenSection.PROGRESS -> {
                     if(iCalObject.module == Module.TODO.name) {

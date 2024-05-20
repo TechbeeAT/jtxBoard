@@ -176,7 +176,8 @@ fun DetailOptionsBottomSheet(
                                     enabled = when (setting) {
                                         DetailsScreenSection.COLLECTION -> true
                                         DetailsScreenSection.DATES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
-                                        DetailsScreenSection.SUMMARYDESCRIPTION -> true
+                                        DetailsScreenSection.SUMMARY -> true    //TODO
+                                        DetailsScreenSection.DESCRIPTION -> true //TODO
                                         DetailsScreenSection.PROGRESS -> module == Module.TODO
                                         DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false
                                         DetailsScreenSection.CATEGORIES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false

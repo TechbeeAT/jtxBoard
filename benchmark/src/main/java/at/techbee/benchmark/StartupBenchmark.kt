@@ -2,7 +2,9 @@ package at.techbee.benchmark
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.benchmark.macro.*
+import androidx.benchmark.macro.CompilationMode
+import androidx.benchmark.macro.StartupMode
+import androidx.benchmark.macro.StartupTimingMetric
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.uiautomator.By
@@ -13,7 +15,6 @@ import org.junit.runner.RunWith
 
 const val BENCHMARK_TAG_LISTCARD = "benchmark:ListCard"
 const val BENCHMARK_TAG_DETAILSUMMARY = "benchmark:DetailSummary"
-const val BENCHMARK_TAG_DETAILSUMMARYCARDEDIT = "benchmark:DetailSummaryCardEdit"
 
 /**
  * This is an example startup benchmark.
@@ -90,7 +91,6 @@ class StartupBenchmark {
         device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)
 
         device.findObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)).click()
-        device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARYCARDEDIT)), 30_000)
     }
 }
 

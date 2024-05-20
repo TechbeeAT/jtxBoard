@@ -138,7 +138,7 @@ fun DetailBottomAppBar(
             }
 
             // Icons for Markdown formatting
-            AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
+            AnimatedVisibility(markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -148,7 +148,7 @@ fun DetailBottomAppBar(
                     VerticalDivider(modifier = Modifier.height(40.dp))
                 }
             }
-            AnimatedVisibility(isEditMode.value && markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
+            AnimatedVisibility(markdownState.value != MarkdownState.DISABLED && markdownState.value != MarkdownState.CLOSED) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
