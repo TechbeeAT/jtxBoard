@@ -19,7 +19,7 @@
 buildscript {
 
     ext {
-        version_core = "1.13.0"
+        version_core = "1.13.1"
         version_coroutine = "1.8.1"
         version_appcompat = "1.6.1"
         version_gradle = '8.4.0'
