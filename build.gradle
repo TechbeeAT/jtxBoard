@@ -23,7 +23,7 @@ buildscript {
         version_coroutine = "1.8.1"
         version_appcompat = "1.6.1"
         version_gradle = '8.4.0'
-        version_kotlin = "1.9.23"
+        version_kotlin = "1.9.24"
         version_room = "2.6.1"
         version_work = "2.9.0"
         version_billing = "6.2.1"
@@ -58,7 +58,7 @@ buildscript {
 }
 
 plugins {
-    id 'com.google.devtools.ksp' version '1.9.23-1.0.20' apply false
+    id 'com.google.devtools.ksp' version '1.9.24-1.0.20' apply false
 }
 
 allprojects {
