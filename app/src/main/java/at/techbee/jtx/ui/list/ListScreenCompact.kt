@@ -62,6 +62,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -100,6 +101,7 @@ fun ListScreenCompact(
     onUpdateSortOrder: (List<ICal4List>) -> Unit
 ) {
 
+    val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
@@ -109,7 +111,7 @@ fun ListScreenCompact(
             val toIndex = indexOfFirst { it.id == to.key }
             add(toIndex, removeAt(fromIndex))
         }
-        onUpdateSortOrder(reordered)
+        ICalDatabase.getInstance(context).iCalDatabaseDao().updateSortOrder(reordered.map { it.id })
     }
     val scope = rememberCoroutineScope()
 

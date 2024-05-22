@@ -137,8 +137,9 @@ fun ListScreen(
                     onProgressChanged = { itemId, newPercent ->
                         processOnProgressChanged(itemId, newPercent)
                     },
-                    onSyncRequested = { listViewModel.syncAccounts() }
-                )
+                    onSyncRequested = { listViewModel.syncAccounts() },
+                    isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP
+                    )
             }
             ViewMode.COMPACT -> {
                 ListScreenCompact(

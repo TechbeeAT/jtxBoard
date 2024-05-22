@@ -62,6 +62,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -128,6 +129,7 @@ fun ListScreenList(
     val storedResources by storedResourcesLive.observeAsState(emptyList())
     val storedStatuses by storedStatusesLive.observeAsState(emptyList())
 
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
@@ -137,7 +139,7 @@ fun ListScreenList(
             val toIndex = indexOfFirst { it.id == to.key }
             add(toIndex, removeAt(fromIndex))
         }
-        onUpdateSortOrder(reordered)
+        ICalDatabase.getInstance(context).iCalDatabaseDao().updateSortOrder(reordered.map { it.id })
     }
     val pullToRefreshState = rememberPullToRefreshState(
         enabled = { isPullRefreshEnabled }

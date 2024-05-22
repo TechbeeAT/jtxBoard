@@ -47,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,6 +56,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -62,8 +64,11 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyStaggeredGridState
 
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -79,15 +84,25 @@ fun ListScreenGrid(
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
+    isListDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onSyncRequested: () -> Unit
 ) {
 
+    val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val gridState = rememberLazyStaggeredGridState()
+    val reorderableLazyListState = rememberReorderableLazyStaggeredGridState(gridState) { from, to ->
+        val reordered = list.map { it.iCal4List }.toMutableList().apply {
+            val fromIndex = indexOfFirst { it.id == from.key }
+            val toIndex = indexOfFirst { it.id == to.key }
+            add(toIndex, removeAt(fromIndex))
+        }
+        ICalDatabase.getInstance(context).iCalDatabaseDao().updateSortOrder(reordered.map { it.id })
+    }
     val scope = rememberCoroutineScope()
 
     val storedStatuses by storedStatusesLive.observeAsState(emptyList())
@@ -114,7 +129,9 @@ fun ListScreenGrid(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize().nestedScroll(pullToRefreshState.nestedScrollConnection),
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(pullToRefreshState.nestedScrollConnection),
         contentAlignment = Alignment.TopCenter
     ) {
 
@@ -123,7 +140,8 @@ fun ListScreenGrid(
             columns = StaggeredGridCells.Adaptive(150.dp),
             contentPadding = PaddingValues(8.dp),
             verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxSize()
         ) {
             items(
                 items = list,
@@ -135,31 +153,51 @@ fun ListScreenGrid(
                     subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
                         .map { it.iCal4List }
 
-                ListCardGrid(
-                    iCal4ListRelObject.iCal4List,
-                    storedCategories = storedCategories,
-                    storedStatuses = storedStatuses,
-                    selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
-                    progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                    markdownEnabled = markdownEnabled,
-                    player = player,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(jtxCardCornerShape)
-                        .combinedClickable(
-                            onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
-                            onLongClick = {
-                                if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                    onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
-                            }
-                        ),
-                    onProgressChanged = onProgressChanged,
-                )
+                ReorderableItem(
+                    state = reorderableLazyListState,
+                    key = iCal4ListRelObject.iCal4List.id
+                ) {
+
+                    ListCardGrid(
+                        iCal4ListRelObject.iCal4List,
+                        storedCategories = storedCategories,
+                        storedStatuses = storedStatuses,
+                        selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
+                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                        markdownEnabled = markdownEnabled,
+                        player = player,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(jtxCardCornerShape)
+                            .combinedClickable(
+                                onClick = {
+                                    onClick(
+                                        iCal4ListRelObject.iCal4List.id,
+                                        list.map { it.iCal4List },
+                                        iCal4ListRelObject.iCal4List.isReadOnly
+                                    )
+                                },
+                                onLongClick = {
+                                    if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                        onLongClick(
+                                            iCal4ListRelObject.iCal4List.id,
+                                            list.map { it.iCal4List })
+                                }
+                            ),
+                        onProgressChanged = onProgressChanged,
+                        dragHandle = {
+                            if(isListDragAndDropEnabled)
+                                DragHandleLazy(this)
+                        },
+                    )
+                }
             }
         }
 
         PullToRefreshContainer(
-            modifier = Modifier.align(Alignment.TopCenter).offset(y = (-30).dp),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .offset(y = (-30).dp),
             state = pullToRefreshState,
         )
 
@@ -174,7 +212,9 @@ fun ListScreenGrid(
                             scope.launch { gridState.scrollToItem(0) }
                         },
                         colors = ButtonDefaults.filledTonalButtonColors(),
-                        modifier = Modifier.padding(8.dp).alpha(0.33f)
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .alpha(0.33f)
                     ) {
                         Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
                     }
@@ -235,7 +275,8 @@ fun ListScreenGrid_TODO() {
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            isListDragAndDropEnabled = true
         )
     }
 }
@@ -291,7 +332,8 @@ fun ListScreenGrid_JOURNAL() {
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            onSyncRequested = { },
+            isListDragAndDropEnabled = false
         )
     }
 }

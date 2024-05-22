@@ -53,6 +53,7 @@ fun ListCardGrid(
     markdownEnabled: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
+    dragHandle:@Composable () -> Unit = { },
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
 ) {
     Card(
@@ -92,11 +93,13 @@ fun ListCardGrid(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
 
+                dragHandle()
+
                 if (iCalObject.summary?.isNotBlank() == true)
                     Text(
                         text = iCalObject.summary?.trim() ?: "",
                         textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
-                        maxLines = 4,
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
@@ -121,7 +124,7 @@ fun ListCardGrid(
                 if(markdownEnabled)
                     MarkdownText(
                         markdown = iCalObject.description?.trim() ?: "",
-                        maxLines = 4,
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -130,7 +133,7 @@ fun ListCardGrid(
                 else
                     Text(
                         text = iCalObject.description?.trim() ?: "",
-                        maxLines = 4,
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .fillMaxWidth()
