@@ -1149,7 +1149,7 @@ interface ICalDatabaseDao {
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET " +
             "$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
             "$COLUMN_LAST_MODIFIED = :lastModified, " +
-            "$COLUMN_DIRTY = true " +
+            "$COLUMN_DIRTY = 1 " +
             "WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL")
     suspend fun makeSeriesDirty(uid: String, lastModified: Long = System.currentTimeMillis())
 
