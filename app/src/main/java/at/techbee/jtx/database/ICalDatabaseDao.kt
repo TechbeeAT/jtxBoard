@@ -1070,7 +1070,7 @@ interface ICalDatabaseDao {
             "$COLUMN_PERCENT = :progress, " +
             "$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
             "$COLUMN_LAST_MODIFIED = :lastModified, " +
-            "$COLUMN_DIRTY = true " +
+            "$COLUMN_DIRTY = 1 " +
             "WHERE $COLUMN_ID = :id")
     suspend fun updateProgressNotSync(id: Long, progress: Int?, lastModified: Long = System.currentTimeMillis())
 
@@ -1078,7 +1078,7 @@ interface ICalDatabaseDao {
             "$COLUMN_PERCENT = :progress, " +
             "$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
             "$COLUMN_LAST_MODIFIED = :lastModified, " +
-            "$COLUMN_DIRTY = true, " +
+            "$COLUMN_DIRTY = 1, " +
             "$COLUMN_STATUS = :status, " +
             "$COLUMN_COMPLETED = :completed " +
             "WHERE $COLUMN_ID = :id")
