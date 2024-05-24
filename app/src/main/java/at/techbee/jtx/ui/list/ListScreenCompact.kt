@@ -62,6 +62,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -73,7 +74,7 @@ import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
-import sh.calvin.reorderable.rememberReorderableLazyColumnState
+import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.util.UUID
 
 
@@ -100,16 +101,17 @@ fun ListScreenCompact(
     onUpdateSortOrder: (List<ICal4List>) -> Unit
 ) {
 
+    val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
-    val reorderableLazyListState = rememberReorderableLazyColumnState(listState) { from, to ->
+    val reorderableLazyListState = rememberReorderableLazyListState(listState) { from, to ->
         val reordered = groupedList.flatMap { it.value }.map { it.iCal4List }.toMutableList().apply {
             val fromIndex = indexOfFirst { it.id == from.key }
             val toIndex = indexOfFirst { it.id == to.key }
             add(toIndex, removeAt(fromIndex))
         }
-        onUpdateSortOrder(reordered)
+        ICalDatabase.getInstance(context).iCalDatabaseDao().updateSortOrder(reordered.map { it.id })
     }
     val scope = rememberCoroutineScope()
 

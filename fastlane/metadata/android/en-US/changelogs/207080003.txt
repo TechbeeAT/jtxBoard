@@ -1,0 +1,4 @@
+- Drag & Drop is now possible in grid view
+- Version updates
+- Bugfixes
+- Fixes crash on start for older Android versions
