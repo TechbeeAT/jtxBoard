@@ -135,10 +135,32 @@
     <string name="about_app_codename">"Codinome: %1$s"</string>
     <string name="about_app_build_date">"Compilado em %s"</string>
     <string name="about_app_terms">"Termos &amp; Condições"</string>
+    <string name="about_thanks_ffg">"Um agradecimento especial a FFG pela sua confiança e apoio financeiro para realizar este projeto."</string>
     <!-- menus -->
+    <string name="menu_list_gotodate">"Ir para a data"</string>
+    <string name="menu_list_quick_journal">"Diário rápido"</string>
+    <string name="menu_list_quick_note">"Nota rápida"</string>
+    <string name="menu_list_quick_todo">"Tarefa rápida"</string>
+    <string name="menu_view_share_ics">"Compartilhar como .ics"</string>
+    <string name="menu_view_copy_as_journal">"Copiar como diário"</string>
+    <string name="menu_view_copy_as_todo">"Copiar como tarefa"</string>
+    <string name="menu_view_copy_as_note">"Copiar como nota"</string>
+    <string name="menu_view_copy_item">"Criar uma cópia"</string>
+    <string name="notification_channel_alarms_name">"Alarmes"</string>
     <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">"Adicionar diário"</string>
+    <string name="shortcut_addNote_longLabel">"Adicionar nota"</string>
+    <string name="shortcut_addTodo_longLabel">"Adicionar tarefa"</string>
     <!-- Settings fragment -->
+    <string name="settings_list">"Configurações para a lista de itens"</string>
+    <string name="settings_show_progress_for_subtasks">Mostrar progresso das subtarefas</string>
+    <string name="settings_show_progress_for_maintasks">Mostrar progresso das tarefas principais</string>
+    <string name="settings_app">"Configurações do aplicativo"</string>
+    <string name="settings_select_mimetype_for_audio">"Selecionar tipo de arquivo para notas de áudio"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"Sincronizar com %1$s"</string>
+    <string name="sync_basic_info">"jtx Board não fornece sincronização com servidor por si mesmo, mas suporta a sincronização pelo DAVx⁵. Esse método permite que você use qualquer servidor CalDAV de sua escolha para armazenar, fazer backup e sincronizar seus dados."</string>
+    <string name="sync_ksync_basic_info">"kSync é um aplicativo baseado no DAVx⁵ desenvolvido por Infomaniak especialmente para seus serviços. Enquanto o DAVx⁵ está aberto a qualquer servidor CalDAV compatível, kSync só permite sincronização com contas Infomaniak."</string>
     <string name="sync_sync_app_not_found">"Não detectamos %1$s no seu telefone."</string>
     <string name="sync_more_about_sync_app">"Saiba mais sobre %1$s"</string>
     <string name="sync_download_sync_app">"Baixar %1$s"</string>
