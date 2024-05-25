@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.reusable.cards
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
@@ -48,29 +49,28 @@ fun CommentCard(
         )
     }
 
-        ElevatedCard(
-            modifier = modifier,
-            onClick = {
-                if(!isReadOnly)
-                    showCommentEditDialog = true
-            }
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    comment.text,
-                    modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp)
-                        .align(alignment = Alignment.CenterVertically)
-                        .weight(1f)
-                )
-            }
+    ElevatedCard(
+        modifier = modifier,
+        onClick = {
+            if(!isReadOnly)
+                showCommentEditDialog = true
         }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .heightIn(min = 38.dp),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                comment.text,
+                modifier = Modifier
+                    .padding(start = 8.dp, end = 8.dp)
+            )
+        }
+    }
 
 }
 
