@@ -779,9 +779,8 @@ fun DetailScreenContent(
             }
         }
 
-    if(isEditMode.value && !showAllOptions) {
-        item {
-
+        if(!showAllOptions) {
+            item {
                 TextButton(
                     onClick = { showAllOptions = true },
                     modifier = detailElementModifier.fillMaxWidth()
@@ -791,36 +790,35 @@ fun DetailScreenContent(
             }
         }
 
-        if(!isEditMode.value) {
-            item {
-                Column(
-                    horizontalAlignment = Alignment.End,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp)
-                ) {
-                    Text(
-                        stringResource(
-                            id = R.string.view_created_text,
-                            DateTimeUtils.convertLongToFullDateTimeString(iCalObject.created, null)
-                        ),
-                        style = MaterialTheme.typography.bodySmall,
-                        fontStyle = FontStyle.Italic
-                    )
-                    Text(
-                        stringResource(
-                            id = R.string.view_last_modified_text,
-                            DateTimeUtils.convertLongToFullDateTimeString(
-                                iCalObject.lastModified,
-                                null
-                            )
-                        ),
-                        style = MaterialTheme.typography.bodySmall,
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+        item {
+            Column(
+                horizontalAlignment = Alignment.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                Text(
+                    stringResource(
+                        id = R.string.view_created_text,
+                        DateTimeUtils.convertLongToFullDateTimeString(iCalObject.created, null)
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontStyle = FontStyle.Italic
+                )
+                Text(
+                    stringResource(
+                        id = R.string.view_last_modified_text,
+                        DateTimeUtils.convertLongToFullDateTimeString(
+                            iCalObject.lastModified,
+                            null
+                        )
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontStyle = FontStyle.Italic
+                )
             }
         }
+
 
         if(!isEditMode.value) {
             item {
