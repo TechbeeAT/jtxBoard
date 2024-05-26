@@ -708,7 +708,6 @@ fun DetailsScreen(
             DetailBottomAppBar(
                 iCalObject = iCalObject.value,
                 collection = collection.value,
-                isEditMode = isEditMode,
                 markdownState = markdownState,
                 isProActionAvailable = isProActionAvailable,
                 changeState = detailViewModel.changeState,

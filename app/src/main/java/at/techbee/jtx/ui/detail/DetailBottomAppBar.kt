@@ -21,8 +21,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.List
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.EditOff
 import androidx.compose.material.icons.outlined.Code
 import androidx.compose.material.icons.outlined.DriveFileRenameOutline
 import androidx.compose.material.icons.outlined.FormatBold
@@ -60,7 +58,6 @@ import at.techbee.jtx.util.SyncApp
 fun DetailBottomAppBar(
     iCalObject: ICalObject?,
     collection: ICalCollection?,
-    isEditMode: MutableState<Boolean>,
     markdownState: MutableState<MarkdownState>,
     isProActionAvailable: Boolean,
     changeState: MutableState<DetailViewModel.DetailChangeState>,
@@ -85,8 +82,7 @@ fun DetailBottomAppBar(
             }
 
             AnimatedVisibility(
-                isEditMode.value
-                        && changeState.value != DetailViewModel.DetailChangeState.UNCHANGED
+                changeState.value != DetailViewModel.DetailChangeState.UNCHANGED
                         && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
             ) {
                 IconButton(onClick = { onRevertClicked() }) {
@@ -201,11 +197,15 @@ fun DetailBottomAppBar(
                             context.getText(R.string.buypro_snackbar_remote_entries_blocked),
                             Toast.LENGTH_LONG
                         ).show()
-                    else if (!collection.readonly)
-                        isEditMode.value = !isEditMode.value
+
+                    //TODO
+
                 },
-                containerColor = if (collection.readonly || !isProActionAvailable) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primaryContainer
+                //containerColor = if (collection.readonly || !isProActionAvailable) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.primaryContainer
             ) {
+                //TODO: restrict editing on remote collections!!!
+                Icon(painterResource(id = R.drawable.ic_save_move_outline), stringResource(id = R.string.save))
+                /*
                 Crossfade(targetState = isEditMode.value, label = "fab_icon_content") { isEditMode ->
                     if (isEditMode) {
                         Icon(painterResource(id = R.drawable.ic_save_move_outline), stringResource(id = R.string.save))
@@ -216,6 +216,7 @@ fun DetailBottomAppBar(
                             Icon(Icons.Filled.Edit, stringResource(id = R.string.edit))
                     }
                 }
+                 */
             }
         }
     )
@@ -235,7 +236,6 @@ fun DetailBottomAppBar_Preview_View() {
         DetailBottomAppBar(
             iCalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
-            isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
@@ -258,7 +258,6 @@ fun DetailBottomAppBar_Preview_edit() {
         DetailBottomAppBar(
             iCalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
-            isEditMode = remember { mutableStateOf(true) },
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
@@ -280,7 +279,6 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
         DetailBottomAppBar(
             iCalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
-            isEditMode = remember { mutableStateOf(true) },
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
@@ -302,7 +300,6 @@ fun DetailBottomAppBar_Preview_View_readonly() {
         DetailBottomAppBar(
             iCalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
-            isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
@@ -324,7 +321,6 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
         DetailBottomAppBar(
             iCalObject = ICalObject.createNote().apply { dirty = false },
             collection = collection,
-            isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = false,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
@@ -349,7 +345,6 @@ fun DetailBottomAppBar_Preview_View_local() {
         DetailBottomAppBar(
             iCalObject = ICalObject.createNote().apply { dirty = true },
             collection = collection,
-            isEditMode = remember { mutableStateOf(false) },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
