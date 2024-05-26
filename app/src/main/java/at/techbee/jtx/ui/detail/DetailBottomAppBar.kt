@@ -60,8 +60,7 @@ fun DetailBottomAppBar(
     collection: ICalCollection?,
     markdownState: MutableState<MarkdownState>,
     isProActionAvailable: Boolean,
-    changeState: MutableState<DetailViewModel.DetailChangeState>,
-    onRevertClicked: () -> Unit
+    changeState: MutableState<DetailViewModel.DetailChangeState>
 ) {
 
     if (iCalObject == null || collection == null)
@@ -80,19 +79,6 @@ fun DetailBottomAppBar(
                     )
                 }
             }
-
-            AnimatedVisibility(
-                changeState.value != DetailViewModel.DetailChangeState.UNCHANGED
-                        && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
-            ) {
-                IconButton(onClick = { onRevertClicked() }) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_revert),
-                        contentDescription = stringResource(id = R.string.revert)
-                    )
-                }
-            }
-
 
             AnimatedVisibility((changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED
                     || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING
@@ -238,8 +224,7 @@ fun DetailBottomAppBar_Preview_View() {
             collection = collection,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
-            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
-            onRevertClicked = { }
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) }
         )
     }
 }
@@ -261,7 +246,6 @@ fun DetailBottomAppBar_Preview_edit() {
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            onRevertClicked = { }
         )
     }
 }
@@ -281,8 +265,7 @@ fun DetailBottomAppBar_Preview_edit_markdown() {
             collection = collection,
             isProActionAvailable = true,
             markdownState = remember { mutableStateOf(MarkdownState.OBSERVING) },
-            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            onRevertClicked = { }
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) }
         )
     }
 }
@@ -302,8 +285,7 @@ fun DetailBottomAppBar_Preview_View_readonly() {
             collection = collection,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
-            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
-            onRevertClicked = { }
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) }
         )
     }
 }
@@ -323,8 +305,7 @@ fun DetailBottomAppBar_Preview_View_proOnly() {
             collection = collection,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = false,
-            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) },
-            onRevertClicked = { }
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVED) }
         )
     }
 }
@@ -347,8 +328,7 @@ fun DetailBottomAppBar_Preview_View_local() {
             collection = collection,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isProActionAvailable = true,
-            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) },
-            onRevertClicked = { }
+            changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGESAVING) }
         )
     }
 }

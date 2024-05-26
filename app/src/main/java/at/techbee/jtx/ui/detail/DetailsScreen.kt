@@ -577,11 +577,7 @@ fun DetailsScreen(
 
                         }
 
-                        if(
-                            collection.value?.readonly == false
-                            && isProActionAvailable
-                            && (markdownState.value == MarkdownState.DISABLED || markdownState.value == MarkdownState.CLOSED)
-                        ) {
+                        if(collection.value?.readonly == false && isProActionAvailable) {
                             DropdownMenuItem(
                                 leadingIcon = { Icon(Icons.Outlined.Delete, null)  },
                                 text = { Text(stringResource(id = R.string.delete)) },
@@ -589,6 +585,12 @@ fun DetailsScreen(
                                     showDeleteDialog = true
                                     menuExpanded.value = false
                                 }
+                            )
+
+                            DropdownMenuItem(
+                                leadingIcon = { Icon(painterResource(id = R.drawable.ic_revert), null) },
+                                text = { Text(stringResource(id = R.string.revert)) },
+                                onClick = { showRevertDialog = true }
                             )
 
                             HorizontalDivider()
@@ -710,8 +712,7 @@ fun DetailsScreen(
                 collection = collection.value,
                 markdownState = markdownState,
                 isProActionAvailable = isProActionAvailable,
-                changeState = detailViewModel.changeState,
-                onRevertClicked = { showRevertDialog = true }
+                changeState = detailViewModel.changeState
             )
         }
     )
