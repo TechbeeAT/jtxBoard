@@ -115,9 +115,7 @@ fun DetailsCardDescription(
                         if(withMarkdown) {
                             MarkdownText(
                                 markdown = description.text.trim(),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(8.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 style = TextStyle(
                                     textDirection = TextDirection.Content,
                                     fontFamily = LocalTextStyle.current.fontFamily
