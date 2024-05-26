@@ -590,7 +590,7 @@ fun DetailScreenContent(
 
                         DetailsCardStatusClassificationPriority(
                             icalObject = iCalObject,
-                            isReadOnly = collection?.readonly ?: true,
+                            isEditMode = isEditMode.value,
                             enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true || showAllOptions,
                             enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true || showAllOptions,
                             enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true || showAllOptions,
