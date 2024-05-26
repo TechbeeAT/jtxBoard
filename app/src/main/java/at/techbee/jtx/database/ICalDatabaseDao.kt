@@ -585,7 +585,7 @@ interface ICalDatabaseDao {
     suspend fun updateToDeleted(id: Long, lastModified: Long)
 
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
-    suspend fun updateSetDirty(id: Long, lastModified: Long)
+    suspend fun updateSetDirty(id: Long, lastModified: Long = System.currentTimeMillis())
 
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SUBTASKS_EXPANDED = :isSubtasksExpanded, $COLUMN_SUBNOTES_EXPANDED = :isSubnotesExpanded, $COLUMN_ATTACHMENTS_EXPANDED = :isAttachmentsExpanded, $COLUMN_PARENTS_EXPANDED = :isParentsExpanded WHERE $COLUMN_ID = :id")
     suspend fun updateExpanded(
@@ -1526,6 +1526,34 @@ interface ICalDatabaseDao {
                 update(it)
         }
     }
+
+
+    @Transaction
+    suspend fun updateCategories(iCalObjectId: Long, uid: String, categories: List<Category>) {
+
+        deleteCategories(iCalObjectId)
+        categories.forEach { it.icalObjectId = iCalObjectId }
+        upsertCategories(categories)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertCategories(categories: List<Category>)
+
+
+    @Transaction
+    suspend fun updateResources(iCalObjectId: Long, uid: String, resources: List<Resource>) {
+
+        deleteResources(iCalObjectId)
+        resources.forEach { it.icalObjectId = iCalObjectId }
+        upsertResources(resources)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertResources(resources: List<Resource>)
 
     @Transaction
     suspend fun saveAll(

@@ -91,11 +91,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     val mutableAttachments = mutableStateListOf<Attachment>()
     val mutableAlarms = mutableStateListOf<Alarm>()
 
-    var allCategories = databaseDao.getAllCategoriesAsText()
-    var allResources = databaseDao.getAllResourcesAsText()
-    val storedCategories = databaseDao.getStoredCategories()
-    val storedResources = databaseDao.getStoredResources()
-    val storedStatuses = databaseDao.getStoredStatuses()
     var allWriteableCollections = databaseDao.getAllWriteableCollections()
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> =
@@ -239,7 +234,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
             )
-            onChangeDone()
+            onChangeDone(updateNotifications = true, updateGeofences = false)
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
     }
@@ -266,7 +261,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun updateSortOrder(list: List<ICal4List>) {
         viewModelScope.launch(Dispatchers.IO) {
             databaseDao.updateSortOrder(list.map { it.id })
-            onChangeDone()
+            onChangeDone(updateNotifications = false, updateGeofences = false)
         }
     }
 
@@ -286,7 +281,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     changeState.value = DetailChangeState.CHANGESAVED
                 }
             }
-            onChangeDone()
+            onChangeDone(updateNotifications = false, updateGeofences = false)
         }
     }
 
@@ -301,7 +296,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 parentId = mainICalObjectId!!,
                 childrenIds = newSubEntries.map { it.id }
             )
-            onChangeDone()
+            onChangeDone(updateNotifications = false, updateGeofences = false)
         }
     }
 
@@ -315,7 +310,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 parentIds = newParents.map { it.id },
                 childId = mainICalObjectId!!
             )
-            onChangeDone()
+            onChangeDone(updateNotifications = false, updateGeofences = false)
         }
     }
 
@@ -513,6 +508,30 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun updateCategories(categories: List<Category>) {
+        mutableCategories.clear()
+        mutableCategories.addAll(categories)
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
+            val uid = mutableICalObject?.uid!!
+            databaseDao.updateCategories(mainICalObjectId!!, uid, categories)
+            onChangeDone(updateNotifications = false, updateGeofences = false)
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
+        }
+    }
+
+    fun updateResources(resources: List<Resource>) {
+        mutableResources.clear()
+        mutableResources.addAll(resources)
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
+            val uid = mutableICalObject?.uid!!
+            databaseDao.updateResources(mainICalObjectId!!, uid, resources)
+            onChangeDone(updateNotifications = false, updateGeofences = false)
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
+        }
+    }
+
     fun createCopy(newModule: Module) {
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -690,11 +709,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * sets geofences
      * updates the widget
      */
-    private suspend fun onChangeDone() {
+    private suspend fun onChangeDone(updateNotifications: Boolean = true, updateGeofences: Boolean = true) {
         SyncUtil.notifyContentObservers(getApplication())
-        NotificationPublisher.scheduleNextNotifications(getApplication())
-        GeofenceClient(_application).setGeofences()
         ListWidget().updateAll(getApplication())
+        if(updateNotifications)
+            NotificationPublisher.scheduleNextNotifications(getApplication())
+        if(updateGeofences)
+            GeofenceClient(_application).setGeofences()
     }
 
     enum class DetailChangeState { LOADING, UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED, DELETING, DELETED, DELETED_BACK_TO_LIST, SQLERROR }

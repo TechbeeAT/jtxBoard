@@ -120,9 +120,6 @@ fun DetailsScreen(
     val collection = detailViewModel.collection.observeAsState()
 
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
-    val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
-    val storedResources by detailViewModel.storedResources.observeAsState(emptyList())
-    val storedStatuses by detailViewModel.storedStatuses.observeAsState(emptyList())
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val isProActionAvailable by remember(isProPurchased, collection) { derivedStateOf { isProPurchased.value || collection.value?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
@@ -644,11 +641,6 @@ fun DetailsScreen(
                 subnotesLive = detailViewModel.relatedSubnotes,
                 isChildLive = detailViewModel.isChild,
                 allWriteableCollectionsLive = detailViewModel.allWriteableCollections,
-                allCategoriesLive = detailViewModel.allCategories,
-                allResourcesLive = detailViewModel.allResources,
-                storedCategories = storedCategories,
-                storedResources = storedResources,
-                extendedStatuses = storedStatuses,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
                 seriesInstancesLive = detailViewModel.seriesInstances,
@@ -678,6 +670,8 @@ fun DetailsScreen(
                 onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },
+                onCategoriesUpdated = { categories -> detailViewModel.updateCategories(categories) },
+                onResourcesUpdated = { resources -> detailViewModel.updateResources(resources) },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list, popBackStack ->
                     if(popBackStack)

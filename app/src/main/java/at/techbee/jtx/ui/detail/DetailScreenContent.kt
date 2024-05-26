@@ -62,13 +62,11 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
-import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSettingData
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Attachment
@@ -108,11 +106,6 @@ fun DetailScreenContent(
     parentsLive: LiveData<List<ICal4List>>,
     isChildLive: LiveData<Boolean>,
     allWriteableCollectionsLive: LiveData<List<ICalCollection>>,
-    allCategoriesLive: LiveData<List<String>>,
-    allResourcesLive: LiveData<List<String>>,
-    storedCategories: List<StoredCategory>,
-    storedResources: List<StoredResource>,
-    extendedStatuses: List<ExtendedStatus>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
     seriesInstancesLive: LiveData<List<ICalObject>>,
@@ -136,6 +129,8 @@ fun DetailScreenContent(
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     onUnlinkSubEntry: (icalObjectId: Long, parentUID: String?) -> Unit,
+    onCategoriesUpdated: (List<Category>) -> Unit,
+    onResourcesUpdated: (List<Resource>) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>, popBackStack: Boolean) -> Unit,
     goBack: () -> Unit,
     goToFilteredList:  (StoredListSettingData) -> Unit,
@@ -460,7 +455,11 @@ fun DetailScreenContent(
                             enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true || showAllOptions,
                             enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true || showAllOptions,
                             allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
-                            extendedStatuses = extendedStatuses,
+                            extendedStatuses = ICalDatabase
+                                .getInstance(context)
+                                .iCalDatabaseDao()
+                                .getStoredStatuses()
+                                .observeAsState(emptyList()).value,
                             onStatusChanged = { newStatus ->
                                 if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
                                     when (newStatus) {
@@ -489,15 +488,19 @@ fun DetailScreenContent(
                 }
 
                 DetailsScreenSection.CATEGORIES -> {
-                    if(categories.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false || showAllOptions))) {
+                    if(categories.isNotEmpty() || (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false || showAllOptions)) {
                         DetailsCardCategories(
                             categories = categories,
-                            storedCategories = storedCategories,
-                            isEditMode = isEditMode.value,
+                            storedCategories = ICalDatabase
+                                .getInstance(context)
+                                .iCalDatabaseDao()
+                                .getStoredCategories()
+                                .observeAsState(emptyList()).value,
+                            isReadOnly = collection?.readonly?: true,
                             onCategoriesUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                                onCategoriesUpdated(it)
                             },
-                            allCategoriesLive = allCategoriesLive,
                             onGoToFilteredList = goToFilteredList,
                             modifier = detailElementModifier
                         )
@@ -628,16 +631,20 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.RESOURCES -> {
-                    if(resources.isNotEmpty() || (isEditMode.value && iCalObject.getModuleFromString() == Module.TODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] == true || showAllOptions))) {
+                    if(iCalObject.getModuleFromString() == Module.TODO && (resources.isNotEmpty() || (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] == true || showAllOptions))) {
                         DetailsCardResources(
                             resources = resources,
-                            storedResources = storedResources,
-                            isEditMode = isEditMode.value,
+                            storedResources = ICalDatabase
+                                .getInstance(context)
+                                .iCalDatabaseDao()
+                                .getStoredResources()
+                                .observeAsState(emptyList()).value,
+                            isReadOnly = collection?.readonly?: true,
                             onResourcesUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                                onResourcesUpdated(it)
                             },
                             onGoToFilteredList = goToFilteredList,
-                            allResourcesLive = allResourcesLive,
                             modifier = detailElementModifier
                         )
                     }
@@ -921,11 +928,6 @@ fun DetailScreenContent_JOURNAL() {
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
             allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
-            allCategoriesLive = MutableLiveData(emptyList()),
-            allResourcesLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            extendedStatuses = emptyList(),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             saveEntry = { },
@@ -941,7 +943,9 @@ fun DetailScreenContent_JOURNAL() {
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { }, 
             onShowLinkExistingDialog = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onCategoriesUpdated = { },
+            onResourcesUpdated = { }
         )
     }
 }
@@ -979,11 +983,6 @@ fun DetailScreenContent_TODO_editInitially() {
             isChildLive = MutableLiveData(false),
             player = null,
             allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
-            allCategoriesLive = MutableLiveData(emptyList()),
-            allResourcesLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            extendedStatuses = emptyList(),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1008,7 +1007,9 @@ fun DetailScreenContent_TODO_editInitially() {
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
             onShowLinkExistingDialog = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onCategoriesUpdated = { },
+            onResourcesUpdated = { }
         )
     }
 }
@@ -1046,11 +1047,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             isChildLive = MutableLiveData(true),
             player = null,
             allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
-            allCategoriesLive = MutableLiveData(emptyList()),
-            allResourcesLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            extendedStatuses = emptyList(),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1075,7 +1071,9 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
             onShowLinkExistingDialog = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onCategoriesUpdated = { },
+            onResourcesUpdated = { }
         )
     }
 }
@@ -1107,11 +1105,6 @@ fun DetailScreenContent_failedLoading() {
             isChildLive = MutableLiveData(true),
             player = null,
             allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
-            allCategoriesLive = MutableLiveData(emptyList()),
-            allResourcesLive = MutableLiveData(emptyList()),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            extendedStatuses = emptyList(),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1136,7 +1129,9 @@ fun DetailScreenContent_failedLoading() {
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
             onShowLinkExistingDialog = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onCategoriesUpdated = { },
+            onResourcesUpdated = { }
         )
     }
 }
