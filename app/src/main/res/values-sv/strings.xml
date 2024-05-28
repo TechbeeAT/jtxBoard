@@ -118,7 +118,7 @@
     <string name="edit_datepicker_dialog_add_timezone">"Lägg till tidszon"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Redigera tidszon"</string>
     <string name="edit_dialog_sure_to_delete_title">"Ta bort \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_title">"Släng denna post?"</string>
+    <string name="edit_dialog_sure_to_discard_title">"Kasta denna post?"</string>
     <string name="dialog_delete_done_title">"Ta bort alla slutförda uppgifter?"</string>
     <string name="dialog_delete_done_message">"Observera: Underaktiviteter tas bort oberoende av deras status om deras överordnade markeras som klara. Den här åtgärden kan inte ångras!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Vill du verkligen radera \"%1$s\"?"</string>
@@ -239,7 +239,7 @@
     <string name="color">"Färg"</string>
     <string name="priority_0_no_priority">"Ingen prioritet"</string>
     <string name="priority_1_highest">"1 - Högsta"</string>
-    <string name="priority_2_higher">"8 - Högre"</string>
+    <string name="priority_2_higher">"2 - Högre"</string>
     <string name="priority_3_high">"3 - Hög"</string>
     <string name="priority_4_medium_high">"4 - Medelhög"</string>
     <string name="priority_5_medium">"5 - Medel"</string>
@@ -274,7 +274,7 @@
     <string name="comments">"Kommentarer"</string>
     <string name="attachments">"Bilagor"</string>
     <string name="alarms">"Alarm"</string>
-    <string name="recurrence">"Återkomst"</string>
+    <string name="recurrence">"Återkommande"</string>
     <string name="recurrence_exceptions">"Undantag"</string>
     <string name="recurrence_additions">"Tillägg"</string>
     <string name="summary">"Sammanfattning"</string>
