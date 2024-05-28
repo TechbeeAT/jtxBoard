@@ -20,6 +20,7 @@ import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.CheckBox
+import androidx.glance.appwidget.CheckboxDefaults
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
@@ -85,7 +86,8 @@ fun ListEntry(
             if (obj.module == Module.TODO.name && checkboxPosition == CheckboxPosition.START && !obj.isReadOnly){
                 CheckBox(
                     checked = checked,
-                    onCheckedChange = { onCheckedChange(obj.id, checked) }
+                    onCheckedChange = { onCheckedChange(obj.id, checked) },
+                    colors = CheckboxDefaults.colors(checkedColor = textColor, uncheckedColor = textColor)
                 )
             }
 
@@ -207,7 +209,8 @@ fun ListEntry(
             if (obj.module == Module.TODO.name && checkboxPosition == CheckboxPosition.END && !obj.isReadOnly) {
                 CheckBox(
                     checked = checked,
-                    onCheckedChange = { onCheckedChange(obj.id, checked) }
+                    onCheckedChange = { onCheckedChange(obj.id, checked) },
+                    colors = CheckboxDefaults.colors(checkedColor = textColor, uncheckedColor = textColor)
                 )
             }
         }
