@@ -35,6 +35,7 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import androidx.glance.unit.FixedColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
@@ -62,6 +63,8 @@ fun ListEntry(
     val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
     val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp)
 
+    val textColorFixed = FixedColorProvider(textColor.getColor(context))  // needs to be fixed, otherwise checkbox coloring would crash
+
     val intent = Intent(context, MainActivity2::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         action = MainActivity2.INTENT_ACTION_OPEN_ICALOBJECT
@@ -87,7 +90,7 @@ fun ListEntry(
                 CheckBox(
                     checked = checked,
                     onCheckedChange = { onCheckedChange(obj.id, checked) },
-                    colors = CheckboxDefaults.colors(checkedColor = textColor, uncheckedColor = textColor)
+                    colors = CheckboxDefaults.colors(checkedColor = textColorFixed, uncheckedColor = textColorFixed)
                 )
             }
 
@@ -210,7 +213,7 @@ fun ListEntry(
                 CheckBox(
                     checked = checked,
                     onCheckedChange = { onCheckedChange(obj.id, checked) },
-                    colors = CheckboxDefaults.colors(checkedColor = textColor, uncheckedColor = textColor)
+                    colors = CheckboxDefaults.colors(checkedColor = textColorFixed, uncheckedColor = textColorFixed)
                 )
             }
         }
