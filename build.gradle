@@ -21,7 +21,7 @@ buildscript {
     ext {
         version_core = "1.13.1"
         version_coroutine = "1.8.1"
-        version_appcompat = "1.6.1"
+        version_appcompat = "1.7.0"
         version_gradle = '8.4.1'
         version_kotlin = "1.9.24"
         version_room = "2.6.1"
