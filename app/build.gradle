@@ -190,7 +190,7 @@ dependencies {
     amazonImplementation 'com.amazon.device:amazon-appstore-sdk:3.0.4'
     amazonImplementation "com.google.maps.android:maps-compose:5.0.1"
     amazonImplementation "com.google.android.gms:play-services-maps:18.2.0"
-    amazonImplementation "com.google.android.gms:play-services-location:21.2.0"
+    amazonImplementation "com.google.android.gms:play-services-location:21.3.0"
 
     // Huawei billing
     //huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
@@ -198,7 +198,7 @@ dependencies {
     // Google Maps
     gplayImplementation "com.google.maps.android:maps-compose:5.0.1"
     gplayImplementation "com.google.android.gms:play-services-maps:18.2.0"
-    gplayImplementation "com.google.android.gms:play-services-location:21.2.0"
+    gplayImplementation "com.google.android.gms:play-services-location:21.3.0"
 
     //OSM
     oseImplementation "org.osmdroid:osmdroid-android:$version_osmdroid"
