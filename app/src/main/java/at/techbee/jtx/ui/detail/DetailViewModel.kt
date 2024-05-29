@@ -129,17 +129,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 originalEntry = databaseDao.getSync(icalObjectId)
                 mutableICalObject = originalEntry?.property
                 mutableCategories.clear()
-                mutableCategories.addAll(originalEntry?.categories ?: emptyList())
+                mutableCategories.addAll(databaseDao.getCategoriesSync(icalObjectId))
                 mutableResources.clear()
-                mutableResources.addAll(originalEntry?.resources ?: emptyList())
+                mutableResources.addAll(databaseDao.getResourcesSync(icalObjectId))
                 mutableAttendees.clear()
-                mutableAttendees.addAll(originalEntry?.attendees ?: emptyList())
+                mutableAttendees.addAll(databaseDao.getAttendeesSync(icalObjectId))
                 mutableComments.clear()
-                mutableComments.addAll(originalEntry?.comments ?: emptyList())
+                mutableComments.addAll(databaseDao.getCommentsSync(icalObjectId))
                 mutableAttachments.clear()
-                mutableAttachments.addAll(originalEntry?.attachments ?: emptyList())
+                mutableAttachments.addAll(databaseDao.getAttachmentsSync(icalObjectId))
                 mutableAlarms.clear()
-                mutableAlarms.addAll(originalEntry?.alarms ?: emptyList())
+                mutableAlarms.addAll(databaseDao.getAlarmsSync(icalObjectId))
             }
 
             //icalEntity = databaseDao.get(icalObjectId)
@@ -324,6 +324,16 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
 
             mutableICalObject?.let {
+                // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
+                icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
+                icalObject.value?.flags.let { currentFlags -> it.flags = currentFlags }
+                icalObject.value?.scheduleTag.let { currentScheduleTag ->
+                    it.scheduleTag = currentScheduleTag
+                }
+                icalObject.value?.fileName.let { currentFileName ->
+                    it.fileName = currentFileName
+                }
+
                 saveSuspend()
                 val newId = databaseDao.moveToCollection(it.id, newCollectionId)
                 if(newId == null) {
@@ -397,14 +407,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
 
     fun saveEntry() {
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-            saveSuspend()
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-        }
-    }
-
-    private suspend fun saveSuspend() {
         mutableICalObject?.let {
             // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
             icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
@@ -415,7 +417,16 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             icalObject.value?.fileName.let { currentFileName ->
                 it.fileName = currentFileName
             }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+            saveSuspend()
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
+        }
+    }
 
+    private suspend fun saveSuspend() {
+        mutableICalObject?.let {
             databaseDao.saveAll(
                 it,
                 mutableCategories,
