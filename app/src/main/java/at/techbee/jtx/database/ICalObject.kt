@@ -53,6 +53,7 @@ import java.net.URLDecoder
 import java.text.ParseException
 import java.time.DayOfWeek
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
@@ -699,7 +700,7 @@ data class ICalObject(
             if(due == null)
                 return null
 
-            val localNow = ZonedDateTime.now()
+            val localNow = if(dueTimezone != TZ_ALLDAY) ZonedDateTime.now() else LocalDate.now().atStartOfDay()
             val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dueTimezone))
 
             return ChronoUnit.MINUTES.between(localNow, localDue) < 0L
