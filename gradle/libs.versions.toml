@@ -25,8 +25,8 @@ compose-bom = "2024.05.00"
 compose-navigation = "2.7.7"
 glance = "1.1.0-rc01"
 godaddy-colorpicker = "0.7.0"
-huawei = "1.8.1.300"
-huawei-iap = "6.10.0.300"
+#huawei = "1.8.1.300"
+#huawei-iap = "6.10.0.300"
 kotlin = "2.0.0"
 kotlinx-coroutines = "1.8.1"
 kotlinxSerializationJson = "1.6.3"
@@ -49,6 +49,10 @@ volley = "1.2.1"
 # gplay and managed build variants
 android-billing = "6.1.0"
 android-review = "2.0.1"
+espressoCore = "3.5.1"
+uiautomator = "2.3.0"
+benchmarkMacroJunit4 = "1.2.4"
+baselineprofile = "1.2.3"
 
 [libraries]
 amazon-appstore-sdk = { module = "com.amazon.device:amazon-appstore-sdk", version.ref = "amazonAppstoreSdk" }
@@ -110,8 +114,11 @@ android-billing = { module = "com.android.billingclient:billing-ktx", version.re
 android-review = { module = "com.google.android.play:review-ktx", version.ref = "android-review" }
 
 # Huawei
-huawei-iap = { module = "com.huawei.hms:iap", version.ref = "huawei-iap"}
-huawei-agconnect = { module = "com.huawei.agconnect:agcp", version.ref = "huawei" }
+#huawei-iap = { module = "com.huawei.hms:iap", version.ref = "huawei-iap"}
+#huawei-agcp = { module = "com.huawei.agconnect:agcp", version.ref = "huawei" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmarkMacroJunit4" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-agp" }
@@ -121,3 +128,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 mikepenz-aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenz-aboutLibraries" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin"}
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+android-test = { id = "com.android.test", version.ref = "android-agp" }
+baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
+#huawei-agconnect = { id = "com.huawei.agconnect", version.ref = "huawei" }
+

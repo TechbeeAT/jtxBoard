@@ -16,7 +16,8 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    //id "com.huawei.agconnect"
+    alias(libs.plugins.baselineprofile)
+    //alias(libs.plugins.huawei.agconnect)
 }
 
 
@@ -76,12 +77,16 @@ android {
         create("ose") {
             versionNameSuffix = ".ose"
         }
+        /*
         create("generic") {
             versionNameSuffix = ".generic"
         }
+         */
+        /*
         create("huawei") {
             versionNameSuffix = ".huawei"
         }
+         */
     }
 
     signingConfigs {
@@ -161,6 +166,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.androidx.ui.text.google.fonts)
+    "baselineProfile"(project(":baselineprofile"))
     coreLibraryDesugaring(libs.android.desugaring)
 
     // support libs
@@ -265,11 +271,14 @@ val oseImplementation by configurations {
     }
 }
 
+/*
 val huaweiImplementation by configurations {
     dependencies {
-        //implementation(libs.huawei.iap)
-        //implementation(libs.huawei.agconnect)
+        implementation(libs.huawei.iap)
+        implementation(libs.huawei.agcp)
     }
 }
+
+ */
 
 
