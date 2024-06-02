@@ -699,7 +699,7 @@ data class ICalObject(
             if(due == null)
                 return null
 
-            val localNow = ZonedDateTime.now()
+            val localNow = ZonedDateTime.now(requireTzId(dueTimezone))
             val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dueTimezone))
 
             return ChronoUnit.MINUTES.between(localNow, localDue) < 0L
@@ -786,7 +786,7 @@ data class ICalObject(
                 else
                     null
 
-            val localNow = ZonedDateTime.now()
+            val localNow = ZonedDateTime.now(requireTzId(timezone2show))
             val localTomorrow = localNow.plusDays(1)
             val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(timezone2show))
 
