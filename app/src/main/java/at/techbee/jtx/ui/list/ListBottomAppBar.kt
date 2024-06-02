@@ -11,6 +11,10 @@ package at.techbee.jtx.ui.list
 import android.content.Context
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -27,6 +31,7 @@ import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FilterListOff
 import androidx.compose.material.icons.outlined.LibraryAddCheck
 import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.SyncProblem
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DropdownMenuItem
@@ -49,6 +54,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -72,6 +79,7 @@ import java.time.ZonedDateTime
 fun ListBottomAppBar(
     module: Module,
     iCal4ListRel: List<ICal4ListRel>,
+    isSyncInProgress: Boolean,
     listSettings: ListSettings,
     showQuickEntry: MutableState<Boolean>,
     multiselectEnabled: MutableState<Boolean>,
@@ -86,7 +94,8 @@ fun ListBottomAppBar(
     onDeleteSelectedClicked: () -> Unit,
     onUpdateSelectedClicked: () -> Unit,
     onToggleBiometricAuthentication: () -> Unit,
-    onDeleteDone: () -> Unit
+    onDeleteDone: () -> Unit,
+    onListSettingsChanged: () -> Unit
 ) {
 
     var showGoToDatePicker by rememberSaveable { mutableStateOf(false) }
@@ -94,11 +103,23 @@ fun ListBottomAppBar(
     var showDeleteDoneDialog by rememberSaveable { mutableStateOf(false) }
     val showMoreActionsMenu = rememberSaveable { mutableStateOf(false) }
 
+    val syncIconAnimation = rememberInfiniteTransition(label = "syncIconAnimation")
+    val angle by syncIconAnimation.animateFloat(
+        initialValue = 0f,
+        targetValue = -360f,
+        animationSpec = infiniteRepeatable(
+            animation = keyframes {
+                durationMillis = 2000
+            }
+        ), label = "syncIconAnimationAngle"
+    )
+
     if(showGoToDatePicker) {
         DatePickerDialog(
             datetime = DateTimeUtils.getTodayAsLong(),
             timezone = ZoneId.systemDefault().id,
             allowNull = false,
+            titleTextRes = R.string.menu_list_gotodate,
             onConfirm = { selectedDate, _ ->
                 val selectedZoned = selectedDate?.let {ZonedDateTime.ofInstant(Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()) } ?: return@DatePickerDialog
 
@@ -121,6 +142,11 @@ fun ListBottomAppBar(
             dateOnly = true,
             minDate = iCal4ListRel.minByOrNull { it.iCal4List.dtstart ?: Long.MAX_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC"))},
             //maxDate = iCal4List.maxByOrNull { it.iCal4List.dtstart ?: Long.MIN_VALUE }?.iCal4List?.dtstart?.let { Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())},
+            allowedDates = iCal4ListRel
+                .filter { it.iCal4List.dtstart != null }
+                .map {
+                ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.iCal4List.dtstart!!), DateTimeUtils.requireTzId(it.iCal4List.dtstartTimezone))
+            }
         )
     }
 
@@ -177,7 +203,10 @@ fun ListBottomAppBar(
                         }
                     }
 
-                    AnimatedVisibility(visible = module == Module.JOURNAL && listSettings.groupBy.value == null && listSettings.orderBy.value == OrderBy.START_VJOURNAL) {
+                    AnimatedVisibility(visible = (module == Module.JOURNAL || module == Module.TODO)
+                            && (((listSettings.viewMode.value == ViewMode.LIST || listSettings.viewMode.value == ViewMode.COMPACT) && listSettings.groupBy.value == null) || listSettings.viewMode.value == ViewMode.WEEK)
+                            && (listSettings.orderBy.value == OrderBy.START_VJOURNAL || listSettings.orderBy.value == OrderBy.START_VTODO  || listSettings.viewMode.value == ViewMode.WEEK)
+                    ) {
                         IconButton(onClick = { showGoToDatePicker = true }) {
                             Icon(
                                 Icons.Outlined.DateRange,
@@ -205,6 +234,20 @@ fun ListBottomAppBar(
                             }
                         }
                     }
+
+                    AnimatedVisibility(isSyncInProgress) {
+                        Icon(
+                            Icons.Outlined.Sync,
+                            contentDescription = stringResource(id = R.string.sync_in_progress),
+                            modifier = Modifier
+                                .graphicsLayer {
+                                    rotationZ = angle
+                                }
+                                .alpha(0.3f),
+                            tint = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+
 
                     AnimatedVisibility(incompatibleSyncApps.isNotEmpty()) {
                         IconButton(onClick = { showSyncAppIncompatibleDialog = true }) {
@@ -234,6 +277,7 @@ fun ListBottomAppBar(
                                 text = { Text(text = stringResource(R.string.clear_filters)) },
                                 onClick = {
                                     listSettings.reset()
+                                    onListSettingsChanged()
                                     showMoreActionsMenu.value = false
                                 },
                                 leadingIcon = { Icon(Icons.Outlined.FilterListOff, null) }
@@ -340,6 +384,7 @@ fun ListBottomAppBar_Preview_Journal() {
         ListBottomAppBar(
             module = Module.JOURNAL,
             iCal4ListRel = emptyList(),
+            isSyncInProgress = true,
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = false,
@@ -354,7 +399,8 @@ fun ListBottomAppBar_Preview_Journal() {
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
             onToggleBiometricAuthentication = { },
-            onDeleteDone = { }
+            onDeleteDone = { },
+            onListSettingsChanged = { }
         )
     }
 }
@@ -371,6 +417,7 @@ fun ListBottomAppBar_Preview_Note() {
         ListBottomAppBar(
             module = Module.NOTE,
             iCal4ListRel = emptyList(),
+            isSyncInProgress = true,
             listSettings = listSettings,
             allowNewEntries = false,
             isBiometricsEnabled = false,
@@ -385,7 +432,8 @@ fun ListBottomAppBar_Preview_Note() {
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
             onToggleBiometricAuthentication = { },
-            onDeleteDone = { }
+            onDeleteDone = { },
+            onListSettingsChanged = { }
         )
     }
 }
@@ -402,6 +450,7 @@ fun ListBottomAppBar_Preview_Todo() {
         ListBottomAppBar(
             module = Module.TODO,
             iCal4ListRel = emptyList(),
+            isSyncInProgress = true,
             listSettings = listSettings,
             allowNewEntries = true,
             incompatibleSyncApps = listOf(SyncApp.DAVX5),
@@ -416,7 +465,8 @@ fun ListBottomAppBar_Preview_Todo() {
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
             onToggleBiometricAuthentication = { },
-            onDeleteDone = { }
+            onDeleteDone = { },
+            onListSettingsChanged = { }
         )
     }
 }
@@ -434,6 +484,7 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
         ListBottomAppBar(
             module = Module.TODO,
             iCal4ListRel = emptyList(),
+            isSyncInProgress = true,
             listSettings = listSettings,
             allowNewEntries = true,
             isBiometricsEnabled = true,
@@ -448,7 +499,8 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             onDeleteSelectedClicked = { },
             onUpdateSelectedClicked = { },
             onToggleBiometricAuthentication = { },
-            onDeleteDone = { }
+            onDeleteDone = { },
+            onListSettingsChanged = { }
         )
     }
 }

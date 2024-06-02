@@ -1,5 +1,6 @@
 package at.techbee.jtx.ui.reusable.elements
 
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 
 
 @Composable
@@ -43,9 +45,10 @@ fun CollectionInfoColumn(collection: ICalCollection, modifier: Modifier = Modifi
                 )
             }
         }
-        if(collection.accountType != ICalCollection.LOCAL_ACCOUNT_TYPE) {
+        if(collection.accountType != LOCAL_ACCOUNT_TYPE) {
+            val url = try { Uri.parse(collection.url).host } catch (e: NullPointerException) { null }
             Text(
-                text = collection.url,
+                text = url ?: "",
                 style = MaterialTheme.typography.labelMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
@@ -66,7 +69,25 @@ fun CollectionInfoColumn_Preview() {
             displayName = "Collection Display Name",
             description = "Here comes the desc",
             accountName = "My account",
-            accountType = "LOCAL"
+            accountType = LOCAL_ACCOUNT_TYPE
+        )
+        CollectionInfoColumn(collection1)
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun CollectionInfoColumn_Preview_REMOTE() {
+    MaterialTheme {
+        val collection1 = ICalCollection(
+            collectionId = 1L,
+            color = Color.Cyan.toArgb(),
+            displayName = "Collection Display Name",
+            description = "Here comes the desc",
+            accountName = "My account",
+            accountType = "Remote",
+            url = "https://www.example.com/whatever/219348729384/mine"
         )
         CollectionInfoColumn(collection1)
     }

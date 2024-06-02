@@ -19,6 +19,7 @@
     <string name="longitude">"Γεωγραφικό μήκος"</string>
     <string name="unlink">"Κατάργηση σύνδεσης"</string>
     <string name="off">"Ανενεργό"</string>
+    <string name="location_permission_denied">"Η άδεια χρήσης τοποθεσίας απορρίφθηκε"</string>
     <string name="permissions">"Εξουσιοδότηση"</string>
     <string name="current_location">"Τρέχουσα τοποθεσία"</string>
     <string name="toolbar_text_add_journal">"Προσθήκη εγγραφής"</string>
@@ -317,6 +318,7 @@
     <string name="filter_no_resource">Χωρίς πηγές</string>
     <string name="filter_subtasks_order_by">Ταξινόμηση υποεργασιών κατά</string>
     <string name="filter_subnotes_order_by">Ταξινόμηση συνδεδεμένων σημειώσεων κατά</string>
+    <string name="order_by_drag_and_drop">"Σύρσιμο &amp; απόθεση"</string>
     <string name="filter_no_filter">"Χωρίς φίλτρο"</string>
     <string name="filter_options_more_entries">"Περισσότερα (%1$d)"</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"Κάντε κλικ στη συλλογή στην οποία πρέπει να προστεθούν οι καταχωρήσεις/καταχωρήσεις!"</string>
@@ -354,6 +356,7 @@
     <string name="settings_timezone_display_local">"Εμφάνιση ώρας στην τοπική ζώνη ώρας"</string>
     <string name="settings_timezone_display_original">"Εμφάνιση ώρας στην αρχική ζώνη ώρας"</string>
     <string name="settings_timezone_display_local_and_original">"Εμφάνιση ώρας στην τοπική και στην αρχική ζώνη ώρας (προβολή λεπτομερειών μόνο)"</string>
+    <string name="settings_font">"Γραμματοσειρά"</string>
     <string name="donate_dialog_title">"Σας αρέσει το jtx Board;"</string>
     <string name="donate_dialog_message">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά. Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε την συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)
  Ευχαριστώ!"</string>
@@ -383,6 +386,16 @@
     <string name="back">"Πίσω"</string>
     <string name="details">"Λεπτομέριες"</string>
     <string name="date">"Ημερομηνία"</string>
+    <string name="group_by_date_day">"Ημερομηνία (ημέρα)"</string>
+    <string name="group_by_date_week">"Ημερομηνία (εβδομάδα)"</string>
+    <string name="group_by_date_month">"Ημερομηνία (μήνας)"</string>
+    <string name="group_by_started_day">"Έναρξη (ημέρα)"</string>
+    <string name="group_by_started_week">"Έναρξη (εβδομάδα)"</string>
+    <string name="group_by_started_month">"Έναρξη (μήνας)"</string>
+    <string name="group_by_due_day">"Μέχρι (ημέρα)"</string>
+    <string name="group_by_due_week">"Μέχρι (εβδομάδα)"</string>
+    <string name="group_by_due_month">"Μέχρι (μήνας)"</string>
+    <string name="week_number_year">"Εβδομάδα %1$d/%2$d"</string>
     <string name="summary_description">"Περίληψη/Περιγραφή"</string>
     <string name="status_classification_priority">"Κατάσταση/Ταξινόμηση/Προτεραιότητα"</string>
     <string name="timezone">"Ζώνη ώρας"</string>
@@ -428,6 +441,7 @@
     <string name="details_go_to_series">"Μετάβαση στη ακολουθία"</string>
     <string name="details_detach_from_series">"Αποκόλληση από την ακολουθία"</string>
     <string name="details_detach_all_instances">"Αποσύνδεση όλων των περιπτώσεων"</string>
+    <string name="details_show_all_instances">"Εμφάνιση όλων των περιπτώσεων (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Αποσύνδεση από την κύρια εγγραφή"</string>
     <string name="dialog_unlink_from_parent_message">"Αφαιρέστε τη σχέση ως υποκαταχώρηση? Η καταχώρηση θα παραμείνει ως αυτόνομη."</string>
     <string name="edit_comment">"Επεξεργασία σημείωσης"</string>
@@ -469,6 +483,7 @@
     <string name="dialog_add_audio_entry_title">"Προσθήκη καταχώρησης ήχου"</string>
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
+    <string name="menu_list_viewmode_week">"Προβολή εβδομάδας"</string>
     <string name="settings_tasks">"Ρυθμίσεις εργασιών"</string>
     <string name="settings_alarms">"Ρυθμίσεις ξυπνητηριού"</string>
     <string name="settings_tasks_status_progress">"Ρυθμίσεις εργασιών (κατάσταση/πρόοδος)"</string>
@@ -500,6 +515,7 @@
     <string name="settings_keep_status_progress_completed_in_sync">"Διατήρηση κατάστασης, προόδου &amp; ολοκλήρωση συγχρονισμού"</string>
     <string name="settings_attention_experimental_feature">"Προσοχή: Αυτό είναι ένα πειραματικό χαρακτηριστικό"</string>
     <string name="settings_create_with_current_location">"Δημιουργήστε νέες καταχωρήσεις με την τρέχουσα τοποθεσία"</string>
+    <string name="settings_create_with_current_location_sub">"Για να χρησιμοποιήσετε αυτήν τη δυνατότητα, παρακαλούμε επιτρέψτε την πρόσβαση στην τοποθεσία σας ενώ χρησιμοποιείτε αυτήν την εφαρμογή."</string>
     <string name="settings_sticky_alarms">"Κολλημένες ειδοποιήσεις"</string>
     <string name="settings_sticky_alarms_sub">"Διατήρηση ειδοποιήσεων μέχρι να ολοκληρωθούν ή αναβληθούν"</string>
     <string name="settings_fullscreen_alarms">"Αφύπνιση σε πλήρη οθόνη"</string>
@@ -528,6 +544,10 @@
     <string name="filter_any">"Οποιαδήποτε"</string>
     <string name="filter_all">"Όλα"</string>
     <string name="filter_none">"Καμία"</string>
+    <string name="filter_date_from_to">"Ημερομηνία: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Έναρξη: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Λήξη: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Ολοκληρώθηκε: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Παρελθοντική ημερομηνία"</string>
     <string name="list_date_today">"Σήμερα"</string>
@@ -590,6 +610,7 @@
     <string name="widget_list_compat_updating_widget_notification">"Ενημέρωση widget"</string>
     <string name="widget_list_opacity_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Με μειωμένες αλλαγές αδιαφάνειας στο χρωματικό θέμα μπορεί να μην αντικατοπτρίζονται αμέσως!"</string>
     <string name="widget_list_color_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Οι αλλαγές στο χρώμα θέμα δε θα αντικατοπτρίζονται! Επιλέξτε κανένα χρώμα για να επιστρέψετε στην προεπιλογή συστήματος."</string>
+    <string name="widget_list_default_categories">"Ορίστε προεπιλεγμένες κατηγορίες για νέες καταχωρήσεις από το widget"</string>
     <string name="opacity">"Αδιαφάνεια"</string>
     <string name="general">"Γενικά"</string>
     <string name="list_collapse">"Αποτυχία"</string>
@@ -646,4 +667,12 @@
     <string name="geofence_request_permission_dialog_message">"Το jtx Board μπορεί να σας ειδοποιήσει όταν είστε κοντά στις δεδομένες συντεταγμένες. Παρακαλώ ορίστε την άδεια τοποθεσίας για 'Να επιτρέπονται όλη την ώρα' και παραχωρήστε το δικαίωμα ειδοποιήσεων για να χρησιμοποιήσετε αυτήν τη δυνατότητα."</string>
     <string name="geofence_notification_summary">"Ο γεωφράκτης ενεργοποιήθηκε"</string>
     <string name="exact_alarm_permission_dialog_message">"Το jtx Board χρειάζεται την άδεια για τον προγραμματισμό ακριβών ειδοποιήσεων, διαφορετικά ενδέχεται να καθυστερήσει η ειδοποίηση. Παρακαλούμε χορηγήστε αυτό το δικαίωμα για να χρησιμοποιήσετε αυτήν τη δυνατότητα."</string>
+    <string name="call_contact">"Κλήση %1$s"</string>
+    <string name="email_contact">"E-mail %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Μαζική δημιουργία υποεργασιών</string>
+    <string name="dialog_create_multiple_subnotes">Μαζική δημιουργία συνδεδεμένων σημειώσεων</string>
+    <string name="dialog_detected_multiple_subtasks">Το κείμενο πιθανώς περιέχει πολλαπλές υποεργασίες. Θέλετε να δημιουργήσετε υποεργασίεςchar@@0 %d υποεργασίες;</string>
+    <string name="dialog_detected_multiple_subnotes">Το κείμενο πιθανόν να περιέχει πολλαπλές συνδεδεμένες σημειώσεις. Θέλετε να δημιουργήσετε %d συνδεδεμένες σημειώσεις;</string>
+    <string name="dialog_confirm_create_multiple">Δημιουργία πολλαπλών</string>
+    <string name="dialog_confirm_create_single">Δημιουργία μοναδικού</string>
 </resources>

@@ -22,11 +22,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
-import androidx.compose.material3.ElevatedAssistChip
+import androidx.compose.material.icons.outlined.Balance
+import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material3.Badge
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -50,6 +52,8 @@ import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
 import com.mikepenz.aboutlibraries.entity.Organization
 import com.mikepenz.aboutlibraries.ui.compose.util.author
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 
 
 @Composable
@@ -86,17 +90,17 @@ fun AboutLibraries_Preview() {
     MaterialTheme {
         AboutLibraries(
             libraries = Libs(
-                libraries = listOf(
+                libraries = persistentListOf(
                     Library(
                         uniqueId = "uniqueId",
                         artifactVersion = "v2.2.0",
                         name = "jtx Board",
                         description = "Description",
                         website = "https://jtx.techbee.at",
-                        developers = emptyList(),
+                        developers = persistentListOf(),
                         organization = Organization("Techbee e.U.", "https://techbee.at"),
                         scm = null,
-                        licenses = setOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
+                        licenses = persistentSetOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
                         //...
                     ),
                     Library(
@@ -105,14 +109,14 @@ fun AboutLibraries_Preview() {
                         name = "jtx Board",
                         description = "Description",
                         website = "https://jtx.techbee.at",
-                        developers = emptyList(),
+                        developers = persistentListOf(),
                         organization = Organization("Techbee e.U.", "https://techbee.at"),
                         scm = null,
-                        licenses = setOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
+                        licenses = persistentSetOf(License("jtx LIcense", "https://jtx.techbee.at", hash = ""))
                         //...
                     )
                 ),
-                licenses = emptySet()
+                licenses = persistentSetOf()
             )
         )
     }
@@ -120,7 +124,7 @@ fun AboutLibraries_Preview() {
 
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AboutLibrariesLib(
     library: Library
@@ -141,83 +145,100 @@ fun AboutLibrariesLib(
             verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top)
         ) {
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = library.name,
-                    modifier = Modifier.weight(1f).animateContentSize(),
-                    style = Typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = if(expanded) 5 else 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                val version = library.artifactVersion
-                if (version != null) {
-                    Text(
-                        text = version,
-                        modifier = Modifier.padding(horizontal = 8.dp)
-                    )
+            if(library.author.isNotBlank()) {
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    if (library.author.isNotBlank()) {
+                        Badge {
+                            Text(
+                                text = library.author,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+
+                            )
+                        }
+                    }
+
+                    library.licenses.forEach { license ->
+                        Badge {
+                            Text(
+                                text = license.name,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            )
+                        }
+                    }
                 }
             }
 
-            if (library.author.isNotBlank()) {
-                Text(text = library.author)
-            }
-
-            AnimatedVisibility(expanded && library.description?.isNotBlank() == true) {
-                Text(
-                    text = library.description ?: ""
-                )
-            }
-
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween, 
+                modifier = Modifier.animateContentSize()
             ) {
-                if (library.licenses.isNotEmpty()) {
-                    library.licenses.forEach { license ->
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = library.name,
+                        style = Typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = if(expanded) Int.MAX_VALUE else 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
+                    library.artifactVersion?.let {
 
-                        val uri = try { Uri.parse(license.url) } catch (e: NullPointerException) { null }
-
-                        ElevatedAssistChip(
-                            onClick = {
-                                if(uri != null)
-                                    context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-                                      },
-                            label = {
-                                Text(
-                                    text = license.name
-                                )
-                            },
-                            trailingIcon = {
-                                if(uri != null)
-                                    Icon(Icons.AutoMirrored.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
-                            }
+                        Text(
+                            text = it,
+                            modifier = Modifier.padding(horizontal = 8.dp).alpha(0.6f)
                         )
                     }
                 }
 
-                if (library.website?.isNotEmpty() == true) {
+                Row {
 
-                    val uri = try { Uri.parse(library.website) } catch (e: java.lang.NullPointerException) { null }
+                    if (library.licenses.isNotEmpty()) {
+                        library.licenses.forEach { license ->
 
-                    ElevatedAssistChip(
-                        onClick = {
-                            if(uri != null)
-                                context.startActivity(Intent(Intent.ACTION_VIEW, uri))
-                                  },
-                        label = {
-                            Text(
-                                text = stringResource(id = R.string.website)
+                            val uri = try { Uri.parse(license.url) } catch (e: NullPointerException) { null } ?: return@forEach
+
+
+                            IconButton(
+                                onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, uri)) },
+                                content = {
+                                    Icon(Icons.Outlined.Balance, stringResource(id = R.string.open_in_browser))
+                                }
                             )
-                        },
-                        trailingIcon = {
-                            Icon(Icons.AutoMirrored.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
                         }
-                    )
+                    }
+
+                    if (library.website?.isNotEmpty() == true) {
+
+                        val uri = try { Uri.parse(library.website) } catch (e: java.lang.NullPointerException) { null }
+
+                        IconButton(
+                            onClick = {
+                                if(uri != null)
+                                    context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+                            },
+                            content = {
+                                Icon(Icons.Outlined.Public, stringResource(id = R.string.open_in_browser))
+                            }
+                        )
+                    }
                 }
+            }
+
+            AnimatedVisibility(library.description?.isNotBlank() == true) {
+                Text(
+                    text = library.description ?: "",
+                    maxLines = if(expanded) Int.MAX_VALUE else 3,
+                    overflow = TextOverflow.Ellipsis
+                )
             }
         }
     }
@@ -235,10 +256,10 @@ fun AboutLibrariesLib_Preview() {
                 name = "jtx Board",
                 description = "Description",
                 website = "https://jtx.techbee.at",
-                developers = emptyList(),
+                developers = persistentListOf(),
                 organization = Organization("Techbee e.U.", "https://techbee.at"),
                 scm = null,
-                licenses = setOf(License("jtx License", "https://jtx.techbee.at", hash = ""))
+                licenses = persistentSetOf(License("jtx License", "https://jtx.techbee.at", hash = ""))
                 //...
             )
         )

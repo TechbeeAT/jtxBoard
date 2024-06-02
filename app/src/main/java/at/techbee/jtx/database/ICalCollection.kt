@@ -98,6 +98,11 @@ const val COLUMN_COLLECTION_SYNC_VERSION = "syncversion"
  * Type: [Boolean]
  */
 const val COLUMN_COLLECTION_READONLY = "readonly"
+/**
+ * Purpose:  This column/property defines the date/time of the last sync
+ * Type: [Long]
+ */
+const val COLUMN_COLLECTION_LAST_SYNC = "lastsync"
 
 
 @Parcelize
@@ -135,8 +140,10 @@ data class ICalCollection(
         @ColumnInfo(name = COLUMN_COLLECTION_SYNC_VERSION)            var syncversion: String? = null,
 
         /** Webcal subscription source URL */
-        @ColumnInfo(name = COLUMN_COLLECTION_READONLY)            var readonly: Boolean = false
+        @ColumnInfo(name = COLUMN_COLLECTION_READONLY)            var readonly: Boolean = false,
 
+        /** Stores the date/time of the last sync for this collection */
+        @ColumnInfo(name = COLUMN_COLLECTION_LAST_SYNC)         var lastSync: Long? = null
 
 ): Parcelable {
         companion object Factory {
@@ -189,6 +196,7 @@ data class ICalCollection(
                 values.getAsString(COLUMN_COLLECTION_ACCOUNT_TYPE)?.let { accountType -> this.accountType = accountType }
                 values.getAsString(COLUMN_COLLECTION_SYNC_VERSION)?.let { syncversion -> this.syncversion = syncversion }
                 values.getAsString(COLUMN_COLLECTION_READONLY)?.let { readonly -> this.readonly = readonly == "1"  || readonly == "true"}
+                values.getAsLong(COLUMN_COLLECTION_LAST_SYNC)?.let { lastSync -> this.lastSync = lastSync }
                 return this
         }
 

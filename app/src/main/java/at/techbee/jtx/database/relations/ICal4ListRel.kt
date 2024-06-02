@@ -26,6 +26,12 @@ import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.GroupBy
 import at.techbee.jtx.ui.list.SortOrder
+import at.techbee.jtx.util.DateTimeUtils
+import java.time.Instant
+import java.time.ZonedDateTime
+import java.time.format.TextStyle
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 
 data class ICal4ListRel(
@@ -130,24 +136,40 @@ data class ICal4ListRel(
                     }
                 }
 
-                GroupBy.DATE -> sortedList.groupBy {
+                GroupBy.DATE, GroupBy.START -> sortedList.groupBy {
                     ICalObject.getDtstartTextInfo(
-                        module = Module.JOURNAL,
+                        module = module,
                         dtstart = it.iCal4List.dtstart,
                         dtstartTimezone = it.iCal4List.dtstartTimezone,
                         daysOnly = true,
                         context = context
                     )
                 }
-
-                GroupBy.START -> sortedList.groupBy {
-                    ICalObject.getDtstartTextInfo(
-                        module = Module.TODO,
-                        dtstart = it.iCal4List.dtstart,
-                        dtstartTimezone = it.iCal4List.dtstartTimezone,
-                        daysOnly = true,
-                        context = context
-                    )
+                GroupBy.DATE_WEEK, GroupBy.START_WEEK -> sortedList.groupBy {ical4ListRel ->
+                    if(ical4ListRel.iCal4List.dtstart == null && module == Module.TODO)
+                        context.getString(R.string.list_start_without)
+                    else if(ical4ListRel.iCal4List.dtstart == null)
+                        context.getString(R.string.list_date_without)
+                    else
+                        ical4ListRel.iCal4List.dtstart!!.let {
+                            val date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(ical4ListRel.iCal4List.dtstartTimezone)).toLocalDate()
+                            context.getString(
+                                R.string.week_number_year,
+                                date[WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()],
+                                date.year
+                            )
+                        }
+                }
+                GroupBy.DATE_MONTH, GroupBy.START_MONTH -> sortedList.groupBy {ical4ListRel ->
+                    if(ical4ListRel.iCal4List.dtstart == null && module == Module.TODO)
+                        context.getString(R.string.list_start_without)
+                    else if(ical4ListRel.iCal4List.dtstart == null)
+                        context.getString(R.string.list_date_without)
+                    else
+                        ical4ListRel.iCal4List.dtstart!!.let {
+                            val date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(ical4ListRel.iCal4List.dtstartTimezone)).toLocalDate()
+                            "${date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${date.year}"
+                        }
                 }
 
                 GroupBy.DUE -> sortedList.groupBy {
@@ -160,6 +182,29 @@ data class ICal4ListRel(
                         context = context
                     )
                 }
+                GroupBy.DUE_WEEK -> sortedList.groupBy {ical4ListRel ->
+                    if(ical4ListRel.iCal4List.due == null)
+                        context.getString(R.string.list_due_without)
+                    else
+                        ical4ListRel.iCal4List.due!!.let {
+                            val date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(ical4ListRel.iCal4List.dueTimezone)).toLocalDate()
+                            context.getString(
+                                R.string.week_number_year,
+                                date[WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()],
+                                date.year
+                            )
+                        }
+                }
+                GroupBy.DUE_MONTH -> sortedList.groupBy {ical4ListRel ->
+                    if(ical4ListRel.iCal4List.due == null)
+                        context.getString(R.string.list_due_without)
+                    else
+                        ical4ListRel.iCal4List.due!!.let {
+                            val date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(ical4ListRel.iCal4List.dueTimezone)).toLocalDate()
+                            "${date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${date.year}"
+                        }
+                }
+
                 null -> sortedList.groupBy { it.iCal4List.module }
             }
         }

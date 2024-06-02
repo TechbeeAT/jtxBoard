@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -47,9 +46,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
-import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -58,17 +54,13 @@ import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LinkExistingEntryDialog(
     excludeCurrentId: Long?,
     preselectedLinkEntryModules: List<Module>,
     preselectedLinkEntryReltype: Reltype,
     allEntriesLive: LiveData<List<ICal4ListRel>>,
-    storedCategories: List<StoredCategory>,
-    storedResources: List<StoredResource>,
-    extendedStatuses: List<ExtendedStatus>,
-    settingIsAccessibilityMode: Boolean,
     player: MediaPlayer?,
     onAllEntriesSearchTextUpdated: (String, List<Module>, sameAccount: Boolean, sameCollection: Boolean) -> Unit,
     onEntriesToLinkConfirmed: (newSubentries: List<ICal4List>, linkEntryReltype: Reltype) -> Unit,
@@ -209,17 +201,13 @@ fun LinkExistingEntryDialog(
 
                             ListCardGrid(
                                 iCalObject = entry.iCal4List,
-                                categories = entry.categories,
-                                resources = entry.resources,
-                                storedCategories = storedCategories,
-                                storedResources = storedResources,
-                                storedStatuses = extendedStatuses,
                                 selected = selectedEntries.contains(entry.iCal4List),
                                 progressUpdateDisabled = true,
                                 markdownEnabled = false,
                                 onProgressChanged = { _, _ -> },
-                                settingIsAccessibilityMode = settingIsAccessibilityMode,
                                 player = player,
+                                storedCategories = emptyList(),
+                                storedStatuses = emptyList(),
                                 modifier = Modifier.clickable {
                                     if (selectedEntries.contains(entry.iCal4List))
                                         selectedEntries.remove(entry.iCal4List)
@@ -278,10 +266,6 @@ fun LinkExistingEntryDialog_Preview_CHILD() {
                     ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList())
                 )
             ),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            extendedStatuses = emptyList(),
-            settingIsAccessibilityMode = false,
             player = null,
             onAllEntriesSearchTextUpdated = { _, _, _, _ -> },
             onEntriesToLinkConfirmed = { _, _ ->  },
@@ -306,10 +290,6 @@ fun LinkExistingEntryDialog_Preview_PARENT() {
                     ICal4ListRel(ICal4List.getSample(), emptyList(), emptyList(), emptyList())
                 )
             ),
-            storedCategories = emptyList(),
-            storedResources = emptyList(),
-            extendedStatuses = emptyList(),
-            settingIsAccessibilityMode = false,
             player = null,
             onAllEntriesSearchTextUpdated = { _, _, _, _ -> },
             onEntriesToLinkConfirmed = { _, _ -> },

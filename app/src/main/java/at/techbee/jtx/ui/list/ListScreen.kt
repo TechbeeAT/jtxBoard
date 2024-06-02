@@ -98,6 +98,9 @@ fun ListScreen(
                     isPullRefreshEnabled = isPullRefreshEnabled,
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
+                    isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP,
+                    isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
+                    isSubnoteDragAndDropEnabled = listViewModel.listSettings.subnotesOrderBy.value == OrderBy.DRAG_AND_DROP,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent ->
@@ -113,7 +116,8 @@ fun ListScreen(
                         )
                     },
                     onSyncRequested = { listViewModel.syncAccounts() },
-                    onSaveListSettings = { listViewModel.saveListSettings() }
+                    onSaveListSettings = { listViewModel.saveListSettings() },
+                    onUpdateSortOrder = { listViewModel.updateSortOrder(it) }
                 )
             }
             ViewMode.GRID -> {
@@ -121,12 +125,10 @@ fun ListScreen(
                     list = list,
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
-                    storedResourcesLive = listViewModel.storedResources,
                     storedStatusesLive = listViewModel.extendedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
-                    settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                     isPullRefreshEnabled = isPullRefreshEnabled,
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
@@ -135,29 +137,30 @@ fun ListScreen(
                     onProgressChanged = { itemId, newPercent ->
                         processOnProgressChanged(itemId, newPercent)
                     },
-                    onSyncRequested = { listViewModel.syncAccounts() }
-                )
+                    onSyncRequested = { listViewModel.syncAccounts() },
+                    isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP
+                    )
             }
             ViewMode.COMPACT -> {
                 ListScreenCompact(
                     groupedList = groupedList,
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
-                    storedResourcesLive = listViewModel.storedResources,
-                    extendedStatusesLive = listViewModel.extendedStatuses,
+                    storedStatusesLive = listViewModel.extendedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
-                    settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                     isPullRefreshEnabled = isPullRefreshEnabled,
-                    markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
+                    isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP,
+                    isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                     onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                     onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
                     onSyncRequested = { listViewModel.syncAccounts() },
-                    onSaveListSettings = { listViewModel.saveListSettings() }
+                    onSaveListSettings = { listViewModel.saveListSettings() },
+                    onUpdateSortOrder = { listViewModel.updateSortOrder(it) }
                 )
             }
             ViewMode.KANBAN -> {
@@ -166,15 +169,13 @@ fun ListScreen(
                     list = list,
                     subtasksLive = listViewModel.allSubtasks,
                     storedCategoriesLive = listViewModel.storedCategories,
-                    storedResourcesLive = listViewModel.storedResources,
-                    extendedStatusesLive = listViewModel.extendedStatuses,
+                    storedStatusesLive = listViewModel.extendedStatuses,
                     selectedEntries = listViewModel.selectedEntries,
                     kanbanColumnsStatus = listViewModel.listSettings.kanbanColumnsStatus,
                     kanbanColumnsXStatus = listViewModel.listSettings.kanbanColumnsXStatus,
                     kanbanColumnsCategory = listViewModel.listSettings.kanbanColumnsCategory,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
-                    settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                     isPullRefreshEnabled = isPullRefreshEnabled,
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
@@ -184,6 +185,15 @@ fun ListScreen(
                     onXStatusChanged = { itemId, newXStatus, scrollOnce -> listViewModel.updateXStatus(itemId, newXStatus, scrollOnce) },
                     onSwapCategories = { itemId, oldCategory, newCategory -> listViewModel.swapCategories(itemId, oldCategory, newCategory) },
                     onSyncRequested = { listViewModel.syncAccounts() }
+                )
+            }
+            ViewMode.WEEK -> {
+                ListScreenWeek(
+                    list = list,
+                    selectedEntries = listViewModel.selectedEntries,
+                    scrollOnceId = listViewModel.scrollOnceId,
+                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
+                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                 )
             }
         }

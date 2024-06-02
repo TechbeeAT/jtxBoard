@@ -19,6 +19,7 @@
     <string name="longitude">"Longitude"</string>
     <string name="unlink">"Dissocier"</string>
     <string name="off">"Désactivé"</string>
+    <string name="location_permission_denied">"Autorisation de localisation refusée"</string>
     <string name="permissions">"Permissions"</string>
     <string name="current_location">"Localisation actuelle"</string>
     <string name="toolbar_text_add_journal">"Ajouter un journal"</string>
@@ -71,7 +72,7 @@
     <string name="list_start_inXhours">"Début planifié dans %d heures"</string>
     <string name="list_start_on_weekday">"Début prévu dans %s"</string>
     <string name="list_tabitem_journals">"Journaux"</string>
-    <string name="list_tabitem_notes">"Remarques"</string>
+    <string name="list_tabitem_notes">"Notes"</string>
     <string name="list_tabitem_todos">"Tâches"</string>
     <string name="list_expand">"Développer"</string>
     <string name="list_dialog_delete_selected_title">Supprimer les entrées sélectionnées ?</string>
@@ -283,6 +284,8 @@
     <string name="search_notes">Rechercher des notes</string>
     <string name="search_todos">Rechercher des tâches</string>
     <string name="filter">"Filtre"</string>
+    <string name="visibility">"Visibilité"</string>
+    <string name="order">"Ordre"</string>
     <string name="sync_now">"Synchroniser maintenant"</string>
     <string name="due">"Exigible"</string>
     <string name="completed">"Complété"</string>
@@ -316,6 +319,7 @@
     <string name="filter_no_resource">Sans ressources</string>
     <string name="filter_subtasks_order_by">Trier les sous-tâches par</string>
     <string name="filter_subnotes_order_by">Trier les notes liées par</string>
+    <string name="order_by_drag_and_drop">"Glisser &amp; Déposer"</string>
     <string name="filter_no_filter">"Aucun filtre"</string>
     <string name="filter_options_more_entries">"Plus (%1$d)"</string>
     <string name="filter_options_less_entries">"Moins"</string>
@@ -382,6 +386,18 @@ Merci !"</string>
     <string name="back">"Retour"</string>
     <string name="details">"Détails"</string>
     <string name="date">"Date"</string>
+    <string name="group_by_date_day">"Date (jour)"</string>
+    <string name="group_by_date_week">"Date (semaine)"</string>
+    <string name="group_by_date_month">"Date (mois)"</string>
+    <string name="group_by_started_day">"Début (jour)"</string>
+    <string name="group_by_started_week">"Début (semaine)"</string>
+    <string name="group_by_started_month">"Début (mois)"</string>
+    <string name="group_by_due_day">"Echéance (jour)"</string>
+    <string name="group_by_due_week">"Echéance (semaine)"</string>
+    <string name="group_by_due_month">"Echéance (mois)"</string>
+    <string name="week_number_year">"Semaine %1$d/%2$d"</string>
+    <string name="summary_description">"Résumé/Description"</string>
+    <string name="status_classification_priority">"Statut/Classification/Priorité"</string>
     <string name="timezone">"Fuseau horaire"</string>
     <string name="not_set2">"Non défini"</string>
     <string name="invert_selection">"Sélection inversée"</string>
@@ -425,6 +441,7 @@ Merci !"</string>
     <string name="details_go_to_series">"Aller à la série"</string>
     <string name="details_detach_from_series">"Détacher de la série"</string>
     <string name="details_detach_all_instances">"Détacher toutes les instances"</string>
+    <string name="details_show_all_instances">"Afficher toutes les instances (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Dissocier du parent"</string>
     <string name="dialog_unlink_from_parent_message">"Supprimer la relation en tant que sous-entrée ? L'entrée restera comme entrée autonome."</string>
     <string name="edit_comment">"Modifier le commentaire"</string>
@@ -466,6 +483,7 @@ Merci !"</string>
     <string name="dialog_add_audio_entry_title">"Ajouter un enregistrement audio"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
+    <string name="menu_list_viewmode_week">"Vue semaine"</string>
     <string name="settings_tasks">"Paramètres des tâches"</string>
     <string name="settings_alarms">"Paramètres d'alarme"</string>
     <string name="settings_tasks_status_progress">"Paramètres des tâches (statut/progression)"</string>
@@ -497,10 +515,12 @@ Merci !"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Garder le statut, la progression &amp; terminée à la synchronisation"</string>
     <string name="settings_attention_experimental_feature">"Attention : Ceci est une fonctionnalité expérimentale"</string>
     <string name="settings_create_with_current_location">"Créer de nouvelles entrées avec l'emplacement actuel"</string>
+    <string name="settings_create_with_current_location_sub">"Veuillez accorder l'accès à votre position lors de l'utilisation de cette application pour utiliser cette fonctionnalité."</string>
     <string name="settings_sticky_alarms">"Alarmes épinglées"</string>
     <string name="settings_sticky_alarms_sub">"Garder les notifications jusqu'à la fin ou les reporter"</string>
     <string name="settings_fullscreen_alarms">"Alarmes en plein écran"</string>
     <string name="settings_fullscreen_alarms_sub">"Affiche les alarmes en plein écran lorsque l'appareil est verrouillé"</string>
+    <string name="settings_accessibility_mode">"Mode d'accessibilité"</string>
     <string name="settings_fullscreen_alarms_toast">"Veuillez autoriser les notifications en plein écran dans les paramètres du système."</string>
     <string name="settings_sync_on_start">"Synchroniser au démarrage de l'appli"</string>
     <string name="settings_sync_on_pull_refresh">"Synchroniser lors du tirage au sort"</string>
@@ -523,6 +543,10 @@ Merci !"</string>
     <string name="filter_any">"N'importe laquelle"</string>
     <string name="filter_all">"Toutes"</string>
     <string name="filter_none">"Aucune"</string>
+    <string name="filter_date_from_to">"Date: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Début : %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Échéance : %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Complété : %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date dans le passé"</string>
     <string name="list_date_today">"Aujourd'hui"</string>
@@ -542,6 +566,7 @@ Merci !"</string>
     <string name="list_biometric_protected_entries_unlocked">Entrées biométriques protégées déverrouillées</string>
     <string name="settings_auto_alarm">"Alarme automatique"</string>
     <string name="alarms_always_ondue">"Toujours en échéance"</string>
+    <string name="alarms_always_on_save">"Toujours en sauvegarde (expérimental)"</string>
     <string name="settings_auto_alarm_sub">"Activez cette option pour créer automatiquement des alarmes. Choisissez \"Toujours à échéance\" pour ne pas créer d'alarme mais pour être informé dans tous les cas lorsqu'une tâche est à échéance."</string>
     <string name="settings_protect_biometric">"Protéger les entrées par biométrie"</string>
     <string name="settings_protect_biometric_sub">"Cette fonction masque les entrées sélectionnées jusqu'à ce qu'elles soient déverrouillées avec des données biométriques, mais ne chiffre/décrypte pas les données en arrière-plan."</string>
@@ -640,4 +665,12 @@ Merci !"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board peut vous avertir lorsque vous êtes proche des coordonnées indiquées. Veuillez définir l’autorisation de localisation pour «Toujours autoriser et autoriser les notifications à utiliser cette fonctionnalité."</string>
     <string name="geofence_notification_summary">"Geofence activé"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board a besoin de l'autorisation pour programmer des alarmes exactes, sinon les notifications d'alarme pourraient être retardées. Veuillez accorder cette autorisation afin d'utiliser cette fonctionnalité."</string>
+    <string name="call_contact">"Appeler %1$s"</string>
+    <string name="email_contact">"E-Mail %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Créer des sous-tâches en masse</string>
+    <string name="dialog_create_multiple_subnotes">Créer des notes liées en masse</string>
+    <string name="dialog_detected_multiple_subtasks">Le texte contient probablement plusieurs sous-tâches. Voulez-vous créer des sous-tâches %d?</string>
+    <string name="dialog_detected_multiple_subnotes">Le texte contient probablement plusieurs notes liées. Voulez-vous créer des notes liées à %d?</string>
+    <string name="dialog_confirm_create_multiple">Créer plusieurs</string>
+    <string name="dialog_confirm_create_single">Créer une seule</string>
 </resources>

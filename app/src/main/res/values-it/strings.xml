@@ -19,6 +19,7 @@
     <string name="longitude">"Longitudine"</string>
     <string name="unlink">"Scollega"</string>
     <string name="off">"Off"</string>
+    <string name="location_permission_denied">"Autorizzazione geolocalizzazione negata"</string>
     <string name="permissions">"Autorizzazioni"</string>
     <string name="current_location">"Posizione attuale"</string>
     <string name="toolbar_text_add_journal">"Inserisci Diario"</string>
@@ -107,9 +108,11 @@
     <string name="edit_recur_on_weekday">"in poi"</string>
     <string name="edit_recur_on_the_x_day_of_month">"sul"</string>
     <string name="edit_recur_x_day_of_the_month">"giorno del mese"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"ultimo"</string>
     <string name="edit_recur_x_times">"volte"</string>
     <string name="edit_recur_toast_requires_start_date">"La ricorrenza richiede una data di inizio!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleziona la data"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Seleziona periodo"</string>
     <string name="edit_datepicker_dialog_add_time">"Aggiungi orario"</string>
     <string name="edit_datepicker_dialog_edit_time">"Modifica orario"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Aggiungi fuso orario"</string>
@@ -281,6 +284,8 @@
     <string name="search_notes">Cerca note</string>
     <string name="search_todos">Cerca attività</string>
     <string name="filter">"Filtro"</string>
+    <string name="visibility">"Visibilità"</string>
+    <string name="order">"Ordine"</string>
     <string name="sync_now">"Sincronizza ora"</string>
     <string name="due">"In scadenza"</string>
     <string name="completed">"Completato"</string>
@@ -352,6 +357,7 @@
     <string name="settings_timezone_display_local">"Mostra l'ora nel fuso orario locale"</string>
     <string name="settings_timezone_display_original">"Mostra l'ora nel fuso orario originale"</string>
     <string name="settings_timezone_display_local_and_original">"Mostra l'orario nel fuso orario locale e nel fuso orario originale (solo vista dettagli)"</string>
+    <string name="settings_font">"Font"</string>
     <string name="donate_dialog_title">"Ti piace JTX Board?"</string>
     <string name="donate_dialog_message">"Lo sviluppo di un'applicazione è un argomento complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. Se vi piace questa applicazione e se volete garantirne lo sviluppo continuo, considerate una donazione :-)
 Grazie!"</string>
@@ -380,6 +386,15 @@ Grazie!"</string>
     <string name="back">"Indietro"</string>
     <string name="details">"Dettagli"</string>
     <string name="date">"Data"</string>
+    <string name="group_by_date_day">"Data (giorno)"</string>
+    <string name="group_by_date_week">"Data (settimana)"</string>
+    <string name="group_by_date_month">"Data (mese)"</string>
+    <string name="group_by_started_day">"Inizio (giorno)"</string>
+    <string name="group_by_started_week">"Inizio (settimana)"</string>
+    <string name="group_by_started_month">"Inizio (mese)"</string>
+    <string name="group_by_due_week">"Scadenza (settimana)"</string>
+    <string name="group_by_due_month">"Scadenza (mese)"</string>
+    <string name="week_number_year">"Settimana %1$d/%2$d"</string>
     <string name="timezone">"Fuso orario"</string>
     <string name="not_set2">"Non impostato"</string>
     <string name="invert_selection">"Inverti selezione"</string>
@@ -423,6 +438,7 @@ Grazie!"</string>
     <string name="details_go_to_series">"Vai alla serie"</string>
     <string name="details_detach_from_series">"Scollega dalla serie"</string>
     <string name="details_detach_all_instances">"Stacca tutte le istanze"</string>
+    <string name="details_show_all_instances">"Mostra tutte le istanze (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Scollega dal genitore"</string>
     <string name="dialog_unlink_from_parent_message">"Rimuovere la relazione come sotto-voce? La voce rimarrà come voce autonoma."</string>
     <string name="edit_comment">"Modifica commento"</string>

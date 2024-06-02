@@ -18,3 +18,9 @@ assignees: patrickunterwegs
 
 **Additional context**
 <!-- Add any other context or screenshots about the feature request here. -->
+
+**Your current device and version**
+ - Device: [e.g. Samsung Galaxy S22]
+ - Android version: [e.g. Android 11]
+ - jtx Board version: [e.g. 2.1.0]
+ - Downloaded from: [e.g. Google Play, f-Droid, ...]

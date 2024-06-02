@@ -33,7 +33,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,8 +69,6 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.ListCardGrid
@@ -95,7 +92,7 @@ enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun UpdateEntriesDialog(
     module: Module,
@@ -103,19 +100,13 @@ fun UpdateEntriesDialog(
     allResourcesLive: LiveData<List<String>>,
     allCollectionsLive: LiveData<List<ICalCollection>>,
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
-    storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedResourcesLive: LiveData<List<StoredResource>>,
     extendedStatusesLive: LiveData<List<ExtendedStatus>>,
-    settingIsAccessibilityMode: Boolean,
     player: MediaPlayer?,
     onSelectFromAllListSearchTextUpdated: (String) -> Unit,
-    //currentCategories: List<String>,
-    //currentResources: List<String>
-    //current: ICalCollection,
-    //onCollectionChanged: (ICalCollection) -> Unit,
     onCategoriesChanged: (addedCategories: List<String>, removedCategories: List<String>) -> Unit,
     onResourcesChanged: (addedResources: List<String>, removedResources: List<String>) -> Unit,
-    onStatusChanged: (String) -> Unit,
+    onStatusChanged: (Status) -> Unit,
+    onXStatusChanged: (ExtendedStatus) -> Unit,
     onClassificationChanged: (Classification) -> Unit,
     onPriorityChanged: (Int?) -> Unit,
     onCollectionChanged: (ICalCollection) -> Unit,
@@ -127,15 +118,14 @@ fun UpdateEntriesDialog(
     val allResources by allResourcesLive.observeAsState(emptyList())
     val allCollections by allCollectionsLive.observeAsState(emptyList())
     val selectFromAllList by selectFromAllListLive.observeAsState(emptyList())
-    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
-    val storedResources by storedResourcesLive.observeAsState(emptyList())
     val storedStatuses by extendedStatusesLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
     val removedCategories = remember { mutableStateListOf<String>() }
     val addedResources = remember { mutableStateListOf<String>() }
     val removedResources = remember { mutableStateListOf<String>() }
-    var newStatus by remember { mutableStateOf<String?>(null) }
+    var newStatus by remember { mutableStateOf<Status?>(null) }
+    var newXStatus by remember { mutableStateOf<ExtendedStatus?>(null) }
     var newClassification by remember { mutableStateOf<Classification?>(null) }
     var newPriority by remember { mutableStateOf<Int?>(null) }
     var newCollection by remember { mutableStateOf<ICalCollection?>(null) }
@@ -306,9 +296,12 @@ fun UpdateEntriesDialog(
 
                         Status.valuesFor(module).forEach { status ->
                             InputChip(
-                                onClick = { newStatus = status.status?:status.name },
+                                onClick = {
+                                    newStatus = status
+                                    newXStatus = null
+                                          },
                                 label = { Text(stringResource(id = status.stringResource)) },
-                                selected = newStatus == status.status || newStatus ==status.name,
+                                selected = newStatus == status,
                             )
                         }
                         storedStatuses
@@ -316,9 +309,12 @@ fun UpdateEntriesDialog(
                             .filter { it.module == module }
                             .forEach { storedStatus ->
                                 InputChip(
-                                    onClick = { newStatus = storedStatus.xstatus },
+                                    onClick = {
+                                        newStatus = null
+                                        newXStatus = storedStatus
+                                              },
                                     label = { Text(storedStatus.xstatus) },
-                                    selected = newStatus == storedStatus.xstatus,
+                                    selected = newXStatus == storedStatus,
                                 )
                             }
                     }
@@ -434,17 +430,13 @@ fun UpdateEntriesDialog(
                                 return@forEachIndexed
                             ListCardGrid(
                                 iCalObject = entry.iCal4List,
-                                categories = entry.categories,
-                                resources = entry.resources,
-                                storedCategories = storedCategories,
-                                storedResources = storedResources,
-                                storedStatuses = storedStatuses,
                                 selected = entry.iCal4List == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
                                 markdownEnabled = false,
-                                settingIsAccessibilityMode = settingIsAccessibilityMode,
                                 player = player,
                                 onProgressChanged = {_, _ -> },
+                                storedCategories = emptyList(),
+                                storedStatuses = emptyList(),
                                 modifier = Modifier.clickable {
                                     selectFromAllListSelectedEntry = if(entry.iCal4List == selectFromAllListSelectedEntry)
                                         null
@@ -469,7 +461,7 @@ fun UpdateEntriesDialog(
                     when (updateEntriesDialogMode) {
                         UpdateEntriesDialogMode.CATEGORIES -> onCategoriesChanged(addedCategories, removedCategories)
                         UpdateEntriesDialogMode.RESOURCES -> onResourcesChanged(addedResources, removedResources)
-                        UpdateEntriesDialogMode.STATUS -> newStatus?.let { onStatusChanged(it) }
+                        UpdateEntriesDialogMode.STATUS -> if(newXStatus != null) onXStatusChanged(newXStatus!!) else newStatus?.let { onStatusChanged(it) }
                         UpdateEntriesDialogMode.CLASSIFICATION -> newClassification?.let { onClassificationChanged(it) }
                         UpdateEntriesDialogMode.PRIORITY -> onPriorityChanged(if(newPriority == 0) null else newPriority)
                         UpdateEntriesDialogMode.COLLECTION -> newCollection?.let { onCollectionChanged(it) }
@@ -480,7 +472,7 @@ fun UpdateEntriesDialog(
                 enabled = when(updateEntriesDialogMode) {
                     UpdateEntriesDialogMode.CATEGORIES -> addedCategories.isNotEmpty() || removedCategories.isNotEmpty()
                     UpdateEntriesDialogMode.RESOURCES -> addedResources.isNotEmpty() || removedResources.isNotEmpty()
-                    UpdateEntriesDialogMode.STATUS -> newStatus != null
+                    UpdateEntriesDialogMode.STATUS -> newStatus != null || newXStatus != null
                     UpdateEntriesDialogMode.CLASSIFICATION -> newClassification != null
                     UpdateEntriesDialogMode.PRIORITY -> true
                     UpdateEntriesDialogMode.COLLECTION -> newCollection != null
@@ -513,15 +505,13 @@ fun UpdateEntriesDialog_Preview() {
             allResourcesLive = MutableLiveData(listOf("1234", "aaa")),
             allCollectionsLive = MutableLiveData(listOf(ICalCollection())),
             selectFromAllListLive = MutableLiveData(listOf()),
-            storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
-            storedResourcesLive = MutableLiveData(listOf(StoredResource("1234", Color.Green.toArgb()))),
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))),
-            settingIsAccessibilityMode = false,
             player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },
             onResourcesChanged = { _, _ -> },
             onStatusChanged = {},
+            onXStatusChanged = {},
             onClassificationChanged = {},
             onPriorityChanged = {},
             onCollectionChanged = {},

@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -47,15 +48,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
 import at.techbee.jtx.ui.reusable.dialogs.EditSubtaskDialog
+import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
+import sh.calvin.reorderable.ReorderableColumn
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -66,13 +68,15 @@ fun DetailsCardSubtasks(
     enforceSavingSubtask: Boolean,
     sliderIncrement: Int,
     showSlider: Boolean,
-    onSubtaskAdded: (subtask: ICalObject) -> Unit,
+    isSubtaskDragAndDropEnabled: Boolean,
+    onSubtaskAdded: (subtask: String) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onSubtaskUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubtaskDeleted: (subtaskId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     onShowLinkExistingDialog: () -> Unit,
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -80,7 +84,7 @@ fun DetailsCardSubtasks(
     var newSubtaskText by rememberSaveable { mutableStateOf("") }
 
     if(enforceSavingSubtask && newSubtaskText.isNotEmpty()) {
-        onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+        onSubtaskAdded(newSubtaskText)
         newSubtaskText = ""
     }
 
@@ -111,8 +115,9 @@ fun DetailsCardSubtasks(
                     trailingIcon = {
                         AnimatedVisibility(newSubtaskText.isNotEmpty()) {
                             IconButton(onClick = {
-                                if(newSubtaskText.isNotEmpty())
-                                    onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+                                if (newSubtaskText.isNotEmpty()) {
+                                    onSubtaskAdded(newSubtaskText)
+                                }
                                 newSubtaskText = ""
                             }) {
                                 Icon(
@@ -131,8 +136,9 @@ fun DetailsCardSubtasks(
                         .padding(bottom = 8.dp),
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
-                        if(newSubtaskText.isNotEmpty())
-                            onSubtaskAdded(ICalObject.createTask(newSubtaskText))
+                        if (newSubtaskText.isNotEmpty()) {
+                            onSubtaskAdded(newSubtaskText)
+                        }
                         newSubtaskText = ""
                     })
                 )
@@ -140,12 +146,19 @@ fun DetailsCardSubtasks(
 
 
             AnimatedVisibility(subtasks.isNotEmpty()) {
-                Column(
+                ReorderableColumn(
+                    list = subtasks,
+                    onSettle = { fromIndex, toIndex ->
+                       val reordered = subtasks.toMutableList().apply {
+                           add(toIndex, removeAt(fromIndex))
+                       }
+                        onUpdateSortOrder(reordered)
+                    },
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                ) {
-                    subtasks.forEach { subtask ->
+                ) {_, subtask, _ ->
+                    key(subtask.id) {
 
                         var showEditSubtaskDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -166,6 +179,7 @@ fun DetailsCardSubtasks(
                             onProgressChanged = onProgressChanged,
                             onDeleteClicked = { onSubtaskDeleted(subtask.id) },
                             onUnlinkClicked = { onUnlinkSubEntry(subtask.id) },
+                            dragHandle = { if(isSubtaskDragAndDropEnabled) DragHandle(this) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
@@ -205,13 +219,15 @@ fun DetailsCardSubtasks_Preview() {
             enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = true,
+            isSubtaskDragAndDropEnabled = true,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
             onUnlinkSubEntry = { },
             goToDetail = { _, _, _ -> },
-            onShowLinkExistingDialog = {}
+            onShowLinkExistingDialog = {},
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -233,13 +249,15 @@ fun DetailsCardSubtasks_Preview_edit() {
             enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = true,
+            isSubtaskDragAndDropEnabled = true,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
             onUnlinkSubEntry = { },
             goToDetail = { _, _, _ -> },
-            onShowLinkExistingDialog = {}
+            onShowLinkExistingDialog = {},
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -261,13 +279,15 @@ fun DetailsCardSubtasks_Preview_edit_without_Slider() {
             enforceSavingSubtask = false,
             sliderIncrement = 25,
             showSlider = false,
+            isSubtaskDragAndDropEnabled = true,
             onSubtaskAdded = { },
             onProgressChanged = { _, _ -> },
             onSubtaskUpdated = { _, _ ->  },
             onSubtaskDeleted = { },
             onUnlinkSubEntry = { },
             goToDetail = { _, _, _ -> },
-            onShowLinkExistingDialog = {}
+            onShowLinkExistingDialog = {},
+            onUpdateSortOrder = { }
         )
     }
 }

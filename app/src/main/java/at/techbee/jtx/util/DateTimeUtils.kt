@@ -20,6 +20,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.time.format.TextStyle
 import java.time.temporal.WeekFields
 import java.util.Locale
 
@@ -84,7 +85,7 @@ object DateTimeUtils {
         return convertLongToMediumDateString(date, timezone) + if(timezone != TZ_ALLDAY) " " + convertLongToShortTimeString(date, timezone) else ""
     }
 
-    private fun convertLongToMediumDateString(date: Long?, timezone: String?): String {
+    fun convertLongToMediumDateString(date: Long?, timezone: String?): String {
         if (date == null || date == 0L)
             return ""
         val zonedDateTime =
@@ -124,20 +125,16 @@ object DateTimeUtils {
     fun convertLongToWeekdayString(date: Long?, timezone: String?): String {
         if (date == null || date == 0L)
             return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
-        val formatter = DateTimeFormatter.ofPattern("eeee", Locale.getDefault())
-        return zonedDateTime.toLocalDateTime().format(formatter)
+        val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        return zonedDateTime.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
     }
 
 
     fun convertLongToMonthString(date: Long?, timezone: String?): String {
         if (date == null || date == 0L)
             return ""
-        val zonedDateTime =
-            ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
-        val formatter = DateTimeFormatter.ofPattern("MMMM", Locale.getDefault())
-        return zonedDateTime.toLocalDateTime().format(formatter)
+        val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        return zonedDateTime.month.getDisplayName(TextStyle.SHORT, Locale.getDefault())
     }
 
 

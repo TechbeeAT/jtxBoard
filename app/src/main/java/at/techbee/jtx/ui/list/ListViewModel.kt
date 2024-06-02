@@ -12,9 +12,7 @@ import android.accounts.Account
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.database.sqlite.SQLiteConstraintException
 import android.media.MediaPlayer
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +25,6 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
-import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_CLASSIFICATION
@@ -37,17 +34,16 @@ import at.techbee.jtx.database.COLUMN_COMPLETED
 import at.techbee.jtx.database.COLUMN_CREATED
 import at.techbee.jtx.database.COLUMN_DTSTART
 import at.techbee.jtx.database.COLUMN_DUE
-import at.techbee.jtx.database.COLUMN_ID
 import at.techbee.jtx.database.COLUMN_LAST_MODIFIED
 import at.techbee.jtx.database.COLUMN_PERCENT
 import at.techbee.jtx.database.COLUMN_PRIORITY
+import at.techbee.jtx.database.COLUMN_SORT_INDEX
 import at.techbee.jtx.database.COLUMN_STATUS
 import at.techbee.jtx.database.COLUMN_SUMMARY
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.Module
@@ -57,12 +53,8 @@ import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.properties.Relatedto
-import at.techbee.jtx.database.properties.Reltype
-import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.database.views.VIEW_NAME_ICAL4LIST
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
@@ -76,7 +68,7 @@ import kotlinx.coroutines.launch
 open class ListViewModel(application: Application, val module: Module) : AndroidViewModel(application) {
 
     private val _application = application
-    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
+    private val databaseDao = ICalDatabase.getInstance(_application).iCalDatabaseDao()
     private val settings = PreferenceManager.getDefaultSharedPreferences(application)
 
     val prefs: SharedPreferences = when (module) {
@@ -91,34 +83,34 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
     private var listQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
     var iCal4ListRel: LiveData<List<ICal4ListRel>> = listQuery.switchMap {
-        database.getIcal4ListRel(it)
+        databaseDao.getIcal4ListRel(it)
     }
 
     private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubtasks: LiveData<List<ICal4ListRel>> = allSubtasksQuery.switchMap { database.getIcal4ListRel(it) }
+    var allSubtasks: LiveData<List<ICal4ListRel>> = allSubtasksQuery.switchMap { databaseDao.getIcal4ListRel(it) }
 
     private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { database.getIcal4ListRel(it) }
+    var allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { databaseDao.getIcal4ListRel(it) }
 
-    var allParents: LiveData<List<ICal4ListRel>> = database.getAllParents()
+    var allParents: LiveData<List<ICal4ListRel>> = databaseDao.getAllParents()
 
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var selectFromAllList: LiveData<List<ICal4ListRel>> = selectFromAllListQuery.switchMap { database.getIcal4ListRel(it) }
+    var selectFromAllList: LiveData<List<ICal4ListRel>> = selectFromAllListQuery.switchMap { databaseDao.getIcal4ListRel(it) }
 
-    private val allAttachmentsList: LiveData<List<Attachment>> = database.getAllAttachments()
+    private val allAttachmentsList: LiveData<List<Attachment>> = databaseDao.getAllAttachments()
     val allAttachmentsMap = allAttachmentsList.map { list ->
         return@map list.groupBy { it.icalObjectId }
     }
 
-    val allCategories = database.getAllCategoriesAsText()
-    val allResources = database.getAllResourcesAsText()
-    val allWriteableCollections = database.getAllWriteableCollections()
-    val allCollections = database.getAllCollections(module = module.name)
-    val storedListSettings = database.getStoredListSettings(modules = listOf(module.name))
-    val storedCategories = database.getStoredCategories()
-    val storedResources = database.getStoredResources()
-    val extendedStatuses = database.getStoredStatuses()
-    val numAllEntries = database.getICal4ListCount(module.name)
+    val allCategories = databaseDao.getAllCategoriesAsText()
+    val allResources = databaseDao.getAllResourcesAsText()
+    val allWriteableCollections = databaseDao.getAllWriteableCollections()
+    val allCollections = databaseDao.getAllCollections(module = module.name)
+    val storedListSettings = databaseDao.getStoredListSettings(modules = listOf(module.name))
+    val storedCategories = databaseDao.getStoredCategories()
+    val storedResources = databaseDao.getStoredResources()
+    val extendedStatuses = databaseDao.getStoredStatuses()
+    val numAllEntries = databaseDao.getICal4ListCount(module.name)
 
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)
@@ -238,39 +230,23 @@ open class ListViewModel(application: Application, val module: Module) : Android
     fun updateProgress(itemId: Long, newPercent: Int, scrollOnce: Boolean = false) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            val currentItem = database.getICalObjectById(itemId) ?: return@launch
-            currentItem.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-            database.update(currentItem)
-            currentItem.makeSeriesDirty(database)
+            databaseDao.updateProgress(
+                id = itemId,
+                newPercent = newPercent,
+                settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
+                settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
+            )
 
-            if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
-                ICalObject.findTopParent(currentItem.id, database)?.let {
-                    ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-                }
-            }
-
-            onChangeDone()
+            onChangeDone(updateNotifications = true)
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
     }
 
     fun updateStatus(itemId: Long, newStatus: Status, scrollOnce: Boolean = false) {
-
         viewModelScope.launch(Dispatchers.IO) {
-            val currentItem = database.getICalObjectById(itemId) ?: return@launch
-            currentItem.status = newStatus.status
-            if(settingsStateHolder.settingKeepStatusProgressCompletedInSync.value) {
-                when(newStatus) {
-                    Status.IN_PROCESS -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
-                    Status.COMPLETED -> currentItem.setUpdatedProgress(100, true)
-                    else -> { }
-                }
-            }
-            currentItem.makeDirty()
-            database.update(currentItem)
-            currentItem.makeSeriesDirty(database)
-            onChangeDone()
+            databaseDao.updateStatus(itemId, newStatus, null, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+            onChangeDone(updateNotifications = true)
             if(scrollOnce)
                 scrollOnceId.postValue(itemId)
         }
@@ -278,23 +254,17 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
     fun updateXStatus(itemId: Long, newXStatus: ExtendedStatus, scrollOnce: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
-            val currentItem = database.getICalObjectById(itemId) ?: return@launch
-            currentItem.xstatus = newXStatus.xstatus
-            database.update(currentItem)
-            updateStatus(itemId, newXStatus.rfcStatus, scrollOnce)
+            databaseDao.updateStatus(itemId, newXStatus.rfcStatus, newXStatus, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+            onChangeDone(updateNotifications = false)
+            if(scrollOnce)
+                scrollOnceId.postValue(itemId)
         }
     }
 
     fun swapCategories(iCalObjectId: Long, oldCategory: String, newCategory: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            database.swapCategories(iCalObjectId, oldCategory, newCategory)
-
-            val currentItem = database.getICalObjectById(iCalObjectId) ?: return@launch
-            currentItem.makeDirty()
-            database.update(currentItem)
-            currentItem.makeSeriesDirty(database)
-            SyncUtil.notifyContentObservers(getApplication())
-            NotificationPublisher.scheduleNextNotifications(getApplication())
+            databaseDao.swapCategories(iCalObjectId, oldCategory, newCategory)
+            onChangeDone(updateNotifications = false)
             scrollOnceId.postValue(iCalObjectId)
         }
     }
@@ -304,21 +274,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun deleteSelected() {
         viewModelScope.launch(Dispatchers.IO) {
-            val selectedICal4List = database.getIcal4ListRelSync(
-                SupportSQLiteQueryBuilder
-                    .builder(VIEW_NAME_ICAL4LIST)
-                    .selection("$COLUMN_ID IN (${selectedEntries.joinToString(separator = ",", transform = { "?"})})", selectedEntries.toTypedArray())
-                    .create()
-            )
-            selectedICal4List.forEach { entry ->
-                if(entry.iCal4List.isReadOnly)
-                    return@forEach
-                if(entry.iCal4List.recurid != null)
-                    database.getICalObjectByIdSync(entry.iCal4List.id)?.let { ICalObject.unlinkFromSeries(it, database) }
-                ICalObject.deleteItemWithChildren(entry.iCal4List.id, database)
-                selectedEntries.clear()
-            }
-            onChangeDone()
+            databaseDao.deleteICalObjects(selectedEntries)
+            selectedEntries.clear()
+            onChangeDone(updateNotifications = true)
         }
     }
 
@@ -329,43 +287,20 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun updateCategoriesOfSelected(addedCategories: List<String>, removedCategories: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-
-            if(removedCategories.isNotEmpty())
-                database.deleteCategoriesForICalObjects(removedCategories, selectedEntries)
-
-            addedCategories.forEach { category ->
-                selectedEntries.forEach { selected ->
-                    if(database.getCategoryForICalObjectByName(selected, category) == null)
-                        database.insertCategory(Category(icalObjectId = selected, text = category))
-                }
-            }
-            makeSelectedDirty()
-            onChangeDone()
+            databaseDao.updateCategories(selectedEntries, addedCategories, removedCategories)
+            onChangeDone(updateNotifications = false)
         }
     }
 
     fun moveSelectedToNewCollection(newCollection: ICalCollection) {
         viewModelScope.launch(Dispatchers.IO) {
-            val newEntries = mutableListOf<Long>()
-
-            selectedEntries.forEach { iCalObjectId ->
-                try {
-                    val newId = ICalObject.updateCollectionWithChildren(iCalObjectId, null, newCollection.collectionId, database, getApplication()) ?: return@forEach
-                    newEntries.add(newId)
-                    // once the newId is there, the local entries can be deleted (or marked as deleted)
-                    ICalObject.deleteItemWithChildren(iCalObjectId, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
-                    val newICalObject = database.getICalObjectByIdSync(newId)
-                    if (newICalObject?.rrule != null)
-                        newICalObject.recreateRecurring(getApplication())
-                } catch (e: SQLiteConstraintException) {
-                    Log.w("SQLConstraint", "Corrupted ID: $iCalObjectId")
-                    Log.w("SQLConstraint", e.stackTraceToString())
-                    //sqlConstraintException.value = true
-                }
-            }
-            onChangeDone()
+            val newEntries = databaseDao.moveToCollection(
+                iCalObjectIds = selectedEntries,
+                newCollectionId = newCollection.collectionId
+            )
             selectedEntries.clear()
             selectedEntries.addAll(newEntries)
+            onChangeDone(updateNotifications = true)
         }
     }
 
@@ -376,18 +311,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun updateResourcesToSelected(addedResources: List<String>, removedResources: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
-
-            if(removedResources.isNotEmpty())
-                database.deleteResourcesForICalObjects(removedResources, selectedEntries)
-
-            addedResources.forEach { resource ->
-                selectedEntries.forEach { selected ->
-                    if(database.getResourceForICalObjectByName(selected, resource) == null)
-                        database.insertResource(Resource(icalObjectId = selected, text = resource))
-                }
-            }
-            makeSelectedDirty()
-            onChangeDone()
+            databaseDao.updateResources(selectedEntries, addedResources, removedResources)
+            onChangeDone(updateNotifications = false)
         }
     }
 
@@ -397,59 +322,31 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun addNewParentToSelected(addedParent: ICal4List) {
         viewModelScope.launch(Dispatchers.IO) {
-            selectedEntries.forEach { selected ->
-
-                val childUID = database.getICalObjectById(selected)?.uid ?: return@forEach
-                if(addedParent.uid == childUID)
-                    return@forEach
-
-                val existing = addedParent.uid?.let { database.findRelatedTo(selected, it, Reltype.PARENT.name) != null } ?: return@forEach
-                if(!existing)
-                    database.insertRelatedto(
-                        Relatedto(
-                            icalObjectId = selected,
-                            text = addedParent.uid,
-                            reltype = Reltype.PARENT.name
-                        )
-                    )
-            }
-            makeSelectedDirty()
-            onChangeDone()
+            databaseDao.linkChildren(addedParent.id, selectedEntries)
+            onChangeDone(updateNotifications = false)
         }
     }
 
-    /**
-     * Updates the currently selected entries to make them dirty
-     */
-    private suspend fun makeSelectedDirty() {
-        selectedEntries.forEach { selected ->
-            database.getICalObjectByIdSync(selected)?.let {
-                database.update(it.apply { makeDirty() })
-                it.makeSeriesDirty(database)
-            }
-        }
-    }
 
     /**
      * Updates the status of the selected entries
      * @param newStatus to be set
      */
-    fun updateStatusOfSelected(newStatus: String) {
+    fun updateStatusOfSelected(newStatus: Status) {
         viewModelScope.launch(Dispatchers.IO) {
-            selectedEntries.forEach { iCalObjectId ->
-                database.getICalObjectByIdSync(iCalObjectId)?.let {
-                    it.status = if(newStatus == Status.NO_STATUS.name) null else newStatus
-                    when {
-                        newStatus == Status.COMPLETED.status -> it.percent = 100
-                        newStatus == Status.NEEDS_ACTION.status -> it.percent = 0
-                        newStatus == Status.IN_PROCESS.status && it.percent !in 1..99 -> it.percent = 1
-                    }
-                    it.makeDirty()
-                    database.update(it)
-                    it.makeSeriesDirty(database)
-                }
-            }
-            onChangeDone()
+            databaseDao.updateStatus(selectedEntries, newStatus, null,  settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+            onChangeDone(updateNotifications = false)
+        }
+    }
+
+    /**
+     * Updates the status of the selected entries
+     * @param newXStatus to be set
+     */
+    fun updateXStatusOfSelected(newXStatus: ExtendedStatus) {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseDao.updateStatus(selectedEntries, newXStatus.rfcStatus, newXStatus, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
+            onChangeDone(updateNotifications = false)
         }
     }
 
@@ -459,15 +356,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun updateClassificationOfSelected(newClassification: Classification) {
         viewModelScope.launch(Dispatchers.IO) {
-            selectedEntries.forEach { iCalObjectId ->
-                database.getICalObjectByIdSync(iCalObjectId)?.let {
-                    it.classification = newClassification.classification
-                    it.makeDirty()
-                    database.update(it)
-                    it.makeSeriesDirty(database)
-                }
-            }
-            onChangeDone()
+            databaseDao.updateClassification(selectedEntries, newClassification)
+            onChangeDone(updateNotifications = false)
         }
     }
 
@@ -477,15 +367,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun updatePriorityOfSelected(newPriority: Int?) {
         viewModelScope.launch(Dispatchers.IO) {
-            selectedEntries.forEach { iCalObjectId ->
-                database.getICalObjectByIdSync(iCalObjectId)?.let {
-                    it.priority = newPriority
-                    it.makeDirty()
-                    database.update(it)
-                    it.makeSeriesDirty(database)
-                }
-            }
-            onChangeDone()
+            databaseDao.updatePriority(selectedEntries, newPriority)
+            onChangeDone(updateNotifications = false)
         }
     }
 
@@ -497,51 +380,36 @@ open class ListViewModel(application: Application, val module: Module) : Android
     fun insertQuickItem(icalObject: ICalObject, categories: List<Category>, attachments: List<Attachment>, alarm: Alarm?, editAfterSaving: Boolean) {
 
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val newId = database.insertICalObject(icalObject)
-                icalObject.id = newId
+            val newId = databaseDao.insertQuickItem(icalObject, categories, attachments, alarm)
 
-                categories.forEach {
-                    it.icalObjectId = newId
-                    database.insertCategory(it)
-                }
-
-                attachments.forEach { attachment ->
-                    attachment.icalObjectId = newId
-                    database.insertAttachment(attachment)
-                }
-
-                alarm?.let {
-                    it.icalObjectId = newId
-                    database.insertAlarm(it)
-                }
-
-                scrollOnceId.postValue(newId)
-
-                // trigger alarm immediately if setting is active
-                if(icalObject.getModuleFromString() == Module.TODO && SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
-                    NotificationPublisher.triggerImmediateAlarm(icalObject, _application)
-
-                if (editAfterSaving)
-                    goToEdit.postValue(newId)
-            } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
-                Log.d("SQLConstraint", e.stackTraceToString())
+            if(newId == null) {
                 sqlConstraintException.value = true
+                return@launch
             }
-            onChangeDone()
+
+            scrollOnceId.postValue(newId)
+
+            // trigger alarm immediately if setting is active
+            if (icalObject.getModuleFromString() == Module.TODO
+                && SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
+                NotificationPublisher.triggerImmediateAlarm(icalObject, _application)
+
+            if (editAfterSaving)
+                goToEdit.postValue(newId)
+
+            onChangeDone(updateNotifications = true)
         }
     }
 
     fun saveStoredListSetting(storedListSetting: StoredListSetting) {
         viewModelScope.launch(Dispatchers.IO) {
-            database.upsertStoredListSetting(storedListSetting)
+            databaseDao.upsertStoredListSetting(storedListSetting)
         }
     }
 
     fun deleteStoredListSetting(storedListSetting: StoredListSetting) {
         viewModelScope.launch(Dispatchers.IO) {
-            database.deleteStoredListSetting(storedListSetting)
+            databaseDao.deleteStoredListSetting(storedListSetting)
         }
     }
 
@@ -550,7 +418,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun updateExpanded(icalObjectId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            database.updateExpanded(icalObjectId, isSubtasksExpanded, isSubnotesExpanded, isParentsExpanded, isAttachmentsExpanded)
+            databaseDao.updateExpanded(icalObjectId, isSubtasksExpanded, isSubnotesExpanded, isParentsExpanded, isAttachmentsExpanded)
         }
     }
 
@@ -560,12 +428,11 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun deleteDone() {
         viewModelScope.launch(Dispatchers.IO) {
-            val doneTasks = database.getDoneTasks()
-            doneTasks.forEach { doneTask ->
-                ICalObject.deleteItemWithChildren(doneTask.id, database)
+            databaseDao.getDoneTasks().let {
+                databaseDao.deleteICalObjects(it)
+                toastMessage.value = _application.getString(R.string.toast_done_tasks_deleted, it.size)
             }
-            toastMessage.value = _application.getString(R.string.toast_done_tasks_deleted, doneTasks.size)
-            onChangeDone()
+            onChangeDone(updateNotifications = true)
         }
     }
 
@@ -575,10 +442,22 @@ open class ListViewModel(application: Application, val module: Module) : Android
      */
     fun syncAccounts() {
         viewModelScope.launch(Dispatchers.IO) {
-            val collections = database.getAllRemoteCollections()
+            val collections = databaseDao.getAllRemoteCollections()
             SyncUtil.syncAccounts(collections.map { Account(it.accountName, it.accountType) }.toSet())
         }
         SyncUtil.showSyncRequestedToast(_application)
+    }
+
+
+    /**
+     * Updates the sort order of entries in the database
+     * @param list of entries, the index of the entry in the list corresponds to the sort order
+     */
+    fun updateSortOrder(list: List<ICal4List>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseDao.updateSortOrder(list.map { it.id })
+            onChangeDone(updateNotifications = false)
+        }
     }
 
     /**
@@ -586,16 +465,11 @@ open class ListViewModel(application: Application, val module: Module) : Android
      * schedules the notifications
      * updates the widget
      */
-    private suspend fun onChangeDone() {
+    private suspend fun onChangeDone(updateNotifications: Boolean) {
         SyncUtil.notifyContentObservers(getApplication())
         ListWidget().updateAll(getApplication())
-        /*
-        GlanceAppWidgetManager(_application).getGlanceIds(ListWidget::class.java).forEach { glanceId ->
-            //ListWidget().provideGlance(_application, glanceId)
-            //ListWidget().compose(_application, glanceId)
-        }
-         */
-        NotificationPublisher.scheduleNextNotifications(getApplication())
+        if(updateNotifications)
+            NotificationPublisher.scheduleNextNotifications(getApplication())
     }
 
     /**
@@ -626,22 +500,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            val wj = database.insertICalObject(welcomeJournal)
-            val wn = database.insertICalObject(welcomeNote)
-            val wt = database.insertICalObject(welcomeTodo)
-
-            database.insertCategory(Category().apply {
-                this.icalObjectId = wj
-                this.text = context.getString(R.string.list_welcome_category)
-            })
-            database.insertCategory(Category().apply {
-                this.icalObjectId = wn
-                this.text = context.getString(R.string.list_welcome_category)
-            })
-            database.insertCategory(Category().apply {
-                this.icalObjectId = wt
-                this.text = context.getString(R.string.list_welcome_category)
-            })
+            databaseDao.insertQuickItem(welcomeJournal, listOf(Category(text = context.getString(R.string.list_welcome_category))), emptyList(), null)
+            databaseDao.insertQuickItem(welcomeNote, listOf(Category(text = context.getString(R.string.list_welcome_category))), emptyList(), null)
+            databaseDao.insertQuickItem(welcomeTodo, listOf(Category(text = context.getString(R.string.list_welcome_category))), emptyList(), null)
         }
     }
 }
@@ -665,7 +526,10 @@ enum class OrderBy(@StringRes val stringResource: Int) {
     STATUS(R.string.status),
     PROGRESS(R.string.progress),
     ACCOUNT(R.string.account),
-    COLLECTION(R.string.collection);
+    COLLECTION(R.string.collection),
+    DRAG_AND_DROP(R.string.order_by_drag_and_drop),
+    CATEGORIES(R.string.categories),
+    RESOURCES(R.string.resources);
 
     fun getQueryAppendix(sortOrder: SortOrder): String {
         return when(this) {
@@ -673,7 +537,7 @@ enum class OrderBy(@StringRes val stringResource: Int) {
             START_VJOURNAL -> "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
             DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100), $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name} "
             COMPLETED -> "IFNULL($COLUMN_COMPLETED, 0) ${sortOrder.name} "
-            CREATED -> "$COLUMN_CREATED ${sortOrder.name} "
+            CREATED -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100), $COLUMN_CREATED ${sortOrder.name} "
             LAST_MODIFIED -> "$COLUMN_LAST_MODIFIED ${sortOrder.name} "
             SUMMARY -> "UPPER($COLUMN_SUMMARY) ${sortOrder.name} "
             PRIORITY -> "CASE WHEN $COLUMN_PRIORITY IS NULL THEN 1 WHEN $COLUMN_PRIORITY = 0 THEN 1 ELSE 0 END, $COLUMN_PRIORITY ${sortOrder.name} "
@@ -682,15 +546,18 @@ enum class OrderBy(@StringRes val stringResource: Int) {
             PROGRESS -> "$COLUMN_PERCENT ${sortOrder.name} "
             ACCOUNT -> "$COLUMN_COLLECTION_ACCOUNT_NAME ${sortOrder.name} "
             COLLECTION -> "$COLUMN_COLLECTION_DISPLAYNAME ${sortOrder.name} "
+            DRAG_AND_DROP -> "$COLUMN_SORT_INDEX "
+            CATEGORIES -> "categories ${sortOrder.name} "
+            RESOURCES -> "resources ${sortOrder.name} "
         }
     }
 
     companion object {
         fun getValuesFor(module: Module): Array<OrderBy> =
             when(module) {
-                Module.JOURNAL -> arrayOf(START_VJOURNAL, CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION)
-                Module.NOTE -> arrayOf(CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION)
-                Module.TODO -> arrayOf(START_VTODO, DUE, COMPLETED, CREATED, LAST_MODIFIED, SUMMARY, PRIORITY, PROGRESS, STATUS, CLASSIFICATION)
+                Module.JOURNAL -> arrayOf(START_VJOURNAL, CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION, DRAG_AND_DROP)
+                Module.NOTE -> arrayOf(CREATED, LAST_MODIFIED, SUMMARY, STATUS, CLASSIFICATION, DRAG_AND_DROP)
+                Module.TODO -> arrayOf(START_VTODO, DUE, COMPLETED, CREATED, LAST_MODIFIED, SUMMARY, PRIORITY, PROGRESS, STATUS, CLASSIFICATION, DRAG_AND_DROP)
             }
     }
 }
@@ -706,9 +573,15 @@ enum class GroupBy(@StringRes val stringResource: Int) {
     PRIORITY(R.string.priority),
     STATUS(R.string.status),
     CLASSIFICATION(R.string.classification),
-    DATE(R.string.date),
-    START(R.string.started),
-    DUE(R.string.due),
+    DATE(R.string.group_by_date_day),
+    DATE_WEEK(R.string.group_by_date_week),
+    DATE_MONTH(R.string.group_by_date_month),
+    START(R.string.group_by_started_day),
+    START_WEEK(R.string.group_by_started_week),
+    START_MONTH(R.string.group_by_started_month),
+    DUE(R.string.group_by_due_day),
+    DUE_WEEK(R.string.group_by_due_week),
+    DUE_MONTH(R.string.group_by_due_month),
     ACCOUNT(R.string.account),
     COLLECTION(R.string.collection);
 
@@ -718,6 +591,8 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                 Module.JOURNAL -> arrayOf(
                     CATEGORY,
                     DATE,
+                    DATE_WEEK,
+                    DATE_MONTH,
                     STATUS,
                     CLASSIFICATION,
                     ACCOUNT,
@@ -734,7 +609,11 @@ enum class GroupBy(@StringRes val stringResource: Int) {
                     CATEGORY,
                     RESOURCE,
                     START,
+                    START_WEEK,
+                    START_MONTH,
                     DUE,
+                    DUE_WEEK,
+                    DUE_MONTH,
                     STATUS,
                     CLASSIFICATION,
                     PRIORITY,
@@ -755,5 +634,6 @@ enum class ViewMode(@StringRes val stringResource: Int) {
     LIST(R.string.menu_list_viewmode_list),
     GRID(R.string.menu_list_viewmode_grid),
     COMPACT(R.string.menu_list_viewmode_compact),
-    KANBAN(R.string.menu_list_viewmode_kanban)
+    KANBAN(R.string.menu_list_viewmode_kanban),
+    WEEK(R.string.menu_list_viewmode_week)
 }

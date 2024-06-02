@@ -2,7 +2,9 @@ name: Create release
 on:
   push:
     tags:
-      - v*
+      - 'v*'
+      - '!v*alpha*'
+      - '!v*beta*'
 jobs:
   build:
     name: Create release
@@ -17,7 +19,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/actions/setup-gradle@v3
 
       - name: Prepare keystore
         run: echo ${{ secrets.android_keystore_base64 }} | base64 -d >$GITHUB_WORKSPACE/keystore.jks
@@ -64,7 +66,7 @@ jobs:
         run: cp app/build/outputs/apk/ose/release/app-ose-release.apk jtxBoard-${{ github.ref_name }}.apk
 
       - name: Create Github release
-        uses: softprops/action-gh-release@v0.1.15
+        uses: softprops/action-gh-release@v2.0.5
         with:
           prerelease: ${{ contains(github.ref_name, '-alpha') || contains(github.ref_name, '-beta') || contains(github.ref_name, '-rc') }}
           files: | 

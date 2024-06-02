@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.detail
 
 import android.media.MediaPlayer
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,6 +30,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -94,6 +94,7 @@ import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.detail.models.DetailsScreenSection
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
@@ -105,44 +106,11 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-enum class DetailsScreenSection(
-    @StringRes val stringRes: Int
-) {
-    COLLECTION(R.string.collection),
-    DATES(R.string.date),
-    SUMMARYDESCRIPTION(R.string.summary_description),
-    PROGRESS(R.string.progress),
-    STATUSCLASSIFICATIONPRIORITY(R.string.status_classification_priority),
-    CATEGORIES(R.string.categories),
-    PARENTS(R.string.linked_parents),
-    SUBTASKS(R.string.subtasks),
-    SUBNOTES(R.string.view_feedback_linked_notes),
-    RESOURCES(R.string.resources),
-    ATTENDEES(R.string.attendees),
-    CONTACT(R.string.contact),
-    URL(R.string.url),
-    LOCATION(R.string.location),
-    COMMENTS(R.string.comments),
-    ATTACHMENTS(R.string.attachments),
-    ALARMS(R.string.alarms),
-    RECURRENCE(R.string.recurrence);
-
-    companion object {
-        fun entriesFor(module: Module): List<DetailsScreenSection> {
-            return when(module) {
-                Module.JOURNAL -> listOf(COLLECTION, DATES, SUMMARYDESCRIPTION, STATUSCLASSIFICATIONPRIORITY, CATEGORIES, PARENTS, SUBTASKS, SUBNOTES, ATTENDEES, CONTACT, URL, LOCATION, COMMENTS, ATTACHMENTS, RECURRENCE)
-                Module.NOTE -> listOf(COLLECTION, SUMMARYDESCRIPTION, STATUSCLASSIFICATIONPRIORITY, CATEGORIES, PARENTS, SUBTASKS, SUBNOTES, ATTENDEES, CONTACT, URL, LOCATION, COMMENTS, ATTACHMENTS)
-                Module.TODO -> listOf(COLLECTION, DATES, SUMMARYDESCRIPTION, PROGRESS, STATUSCLASSIFICATIONPRIORITY, CATEGORIES, PARENTS, SUBTASKS, SUBNOTES, RESOURCES, ATTENDEES, CONTACT, URL, LOCATION, COMMENTS, ATTACHMENTS, ALARMS, RECURRENCE)
-            }
-        }
-    }
-}
-
 @Composable
 fun DetailScreenContent(
-    observedICalEntity: State<ICalEntity?>,
-    initialEntity: ICalEntity?,
+    observedICalObject: State<ICalObject?>,
     iCalObject: ICalObject?,
+    collection: ICalCollection?,
     categories: SnapshotStateList<Category>,
     resources: SnapshotStateList<Resource>,
     attendees: SnapshotStateList<Attendee>,
@@ -170,15 +138,17 @@ fun DetailScreenContent(
     showProgressForSubTasks: Boolean,
     keepStatusProgressCompletedInSync: Boolean,
     linkProgressToSubtasks: Boolean,
-    setCurrentLocation: Boolean,
     markdownState: MutableState<MarkdownState>,
     scrollToSectionState: MutableState<DetailsScreenSection?>,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
+    isSubtaskDragAndDropEnabled: Boolean,
+    isSubnoteDragAndDropEnabled: Boolean,
     saveEntry: () -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onMoveToNewCollection: (newCollection: ICalCollection) -> Unit,
-    onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
+    onAudioSubEntryAdded: (iCalObject: ICalObject, attachment: Attachment) -> Unit,
+    onSubEntryAdded: (module: Module, text: String) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     onUnlinkSubEntry: (icalObjectId: Long, parentUID: String?) -> Unit,
@@ -187,7 +157,8 @@ fun DetailScreenContent(
     goToFilteredList:  (StoredListSettingData) -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit,
     onShowLinkExistingDialog: (modules: List<Module>, reltype: Reltype) -> Unit,
-) {
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
+    ) {
     if(iCalObject == null)
         return
 
@@ -209,15 +180,15 @@ fun DetailScreenContent(
     }
 
     var timeout by remember { mutableStateOf(false) }
-    LaunchedEffect(timeout, observedICalEntity.value) {
-        if (observedICalEntity.value == null && !timeout) {
-            delay((2).seconds)
+    LaunchedEffect(timeout, observedICalObject.value) {
+        if (observedICalObject.value == null && !timeout) {
+            delay((10).seconds)
             timeout = true
         }
     }
 
     // item was not loaded yet or was deleted in the background
-    if (observedICalEntity.value == null && timeout) {
+    if (observedICalObject.value == null && timeout) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -232,7 +203,7 @@ fun DetailScreenContent(
             }
         }
         return
-    } else if (observedICalEntity.value == null && !timeout) {
+    } else if (observedICalObject.value == null && !timeout) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -245,14 +216,9 @@ fun DetailScreenContent(
         return
     }
 
-    val color = rememberSaveable { mutableStateOf(observedICalEntity.value?.property?.color) }
-    var summary by rememberSaveable { mutableStateOf(initialEntity?.property?.summary ?: "") }
-    var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(initialEntity?.property?.description ?: "")) }
-    if(summary.isEmpty() && initialEntity?.property?.summary?.isNotEmpty() == true
-        || description.text.isEmpty() && initialEntity?.property?.description?.isNotEmpty() == true) {
-        summary = initialEntity.property.summary ?: ""
-        description = TextFieldValue(initialEntity.property.description ?: "")
-    }
+    val color = rememberSaveable { mutableStateOf(iCalObject.color) }
+    var summary by rememberSaveable { mutableStateOf(iCalObject.summary ?:"") }
+    var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(iCalObject.description ?: "")) }
 
 
     // make sure the values get propagated in the iCalObject again when the orientation changes
@@ -274,18 +240,18 @@ fun DetailScreenContent(
     }
 
     // Update some fields in the background that might have changed (e.g. by creating a copy)
-    if ((observedICalEntity.value?.property?.sequence ?: 0) > iCalObject.sequence) {
-        iCalObject.status = observedICalEntity.value?.property?.status
-        iCalObject.percent = observedICalEntity.value?.property?.percent
-        iCalObject.completed = observedICalEntity.value?.property?.completed
-        iCalObject.completedTimezone = observedICalEntity.value?.property?.completedTimezone
-        iCalObject.sequence = observedICalEntity.value?.property?.sequence ?: 0
-        iCalObject.recurid = observedICalEntity.value?.property?.recurid
-        iCalObject.uid = observedICalEntity.value?.property?.uid!!
+    if ((observedICalObject.value?.sequence ?: 0) > iCalObject.sequence) {
+        iCalObject.status = observedICalObject.value?.status
+        iCalObject.percent = observedICalObject.value?.percent
+        iCalObject.completed = observedICalObject.value?.completed
+        iCalObject.completedTimezone = observedICalObject.value?.completedTimezone
+        iCalObject.sequence = observedICalObject.value?.sequence ?: 0
+        iCalObject.recurid = observedICalObject.value?.recurid
+        iCalObject.uid = observedICalObject.value?.uid!!
     }
-    observedICalEntity.value?.property?.id?.let { iCalObject.id = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
-    observedICalEntity.value?.property?.uid?.let { iCalObject.uid = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
-    observedICalEntity.value?.property?.collectionId?.let { iCalObject.collectionId = it }   //  the collectionId might also have changed (when moving the entry to a new collection)!
+    observedICalObject.value?.id?.let { iCalObject.id = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
+    observedICalObject.value?.uid?.let { iCalObject.uid = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
+    observedICalObject.value?.collectionId?.let { iCalObject.collectionId = it }   //  the collectionId might also have changed (when moving the entry to a new collection)!
 
     var showAllOptions by rememberSaveable { mutableStateOf(false) }
 
@@ -381,16 +347,19 @@ fun DetailScreenContent(
 
             when(detailsScreenSection) {
                 DetailsScreenSection.COLLECTION -> {
+                    if(collection == null)
+                        return@items
+
                     DetailsCardCollections(
                         iCalObject = iCalObject,
                         isEditMode = isEditMode.value,
                         isChild = isChild.value,
-                        originalICalEntity = observedICalEntity.value,
+                        originalCollection = collection,
                         color = color,
                         changeState = changeState,
                         allPossibleCollections = allPossibleCollections,
-                        includeVJOURNAL = if (observedICalEntity.value?.property?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
-                        includeVTODO = if (observedICalEntity.value?.property?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
+                        includeVJOURNAL = if (observedICalObject.value?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
+                        includeVTODO = if (observedICalObject.value?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
                         onMoveToNewCollection = onMoveToNewCollection,
                         modifier = detailElementModifier
                     )
@@ -438,7 +407,7 @@ fun DetailScreenContent(
                         SelectionContainer(modifier = detailElementModifier) {
                             ElevatedCard(
                                 onClick = {
-                                    if (observedICalEntity.value?.ICalCollection?.readonly == false)
+                                    if (collection?.readonly == false)
                                         isEditMode.value = true
                                 },
                                 modifier = Modifier
@@ -462,9 +431,12 @@ fun DetailScreenContent(
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .padding(8.dp),
-                                            style = TextStyle(textDirection = TextDirection.Content),
+                                            style = TextStyle(
+                                                textDirection = TextDirection.Content,
+                                                fontFamily = LocalTextStyle.current.fontFamily
+                                                ),
                                             onClick = {
-                                                if (observedICalEntity.value?.ICalCollection?.readonly == false)
+                                                if (collection?.readonly == false)
                                                     isEditMode.value = true
                                             }
                                         )
@@ -588,7 +560,7 @@ fun DetailScreenContent(
                                 iCalObjectId = iCalObject.id,
                                 progress = iCalObject.percent,
                                 status = iCalObject.status,
-                                isReadOnly = observedICalEntity.value?.ICalCollection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                                isReadOnly = collection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                                 sliderIncrement = sliderIncrement,
                                 onProgressChanged = { itemId, newPercent ->
                                     iCalObject.setUpdatedProgress(
@@ -705,17 +677,18 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.SUBTASKS -> {
-                    if(subtasks.value.isNotEmpty() || (isEditMode.value && observedICalEntity.value?.ICalCollection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
+                    if(subtasks.value.isNotEmpty() || (isEditMode.value && collection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
                         DetailsCardSubtasks(
                             subtasks = subtasks.value,
                             isEditMode = isEditMode,
                             enforceSavingSubtask = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
                             sliderIncrement = sliderIncrement,
                             showSlider = showProgressForSubTasks,
+                            isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
                             onProgressChanged = { itemId, newPercent ->
                                 onProgressChanged(itemId, newPercent)
                             },
-                            onSubtaskAdded = { subtask -> onSubEntryAdded(subtask, null) },
+                            onSubtaskAdded = { text -> onSubEntryAdded(Module.TODO, text) },
                             onSubtaskUpdated = { icalObjectId, newText ->
                                 onSubEntryUpdated(
                                     icalObjectId,
@@ -738,21 +711,26 @@ fun DetailScreenContent(
                                     Reltype.CHILD
                                 )
                             },
+                            onUpdateSortOrder = onUpdateSortOrder,
                             modifier = detailElementModifier
                         )
                     }
                 }
                 DetailsScreenSection.SUBNOTES -> {
-                    if(subnotes.value.isNotEmpty() || (isEditMode.value && observedICalEntity.value?.ICalCollection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
+                    if(subnotes.value.isNotEmpty() || (isEditMode.value && collection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
                         DetailsCardSubnotes(
                             subnotes = subnotes.value,
                             isEditMode = isEditMode,
                             enforceSavingSubnote = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
-                            onSubnoteAdded = { subnote, attachment ->
-                                onSubEntryAdded(
-                                    subnote,
+                            isSubnoteDragAndDropEnabled = isSubnoteDragAndDropEnabled,
+                            onAudioSubnoteAdded = { iCalObject, attachment ->
+                                onAudioSubEntryAdded(
+                                    iCalObject,
                                     attachment
                                 )
+                            },
+                            onSubnoteAdded = { text ->
+                                onSubEntryAdded(Module.NOTE, text)
                             },
                             onSubnoteUpdated = { icalObjectId, newText ->
                                 onSubEntryUpdated(
@@ -779,6 +757,7 @@ fun DetailScreenContent(
                                     ), Reltype.CHILD
                                 )
                             },
+                            onUpdateSortOrder = onUpdateSortOrder,
                             modifier = detailElementModifier
                         )
                     }
@@ -844,7 +823,6 @@ fun DetailScreenContent(
                             initialGeoLong = iCalObject.geoLong,
                             initialGeofenceRadius = iCalObject.geofenceRadius,
                             isEditMode = isEditMode.value,
-                            setCurrentLocation = setCurrentLocation,
                             onLocationUpdated = { newLocation, newGeoLat, newGeoLong ->
                                 if (newGeoLat != null && newGeoLong != null) {
                                     iCalObject.geoLat = newGeoLat
@@ -878,7 +856,7 @@ fun DetailScreenContent(
                         DetailsCardAttachments(
                             attachments = attachments,
                             isEditMode = isEditMode.value,
-                            isRemoteCollection = observedICalEntity.value?.ICalCollection?.accountType != LOCAL_ACCOUNT_TYPE,
+                            isRemoteCollection = collection?.accountType != LOCAL_ACCOUNT_TYPE,
                             player = player,
                             onAttachmentsUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
@@ -981,7 +959,7 @@ fun DetailScreenContent(
 
         if(!isEditMode.value) {
             item {
-                val curIndex = icalObjectIdList.indexOf(observedICalEntity.value?.property?.id ?: 0)
+                val curIndex = icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0)
                 if (icalObjectIdList.size > 1 && curIndex >= 0) {
                     Row(
                         modifier = Modifier
@@ -1008,7 +986,7 @@ fun DetailScreenContent(
                         } else {
                             Spacer(modifier = Modifier.size(48.dp))
                         }
-                        Text(text = "${icalObjectIdList.indexOf(observedICalEntity.value?.property?.id ?: 0) + 1}/${icalObjectIdList.size}")
+                        Text(text = "${icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0) + 1}/${icalObjectIdList.size}")
                         if (curIndex != icalObjectIdList.lastIndex) {
                             IconButton(onClick = {
                                 goToDetail(
@@ -1052,8 +1030,8 @@ fun DetailScreenContent_JOURNAL() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            observedICalEntity = remember { mutableStateOf(entity) },
-            initialEntity = null,
+            observedICalObject = remember { mutableStateOf(entity.property) },
+            collection = entity.ICalCollection,
             iCalObject = entity.property,
             categories = remember { mutableStateListOf<Category>().apply { this.addAll(entity.categories ?: emptyList()) } },
             resources = remember { mutableStateListOf() },
@@ -1075,7 +1053,8 @@ fun DetailScreenContent_JOURNAL() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
             allWriteableCollectionsLive = MutableLiveData(listOf(ICalCollection.createLocalCollection(LocalContext.current))),
@@ -1089,7 +1068,8 @@ fun DetailScreenContent_JOURNAL() {
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
-            onSubEntryAdded = { _, _ -> },
+            onAudioSubEntryAdded = { _,  _ -> },
+            onSubEntryAdded = { _,  _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _, _ -> },
@@ -1097,7 +1077,8 @@ fun DetailScreenContent_JOURNAL() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { }, 
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -1116,8 +1097,8 @@ fun DetailScreenContent_TODO_editInitially() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            observedICalEntity = remember { mutableStateOf(entity) },
-            initialEntity = null,
+            observedICalObject = remember { mutableStateOf(entity.property) },
+            collection = entity.ICalCollection,
             iCalObject = entity.property,
             categories = remember { mutableStateListOf() },
             resources = remember { mutableStateListOf() },
@@ -1147,13 +1128,15 @@ fun DetailScreenContent_TODO_editInitially() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
-            onSubEntryAdded = { _, _ -> },
+            onAudioSubEntryAdded = { _,  _ -> },
+            onSubEntryAdded = { _,  _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _, _ -> },
@@ -1161,7 +1144,8 @@ fun DetailScreenContent_TODO_editInitially() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -1180,8 +1164,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            observedICalEntity = remember { mutableStateOf(entity) },
-            initialEntity = null,
+            observedICalObject = remember { mutableStateOf(entity.property) },
+            collection = entity.ICalCollection,
             iCalObject = entity.property,
             categories = remember { mutableStateListOf() },
             resources = remember { mutableStateListOf() },
@@ -1211,13 +1195,15 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             showProgressForSubTasks = false,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
-            onSubEntryAdded = { _, _ -> },
+            onAudioSubEntryAdded = { _,  _ -> },
+            onSubEntryAdded = { _,  _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _, _ -> },
@@ -1225,7 +1211,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -1238,8 +1225,8 @@ fun DetailScreenContent_failedLoading() {
         val detailSettings = DetailSettings()
 
         DetailScreenContent(
-            observedICalEntity = remember { mutableStateOf(null) },
-            initialEntity = null,
+            observedICalObject = remember { mutableStateOf(null) },
+            collection = null,
             iCalObject = ICalObject.createJournal(),
             categories = remember { mutableStateListOf() },
             resources = remember { mutableStateListOf() },
@@ -1269,13 +1256,15 @@ fun DetailScreenContent_failedLoading() {
             showProgressForSubTasks = true,
             keepStatusProgressCompletedInSync = true,
             linkProgressToSubtasks = false,
-            setCurrentLocation = false,
+            isSubtaskDragAndDropEnabled = true,
+            isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
-            onSubEntryAdded = { _, _ -> },
+            onAudioSubEntryAdded = { _,  _ -> },
+            onSubEntryAdded = { _,  _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _, _ -> },
@@ -1283,7 +1272,8 @@ fun DetailScreenContent_failedLoading() {
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
-            onShowLinkExistingDialog = { _, _ -> }
+            onShowLinkExistingDialog = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }

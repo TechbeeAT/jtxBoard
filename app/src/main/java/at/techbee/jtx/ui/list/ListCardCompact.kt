@@ -12,9 +12,23 @@ import android.media.MediaPlayer
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.DragHandle
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -32,73 +46,50 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
+import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
-import com.arnyminerz.markdowntext.MarkdownText
+import sh.calvin.reorderable.ReorderableColumn
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListCardCompact(
     iCalObject: ICal4List,
-    categories: List<Category>,
-    resources: List<Resource>,
     subtasks: List<ICal4List>,
     storedCategories: List<StoredCategory>,
-    storedResources: List<StoredResource>,
     storedStatuses: List<ExtendedStatus>,
     progressUpdateDisabled: Boolean,
-    markdownEnabled: Boolean,
-    settingIsAccessibilityMode: Boolean,
     selected: List<Long>,
     player: MediaPlayer?,
+    isSubtaskDragAndDropEnabled: Boolean,
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
+    dragHandle:@Composable () -> Unit = { }
 ) {
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
+            contentColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
         ),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
         modifier = modifier
     ) {
 
         Column(
-            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
+            verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
             modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 0.dp)
+                .padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 2.dp)
                 .fillMaxWidth()
         ) {
 
-            ListTopRow(
-                ical4List = iCalObject,
-                categories = categories,
-                resources = resources,
-                storedCategories = storedCategories,
-                storedResources = storedResources,
-                extendedStatuses = storedStatuses,
-                includeJournalDate = true,
-                isAccessibilityMode = settingIsAccessibilityMode
-            )
-
-            iCalObject.getAudioAttachmentAsUri()?.let {
-                AudioPlaybackElement(
-                    uri = it,
-                    player = player,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 4.dp)
-                )
-            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -106,31 +97,40 @@ fun ListCardCompact(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
 
-                if (!iCalObject.summary.isNullOrEmpty()) {
+                dragHandle()
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.Top),
+                    modifier = Modifier.weight(1f)
+                ) {
+
+                    ListTopRowSimple(
+                        ical4List = iCalObject,
+                        storedCategories = storedCategories,
+                        extendedStatusesAll = storedStatuses
+                    )
+
+                    iCalObject.getAudioAttachmentAsUri()?.let {
+                        AudioPlaybackElement(
+                            uri = it,
+                            player = player,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 4.dp)
+                        )
+                    }
+
                     Text(
-                        text = iCalObject.summary?.trim() ?: "",
+                        text = iCalObject.summary?.trim() ?: iCalObject.description?.trim() ?: "",
                         textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.fillMaxWidth(1f)
                     )
-                } else if (!iCalObject.description.isNullOrEmpty()) {
-                    if(markdownEnabled)
-                        MarkdownText(
-                            markdown = iCalObject.description?.trim() ?: "",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f)
-                        )
-                    else
-                        Text(
-                            text = iCalObject.description?.trim() ?: "",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f)
-                        )
                 }
+
+
 
                 if (iCalObject.module == Module.TODO.name) {
                     Checkbox(
@@ -146,29 +146,26 @@ fun ListCardCompact(
                 }
             }
 
-            // put the description in the second row only if the first row was not already occupied by the description due to a missing summary
-            if (!iCalObject.summary.isNullOrEmpty() && !iCalObject.description.isNullOrEmpty()) {
-                if(markdownEnabled)
-                    MarkdownText(
-                        markdown = iCalObject.description?.trim() ?: "",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                else
-                    Text(
-                        text = iCalObject.description?.trim() ?: "",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-            }
-
-            Column(modifier = Modifier.padding(horizontal = 8.dp)) {
-                subtasks.forEach { subtask ->
+            ReorderableColumn(
+                list = subtasks,
+                onSettle = { fromIndex, toIndex ->
+                    val reordered = subtasks.toMutableList().apply {
+                        add(toIndex, removeAt(fromIndex))
+                    }
+                    onUpdateSortOrder(reordered)
+                },
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            ) { _, subtask, _ ->
+                key(subtask.id) {
 
                     SubtaskCardCompact(
                         subtask = subtask,
                         selected = selected.contains(subtask.id),
                         onProgressChanged = onProgressChanged,
+                        dragHandle = { if(isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
                         modifier = Modifier
                             .clip(jtxCardCornerShape)
                             .combinedClickable(
@@ -200,20 +197,20 @@ fun ListCardCompact_JOURNAL() {
         }
         ListCardCompact(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
             subtasks = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
-            settingIsAccessibilityMode = false,
-            markdownEnabled = false,
             selected = emptyList(),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { },
+            dragHandle = { IconButton(onClick = {  }) {
+                Icon(Icons.Outlined.DragHandle, null)
+            } }
         )
     }
 }
@@ -232,19 +229,16 @@ fun ListCardCompact_JOURNAL2() {
         ListCardCompact(
             icalobject,
             subtasks = emptyList(),
-            categories = emptyList(),
-            resources = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
-            settingIsAccessibilityMode = false,
-            markdownEnabled = false,
             selected = emptyList(),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -263,20 +257,17 @@ fun ListCardCompact_NOTE() {
         }
         ListCardCompact(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
             subtasks = emptyList(),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
-            settingIsAccessibilityMode = false,
-            markdownEnabled = false,
             selected = emptyList(),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -299,20 +290,17 @@ fun ListCardCompact_TODO() {
         }
         ListCardCompact(
             icalobject,
-            categories = emptyList(),
-            resources = emptyList(),
             subtasks = listOf(icalobject, icalobject),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
-            settingIsAccessibilityMode = false,
-            markdownEnabled = false,
             selected = emptyList(),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -349,20 +337,17 @@ fun ListCardCompact_TODO_only_summary() {
         }
         ListCardCompact(
             icalobject,
-            categories = listOf(Category(text = "Category1"), Category(text = "Category2")),
-            resources = listOf(Resource(text = "Resource1")),
             subtasks = listOf(icalobject, icalobject),
-            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
-            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
-            storedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             progressUpdateDisabled = true,
-            settingIsAccessibilityMode = false,
-            markdownEnabled = false,
-            selected = emptyList(),
+            selected = listOf(icalobject.id),
             player = null,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> }
+            onLongClick = { _, _ -> },
+            onUpdateSortOrder = { }
         )
     }
 }

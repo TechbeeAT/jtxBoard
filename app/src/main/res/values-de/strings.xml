@@ -19,6 +19,7 @@
     <string name="longitude">"Längengrad"</string>
     <string name="unlink">"Verlinkung aufheben"</string>
     <string name="off">"Aus"</string>
+    <string name="location_permission_denied">"Standortberechtigung abgelehnt"</string>
     <string name="permissions">"Berechtigungen"</string>
     <string name="current_location">"Aktueller Standort"</string>
     <string name="toolbar_text_add_journal">"Journal hinzufügen"</string>
@@ -318,6 +319,7 @@
     <string name="filter_no_resource">Ohne Materialien</string>
     <string name="filter_subtasks_order_by">Unteraufgaben sortieren nach</string>
     <string name="filter_subnotes_order_by">Verlinkte Notizen sortieren nach</string>
+    <string name="order_by_drag_and_drop">"Drag &amp; Drop"</string>
     <string name="filter_no_filter">"Kein Filter"</string>
     <string name="filter_options_more_entries">"Mehr (%1$d)"</string>
     <string name="filter_options_less_entries">"Weniger"</string>
@@ -356,6 +358,7 @@
     <string name="settings_timezone_display_local">"Zeit in lokaler Zeitzone anzeigen"</string>
     <string name="settings_timezone_display_original">"Zeit in der ursprünglichen Zeitzone anzeigen"</string>
     <string name="settings_timezone_display_local_and_original">"Zeit in lokaler und in ursprünglicher Zeitzone anzeigen (nur Detailansicht)"</string>
+    <string name="settings_font">"Schriftart"</string>
     <string name="donate_dialog_title">"Gefällt dir jtx Board?"</string>
     <string name="donate_dialog_message">"Die Entwicklung und Wartung einer App sind viel Arbeit. Wenn dir jtx Board gefällt und du die kontinuierliche Entwicklung sicherstellen möchtest, dann denke bitte auch an die Möglichkeit einer Spende! :-)
 Vielen Dank!"</string>
@@ -385,6 +388,16 @@ Danke!"</string>
     <string name="back">"Zurück"</string>
     <string name="details">"Details"</string>
     <string name="date">"Datum"</string>
+    <string name="group_by_date_day">"Datum (Tag)"</string>
+    <string name="group_by_date_week">"Datum (Woche)"</string>
+    <string name="group_by_date_month">"Datum (Monat)"</string>
+    <string name="group_by_started_day">"Start (Tag)"</string>
+    <string name="group_by_started_week">"Start (Woche)"</string>
+    <string name="group_by_started_month">"Start (Monat)"</string>
+    <string name="group_by_due_day">"Fällig (Tag)"</string>
+    <string name="group_by_due_week">"Fällig (Woche)"</string>
+    <string name="group_by_due_month">"Fällig (Monat)"</string>
+    <string name="week_number_year">"KW %1$d/%2$d"</string>
     <string name="summary_description">"Zusammenfassung/Beschreibung"</string>
     <string name="status_classification_priority">"Status/Klassifizierung/Priorität"</string>
     <string name="timezone">"Zeitzone"</string>
@@ -430,6 +443,7 @@ Danke!"</string>
     <string name="details_go_to_series">"Gehe zur Serie"</string>
     <string name="details_detach_from_series">"Von der Serie trennen"</string>
     <string name="details_detach_all_instances">"Alle Instanzen trennen"</string>
+    <string name="details_show_all_instances">"Alle Instanzen anzeigen (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Von übergeordnetem Element trennen"</string>
     <string name="dialog_unlink_from_parent_message">"Die Beziehung als Untereintrag entfernen? Der Eintrag bleibt als eigenständiger Eintrag."</string>
     <string name="edit_comment">"Kommentar bearbeiten"</string>
@@ -471,6 +485,7 @@ Danke!"</string>
     <string name="dialog_add_audio_entry_title">"Audio-Eintrag hinzufügen"</string>
     <string name="menu_list_viewmode_compact">"Kompakt-Ansicht"</string>
     <string name="menu_list_viewmode_kanban">"Kanban-Ansicht"</string>
+    <string name="menu_list_viewmode_week">"Wochenansicht"</string>
     <string name="settings_tasks">"Aufgaben-Einstellungen"</string>
     <string name="settings_alarms">"Alarm-Einstellungen"</string>
     <string name="settings_tasks_status_progress">"Aufgaben-Einstellungen (Status/Fortschritt)"</string>
@@ -502,6 +517,7 @@ Danke!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Status, Fortschritt und Fertiggestellt synchron halten"</string>
     <string name="settings_attention_experimental_feature">"Achtung: Dies ist eine experimentelle Funktion"</string>
     <string name="settings_create_with_current_location">"Neue Einträge mit aktuellem Standort erstellen"</string>
+    <string name="settings_create_with_current_location_sub">"Bitte erteilen Sie beim Verwenden dieser App Zugriff auf Ihren Standort um dieses Feature zu nutzen."</string>
     <string name="settings_sticky_alarms">"Fixierte Alarme"</string>
     <string name="settings_sticky_alarms_sub">"Benachrichtigungen erhalten bis erledigt oder verschoben"</string>
     <string name="settings_fullscreen_alarms">"Vollbild-Alarme"</string>
@@ -530,6 +546,10 @@ Danke!"</string>
     <string name="filter_any">"Irgendeine"</string>
     <string name="filter_all">"Alle"</string>
     <string name="filter_none">"Keine"</string>
+    <string name="filter_date_from_to">"Datum: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Start: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Fällig: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Fertiggestellt: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>
@@ -592,6 +612,7 @@ Danke!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualisiere Widget"</string>
     <string name="widget_list_opacity_warning">"Hinweis: Dies ist eine experimentelle Funktion. Mit reduzierter Deckkraft werden Änderungen im System-Farbschema möglicherweise nicht sofort übernommen!"</string>
     <string name="widget_list_color_warning">"Hinweis: Dies ist eine experimentelle Funktion. Änderungen im System-Farbschema werden nicht übernommen! Wählen Sie keine Farbe, um zum Systemstandard zurückzukehren."</string>
+    <string name="widget_list_default_categories">"Standardkategorien für neue Einträge aus dem Widget festlegen"</string>
     <string name="opacity">"Transparenz"</string>
     <string name="general">"Allgemein"</string>
     <string name="list_collapse">"Zuklappen"</string>
@@ -648,4 +669,12 @@ Danke!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board kann Sie benachrichtigen, wenn Sie in der Nähe der angegebenen Koordinaten sind. Bitte setzen Sie die Standortberechtigung auf \"Immer erlauben\" und gewähren Sie die Benachrichtigungs-Berechtigung um diese Funktion nutzen zu können."</string>
     <string name="geofence_notification_summary">"Geofence aktiviert"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board benötigt die Berechtigung, genaue Erinnerungen zu planen, da sonst Alarme verzögert ausgegeben werden könnten. Bitte erteilen Sie diese Berechtigung, um diese Funktion zu nutzen."</string>
+    <string name="call_contact">"%1$s anrufen"</string>
+    <string name="email_contact">"E-Mail an %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Mehrere Unteraufgaben erstellen</string>
+    <string name="dialog_create_multiple_subnotes">Mehrere verknüpfte Notizen erstellen</string>
+    <string name="dialog_detected_multiple_subtasks">Der Text enthält möglicherweise mehrere Unteraufgaben. Möchten Sie %d Unteraufgaben erstellen?</string>
+    <string name="dialog_detected_multiple_subnotes">Der Text enthält möglicherweise mehrere verknüpfte Notizen. Möchten Sie %d verknüpfte Notizen erstellen?</string>
+    <string name="dialog_confirm_create_multiple">Mehrere erstellen</string>
+    <string name="dialog_confirm_create_single">Einzeln erstellen</string>
 </resources>

@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,9 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.database.properties.Category
-import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionInfoColumn
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
@@ -45,7 +45,7 @@ fun DetailsCardCollections(
     iCalObject: ICalObject?,
     isEditMode: Boolean,
     isChild: Boolean,
-    originalICalEntity: ICalEntity?,
+    originalCollection: ICalCollection,
     color: MutableState<Int?>,
     includeVJOURNAL: Boolean?,
     includeVTODO: Boolean?,
@@ -56,6 +56,7 @@ fun DetailsCardCollections(
     ) {
 
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
 
     if (showColorPicker) {
         ColorPickerDialog(
@@ -67,7 +68,14 @@ fun DetailsCardCollections(
             },
             onDismiss = {
                 showColorPicker = false
-            }
+            },
+            additionalColorsInt = ICalDatabase
+                .getInstance(context)
+                .iCalDatabaseDao()
+                .getAllColors()
+                .observeAsState(
+                    initial = emptyList()
+                ).value
         )
     }
 
@@ -91,19 +99,17 @@ fun DetailsCardCollections(
                     ListBadge(
                         icon = Icons.Outlined.FolderOpen,
                         iconDesc = stringResource(id = R.string.collection),
-                        containerColor = originalICalEntity?.ICalCollection?.color?.let {
+                        containerColor = originalCollection.color?.let {
                             Color(
                                 it
                             )
                         } ?: MaterialTheme.colorScheme.primaryContainer,
                         isAccessibilityMode = true
                     )
-                    originalICalEntity?.ICalCollection?.let {
-                        CollectionInfoColumn(
-                            collection = it,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+                    CollectionInfoColumn(
+                        collection = originalCollection,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }
@@ -121,25 +127,23 @@ fun DetailsCardCollections(
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                originalICalEntity?.ICalCollection?.let {
+                CollectionsSpinner(
+                    collections = allPossibleCollections,
+                    preselected = originalCollection,
+                    includeReadOnly = false,
+                    includeVJOURNAL = includeVJOURNAL,
+                    includeVTODO = includeVTODO,
+                    onSelectionChanged = { newCollection ->
+                        if (iCalObject?.collectionId != newCollection.collectionId) {
+                            onMoveToNewCollection(newCollection)
+                        }
+                    },
+                    enabled = iCalObject?.recurid.isNullOrEmpty(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(4.dp)
+                )
 
-                    CollectionsSpinner(
-                        collections = allPossibleCollections,
-                        preselected = it,
-                        includeReadOnly = false,
-                        includeVJOURNAL = includeVJOURNAL,
-                        includeVTODO = includeVTODO,
-                        onSelectionChanged = { newCollection ->
-                            if (iCalObject?.collectionId != newCollection.collectionId) {
-                                onMoveToNewCollection(newCollection)
-                            }
-                        },
-                        enabled = iCalObject?.recurid.isNullOrEmpty(),
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(4.dp)
-                    )
-                }
                 IconButton(onClick = { showColorPicker = true }) {
                     Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
                 }
@@ -157,26 +161,12 @@ fun DetailsCardCollections_edit() {
     MaterialTheme {
         val context = LocalContext.current
 
-        val entity = ICalEntity().apply {
-            this.property = ICalObject.createJournal("MySummary")
-            //this.property.dtstart = System.currentTimeMillis()
-        }
-        entity.property.description = "Hello World, this \nis my description."
-        entity.property.contact = "John Doe, +1 555 5545"
-        entity.categories = listOf(
-            Category(1, 1, "MyCategory1", null, null),
-            Category(2, 1, "My Dog likes Cats", null, null),
-            Category(3, 1, "This is a very long category", null, null),
-        )
-        entity.property.color = Color.Blue.toArgb()
-        entity.ICalCollection = ICalCollection.createLocalCollection(context).apply { this.displayName = "Test" }
-
         DetailsCardCollections(
-            iCalObject = entity.property,
+            iCalObject = ICalObject.createJournal("MySummary"),
             isEditMode = true,
             isChild = false,
-            originalICalEntity = entity,
-            color = remember { mutableStateOf(entity.property.color) },
+            originalCollection = ICalCollection.createLocalCollection(context).apply { this.displayName = "Test" },
+            color = remember { mutableStateOf(Color.Blue.toArgb()) },
             includeVJOURNAL = null,
             includeVTODO = null,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },
@@ -194,27 +184,12 @@ fun DetailsCardCollections_read() {
     MaterialTheme {
         val context = LocalContext.current
 
-        val entity = ICalEntity().apply {
-            this.property = ICalObject.createJournal("MySummary")
-            //this.property.dtstart = System.currentTimeMillis()
-        }
-        entity.property.description = "Hello World, this \nis my description."
-        entity.property.contact = "John Doe, +1 555 5545"
-        entity.categories = listOf(
-            Category(1, 1, "MyCategory1", null, null),
-            Category(2, 1, "My Dog likes Cats", null, null),
-            Category(3, 1, "This is a very long category", null, null),
-        )
-        entity.property.color = Color.Blue.toArgb()
-        entity.ICalCollection = ICalCollection.createLocalCollection(context).apply { this.displayName = "Test" }
-
-
         DetailsCardCollections(
-            iCalObject = entity.property,
+            iCalObject = ICalObject.createJournal("MySummary"),
             isEditMode = false,
             isChild = false,
-            originalICalEntity = entity,
-            color = remember { mutableStateOf(entity.property.color) },
+            originalCollection = ICalCollection.createLocalCollection(context).apply { this.displayName = "Test" },
+            color = remember { mutableStateOf(Color.Blue.toArgb()) },
             includeVJOURNAL = null,
             includeVTODO = null,
             changeState = remember { mutableStateOf(DetailViewModel.DetailChangeState.CHANGEUNSAVED) },

@@ -39,6 +39,8 @@ import at.techbee.jtx.ui.buypro.BuyProScreenContent
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import com.mikepenz.aboutlibraries.Libs
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -156,7 +158,7 @@ fun AboutScreenPreview() {
                     githubUrl = "https://github.com/TechbeeAT/jtxBoard/releases"
                 )
             ),
-            libraries = Libs(emptyList(), emptySet()),
+            libraries = Libs(persistentListOf(), persistentSetOf()),
             isPurchased = remember { mutableStateOf(null) },
             priceLive = MutableLiveData("€ 3,29"),
             orderIdLive = MutableLiveData("93287z4"),

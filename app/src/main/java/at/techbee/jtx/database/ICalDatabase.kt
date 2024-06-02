@@ -12,7 +12,12 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import androidx.annotation.VisibleForTesting
-import androidx.room.*
+import androidx.room.AutoMigration
+import androidx.room.Database
+import androidx.room.DeleteColumn
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -21,7 +26,16 @@ import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.Attachment
+import at.techbee.jtx.database.properties.Attendee
+import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.properties.Comment
+import at.techbee.jtx.database.properties.Organizer
+import at.techbee.jtx.database.properties.Relatedto
+import at.techbee.jtx.database.properties.Resource
+import at.techbee.jtx.database.properties.TABLE_NAME_ALARM
+import at.techbee.jtx.database.properties.Unknown
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.database.views.ICal4List
 
@@ -51,7 +65,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 33,
+    version = 38,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -84,6 +98,11 @@ import at.techbee.jtx.database.views.ICal4List
         // no AutoMigration from 30 to 31
         AutoMigration (from = 31, to = 32),  // view update
         AutoMigration (from = 32, to = 33),  // view update
+        AutoMigration (from = 33, to = 34),  // new last sync column in ICalCollection
+        AutoMigration (from = 34, to = 35),  // new/updated indices
+        AutoMigration (from = 35, to = 36),  // new/updated indices
+        AutoMigration (from = 36, to = 37),  // new/updated indices
+        AutoMigration (from = 37, to = 38),  // view udpate
     ]
 )
 @TypeConverters(Converters::class)
@@ -224,13 +243,14 @@ abstract class ICalDatabase : RoomDatabase() {
                                 super.onOpen(db)
                                  */
                             }
-
                         })
+                        // see https://developer.android.com/topic/performance/sqlite-performance-best-practices#consider-without
+                        .setJournalMode(JournalMode.AUTOMATIC)
                         .build()
+
                     // Assign INSTANCE to the newly created database.
                     INSTANCE = instance
                 }
-
                 // Return instance; smart cast to be non-null.
                 return instance
             }

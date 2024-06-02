@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -55,9 +56,11 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.dialogs.AddAudioEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.EditSubnoteDialog
+import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import net.fortuna.ical4j.model.Component
+import sh.calvin.reorderable.ReorderableColumn
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -66,13 +69,16 @@ fun DetailsCardSubnotes(
     subnotes: List<ICal4List>,
     isEditMode: MutableState<Boolean>,
     enforceSavingSubnote: Boolean,
-    onSubnoteAdded: (subnote: ICalObject, attachment: Attachment?) -> Unit,
+    onAudioSubnoteAdded: (subnote: ICalObject, attachment: Attachment) -> Unit,
+    onSubnoteAdded: (subnote: String) -> Unit,
     onSubnoteUpdated: (icalobjectId: Long, text: String) -> Unit,
     onSubnoteDeleted: (icalobjectId: Long) -> Unit,
     onUnlinkSubEntry: (icalobjectId: Long) -> Unit,
     player: MediaPlayer?,
+    isSubnoteDragAndDropEnabled: Boolean,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     onShowLinkExistingDialog: () -> Unit,
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -84,13 +90,13 @@ fun DetailsCardSubnotes(
         AddAudioEntryDialog(
             module = Module.NOTE,
             player = player,
-            onConfirm = { newEntry, attachment -> onSubnoteAdded(newEntry, attachment) },
+            onConfirm = { newEntry, attachment -> onAudioSubnoteAdded(newEntry, attachment) },
             onDismiss = { showAddAudioNoteDialog = false }
         )
     }
 
     if (enforceSavingSubnote && newSubnoteText.isNotEmpty()) {
-        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+        onSubnoteAdded(newSubnoteText)
         newSubnoteText = ""
     }
 
@@ -130,8 +136,9 @@ fun DetailsCardSubnotes(
                         trailingIcon = {
                             AnimatedVisibility(newSubnoteText.isNotEmpty()) {
                                 IconButton(onClick = {
-                                    if (newSubnoteText.isNotEmpty())
-                                        onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                                    if (newSubnoteText.isNotEmpty()) {
+                                        onSubnoteAdded(newSubnoteText)
+                                    }
                                     newSubnoteText = ""
                                 }) {
                                     Icon(
@@ -153,8 +160,9 @@ fun DetailsCardSubnotes(
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(onDone = {
-                            if (newSubnoteText.isNotEmpty())
-                                onSubnoteAdded(ICalObject.createNote(newSubnoteText), null)
+                            if (newSubnoteText.isNotEmpty()) {
+                                onSubnoteAdded(newSubnoteText)
+                            }
                             newSubnoteText = ""
                         })
                     )
@@ -165,12 +173,18 @@ fun DetailsCardSubnotes(
             }
 
             AnimatedVisibility(subnotes.isNotEmpty()) {
-                Column(
+                ReorderableColumn(
+                    list = subnotes,
+                    onSettle = { fromIndex, toIndex ->
+                        val reordered = subnotes.toMutableList().apply {
+                            add(toIndex, removeAt(fromIndex))
+                        }
+                        onUpdateSortOrder(reordered)
+                    },
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    subnotes.forEach { subnote ->
+                    modifier = Modifier.fillMaxWidth()
+                ) {_, subnote, _ ->
+                    key(subnote.id) {
 
                         var showEditSubnoteDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -189,6 +203,7 @@ fun DetailsCardSubnotes(
                             onDeleteClicked = { onSubnoteDeleted(subnote.id) },
                             onUnlinkClicked = { onUnlinkSubEntry(subnote.id) },
                             player = player,
+                            dragHandle = { if(isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
                                 .combinedClickable(
@@ -225,13 +240,16 @@ fun DetailsCardSubnotes_Preview() {
                     ),
             isEditMode = remember { mutableStateOf(false) },
             enforceSavingSubnote = false,
-            onSubnoteAdded = { _, _ -> },
+            onAudioSubnoteAdded = { _, _ -> },
+            onSubnoteAdded = { },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
             player = null,
+            isSubnoteDragAndDropEnabled = true,
             goToDetail = { _, _, _ -> },
-            onShowLinkExistingDialog = {}
+            onShowLinkExistingDialog = {},
+            onUpdateSortOrder = {}
         )
     }
 }
@@ -251,13 +269,16 @@ fun DetailsCardSubnotes_Preview_edit() {
             ),
             isEditMode = remember { mutableStateOf(true) },
             enforceSavingSubnote = false,
-            onSubnoteAdded = { _, _ -> },
+            onAudioSubnoteAdded = { _, _ -> },
+            onSubnoteAdded = { },
             onSubnoteUpdated = { _, _ ->  },
             onSubnoteDeleted = { },
             onUnlinkSubEntry = { },
             player = null,
+            isSubnoteDragAndDropEnabled = true,
             goToDetail = { _, _, _ -> },
-            onShowLinkExistingDialog = {}
+            onShowLinkExistingDialog = {},
+            onUpdateSortOrder = { }
         )
     }
 }

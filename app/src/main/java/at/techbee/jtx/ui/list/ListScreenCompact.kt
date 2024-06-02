@@ -19,25 +19,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowDropUp
 import androidx.compose.material.icons.outlined.VerticalAlignTop
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -52,6 +52,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,60 +62,78 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.util.UUID
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreenCompact(
     groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedResourcesLive: LiveData<List<StoredResource>>,
-    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
+    storedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
     settingLinkProgressToSubtasks: Boolean,
-    settingIsAccessibilityMode: Boolean,
     isPullRefreshEnabled: Boolean,
-    markdownEnabled: Boolean,
     player: MediaPlayer?,
+    isListDragAndDropEnabled: Boolean,
+    isSubtaskDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onSyncRequested: () -> Unit,
-    onSaveListSettings: () -> Unit
+    onSaveListSettings: () -> Unit,
+    onUpdateSortOrder: (List<ICal4List>) -> Unit
 ) {
 
+    val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
     val scrollId by scrollOnceId.observeAsState(null)
-    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
-    val storedResources by storedResourcesLive.observeAsState(emptyList())
-    val storedStatuses by extendedStatusesLive.observeAsState(emptyList())
     val listState = rememberLazyListState()
+    val reorderableLazyListState = rememberReorderableLazyListState(listState) { from, to ->
+        val reordered = groupedList.flatMap { it.value }.map { it.iCal4List }.toMutableList().apply {
+            val fromIndex = indexOfFirst { it.id == from.key }
+            val toIndex = indexOfFirst { it.id == to.key }
+            add(toIndex, removeAt(fromIndex))
+        }
+        ICalDatabase.getInstance(context).iCalDatabaseDao().updateSortOrder(reordered.map { it.id })
+    }
     val scope = rememberCoroutineScope()
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = false,
-        onRefresh = { onSyncRequested() }
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
+    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
+
+    val pullToRefreshState = rememberPullToRefreshState(
+        enabled = { isPullRefreshEnabled }
     )
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if(pullToRefreshState.isRefreshing) {
+            onSyncRequested()
+            pullToRefreshState.endRefresh()
+        }
+    }
 
     Box(
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier.fillMaxSize().nestedScroll(pullToRefreshState.nestedScrollConnection)
     ) {
         LazyColumn(
-            modifier = if(isPullRefreshEnabled) Modifier.padding(start = 2.dp, end = 2.dp).pullRefresh(pullRefreshState) else Modifier.padding(start = 2.dp, end = 2.dp),
+            modifier = Modifier.padding(start = 2.dp, end = 2.dp).fillMaxSize(),
             state = listState,
         ) {
 
@@ -155,7 +174,7 @@ fun ListScreenCompact(
 
                 if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !listSettings.collapsedGroups.contains(groupName))) {
                     items(
-                        items = group,
+                        items = group.toList(),
                         key = { item ->
                             if(listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE)
                                 item.iCal4List.id.toString() + UUID.randomUUID()
@@ -182,46 +201,52 @@ fun ListScreenCompact(
                             }
                         }
 
-                        ListCardCompact(
-                            iCal4ListRelObject.iCal4List,
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
-                            subtasks = currentSubtasks,
-                            storedCategories = storedCategories,
-                            storedResources = storedResources,
-                            storedStatuses = storedStatuses,
-                            progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                            settingIsAccessibilityMode = settingIsAccessibilityMode,
-                            markdownEnabled = markdownEnabled,
-                            selected = selectedEntries,
-                            player = player,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 4.dp, bottom = 4.dp)
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = {
-                                        onClick(
-                                            iCal4ListRelObject.iCal4List.id,
-                                            groupedList
-                                                .flatMap { it.value }
-                                                .map { it.iCal4List },
-                                            iCal4ListRelObject.iCal4List.isReadOnly,
-                                        )
-                                    },
-                                    onLongClick = {
-                                        if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                            onLongClick(
+                        ReorderableItem(
+                            reorderableLazyListState,
+                            key = iCal4ListRelObject.iCal4List.id
+                        ) { _ ->
+                            ListCardCompact(
+                                iCal4ListRelObject.iCal4List,
+                                storedCategories = storedCategories,
+                                storedStatuses = storedStatuses,
+                                subtasks = currentSubtasks,
+                                progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                                selected = selectedEntries,
+                                player = player,
+                                isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
+                                dragHandle = {
+                                    if(isListDragAndDropEnabled)
+                                        DragHandleLazy(this)
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 4.dp, bottom = 4.dp)
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = {
+                                            onClick(
                                                 iCal4ListRelObject.iCal4List.id,
                                                 groupedList
                                                     .flatMap { it.value }
-                                                    .map { it.iCal4List })
-                                    }
-                                ),
-                            onProgressChanged = onProgressChanged,
-                            onClick = onClick,
-                            onLongClick = onLongClick
-                        )
+                                                    .map { it.iCal4List },
+                                                iCal4ListRelObject.iCal4List.isReadOnly,
+                                            )
+                                        },
+                                        onLongClick = {
+                                            if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                                onLongClick(
+                                                    iCal4ListRelObject.iCal4List.id,
+                                                    groupedList
+                                                        .flatMap { it.value }
+                                                        .map { it.iCal4List })
+                                        }
+                                    ),
+                                onProgressChanged = onProgressChanged,
+                                onClick = onClick,
+                                onLongClick = onLongClick,
+                                onUpdateSortOrder = onUpdateSortOrder
+                            )
+                        }
 
                         if (iCal4ListRelObject != group.last())
                             HorizontalDivider(
@@ -233,9 +258,9 @@ fun ListScreenCompact(
             }
         }
 
-        PullRefreshIndicator(
-            refreshing = false,
-            state = pullRefreshState
+        PullToRefreshContainer(
+            modifier = Modifier.align(Alignment.TopCenter).offset(y = (-30).dp),
+            state = pullToRefreshState,
         )
 
         Crossfade(listState.canScrollBackward, label = "showScrollUp") {
@@ -249,7 +274,9 @@ fun ListScreenCompact(
                             scope.launch { listState.scrollToItem(0) }
                         },
                         colors = ButtonDefaults.filledTonalButtonColors(),
-                        modifier = Modifier.padding(8.dp).alpha(0.33f)
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .alpha(0.33f)
                     ) {
                         Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
                     }
@@ -306,21 +333,21 @@ fun ListScreenCompact_TODO() {
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            extendedStatusesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
-            markdownEnabled = false,
             player = null,
+            isListDragAndDropEnabled = true,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { },
-            onSaveListSettings = { }
+            onSaveListSettings = { },
+            onUpdateSortOrder = { }
         )
     }
 }
@@ -373,21 +400,21 @@ fun ListScreenCompact_JOURNAL() {
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            extendedStatusesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
-            markdownEnabled = false,
             player = null,
+            isListDragAndDropEnabled = true,
+            isSubtaskDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSyncRequested = { },
-            onSaveListSettings = { }
+            onSaveListSettings = { },
+            onUpdateSortOrder = { }
         )
     }
 }

@@ -19,6 +19,7 @@
     <string name="longitude">"Долгота"</string>
     <string name="unlink">"Отвязать"</string>
     <string name="off">"Отключено"</string>
+    <string name="location_permission_denied">"Доступ к местоположению запрещен"</string>
     <string name="permissions">"Разрешения"</string>
     <string name="current_location">"Текущее местоположение"</string>
     <string name="toolbar_text_add_journal">"Добавить журнал"</string>
@@ -107,6 +108,7 @@
     <string name="edit_recur_on_weekday">"по"</string>
     <string name="edit_recur_on_the_x_day_of_month">"на"</string>
     <string name="edit_recur_x_day_of_the_month">"день месяца"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"последний"</string>
     <string name="edit_recur_x_times">"раз"</string>
     <string name="edit_recur_toast_requires_start_date">"Установите дату начала, чтобы активировать повторения!"</string>
     <string name="edit_datepicker_dialog_select_date">"Выбрать дату"</string>
@@ -317,6 +319,7 @@
     <string name="filter_no_resource">Без ресурсов</string>
     <string name="filter_subtasks_order_by">Сортировать подзадачи по</string>
     <string name="filter_subnotes_order_by">Сортировать связанные заметки по</string>
+    <string name="order_by_drag_and_drop">"Перетаскивание"</string>
     <string name="filter_no_filter">"Без фильтра"</string>
     <string name="filter_options_more_entries">"Развернуть (%1$d)"</string>
     <string name="filter_options_less_entries">"Свернуть"</string>
@@ -355,6 +358,7 @@
     <string name="settings_timezone_display_local">"Местный часовой пояс"</string>
     <string name="settings_timezone_display_original">"Указанный часовой пояс"</string>
     <string name="settings_timezone_display_local_and_original">"Местный и указанный часовые пояса (только в детальном просмотре записи)"</string>
+    <string name="settings_font">"Шрифт"</string>
     <string name="donate_dialog_title">"Вам нравится jtx Board?"</string>
     <string name="donate_dialog_message">"Разработка приложения – непростая вещь, и его обслуживание и поддержка – тяжелая работа. Если вам нравится наш проект, вы можете поддержать его пожертвованием :-)
 Спасибо большое!"</string>
@@ -383,6 +387,16 @@
     <string name="back">"Назад"</string>
     <string name="details">"Подробности"</string>
     <string name="date">"Дата"</string>
+    <string name="group_by_date_day">"Дата (день)"</string>
+    <string name="group_by_date_week">"Дата (неделя)"</string>
+    <string name="group_by_date_month">"Дата (месяц)"</string>
+    <string name="group_by_started_day">"Начало (день)"</string>
+    <string name="group_by_started_week">"Начало (неделя)"</string>
+    <string name="group_by_started_month">"Начало (месяц)"</string>
+    <string name="group_by_due_day">"Завершение (день)"</string>
+    <string name="group_by_due_week">"Завершение (неделя)"</string>
+    <string name="group_by_due_month">"Завершение (месяц)"</string>
+    <string name="week_number_year">"Неделя %1$d/%2$d"</string>
     <string name="summary_description">"Название/Описание"</string>
     <string name="status_classification_priority">"Статус/Классификация/Приоритет"</string>
     <string name="timezone">"Часовой пояс"</string>
@@ -428,6 +442,7 @@
     <string name="details_go_to_series">"Перейти к серии"</string>
     <string name="details_detach_from_series">"Отвязать от серии"</string>
     <string name="details_detach_all_instances">"Отвязать все записи"</string>
+    <string name="details_show_all_instances">"Показать все записи (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Отвязать от родителя"</string>
     <string name="dialog_unlink_from_parent_message">"Вы хотите отвязать данную запись? Запись не будет удалена, но отвяжется от родителя."</string>
     <string name="edit_comment">"Изменить комментарий"</string>
@@ -469,6 +484,7 @@
     <string name="dialog_add_audio_entry_title">"Добавить аудио как запись"</string>
     <string name="menu_list_viewmode_compact">"Компактно"</string>
     <string name="menu_list_viewmode_kanban">"Канбан"</string>
+    <string name="menu_list_viewmode_week">"Неделя"</string>
     <string name="settings_tasks">"Настройки задач"</string>
     <string name="settings_alarms">"Настройки напоминаний"</string>
     <string name="settings_tasks_status_progress">"Настройки задач (статус/прогресс)"</string>
@@ -500,6 +516,7 @@
     <string name="settings_keep_status_progress_completed_in_sync">"Синхронизировать статус, прогресс и дату выполнения"</string>
     <string name="settings_attention_experimental_feature">"Внимание: это экспериментальная функция"</string>
     <string name="settings_create_with_current_location">"Создавать новые записи с текущим местоположением"</string>
+    <string name="settings_create_with_current_location_sub">"Предоставьте доступ к вашему местоположению для использования этой функции."</string>
     <string name="settings_sticky_alarms">"Закрепленные напоминания"</string>
     <string name="settings_sticky_alarms_sub">"Уведомление находится в шторке, пока не отмечено как выполненное или отложенное"</string>
     <string name="settings_fullscreen_alarms">"Полноэкранные напоминания"</string>
@@ -528,6 +545,10 @@
     <string name="filter_any">"Любое из"</string>
     <string name="filter_all">"Все из"</string>
     <string name="filter_none">"Ничего из"</string>
+    <string name="filter_date_from_to">"Дата: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Даты начала: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Даты завершения: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Даты выполнения: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Дата в прошлом"</string>
     <string name="list_date_today">"Сегодня"</string>
@@ -646,4 +667,6 @@
     <string name="geofence_request_permission_dialog_message">"jtx Board будет отправлять вам уведомления, когда вы приближаетесь к указанным координатам. Пожалуйста, установите права доступа к местоположению на «Разрешать всегда» и предоставьте разрешение на уведомления для использования этой функции."</string>
     <string name="geofence_notification_summary">"Геозона активирована"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board требуется разрешение для установки точного времени напоминания, в противном случае уведомления могут быть задержаны. Пожалуйста, предоставьте это разрешение для использования этой функции."</string>
+    <string name="call_contact">"Позвонить %1$s"</string>
+    <string name="email_contact">"E-Mail %1$s"</string>
 </resources>

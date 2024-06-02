@@ -56,21 +56,25 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.detail.models.DetailsScreenSection
+import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
+import at.techbee.jtx.ui.reusable.dialogs.CreateSingleOrMultipleSubitemsDialog
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.RevertChangesDialog
 import at.techbee.jtx.ui.reusable.dialogs.UnsavedChangesDialog
 import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -106,7 +110,8 @@ fun DetailsScreen(
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
     val scrollToSection = remember { mutableStateOf<DetailsScreenSection?>(null) }
 
-    val icalEntity = detailViewModel.icalEntity.observeAsState(null)
+    val iCalObject = detailViewModel.icalObject.observeAsState(null)
+    val collection = detailViewModel.collection.observeAsState()
 
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
     val storedCategories by detailViewModel.storedCategories.observeAsState(emptyList())
@@ -114,23 +119,13 @@ fun DetailsScreen(
     val storedStatuses by detailViewModel.storedStatuses.observeAsState(emptyList())
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
-    val isProActionAvailable by remember(isProPurchased, icalEntity) { derivedStateOf { isProPurchased.value || icalEntity.value?.ICalCollection?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
+    val isProActionAvailable by remember(isProPurchased, collection) { derivedStateOf { isProPurchased.value || collection.value?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
 
-    icalEntity.value?.property?.getModuleFromString()?.let {
+    var newSubtaskTextToProcess by remember { mutableStateOf("") }
+    var newSubnoteTextToProcess by remember { mutableStateOf("") }
+
+    iCalObject.value?.getModuleFromString()?.let {
         detailViewModel.detailSettings.load(it, context)
-    }
-
-    // load objects into states for editing
-    LaunchedEffect(detailViewModel.changeState.value, icalEntity.value, icalEntity.value?.property) {
-        if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED) {
-            detailViewModel.mutableICalObject = icalEntity.value?.property
-            if(detailViewModel.mutableCategories.isEmpty()) detailViewModel.mutableCategories.addAll(icalEntity.value?.categories ?: emptyList())
-            if(detailViewModel.mutableResources.isEmpty()) detailViewModel.mutableResources.addAll(icalEntity.value?.resources ?: emptyList())
-            if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttendees.addAll(icalEntity.value?.attendees ?: emptyList())
-            if(detailViewModel.mutableComments.isEmpty()) detailViewModel.mutableComments.addAll(icalEntity.value?.comments ?: emptyList())
-            if(detailViewModel.mutableAttachments.isEmpty()) detailViewModel.mutableAttachments.addAll(icalEntity.value?.attachments ?: emptyList())
-            if(detailViewModel.mutableAlarms.isEmpty()) detailViewModel.mutableAlarms.addAll(icalEntity.value?.alarms ?: emptyList())
-        }
     }
 
     BackHandler {
@@ -145,12 +140,12 @@ fun DetailsScreen(
 
         when(detailViewModel.changeState.value) {
             DetailViewModel.DetailChangeState.UNCHANGED -> {
-                if (isEditMode.value
-                    && detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED
-                    && icalEntity.value?.property?.sequence == 0L
-                    && icalEntity.value?.property?.summary == null
-                    && icalEntity.value?.property?.description == null
-                    && icalEntity.value?.attachments?.isEmpty() == true
+                if (
+                    (isEditMode.value
+                            && detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED
+                            && iCalObject.value?.sequence == 0L
+                            && iCalObject.value?.summary == null
+                            && iCalObject.value?.description == null) && detailViewModel.mutableAttachments.isEmpty()
                 ) {
                     showDeleteDialog = true
                 } else if(!detailViewModel.mutableICalObject?.rrule.isNullOrEmpty())  {
@@ -166,8 +161,20 @@ fun DetailsScreen(
             DetailViewModel.DetailChangeState.SAVINGREQUESTED -> { /* do nothing, wait until saved */ }
             DetailViewModel.DetailChangeState.CHANGESAVING -> { /* do nothing, wait until saved */ }
             DetailViewModel.DetailChangeState.DELETING -> { /* do nothing, wait until deleted */ }
-            DetailViewModel.DetailChangeState.DELETED -> { navController.navigateUp() }
-            DetailViewModel.DetailChangeState.SQLERROR -> { navController.navigateUp() }
+            DetailViewModel.DetailChangeState.DELETED -> {
+                Attachment.scheduleCleanupJob(context)
+                onRequestReview()
+                navController.navigateUp()
+                navigateUp = false
+            }
+            DetailViewModel.DetailChangeState.DELETED_BACK_TO_LIST -> {
+                navController.popBackStack(NavigationDrawerDestination.BOARD.name, false)
+                navigateUp = false
+            }
+            DetailViewModel.DetailChangeState.SQLERROR -> {
+                navController.navigateUp()
+                navigateUp = false
+            }
             DetailViewModel.DetailChangeState.CHANGESAVED -> {
                 showUnsavedChangesDialog = false
                 if(isEditMode.value)
@@ -180,15 +187,8 @@ fun DetailsScreen(
         }
     }
 
-    if (detailViewModel.changeState.value == DetailViewModel.DetailChangeState.DELETED) {
-        Attachment.scheduleCleanupJob(context)
-        onRequestReview()
-        navigateUp = true
-    }
-
-    if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.SQLERROR) {
+    if(detailViewModel.changeState.value == DetailViewModel.DetailChangeState.SQLERROR)
         ErrorOnUpdateDialog(onConfirm = { navigateUp = true })
-    }
 
     detailViewModel.toastMessage.value?.let {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -201,12 +201,13 @@ fun DetailsScreen(
     }
 
     if (showDeleteDialog) {
-        icalEntity.value?.property?.let {
+        iCalObject.value?.let {
             DeleteEntryDialog(
                 icalObject = it,
                 onConfirm = {
                     showDeleteDialog = false
                     detailViewModel.delete()
+                    navigateUp = true
                 },
                 onDismiss = { showDeleteDialog = false }
             )
@@ -238,14 +239,10 @@ fun DetailsScreen(
     }
     if(showLinkEntryDialog) {
         LinkExistingEntryDialog(
-            excludeCurrentId = detailViewModel.icalEntity.value?.property?.id,
+            excludeCurrentId = iCalObject.value?.id,
             preselectedLinkEntryModules = linkEntryDialogModule,
             preselectedLinkEntryReltype = linkEntryDialogReltype ?: Reltype.CHILD,
             allEntriesLive = detailViewModel.selectFromAllList,
-            storedCategories = storedCategories,
-            storedResources = storedResources,
-            extendedStatuses = storedStatuses,
-            settingIsAccessibilityMode = detailViewModel.settingsStateHolder.settingAccessibilityMode.value,
             player = detailViewModel.mediaPlayer,
             onAllEntriesSearchTextUpdated = { searchText, modules, sameCollection, sameAccount -> detailViewModel.updateSelectFromAllListQuery(searchText, modules, sameCollection, sameAccount) },
             onEntriesToLinkConfirmed = { selected, reltype ->
@@ -262,6 +259,30 @@ fun DetailsScreen(
         )
     }
 
+    if(newSubtaskTextToProcess.isNotEmpty()) {
+        CreateSingleOrMultipleSubitemsDialog(
+            textToProcess = newSubtaskTextToProcess,
+            module = Module.TODO,
+            onCreate = { itemList ->
+                detailViewModel.addSubEntries(itemList, iCalObject.value?.collectionId!!)
+                scrollToSection.value = DetailsScreenSection.SUBTASKS
+            },
+            onDismiss = { newSubtaskTextToProcess = ""}
+        )
+    }
+
+    if(newSubnoteTextToProcess.isNotEmpty()) {
+        CreateSingleOrMultipleSubitemsDialog(
+            textToProcess = newSubnoteTextToProcess,
+            module = Module.NOTE,
+            onCreate = { itemList ->
+                detailViewModel.addSubEntries(itemList, iCalObject.value?.collectionId!!)
+                scrollToSection.value = DetailsScreenSection.SUBNOTES
+            },
+            onDismiss = { newSubnoteTextToProcess = ""}
+        )
+    }
+
     if(detailsBottomSheetState.currentValue != SheetValue.Hidden) {
         ModalBottomSheet(
             sheetState = detailsBottomSheetState,
@@ -270,7 +291,7 @@ fun DetailsScreen(
             }) {
             DetailOptionsBottomSheet(
                 module = try {
-                    Module.valueOf(icalEntity.value?.property?.module ?: Module.NOTE.name)
+                    Module.valueOf(iCalObject.value?.module ?: Module.NOTE.name)
                 } catch (e: Exception) {
                     Module.NOTE
                 },
@@ -284,19 +305,13 @@ fun DetailsScreen(
     Scaffold(
         topBar = {
             DetailsTopAppBar(
-                readonly = icalEntity.value?.ICalCollection?.readonly ?: true,
+                readonly = collection.value?.readonly ?: true,
                 goBack = {
                     navigateUp = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 detailTopAppBarMode = detailViewModel.settingsStateHolder.detailTopAppBarMode.value,
-                onAddSubnote = { subnoteText ->
-                    detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null)
-                    scrollToSection.value = DetailsScreenSection.SUBNOTES
-                               },
-                onAddSubtask = { subtaskText ->
-                    detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null)
-                    scrollToSection.value = DetailsScreenSection.SUBTASKS
-                               },
+                onAddSubnote = { subnoteText -> newSubnoteTextToProcess = subnoteText },
+                onAddSubtask = { subtaskText -> newSubtaskTextToProcess = subtaskText },
                 actions = {
                     val menuExpanded = remember { mutableStateOf(false) }
 
@@ -388,11 +403,19 @@ fun DetailsScreen(
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
                                 onClick = {
-                                    val text = icalEntity.value?.getShareText(context) ?: ""
-                                    val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-                                    clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
-                                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
-                                        Toast.makeText(context, context.getText(R.string.menu_view_copy_to_clipboard_copied), Toast.LENGTH_SHORT).show()
+                                    scope.launch(Dispatchers.IO) {
+                                        ICalDatabase
+                                            .getInstance(context)
+                                            .iCalDatabaseDao()
+                                            .getSync(iCalObject.value?.id!!)
+                                            ?.let {
+                                                val text = it.getShareText(context)
+                                                val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                                clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
+                                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
+                                                    detailViewModel.toastMessage.value = context.getString(R.string.menu_view_copy_to_clipboard_copied)
+                                            }
+                                    }
                                     menuExpanded.value = false
                                 },
                                 leadingIcon = {
@@ -430,8 +453,8 @@ fun DetailsScreen(
 
                         HorizontalDivider()
 
-                        if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVJOURNAL == true) {
-                            if (icalEntity.value?.property?.module != Module.JOURNAL.name) {
+                        if(collection.value?.readonly == false && collection.value?.supportsVJOURNAL == true) {
+                            if (iCalObject.value?.module != Module.JOURNAL.name) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_journal)) },
                                     onClick = { detailViewModel.convertTo(Module.JOURNAL) },
@@ -444,7 +467,7 @@ fun DetailsScreen(
                                     }
                                 )
                             }
-                            if (icalEntity.value?.property?.module != Module.NOTE.name) {
+                            if (iCalObject.value?.module != Module.NOTE.name) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_note)) },
                                     onClick = { detailViewModel.convertTo(Module.NOTE) },
@@ -458,8 +481,8 @@ fun DetailsScreen(
                                 )
                             }
                         }
-                        if(icalEntity.value?.ICalCollection?.readonly == false && icalEntity.value?.ICalCollection?.supportsVTODO == true) {
-                            if(icalEntity.value?.property?.module != Module.TODO.name) {
+                        if(collection.value?.readonly == false && collection.value?.supportsVTODO == true) {
+                            if(iCalObject.value?.module != Module.TODO.name) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_task)) },
                                     onClick = { detailViewModel.convertTo(Module.TODO) },
@@ -480,8 +503,8 @@ fun DetailsScreen(
         content = { paddingValues ->
 
             DetailScreenContent(
-                observedICalEntity = icalEntity,
-                initialEntity = detailViewModel.initialEntity.value,
+                observedICalObject = iCalObject,
+                collection = collection.value,
                 iCalObject = detailViewModel.mutableICalObject,
                 categories = detailViewModel.mutableCategories,
                 resources = detailViewModel.mutableResources,
@@ -510,19 +533,8 @@ fun DetailsScreen(
                 showProgressForSubTasks = detailViewModel.settingsStateHolder.settingShowProgressForSubTasks.value,
                 keepStatusProgressCompletedInSync = detailViewModel.settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 linkProgressToSubtasks = detailViewModel.settingsStateHolder.settingLinkProgressToSubtasks.value,
-                setCurrentLocation = if(isEditMode.value
-                        && detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED
-                        && icalEntity.value?.property?.sequence == 0L
-                        && icalEntity.value?.property?.summary == null
-                        && icalEntity.value?.property?.description == null
-                        && icalEntity.value?.attachments?.isEmpty() == true) {
-                            when(icalEntity.value?.property?.getModuleFromString()) {
-                                Module.JOURNAL -> detailViewModel.settingsStateHolder.settingSetDefaultCurrentLocationJournals.value
-                                Module.NOTE -> detailViewModel.settingsStateHolder.settingSetDefaultCurrentLocationNotes.value
-                                Module.TODO -> detailViewModel.settingsStateHolder.settingSetDefaultCurrentLocationTasks.value
-                                else -> false
-                            }
-                    } else false,
+                isSubtaskDragAndDropEnabled = detailViewModel.detailSettings.listSettings?.subtasksOrderBy?.value == OrderBy.DRAG_AND_DROP,
+                isSubnoteDragAndDropEnabled = detailViewModel.detailSettings.listSettings?.subnotesOrderBy?.value == OrderBy.DRAG_AND_DROP,
                 markdownState = markdownState,
                 scrollToSectionState = scrollToSection,
                 saveEntry = {
@@ -531,14 +543,13 @@ fun DetailsScreen(
                 },
                 onProgressChanged = { itemId, newPercent -> detailViewModel.updateProgress(itemId, newPercent) },
                 onMoveToNewCollection = { newCollection -> detailViewModel.moveToNewCollection(newCollection.collectionId) },
-                onSubEntryAdded = { icalObject, attachment ->
-                    detailViewModel.addSubEntry(icalObject, attachment)
-                    when(icalObject.getModuleFromString()) {
-                        Module.JOURNAL -> scrollToSection.value = DetailsScreenSection.SUBNOTES
-                        Module.NOTE -> scrollToSection.value = DetailsScreenSection.SUBNOTES
-                        Module.TODO -> scrollToSection.value = DetailsScreenSection.SUBTASKS
+                onAudioSubEntryAdded = { subEntry, attachment -> detailViewModel.addSubEntry(subEntry, attachment, iCalObject.value?.collectionId!!) },
+                onSubEntryAdded = { module, text ->
+                    when(module) {
+                        Module.TODO -> newSubtaskTextToProcess = text
+                        else -> newSubnoteTextToProcess = text
                     }
-                                  },
+                },
                 onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },
@@ -551,24 +562,30 @@ fun DetailsScreen(
                 goToFilteredList = {
                     navController.navigate(
                         FilteredListDestination.FilteredList.getRoute(
-                            module = icalEntity.value?.property?.getModuleFromString() ?: Module.NOTE,
+                            module = iCalObject.value?.getModuleFromString() ?: Module.NOTE,
                             storedListSettingData = it
                         )
                     )
                 },
-                unlinkFromSeries = { instances, series, deleteAfterUnlink -> detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink) },
+                unlinkFromSeries = { instances, series, deleteAfterUnlink ->
+                    detailViewModel.unlinkFromSeries(instances, series, deleteAfterUnlink)
+                    detailViewModel.changeState.value = DetailViewModel.DetailChangeState.CHANGESAVING
+                    if(deleteAfterUnlink)
+                        navigateUp = true
+                },
                 onShowLinkExistingDialog = { modules, reltype ->
                     linkEntryDialogModule = modules
                     linkEntryDialogReltype = reltype
                 },
+                onUpdateSortOrder = { detailViewModel.updateSortOrder(it) },
                 modifier = Modifier.padding(paddingValues)
             )
         },
         bottomBar = {
             DetailBottomAppBar(
-                icalObject = icalEntity.value?.property,
+                icalObject = iCalObject.value,
                 seriesElement = seriesElement.value,
-                collection = icalEntity.value?.ICalCollection,
+                collection = collection.value,
                 isEditMode = isEditMode,
                 markdownState = markdownState,
                 isProActionAvailable = isProActionAvailable,

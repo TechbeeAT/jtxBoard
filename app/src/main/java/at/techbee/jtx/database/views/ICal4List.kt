@@ -93,9 +93,12 @@ import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.DateTimeUtils
+import java.util.UUID
 import kotlin.time.Duration.Companion.days
 
 const val VIEW_NAME_ICAL4LIST = "ical4list"
+
+const val CONCAT_DELIMITER = "|||"
 
 /**
  * This data class defines a view that is used by the IcalListViewModel.
@@ -148,8 +151,8 @@ const val VIEW_NAME_ICAL4LIST = "ical4list"
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'JOURNAL' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'NOTE' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, " +
             "CASE WHEN main_icalobject.$COLUMN_ID IN (SELECT sub_rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO sub_rel INNER JOIN $TABLE_NAME_ICALOBJECT sub_ical on sub_rel.$COLUMN_RELATEDTO_TEXT = sub_ical.$COLUMN_UID AND sub_ical.$COLUMN_MODULE = 'TODO' AND sub_rel.$COLUMN_RELATEDTO_RELTYPE = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, " +
-            "(SELECT group_concat(sub.$COLUMN_CATEGORY_TEXT, \', \') FROM (SELECT * FROM $TABLE_NAME_CATEGORY ORDER BY $COLUMN_CATEGORY_TEXT) as sub WHERE main_icalobject.$COLUMN_ID = sub.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
-            "(SELECT group_concat(sub.$COLUMN_RESOURCE_TEXT, \', \') FROM (SELECT * FROM $TABLE_NAME_RESOURCE ORDER BY $COLUMN_RESOURCE_TEXT) as sub WHERE main_icalobject.$COLUMN_ID = sub.$COLUMN_RESOURCE_ICALOBJECT_ID) as resources, " +
+            "(SELECT group_concat(sub.$COLUMN_CATEGORY_TEXT, \'"+ CONCAT_DELIMITER + "\') FROM (SELECT * FROM $TABLE_NAME_CATEGORY ORDER BY $COLUMN_CATEGORY_TEXT) as sub WHERE main_icalobject.$COLUMN_ID = sub.$COLUMN_CATEGORY_ICALOBJECT_ID) as categories, " +
+            "(SELECT group_concat(sub.$COLUMN_RESOURCE_TEXT, \'"+ CONCAT_DELIMITER + "\') FROM (SELECT * FROM $TABLE_NAME_RESOURCE ORDER BY $COLUMN_RESOURCE_TEXT) as sub WHERE main_icalobject.$COLUMN_ID = sub.$COLUMN_RESOURCE_ICALOBJECT_ID) as resources, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = 'VTODO' AND sub_relatedto.$COLUMN_RELATEDTO_TEXT = main_icalobject.$COLUMN_UID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_icalobject.$COLUMN_DELETED = 0 AND sub_icalobject.$COLUMN_RRULE IS NULL) as numSubtasks, " +
             "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT sub_icalobject INNER JOIN $TABLE_NAME_RELATEDTO sub_relatedto ON sub_icalobject.$COLUMN_ID = sub_relatedto.$COLUMN_RELATEDTO_ICALOBJECT_ID AND sub_icalobject.$COLUMN_COMPONENT = 'VJOURNAL' AND sub_relatedto.$COLUMN_RELATEDTO_TEXT = main_icalobject.$COLUMN_UID AND sub_relatedto.$COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND sub_icalobject.$COLUMN_DELETED = 0 AND sub_icalobject.$COLUMN_RRULE IS NULL) as numSubnotes, " +
             "(SELECT count(*) FROM $TABLE_NAME_ATTACHMENT WHERE $COLUMN_ATTACHMENT_ICALOBJECT_ID = main_icalobject.$COLUMN_ID  ) as numAttachments, " +
@@ -208,7 +211,7 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long,
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long,
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long,
-    @ColumnInfo(name = COLUMN_UID) var uid: String?,
+    @ColumnInfo(index = true, name = COLUMN_UID) var uid: String?,
     @ColumnInfo(name = COLUMN_RRULE) var rrule: String?,
     @ColumnInfo(name = COLUMN_RECURID) var recurid: String?,
 
@@ -216,7 +219,7 @@ data class ICal4List(
     @ColumnInfo var colorItem: Int?,
 
 
-    @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long?,
+    @ColumnInfo(name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long?,
     @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME) var accountName: String?,
     @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME) var collectionDisplayName: String?,
 
@@ -253,41 +256,41 @@ data class ICal4List(
                 id = 1L,
                 module = Module.JOURNAL.name,
                 component = Component.VJOURNAL.name,
-                "My Summary",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
+                summary = "My Summary",
+                description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
                         "\n" +
                         "Phasellus id quam vel enim semper ullamcorper in ac velit. Aliquam eleifend dignissim lacinia. Donec elementum ex et dui iaculis, eget vehicula leo bibendum. Nam turpis erat, luctus ut vehicula quis, congue non ex. In eget risus consequat, luctus ipsum nec, venenatis elit. In in tellus vel mauris rhoncus bibendum. Pellentesque sit amet quam elementum, pharetra nisl id, vehicula turpis. ",
-                "Vienna",
-                123.456,
-                321.654,
-                "https://jtx.techbee.at",
-                null,
-                System.currentTimeMillis(),
-                null,
-                null,
-                null,
+                location = "Vienna",
+                geoLat = 123.456,
+                geoLong = 321.654,
+                url = "https://jtx.techbee.at",
+                contact = null,
+                dtstart = System.currentTimeMillis(),
+                dtstartTimezone = null,
+                dtend = null,
+                dtendTimezone = null,
                 status = Status.DRAFT.status,
                 xstatus = null,
                 classification = Classification.CONFIDENTIAL.classification,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                System.currentTimeMillis(),
-                System.currentTimeMillis(),
-                System.currentTimeMillis(),
-                0,
-                null,
-                null,
-                null,
-                Color.Magenta.toArgb(),
-                Color.Cyan.toArgb(),
-                1L,
-                "myAccount",
-                "myCollection",
+                percent = null,
+                priority = null,
+                due = null,
+                dueTimezone = null,
+                completed = null,
+                completedTimezone = null,
+                duration = null,
+                created = System.currentTimeMillis(),
+                dtstamp = System.currentTimeMillis(),
+                lastModified = System.currentTimeMillis(),
+                sequence = 0,
+                uid = UUID.randomUUID().toString(),
+                rrule = null,
+                recurid = null,
+                colorCollection = Color.Magenta.toArgb(),
+                colorItem = Color.Cyan.toArgb(),
+                collectionId = 1L,
+                accountName = "myAccount",
+                collectionDisplayName = "myCollection",
                 deleted = false,
                 uploadPending = true,
                 isChildOfJournal = false,
@@ -645,4 +648,17 @@ data class ICal4List(
             null
         }
     }
+
+    /***
+     * @return Module of the current entry
+     */
+    fun getModule() = when(this.module) {
+        Module.TODO.name -> Module.TODO
+        Module.JOURNAL.name -> Module.JOURNAL
+        else -> Module.NOTE
+    }
+
+    fun getSplitCategories() = categories?.split(CONCAT_DELIMITER) ?: emptyList()
+    //fun getSplitResources() = resources?.split(CONCAT_DELIMITER) ?: emptyList()
+
 }

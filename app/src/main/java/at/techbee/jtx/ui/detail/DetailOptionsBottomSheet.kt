@@ -11,22 +11,19 @@ package at.techbee.jtx.ui.detail
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
@@ -34,12 +31,12 @@ import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,7 +47,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.ui.detail.models.DetailsScreenSection
+import at.techbee.jtx.ui.reusable.elements.DragHandle
 import kotlinx.coroutines.launch
+import sh.calvin.reorderable.ReorderableColumn
 
 enum class DetailOptionsBottomSheetTabs { VISIBILITY, ORDER }
 
@@ -146,86 +146,79 @@ fun DetailOptionsBottomSheet(
                     }
                 }
                 DetailOptionsBottomSheetTabs.ORDER -> {
+
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically),
+                        verticalArrangement = Arrangement.Top,
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = modifier
-                            .verticalScroll(rememberScrollState())
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    ) {
+                        modifier = Modifier.verticalScroll(rememberScrollState())) {
+                        ReorderableColumn(
+                            verticalArrangement = Arrangement.spacedBy(
+                                2.dp,
+                                Alignment.CenterVertically
+                            ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            list = detailSettings.detailSettingOrder.toList(),
+                            onSettle = { fromIndex, toIndex ->
+                               detailSettings.detailSettingOrder.apply {
+                                   add(toIndex, removeAt(fromIndex))
+                               }
+                               onListSettingsChanged()
+                            },
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) { _, setting, _ ->
 
-                        detailSettings.detailSettingOrder.forEach {
+                            key(setting.ordinal) {
 
-                            ElevatedAssistChip(
-                                onClick = { },
-                                enabled = when(it) {
-                                              DetailsScreenSection.COLLECTION -> true
-                                              DetailsScreenSection.DATES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
-                                              DetailsScreenSection.SUMMARYDESCRIPTION -> true
-                                              DetailsScreenSection.PROGRESS -> module == Module.TODO
-                                              DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false
-                                              DetailsScreenSection.CATEGORIES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false
-                                              DetailsScreenSection.PARENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false
-                                              DetailsScreenSection.SUBTASKS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false
-                                              DetailsScreenSection.SUBNOTES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] != false
-                                              DetailsScreenSection.RESOURCES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] != false
-                                              DetailsScreenSection.ATTENDEES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] != false
-                                              DetailsScreenSection.CONTACT -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] != false
-                                              DetailsScreenSection.URL -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] != false
-                                              DetailsScreenSection.LOCATION -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] != false
-                                              DetailsScreenSection.COMMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] != false
-                                              DetailsScreenSection.ATTACHMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] != false
-                                              DetailsScreenSection.ALARMS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] != false
-                                              DetailsScreenSection.RECURRENCE -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] != false
-                                },
-                                label = { Text(stringResource(id = it.stringRes)) },
-                                leadingIcon = {
-                                    val index = detailSettings.detailSettingOrder.indexOf(it)
-                                    Text((index+1).toString())
-                                },
-                                trailingIcon = {
-                                              Row {
-                                                  if(it != detailSettings.detailSettingOrder.firstOrNull()) {
-                                                      IconButton(onClick = {
-                                                          val index = detailSettings.detailSettingOrder.indexOf(it)
-                                                          detailSettings.detailSettingOrder.remove(it)
-                                                          detailSettings.detailSettingOrder.add(index-1, it)
-                                                          onListSettingsChanged()
-                                                      }) {
-                                                          Icon(
-                                                              Icons.Outlined.KeyboardArrowUp,
-                                                              "Up"
-                                                          )
-                                                      }
-                                                  } else { Box(modifier = Modifier.size(48.dp))}
-
-                                                  if(it != detailSettings.detailSettingOrder.lastOrNull()) {
-                                                      IconButton(onClick = {
-                                                          val index = detailSettings.detailSettingOrder.indexOf(it)
-                                                          detailSettings.detailSettingOrder.remove(it)
-                                                          detailSettings.detailSettingOrder.add(index+1, it)
-                                                          onListSettingsChanged()
-                                                      }) {
-                                                          Icon(
-                                                              Icons.Outlined.KeyboardArrowDown,
-                                                              "Down"
-                                                          )
-                                                      }
-                                                  } else { Box(modifier = Modifier.size(48.dp))}
-
-                                              }
-                                },
-                                modifier = Modifier
-                                    .padding(end = 4.dp)
-                                    .fillMaxWidth()
-                            )
+                                ElevatedAssistChip(
+                                    onClick = { },
+                                    enabled = when (setting) {
+                                        DetailsScreenSection.COLLECTION -> true
+                                        DetailsScreenSection.DATES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
+                                        DetailsScreenSection.SUMMARYDESCRIPTION -> true
+                                        DetailsScreenSection.PROGRESS -> module == Module.TODO
+                                        DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false
+                                        DetailsScreenSection.CATEGORIES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false
+                                        DetailsScreenSection.PARENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false
+                                        DetailsScreenSection.SUBTASKS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false
+                                        DetailsScreenSection.SUBNOTES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] != false
+                                        DetailsScreenSection.RESOURCES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] != false
+                                        DetailsScreenSection.ATTENDEES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] != false
+                                        DetailsScreenSection.CONTACT -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] != false
+                                        DetailsScreenSection.URL -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] != false
+                                        DetailsScreenSection.LOCATION -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] != false
+                                        DetailsScreenSection.COMMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] != false
+                                        DetailsScreenSection.ATTACHMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] != false
+                                        DetailsScreenSection.ALARMS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] != false
+                                        DetailsScreenSection.RECURRENCE -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] != false
+                                    },
+                                    label = {
+                                        Text(
+                                            text = stringResource(id = setting.stringRes),
+                                            modifier = Modifier
+                                                .heightIn(min = 48.dp)
+                                                .wrapContentHeight(align = Alignment.CenterVertically)
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        DragHandle(this)
+                                    },
+                                    modifier = Modifier
+                                        .padding(end = 4.dp)
+                                        .fillMaxWidth()
+                                )
+                            }
                         }
 
                         Button(
                             onClick = {
                                 detailSettings.detailSettingOrder.clear()
-                                detailSettings.detailSettingOrder.addAll(DetailsScreenSection.entriesFor(module))
+                                detailSettings.detailSettingOrder.addAll(
+                                    DetailsScreenSection.entriesFor(
+                                        module
+                                    )
+                                )
                                 onListSettingsChanged()
                             },
                             modifier = Modifier.padding(8.dp)

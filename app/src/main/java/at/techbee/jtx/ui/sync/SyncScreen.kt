@@ -137,7 +137,7 @@ fun SyncScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            SyncApp.values().forEach { syncApp ->
+            SyncApp.entries.forEach { syncApp ->
 
                 ElevatedCard(modifier = Modifier.fillMaxWidth()) {
 
@@ -292,7 +292,7 @@ fun SyncScreenContent_Preview_no_DAVX5() {
 fun SyncScreenContent_Preview_DAVx5_no_collections() {
     MaterialTheme {
         SyncScreenContent(
-            availableSyncApps = SyncApp.values().toList(),
+            availableSyncApps = SyncApp.entries,
             isSyncInProgress = remember { mutableStateOf(false) },
             remoteCollections = emptyList(),
             goToCollections = { },
@@ -306,7 +306,7 @@ fun SyncScreenContent_Preview_DAVx5_no_collections() {
 fun SyncScreenContent_Preview_DAVx5_with_collections() {
     MaterialTheme {
         SyncScreenContent(
-            availableSyncApps = SyncApp.values().toList(),
+            availableSyncApps = SyncApp.entries,
             isSyncInProgress = remember { mutableStateOf(true) },
             remoteCollections =
             listOf(

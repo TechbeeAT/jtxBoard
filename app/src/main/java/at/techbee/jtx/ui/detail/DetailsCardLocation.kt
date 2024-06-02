@@ -58,6 +58,7 @@ import at.techbee.jtx.flavored.MapComposable
 import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
+import at.techbee.jtx.util.UiUtil
 import com.google.accompanist.permissions.*
 import java.net.URLEncoder
 import java.util.*
@@ -73,7 +74,6 @@ fun DetailsCardLocation(
     initialGeoLong: Double?,
     initialGeofenceRadius: Int?,
     isEditMode: Boolean,
-    setCurrentLocation: Boolean,
     onLocationUpdated: (String, Double?, Double?) -> Unit,
     onGeofenceRadiusUpdatd: (Int?) -> Unit,
     modifier: Modifier = Modifier
@@ -92,14 +92,23 @@ fun DetailsCardLocation(
     var geoLongText by rememberSaveable { mutableStateOf(initialGeoLong?.toString() ?: "") }
     var geofenceRadius by rememberSaveable { mutableStateOf(initialGeofenceRadius) }
 
-    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao().getAllLocationsLatLng().observeAsState(emptyList())
-
     val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
         )
     ) else null
+
+    val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
+
+    val allLocations by ICalDatabase.getInstance(context).iCalDatabaseDao().getAllLocationsLatLng().observeAsState(emptyList())
+    val allLocalAddresses by remember { derivedStateOf {
+        if(contactsPermissionState?.status?.isGranted == true)
+            UiUtil.getLocalAddresses(context, location)
+        else
+            emptySet()
+    } }
+
 
     val geofencePermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
@@ -110,14 +119,8 @@ fun DetailsCardLocation(
             listOf(Manifest.permission.ACCESS_FINE_LOCATION)
     ) else null
 
-    var locationUpdateState by remember { mutableStateOf(
-        if(setCurrentLocation && locationPermissionState?.permissions?.any { it.status.isGranted } == true)
-                LocationUpdateState.LOCATION_REQUESTED
-        else if(setCurrentLocation)
-                LocationUpdateState.PERMISSION_NEEDED
-        else
-            LocationUpdateState.IDLE
-    )}
+
+    var locationUpdateRequested by rememberSaveable { mutableStateOf(false) }
 
     if (showLocationPickerDialog) {
         if (locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted }) {   // second part = permission is NOT permanently denied!
@@ -159,10 +162,9 @@ fun DetailsCardLocation(
         )
     }
 
-    LaunchedEffect(locationUpdateState, locationPermissionState?.permissions?.any { it.status.isGranted }) {
-        when (locationUpdateState) {
-            LocationUpdateState.IDLE -> {}
-            LocationUpdateState.LOCATION_REQUESTED -> {
+    LaunchedEffect(locationUpdateRequested, locationPermissionState?.permissions?.any { it.status.isGranted }) {
+        if(locationUpdateRequested) {
+            if(locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
                 // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
                 val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
                 val bestProvider = locationManager.getProviders(true).firstOrNull() ?: return@LaunchedEffect
@@ -174,12 +176,10 @@ fun DetailsCardLocation(
                     geoLatText = lastKnownLocation.latitude.toString()
                     geoLongText = lastKnownLocation.longitude.toString()
                     onLocationUpdated(location, geoLat, geoLong)
-                    locationUpdateState = LocationUpdateState.IDLE
+                    locationUpdateRequested = false
                 }
-            }
-            LocationUpdateState.PERMISSION_NEEDED -> {
+            } else {
                 locationPermissionState?.launchMultiplePermissionRequest()
-                locationUpdateState = LocationUpdateState.LOCATION_REQUESTED
             }
         }
     }
@@ -194,22 +194,64 @@ fun DetailsCardLocation(
 
             Crossfade(isEditMode, label = "toggleEditModeForMap") { editMode ->
                 if (!editMode) {
-                    Column {
-                        HeadlineWithIcon(icon = Icons.Outlined.Place, iconDesc = headline, text = headline)
-                        Text(
-                            text = location,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            HeadlineWithIcon(
+                                icon = Icons.Outlined.Place,
+                                iconDesc = headline,
+                                text = headline
+                            )
+                            Text(
+                                text = location,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            if(geoLat != null && geoLong != null) {
+                                Text(ICalObject.getLatLongString(geoLat, geoLong) ?: "")
+                            }
+                        }
+
+                        if((geoLat != null && geoLong != null) || location.isNotEmpty()) {
+
+                            IconButton(onClick = {
+                                val uri = if(geoLat == null && geoLong == null && location.isNotEmpty()) {
+                                    Uri.parse("geo:0,0?q=$location")
+                                } else if (geoLat != null && geoLong != null && location.isEmpty()) {
+                                    val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
+                                    Uri.parse("geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
+                                } else {
+                                    val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
+                                    Uri.parse("geo:$latLngParam")
+                                }
+
+                                val geoIntent = Intent(Intent.ACTION_VIEW, uri)
+                                try {
+                                    context.startActivity(geoIntent)
+                                } catch (e: ActivityNotFoundException) {
+                                    context.startActivity(
+                                        Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, location, BuildFlavor.getCurrent()))
+                                    )
+                                }
+                            }) {
+                                Icon(
+                                    Icons.AutoMirrored.Outlined.OpenInNew,
+                                    stringResource(id = R.string.open_in_browser)
+                                )
+                            }
+                        }
+
                     }
                 } else {
                     Column {
-                        if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY && allLocations.isNotEmpty()) {
+                        if (allLocations.isNotEmpty() || allLocalAddresses.isNotEmpty()) {
                             LazyRow(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 modifier = Modifier.fillMaxWidth()
                             ) {
-
-                                items(allLocations) { locationLatLng ->
+                                items(allLocations.filter { it.location?.lowercase()?.contains(location.lowercase()) == true }) { locationLatLng ->
                                     AssistChip(
                                         onClick = {
                                             location = locationLatLng.location ?: ""
@@ -232,6 +274,24 @@ fun DetailsCardLocation(
                                         },
                                         modifier = Modifier.alpha(
                                             if (locationLatLng.location == location && locationLatLng.geoLat == geoLat && locationLatLng.geoLong == geoLong) 1f else 0.4f
+                                        )
+                                    )
+                                }
+
+                                items(allLocalAddresses.toList()) { addressBookLocation ->
+                                    AssistChip(
+                                        onClick = {
+                                            location = addressBookLocation
+                                            geoLat = null
+                                            geoLong = null
+                                            geoLatText = ""
+                                            geoLongText = ""
+                                            onLocationUpdated(location, null, null)
+                                        },
+                                        label = { Text(addressBookLocation) },
+                                        leadingIcon = { Icon(Icons.Outlined.Contacts, null) },
+                                        modifier = Modifier.alpha(
+                                            if (addressBookLocation == location) 1f else 0.4f
                                         )
                                     )
                                 }
@@ -332,11 +392,7 @@ fun DetailsCardLocation(
                     )
 
                     IconButton(onClick = {
-                        locationUpdateState = if (locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
-                            LocationUpdateState.LOCATION_REQUESTED
-                        } else {
-                            LocationUpdateState.PERMISSION_NEEDED
-                        }
+                        locationUpdateRequested = true
                     }) {
                         Icon(Icons.Outlined.MyLocation, stringResource(R.string.current_location))
                     }
@@ -356,33 +412,6 @@ fun DetailsCardLocation(
                         .height(200.dp)
                         .padding(top = 8.dp)
                 )
-            }
-
-            AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(ICalObject.getLatLongString(geoLat, geoLong) ?: "")
-
-                    IconButton(onClick = {
-                        val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
-                        val geoUri = if (location.isNotEmpty())
-                            Uri.parse("geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
-                        else
-                            Uri.parse("geo:$latLngParam")
-
-                        val geoIntent = Intent(Intent.ACTION_VIEW, geoUri)
-                        try {
-                            context.startActivity(geoIntent)
-                        } catch (e: ActivityNotFoundException) {
-                            context.startActivity(Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, BuildFlavor.getCurrent())))
-                        }
-                    }) {
-                        Icon(Icons.AutoMirrored.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
-                    }
-                }
             }
 
             if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY) {
@@ -488,8 +517,6 @@ data class LocationLatLng(
     @ColumnInfo(name = COLUMN_GEO_LONG) val geoLong: Double?
 )
 
-enum class LocationUpdateState { IDLE, LOCATION_REQUESTED, PERMISSION_NEEDED }
-
 @Preview(showBackground = true)
 @Composable
 fun DetailsCardLocation_Preview() {
@@ -500,7 +527,6 @@ fun DetailsCardLocation_Preview() {
             initialGeoLong = null,
             initialGeofenceRadius = null,
             isEditMode = false,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )
@@ -517,7 +543,6 @@ fun DetailsCardLocation_Preview_withGeo() {
             initialGeoLong = 73.272838,
             initialGeofenceRadius = null,
             isEditMode = false,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )
@@ -534,7 +559,6 @@ fun DetailsCardLocation_Preview_withGeoDE() {
             initialGeoLong = 73.272838,
             initialGeofenceRadius = null,
             isEditMode = false,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )
@@ -552,7 +576,6 @@ fun DetailsCardLocation_Preview_edit() {
             initialGeoLong = null,
             initialGeofenceRadius = null,
             isEditMode = true,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )
@@ -570,7 +593,6 @@ fun DetailsCardLocation_Preview_edit_with_geo() {
             initialGeoLong = 73.272838,
             initialGeofenceRadius = null,
             isEditMode = true,
-            setCurrentLocation = false,
             onLocationUpdated = { _, _, _ -> },
             onGeofenceRadiusUpdatd = {}
         )

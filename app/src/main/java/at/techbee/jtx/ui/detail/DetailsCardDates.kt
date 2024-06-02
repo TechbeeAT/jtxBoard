@@ -82,6 +82,9 @@ fun DetailsCardDates(
                             dtstartTimezone = timezone
                             onDtstartChanged(datetime, timezone)
 
+                            if(datetime == null)
+                                return@HorizontalDateCard
+
                             due?.let {
                                 val dueZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(dueTimezone))
                                 if((dueTimezone == TZ_ALLDAY && dtstartTimezone != TZ_ALLDAY)) {
@@ -125,6 +128,9 @@ fun DetailsCardDates(
                             dueTimezone = timezone
                             onDueChanged(datetime, timezone)
                         }
+
+                        if(datetime == null)
+                            return@HorizontalDateCard
 
                         dtstart?.let {
                             if((dtstartTimezone == TZ_ALLDAY && dueTimezone != TZ_ALLDAY) || (dtstartTimezone != TZ_ALLDAY && dueTimezone == TZ_ALLDAY)) {

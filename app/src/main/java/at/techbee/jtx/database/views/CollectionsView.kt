@@ -10,7 +10,27 @@ package at.techbee.jtx.database.views
 
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
-import at.techbee.jtx.database.*
+import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_NAME
+import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_TYPE
+import at.techbee.jtx.database.COLUMN_COLLECTION_COLOR
+import at.techbee.jtx.database.COLUMN_COLLECTION_DESCRIPTION
+import at.techbee.jtx.database.COLUMN_COLLECTION_DISPLAYNAME
+import at.techbee.jtx.database.COLUMN_COLLECTION_ID
+import at.techbee.jtx.database.COLUMN_COLLECTION_LAST_SYNC
+import at.techbee.jtx.database.COLUMN_COLLECTION_OWNER
+import at.techbee.jtx.database.COLUMN_COLLECTION_OWNER_DISPLAYNAME
+import at.techbee.jtx.database.COLUMN_COLLECTION_READONLY
+import at.techbee.jtx.database.COLUMN_COLLECTION_SUPPORTSVEVENT
+import at.techbee.jtx.database.COLUMN_COLLECTION_SUPPORTSVJOURNAL
+import at.techbee.jtx.database.COLUMN_COLLECTION_SUPPORTSVTODO
+import at.techbee.jtx.database.COLUMN_COLLECTION_SYNC_VERSION
+import at.techbee.jtx.database.COLUMN_COLLECTION_URL
+import at.techbee.jtx.database.COLUMN_DELETED
+import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
+import at.techbee.jtx.database.COLUMN_MODULE
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.TABLE_NAME_COLLECTION
+import at.techbee.jtx.database.TABLE_NAME_ICALOBJECT
 
 const val VIEW_NAME_COLLECTIONS_VIEW = "collectionsView"
 
@@ -34,6 +54,7 @@ const val VIEW_NAME_COLLECTIONS_VIEW = "collectionsView"
                 "$COLUMN_COLLECTION_ACCOUNT_TYPE, " +
                 "$COLUMN_COLLECTION_SYNC_VERSION, " +
                 "$COLUMN_COLLECTION_READONLY, " +
+                "$COLUMN_COLLECTION_LAST_SYNC, " +
                 "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $COLUMN_MODULE = 'JOURNAL' AND $COLUMN_DELETED = 0) as numJournals, " +
                 "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $COLUMN_MODULE = 'NOTE' AND $COLUMN_DELETED = 0) as numNotes, " +
                 "(SELECT count(*) FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID = $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID AND $COLUMN_MODULE = 'TODO' AND $COLUMN_DELETED = 0) as numTodos " +
@@ -55,6 +76,7 @@ data class CollectionsView (
     @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_TYPE)      var accountType: String? = ICalCollection.LOCAL_ACCOUNT_TYPE,
     @ColumnInfo(name = COLUMN_COLLECTION_SYNC_VERSION)      var syncversion: String? = null,
     @ColumnInfo(name = COLUMN_COLLECTION_READONLY)          var readonly: Boolean = false,
+    @ColumnInfo(name = COLUMN_COLLECTION_LAST_SYNC)         var lastSync: Long? = null,
                                                             var numJournals: Int? = null,
                                                             var numNotes: Int? = null,
                                                             var numTodos: Int? = null
@@ -80,6 +102,7 @@ data class CollectionsView (
         icc.supportsVTODO = this.supportsVTODO
         icc.syncversion = this.syncversion
         icc.url = this.url
+        icc.lastSync = this.lastSync
         return icc
     }
 }

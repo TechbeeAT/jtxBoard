@@ -10,6 +10,9 @@
     <string name="link_jtx_support" translatable="false">"https://jtx.techbee.at/support"</string>
     <string name="link_jtx_privacy_policy" translatable="false">"https://jtx.techbee.at/privacy"</string>
     <string name="link_jtx_terms" translatable="false">"https://jtx.techbee.at/terms-conditions"</string>
+    <string name="font_roboto" translatable="false">"Roboto"</string>
+    <string name="font_noto" translatable="false">"Noto"</string>
+    <string name="font_montserrat_alternates" translatable="false">"Montserrat Alternates"</string>
     <!-- Global Strings -->
     <string name="save">"Save"</string>
     <string name="update">"Update"</string>
@@ -25,6 +28,7 @@
     <string name="longitude">"Longitude"</string>
     <string name="unlink">"Unlink"</string>
     <string name="off">"Off"</string>
+    <string name="location_permission_denied">"Location permission denied"</string>
     <string name="permissions">"Permissions"</string>
     <string name="current_location">"Current location"</string>
     <string name="toolbar_text_add_journal">"Add Journal"</string>
@@ -327,6 +331,7 @@
     <string name="filter_no_resource">Without resources</string>
     <string name="filter_subtasks_order_by">Order subtasks by</string>
     <string name="filter_subnotes_order_by">Order linked notes by</string>
+    <string name="order_by_drag_and_drop">"Drag &amp; Drop"</string>
     <string name="filter_no_filter">"No filter"</string>
     <string name="filter_options_more_entries">"More (%1$d)"</string>
     <string name="filter_options_less_entries">"Less"</string>
@@ -365,6 +370,7 @@
     <string name="settings_timezone_display_local">"Show time in local timezone"</string>
     <string name="settings_timezone_display_original">"Show time in original timezone"</string>
     <string name="settings_timezone_display_local_and_original">"Show time in local and in original timezone (detail view only)"</string>
+    <string name="settings_font">"Font"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>
@@ -395,6 +401,16 @@ Thank you!"</string>
     <string name="back">"Back"</string>
     <string name="details">"Details"</string>
     <string name="date">"Date"</string>
+    <string name="group_by_date_day">"Date (day)"</string>
+    <string name="group_by_date_week">"Date (week)"</string>
+    <string name="group_by_date_month">"Date (month)"</string>
+    <string name="group_by_started_day">"Start(ed) (day)"</string>
+    <string name="group_by_started_week">"Start(ed) (week)"</string>
+    <string name="group_by_started_month">"Start(ed) (month)"</string>
+    <string name="group_by_due_day">"Due (day)"</string>
+    <string name="group_by_due_week">"Due (week)"</string>
+    <string name="group_by_due_month">"Due (month)"</string>
+    <string name="week_number_year">"Week %1$d/%2$d"</string>
     <string name="summary_description">"Summary/Description"</string>
     <string name="status_classification_priority">"Status/Classification/Priority"</string>
     <string name="timezone">"Timezone"</string>
@@ -440,6 +456,7 @@ Thank you!"</string>
     <string name="details_go_to_series">"Go to series"</string>
     <string name="details_detach_from_series">"Detach from series"</string>
     <string name="details_detach_all_instances">"Detach all instances"</string>
+    <string name="details_show_all_instances">"Show all instances (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Unlink from parent"</string>
     <string name="dialog_unlink_from_parent_message">"Remove the relation as a sub-entry? The entry will remain as a standalone entry."</string>
     <string name="edit_comment">"Edit comment"</string>
@@ -481,6 +498,7 @@ Thank you!"</string>
     <string name="dialog_add_audio_entry_title">"Add audio entry"</string>
     <string name="menu_list_viewmode_compact">"Compact view"</string>
     <string name="menu_list_viewmode_kanban">"Kanban view"</string>
+    <string name="menu_list_viewmode_week">"Week view"</string>
     <string name="settings_audio_format_3gpp" translatable="false">"3GPP (audio/3gpp)"</string>
     <string name="settings_audio_format_aac" translatable="false">"AAC (audio/aac)"</string>
     <string name="settings_audio_format_ogg" translatable="false">"OGG (audio/ogg)"</string>
@@ -516,6 +534,7 @@ Thank you!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Keep status, progress &amp; completed in sync"</string>
     <string name="settings_attention_experimental_feature">"Attention: This is an experimental feature"</string>
     <string name="settings_create_with_current_location">"Create new entries with current location"</string>
+    <string name="settings_create_with_current_location_sub">"Please grant access to your location while using this app to use this feature."</string>
     <string name="settings_sticky_alarms">"Sticky alarms"</string>
     <string name="settings_sticky_alarms_sub">"Keep notifications until done or postponed"</string>
     <string name="settings_fullscreen_alarms">"Full screen alarms"</string>
@@ -544,6 +563,10 @@ Thank you!"</string>
     <string name="filter_any">"Any"</string>
     <string name="filter_all">"All"</string>
     <string name="filter_none">"None"</string>
+    <string name="filter_date_from_to">"Date: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Start(ed): %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Due: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completed: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
@@ -606,6 +629,7 @@ Thank you!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Updating widget"</string>
     <string name="widget_list_opacity_warning">"Note: This is an experimental feature! With reduced opacity changes in the color theme might not be reflected immediately!"</string>
     <string name="widget_list_color_warning">"Note: This is an experimental feature! Changes in the color theme will not be reflected! Choose no color to return to system default."</string>
+    <string name="widget_list_default_categories">"Set default categories for new entries from widget"</string>
     <string name="opacity">"Opacity"</string>
     <string name="link_jtx_mastodon" translatable="false">"https://fosstodon.org/@jtx"</string>
     <string name="mastodon_account_name" translatable="false">"@jtx@fosstodon.org"</string>
@@ -664,4 +688,12 @@ Thank you!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board can notify you when you are close to the given coordinates. Please set the location permission to 'Allow all the time' and grant the notifications permission to use this feature."</string>
     <string name="geofence_notification_summary">"Geofence activated"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board needs the permission to schedule exact alarms, otherwise alarm-notifications might be delayed. Please grant this permission in order to use this feature."</string>
+    <string name="call_contact">"Call %1$s"</string>
+    <string name="email_contact">"E-Mail %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Bulk create subtasks</string>
+    <string name="dialog_create_multiple_subnotes">Bulk create linked notes</string>
+    <string name="dialog_detected_multiple_subtasks">Text possibly contains multiple subtasks. Do you want to create %d subtasks?</string>
+    <string name="dialog_detected_multiple_subnotes">Text possibly contains multiple linked notes. Do you want to create %d linked notes?</string>
+    <string name="dialog_confirm_create_multiple">Create multiple</string>
+    <string name="dialog_confirm_create_single">Create single</string>
 </resources>

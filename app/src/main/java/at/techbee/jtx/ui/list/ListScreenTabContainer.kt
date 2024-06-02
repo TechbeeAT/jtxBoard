@@ -9,6 +9,11 @@
 package at.techbee.jtx.ui.list
 
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.location.LocationListener
+import android.location.LocationManager
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
@@ -33,7 +38,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.PrimaryTabRow
@@ -57,11 +61,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
@@ -85,6 +91,9 @@ import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.minutes
@@ -93,7 +102,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class
+    ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class
 )
 @Composable
 fun ListScreenTabContainer(
@@ -107,6 +116,12 @@ fun ListScreenTabContainer(
     val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
+    val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    ) else null
     val enabledTabs = mutableListOf<ListTabDestination>().apply {
         if(settingsStateHolder.settingEnableJournals.value)
             add(ListTabDestination.Journals)
@@ -224,15 +239,13 @@ fun ListScreenTabContainer(
             allResourcesLive = getActiveViewModel().allResources,
             allCollectionsLive = getActiveViewModel().allWriteableCollections,
             selectFromAllListLive = getActiveViewModel().selectFromAllList,
-            storedCategoriesLive = getActiveViewModel().storedCategories,
-            storedResourcesLive = getActiveViewModel().storedResources,
             extendedStatusesLive = getActiveViewModel().extendedStatuses,
-            settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
             player = getActiveViewModel().mediaPlayer,
             onSelectFromAllListSearchTextUpdated = { getActiveViewModel().updateSelectFromAllListQuery(searchText = it, isAuthenticated = globalStateHolder.isAuthenticated.value) },
             onCategoriesChanged = { addedCategories, deletedCategories -> getActiveViewModel().updateCategoriesOfSelected(addedCategories, deletedCategories) },
             onResourcesChanged = { addedResources, deletedResources -> getActiveViewModel().updateResourcesToSelected(addedResources, deletedResources) },
             onStatusChanged = { newStatus -> getActiveViewModel().updateStatusOfSelected(newStatus) },
+            onXStatusChanged = { newXStatus -> getActiveViewModel().updateXStatusOfSelected(newXStatus) },
             onClassificationChanged = { newClassification -> getActiveViewModel().updateClassificationOfSelected(newClassification) },
             onPriorityChanged = { newPriority -> getActiveViewModel().updatePriorityOfSelected(newPriority) },
             onCollectionChanged = { newCollection -> getActiveViewModel().moveSelectedToNewCollection(newCollection) },
@@ -278,8 +291,10 @@ fun ListScreenTabContainer(
     fun addNewEntry(
         module: Module,
         text: String?,
+        categories: List<String>,
         collectionId: Long,
         attachments: List<Attachment>,
+        setLocation: Boolean,
         editAfterSaving: Boolean
     ) {
 
@@ -295,7 +310,29 @@ fun ListScreenTabContainer(
             settingsStateHolder.settingDefaultDueTime.value,
             settingsStateHolder.settingDefaultDueTimezone.value,
         )
-        val categories = Category.extractHashtagsFromText(text)
+        val mergedCategories = mutableListOf<Category>()
+        categories.forEach {
+            mergedCategories.add(Category(text = it))
+        }
+        mergedCategories.addAll(Category.extractHashtagsFromText(text))
+
+        if(setLocation && locationPermissionState?.permissions?.any { it.status.isGranted } == true) {
+            // Get the location manager, avoiding using fusedLocationClient here to not use proprietary libraries
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            val bestProvider = locationManager.getProviders(true).firstOrNull() ?: return
+            val locListener = LocationListener { }
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            ) {
+                locationManager.requestLocationUpdates(bestProvider, 0, 0f, locListener)
+                locationManager.getLastKnownLocation(bestProvider)?.let { lastKnownLocation ->
+                    newICalObject.geoLat = lastKnownLocation.latitude
+                    newICalObject.geoLong = lastKnownLocation.longitude
+                }
+            }
+        } else if(setLocation && locationPermissionState?.permissions?.none { it.status.isGranted } == true) {
+            Toast.makeText(context, R.string.location_permission_denied, Toast.LENGTH_SHORT).show()
+        }
 
         //handle autoAlarm
         val autoAlarm = if(settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_DUE && newICalObject.due != null) {
@@ -316,7 +353,7 @@ fun ListScreenTabContainer(
 
         getActiveViewModel().insertQuickItem(
             newICalObject,
-            categories,
+            mergedCategories,
             attachments,
             autoAlarm,
             editAfterSaving
@@ -360,8 +397,14 @@ fun ListScreenTabContainer(
                     addNewEntry(
                         module = listViewModel.module,
                         text = newEntryText,
+                        categories = emptyList(),
                         collectionId = listViewModel.listSettings.topAppBarCollectionId.value,
                         attachments = emptyList(),
+                        setLocation = when(listViewModel.module) {
+                            Module.JOURNAL -> settingsStateHolder.settingSetDefaultCurrentLocationJournals.value
+                            Module.NOTE -> settingsStateHolder.settingSetDefaultCurrentLocationNotes.value
+                            Module.TODO -> settingsStateHolder.settingSetDefaultCurrentLocationTasks.value
+                        },
                         editAfterSaving = false
                     )
                 },
@@ -473,6 +516,10 @@ fun ListScreenTabContainer(
                             HorizontalDivider()
                         }
                         ViewMode.entries.forEach { viewMode ->
+
+                            if(getActiveViewModel().module == Module.NOTE && viewMode == ViewMode.WEEK)
+                                return@forEach
+
                             RadiobuttonWithText(
                                 text = stringResource(id = viewMode.stringResource),
                                 isSelected = getActiveViewModel().listSettings.viewMode.value == viewMode,
@@ -534,9 +581,6 @@ fun ListScreenTabContainer(
             )
         },
         bottomBar = {
-            if(storedListSettingData != null)    // no bottom bar if there are preset filters
-                return@Scaffold
-
             // show the bottom bar only if there is any collection available that supports the component/module
             if (allWriteableCollections.value.any { collection ->
                     (listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
@@ -546,6 +590,7 @@ fun ListScreenTabContainer(
                 ListBottomAppBar(
                     module = listViewModel.module,
                     iCal4ListRel = iCal4ListRel,
+                    isSyncInProgress = globalStateHolder.isSyncInProgress.value,
                     allowNewEntries = allUsableCollections.any { collection ->
                         ((listViewModel.module == Module.JOURNAL && collection.supportsVJOURNAL)
                                 || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
@@ -562,7 +607,19 @@ fun ListScreenTabContainer(
                         settingsStateHolder.lastUsedModule.value = listViewModel.module
                         settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
 
-                        addNewEntry(module = listViewModel.module, text = listViewModel.listSettings.newEntryText.value.ifEmpty { null }, collectionId = proposedCollectionId, attachments = emptyList(), editAfterSaving = true)
+                        addNewEntry(
+                            module = listViewModel.module,
+                            text = listViewModel.listSettings.newEntryText.value.ifEmpty { null },
+                            categories = emptyList(),
+                            collectionId = proposedCollectionId,
+                            attachments = emptyList(),
+                            setLocation = when(listViewModel.module) {
+                                Module.JOURNAL -> settingsStateHolder.settingSetDefaultCurrentLocationJournals.value
+                                Module.NOTE -> settingsStateHolder.settingSetDefaultCurrentLocationNotes.value
+                                Module.TODO -> settingsStateHolder.settingSetDefaultCurrentLocationTasks.value
+                            },
+                            editAfterSaving = true
+                        )
                         listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
@@ -598,7 +655,13 @@ fun ListScreenTabContainer(
                         }
                         listViewModel.updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
                     },
-                    onDeleteDone = { listViewModel.deleteDone() }
+                    onDeleteDone = { listViewModel.deleteDone() },
+                    onListSettingsChanged = {
+                        listViewModel.updateSearch(
+                            saveListSettings = true,
+                            isAuthenticated = globalStateHolder.isAuthenticated.value
+                        )
+                    }
                 )
             } else if(timeout) {
                 BottomAppBar {
@@ -670,24 +733,32 @@ fun ListScreenTabContainer(
                                         globalStateHolder.icalFromIntentModule.value ?: getActiveViewModel().module,   // coming from intent
                                     enabledModules = enabledTabs.map { it.module },
                                     presetText = globalStateHolder.icalFromIntentString.value ?: quickAddBackupText,    // only relevant when coming from intent
+                                    presetCategories = globalStateHolder.icalFromIntentCategories,   // only relevant when coming from intent
                                     presetAttachment = globalStateHolder.icalFromIntentAttachment.value,    // only relevant when coming from intent
                                     allWriteableCollections = allUsableCollections,
                                     presetCollectionId = globalStateHolder.icalFromIntentCollection.value?.let {fromIntent ->
                                         allUsableCollections.find { fromIntent == it.displayName }?.collectionId
                                     } ?: listViewModel.listSettings.getLastUsedCollectionId(listViewModel.prefs),
                                     player = listViewModel.mediaPlayer,
-                                    onSaveEntry = { module, text, attachments, collectionId,  editAfterSaving ->
+                                    onSaveEntry = { module, text, categories, attachments, collectionId,  editAfterSaving ->
 
                                         listViewModel.listSettings.saveLastUsedCollectionId(listViewModel.prefs, collectionId)
                                         settingsStateHolder.lastUsedModule.value = module
                                         settingsStateHolder.lastUsedModule = settingsStateHolder.lastUsedModule
+
+                                        val setLocation = when(module) {
+                                            Module.JOURNAL -> settingsStateHolder.settingSetDefaultCurrentLocationJournals.value
+                                            Module.NOTE -> settingsStateHolder.settingSetDefaultCurrentLocationNotes.value
+                                            Module.TODO -> settingsStateHolder.settingSetDefaultCurrentLocationTasks.value
+                                        }
+
+                                        addNewEntry(module, text, categories, collectionId, attachments, setLocation, editAfterSaving)
 
                                         globalStateHolder.icalFromIntentString.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentModule.value = null
                                         globalStateHolder.icalFromIntentCollection.value = null
 
-                                        addNewEntry(module, text, collectionId, attachments, editAfterSaving)
                                         scope.launch {
                                             val index = enabledTabs.indexOf(enabledTabs.find { tab -> tab.module == module })
                                             if(index >=0)
@@ -701,6 +772,7 @@ fun ListScreenTabContainer(
                                         globalStateHolder.icalFromIntentAttachment.value = null  // origin was state from import
                                         globalStateHolder.icalFromIntentModule.value = null
                                         globalStateHolder.icalFromIntentCollection.value = null
+                                        globalStateHolder.icalFromIntentCategories.clear()
                                     },
                                     keepDialogOpen = { showQuickAdd.value = true } // necessary when origin was intent and save&new is clicked!
                                 )
@@ -721,10 +793,6 @@ fun ListScreenTabContainer(
                                         },
                                         navController = navController
                                     )
-                                }
-
-                                if(globalStateHolder.isSyncInProgress.value) {
-                                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                                 }
                             }
                         }

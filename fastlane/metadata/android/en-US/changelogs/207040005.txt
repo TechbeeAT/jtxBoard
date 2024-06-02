@@ -1,0 +1,2 @@
+- Create subtask and linked notes form detail view in bulk when entering multiple lines
+- Minor improvements and fixes

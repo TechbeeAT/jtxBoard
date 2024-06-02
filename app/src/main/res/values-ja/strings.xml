@@ -19,12 +19,13 @@
     <string name="longitude">"経度"</string>
     <string name="unlink">"リンク解除"</string>
     <string name="off">"オフ"</string>
+    <string name="location_permission_denied">"位置情報の権限が拒否されました"</string>
     <string name="permissions">"権限"</string>
     <string name="current_location">"現在地"</string>
     <string name="toolbar_text_add_journal">"ジャーナルを追加"</string>
     <string name="toolbar_text_add_note">"メモを追加"</string>
     <string name="toolbar_text_add_task">"ToDo を追加"</string>
-    <string name="toast_sync_requested">"同期が要求されました"</string>
+    <string name="toast_sync_requested">"同期をリクエストしました"</string>
     <string name="default_local_collection_name">"ローカル"</string>
     <string name="default_local_account_name">"ローカル"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -107,6 +108,7 @@
     <string name="edit_recur_on_weekday">"曜日:"</string>
     <string name="edit_recur_on_the_x_day_of_month">"月の"</string>
     <string name="edit_recur_x_day_of_the_month">"日目"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"末日"</string>
     <string name="edit_recur_x_times">"回"</string>
     <string name="edit_recur_toast_requires_start_date">"繰り返すには着手日を設定してください！"</string>
     <string name="edit_datepicker_dialog_select_date">"日付を選択"</string>
@@ -177,7 +179,7 @@
     <string name="donate_other_donation_methods">"その他の寄付方法は、私たちのウェブサイトからご確認ください:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"この ファイル/URL を開けるアプリが見つかりませんでした。"</string>
     <string name="toast_item_is_now_recu_exception">"繰り返しのあるアイテムが例外になりました。"</string>
-    <string name="toast_done_tasks_deleted">"完了した ToDo が削除されました (%d)。"</string>
+    <string name="toast_done_tasks_deleted">"完了した ToDo (%d) が削除されました。"</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"Thanks to"</string>
     <string name="about_translations_basic_info">"jtx Board は、オープンソースコミュニティへの参加と貢献を評価するオープンソースアプリです。このページではコミュニティメンバーの翻訳への取り組みを紹介します。"</string>
@@ -316,6 +318,7 @@
     <string name="filter_no_resource">必要なものなし</string>
     <string name="filter_subtasks_order_by">サブ ToDo の並べ替え</string>
     <string name="filter_subnotes_order_by">リンクされたメモの並べ替え</string>
+    <string name="order_by_drag_and_drop">"ドラッグ &amp; ドロップ"</string>
     <string name="filter_no_filter">"フィルターなし"</string>
     <string name="filter_options_more_entries">"詳細 (%1$d)"</string>
     <string name="filter_options_less_entries">"表示を減らす"</string>
@@ -354,6 +357,7 @@
     <string name="settings_timezone_display_local">"現地時間で時刻を表示する"</string>
     <string name="settings_timezone_display_original">"元のタイムゾーンで時間を表示"</string>
     <string name="settings_timezone_display_local_and_original">"現地時間および元のタイムゾーンで時間を表示 (詳細表示のみ)"</string>
+    <string name="settings_font">"フォント"</string>
     <string name="donate_dialog_title">"jtx Board を気に入っていただけましたか？"</string>
     <string name="donate_dialog_message">"アプリの開発は複雑で、開発・メンテナンス・サポートは大変な仕事です。このアプリを気に入り、継続的な開発をご支援いただける場合は、寄付をご検討ください :-)
 ありがとうございます！"</string>
@@ -382,6 +386,16 @@
     <string name="back">"戻る"</string>
     <string name="details">"詳細"</string>
     <string name="date">"日付"</string>
+    <string name="group_by_date_day">"日付 (日)"</string>
+    <string name="group_by_date_week">"日付 (週)"</string>
+    <string name="group_by_date_month">"日付 (月)"</string>
+    <string name="group_by_started_day">"開始 (日)"</string>
+    <string name="group_by_started_week">"開始 (週)"</string>
+    <string name="group_by_started_month">"開始 (月)"</string>
+    <string name="group_by_due_day">"期限 (日)"</string>
+    <string name="group_by_due_week">"期限 (週)"</string>
+    <string name="group_by_due_month">"期限 (月)"</string>
+    <string name="week_number_year">"第 %1$d 週/%2$d 年"</string>
     <string name="summary_description">"概要/詳細"</string>
     <string name="status_classification_priority">"ステータス/公開設定/優先度"</string>
     <string name="timezone">"タイムゾーン"</string>
@@ -427,6 +441,7 @@
     <string name="details_go_to_series">"シリーズに移動"</string>
     <string name="details_detach_from_series">"シリーズから切り離す"</string>
     <string name="details_detach_all_instances">"すべてのインスタンスを切り離す"</string>
+    <string name="details_show_all_instances">"すべてのインスタンスを表示 (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"親からリンクを解除"</string>
     <string name="dialog_unlink_from_parent_message">"サブエントリーとしての関係を解除しますか？ エントリーは独立して残ります。"</string>
     <string name="edit_comment">"コメントを編集"</string>
@@ -468,6 +483,7 @@
     <string name="dialog_add_audio_entry_title">"音声エントリーを追加"</string>
     <string name="menu_list_viewmode_compact">"コンパクト表示"</string>
     <string name="menu_list_viewmode_kanban">"カンバン表示"</string>
+    <string name="menu_list_viewmode_week">"週表示"</string>
     <string name="settings_tasks">"ToDo の設定"</string>
     <string name="settings_alarms">"アラームの設定"</string>
     <string name="settings_tasks_status_progress">"ToDo の設定 (ステータス/進捗)"</string>
@@ -499,6 +515,7 @@
     <string name="settings_keep_status_progress_completed_in_sync">"同期でステータス、進捗状況、完了を維持"</string>
     <string name="settings_attention_experimental_feature">"注意: これは試験運用中の機能です"</string>
     <string name="settings_create_with_current_location">"新規作成するエントリーに現在の位置情報を設定"</string>
+    <string name="settings_create_with_current_location_sub">"この機能を使用するには、アプリに位置情報へのアクセス権限を付与してください。"</string>
     <string name="settings_sticky_alarms">"固定アラーム"</string>
     <string name="settings_sticky_alarms_sub">"完了または延期されるまで通知を維持します"</string>
     <string name="settings_fullscreen_alarms">"全画面アラーム"</string>
@@ -527,6 +544,10 @@
     <string name="filter_any">"選択したもの"</string>
     <string name="filter_all">"すべて"</string>
     <string name="filter_none">"なし"</string>
+    <string name="filter_date_from_to">"日付: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"着手: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"締切: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"完了: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>
     <string name="list_date_today">"今日"</string>
@@ -545,9 +566,9 @@
     <string name="collections_biometric_protected_entries_locked_subtitle">認証してもう一度お試しください</string>
     <string name="list_biometric_protected_entries_unlocked">生体認証で保護されたエントリーはロック解除されています</string>
     <string name="settings_auto_alarm">"自動アラーム"</string>
-    <string name="alarms_always_ondue">"締切日時に通知"</string>
-    <string name="alarms_always_on_save">"常に保存時（実験的）"</string>
-    <string name="settings_auto_alarm_sub">"オンにすると自動でアラームを作成します。「締切日時に通知」を選択するとアラームを作成せずに、締切日時に通知します。"</string>
+    <string name="alarms_always_ondue">"常に締切日時に"</string>
+    <string name="alarms_always_on_save">"常に保存時に (試験的)"</string>
+    <string name="settings_auto_alarm_sub">"オンにすると自動でアラームを作成します。「常に締切日時に」を選択するとアラームを作成せずに、締切日時に通知します。"</string>
     <string name="settings_protect_biometric">"エントリーを生体認証で保護"</string>
     <string name="settings_protect_biometric_sub">"この機能は、選択されたエントリーを生体認証でロック解除されるまで非表示にしますが、バックグラウンドでデータを暗号化/復号するものではありません。"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -564,9 +585,9 @@
     <string name="filter_group_by_info">"リスト表示とコンパクト表示のみグループ化に対応しています"</string>
     <string name="filter_save_as_preset">"プリセットとして保存"</string>
     <string name="menu_list_flat_view">"フラット表示"</string>
-    <string name="menu_list_flat_view_sub">"リストの最上位に子エントリーを常に表示"</string>
-    <string name="menu_list_limit_recur_entries">"繰り返しを制限"</string>
-    <string name="menu_list_limit_recur_entries_sub">"将来の繰り返しエントリーは 1 つだけ表示"</string>
+    <string name="menu_list_flat_view_sub">"リストの最上位に子エントリーを常に表示します"</string>
+    <string name="menu_list_limit_recur_entries">"繰り返しを制限する"</string>
+    <string name="menu_list_limit_recur_entries_sub">"将来の繰り返しエントリーは 1 つだけ表示します"</string>
     <string name="menu_view_markdown_formatting">"Markdown 記法"</string>
     <string name="menu_view_autosave">"自動保存"</string>
     <string name="next">"次へ"</string>
@@ -589,6 +610,7 @@
     <string name="widget_list_compat_updating_widget_notification">"ウィジェットの更新中"</string>
     <string name="widget_list_opacity_warning">"注意: これは試験運用中の機能です！ テーマカラーの不透明度の変更が、すぐに反映されない場合があります！"</string>
     <string name="widget_list_color_warning">"注意: これは試験運用中の機能です！ テーマカラーの変更がすぐに反映されない場合があります！ 色なしを選択すると、システムのデフォルトに戻ります。"</string>
+    <string name="widget_list_default_categories">"ウィジェットで新規作成するエントリーのデフォルトのカテゴリーを設定する"</string>
     <string name="opacity">"不透明度"</string>
     <string name="general">"一般"</string>
     <string name="list_collapse">"閉じる"</string>
@@ -645,4 +667,8 @@
     <string name="geofence_request_permission_dialog_message">"jtx Board は指定された座標に近づいたときにお知らせできます。この機能を有効にするには、位置情報の権限を「常に許可」にし、通知の権限を許可してください。"</string>
     <string name="geofence_notification_summary">"ジオフェンスが有効です"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board はアラーム通知の遅延を避けるため、正確なアラームを設定する権限を必要とします。この機能を使用するには、権限を付与してください。"</string>
+    <string name="call_contact">"%1$sに電話する"</string>
+    <string name="email_contact">"%1$sにメールを送信"</string>
+    <string name="dialog_create_multiple_subtasks">サブ ToDo を一括作成</string>
+    <string name="dialog_create_multiple_subnotes">リンクされたメモを一括作成</string>
 </resources>

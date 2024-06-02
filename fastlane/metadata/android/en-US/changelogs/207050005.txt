@@ -1,0 +1,3 @@
+- Widgets allow now setting default categories that will automatically assigned to new entries when created out of the widget
+- When sorting by created date, done tasks are now shown at the end
+- More condensed metadata-info to take up less space in compact views

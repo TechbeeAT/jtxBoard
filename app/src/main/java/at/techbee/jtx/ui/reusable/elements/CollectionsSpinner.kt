@@ -10,7 +10,6 @@ import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -35,7 +34,6 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.flavored.BillingManager
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CollectionsSpinner(
     collections: List<ICalCollection>,

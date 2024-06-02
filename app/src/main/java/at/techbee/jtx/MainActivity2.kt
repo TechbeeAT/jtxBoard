@@ -70,6 +70,9 @@ import at.techbee.jtx.ui.settings.SettingsScreen
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.sync.SyncScreen
 import at.techbee.jtx.ui.theme.JtxBoardTheme
+import at.techbee.jtx.ui.theme.montserratAlternatesFont
+import at.techbee.jtx.ui.theme.notoFont
+import at.techbee.jtx.ui.theme.robotoFont
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidget
@@ -78,7 +81,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
-import java.net.URLDecoder
 import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.minutes
 
@@ -115,6 +117,7 @@ class MainActivity2 : AppCompatActivity() {
         const val INTENT_ACTION_OPEN_ICALOBJECT = "openICalObject"
         const val INTENT_EXTRA_ITEM2SHOW = "item2show"
         const val INTENT_EXTRA_COLLECTION2PRESELECT = "collection2preselect"
+        const val INTENT_EXTRA_CATEGORIES2PRESELECT = "categories2preselect"
         const val INTENT_EXTRA_LISTWIDGETCONFIG = "listWidgetConfig"
     }
 
@@ -194,7 +197,19 @@ class MainActivity2 : AppCompatActivity() {
                         },
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.merge(TextStyle(textDirection = TextDirection.Content))) {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides LocalTextStyle.current.merge(
+                            TextStyle(
+                                textDirection = TextDirection.Content,
+                                fontFamily = when(settingsStateHolder.settingFont.value) {
+                                    DropdownSettingOption.FONT_ROBOTO -> robotoFont
+                                    DropdownSettingOption.FONT_NOTO -> notoFont
+                                    DropdownSettingOption.FONT_MONTSERRAT_ALTERNATES -> montserratAlternatesFont
+                                    else -> robotoFont
+                                }
+                            )
+                        )
+                    ) {
                         MainNavHost(this, globalStateHolder, settingsStateHolder)
                     }
                 }
@@ -204,12 +219,14 @@ class MainActivity2 : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        /*
         if(settingsStateHolder.settingSyncOnStart.value) {
             lifecycleScope.launch(Dispatchers.IO) {
                 val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao().getAllRemoteCollections()
                 SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
             }
         }
+         */
 
         //handle intents, but only if it wasn't already handled
         if (intent.hashCode() != lastProcessedIntentHash) {
@@ -219,18 +236,24 @@ class MainActivity2 : AppCompatActivity() {
                     globalStateHolder.icalFromIntentString.value = ""
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.getStringArrayListExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)?.let { globalStateHolder.icalFromIntentCategories.addAll(it) }
+                    intent.removeExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)
                 }
                 INTENT_ACTION_ADD_NOTE -> {
                     globalStateHolder.icalFromIntentModule.value = Module.NOTE
                     globalStateHolder.icalFromIntentString.value = ""
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.getStringArrayListExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)?.let { globalStateHolder.icalFromIntentCategories.addAll(it) }
+                    intent.removeExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)
                 }
                 INTENT_ACTION_ADD_TODO -> {
                     globalStateHolder.icalFromIntentModule.value = Module.TODO
                     globalStateHolder.icalFromIntentString.value = ""
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.getStringArrayListExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)?.let { globalStateHolder.icalFromIntentCategories.addAll(it) }
+                    intent.removeExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)
                 }
                 INTENT_ACTION_OPEN_FILTERED_LIST -> {
                     intent.getStringExtra(INTENT_EXTRA_LISTWIDGETCONFIG)?.let {
@@ -325,7 +348,9 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = NavigationDrawerDestination.BOARD.name
+        startDestination = if(globalStateHolder.filteredList2Load.value != null)
+            FilteredListDestination.FilteredListFromWidget.route
+            else NavigationDrawerDestination.BOARD.name
     ) {
         composable(NavigationDrawerDestination.BOARD.name) {
             ListScreenTabContainer(
@@ -340,11 +365,11 @@ fun MainNavHost(
             arguments = FilteredListDestination.FilteredList.args
         ) { backStackEntry ->
 
-            val module = Module.entries.find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
+            val module = Module.entries.find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.ARG_MODULE) } ?: return@composable
             val storedListSettingData = backStackEntry.arguments?.getString(
-                FilteredListDestination.argStoredListSettingData)?.let {
-                Json.decodeFromString<StoredListSettingData>(URLDecoder.decode(it, "utf-8")
-                ) }
+                FilteredListDestination.ARG_STORED_LIST_SETTING_DATA)?.let {
+                    Json.decodeFromString<StoredListSettingData>(it)
+                }
 
             ListScreenTabContainer(
                 navController = navController,
@@ -353,6 +378,25 @@ fun MainNavHost(
                 initialModule = module,
                 storedListSettingData = storedListSettingData
             )
+        }
+        composable(
+            FilteredListDestination.FilteredListFromWidget.route,
+            arguments = emptyList()
+        ) {
+
+            val storedListSettingData = globalStateHolder.filteredList2Load.value?.let { listWidgetConfig ->
+                val listSettings = ListSettings.fromListWidgetConfig(listWidgetConfig)
+                StoredListSettingData.fromListSettings(listSettings)
+            }
+
+            ListScreenTabContainer(
+                navController = navController,
+                globalStateHolder = globalStateHolder,
+                settingsStateHolder = settingsStateHolder,
+                initialModule = globalStateHolder.filteredList2Load.value?.module ?: Module.NOTE,
+                storedListSettingData = storedListSettingData
+            )
+            //globalStateHolder.filteredList2Load.value = null
         }
         composable(
             DetailDestination.Detail.route,
@@ -469,13 +513,6 @@ fun MainNavHost(
 
     globalStateHolder.icalObject2Open.value?.let { id ->
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
-    }
-
-    globalStateHolder.filteredList2Load.value?.let { listWidgetConfig ->
-        val listSettings = ListSettings.fromListWidgetConfig(listWidgetConfig)
-        val storedListSettingData = StoredListSettingData.fromListSettings(listSettings)
-        navController.navigate(FilteredListDestination.FilteredList.getRoute(listWidgetConfig.module, storedListSettingData))
-        globalStateHolder.filteredList2Load.value = null
     }
 
     if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {

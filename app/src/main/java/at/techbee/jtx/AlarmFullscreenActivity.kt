@@ -48,6 +48,7 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.DateTimeUtils
+import at.techbee.jtx.util.SyncUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.days
@@ -258,7 +259,15 @@ fun FullscreenAlarmScreen(
                 TextButton(
                     onClick = {
                         scope.launch(Dispatchers.IO) {
-                            NotificationPublisher.setToDone(iCalObject.id, settingKeepStatusProgressCompletedInSync, settingLinkProgressToSubtasks, context)
+                            ICalDatabase.getInstance(context).iCalDatabaseDao().updateProgress(
+                                id = iCalObject.id,
+                                uid = iCalObject.uid,
+                                newPercent = 100,
+                                settingKeepStatusProgressCompletedInSync = settingKeepStatusProgressCompletedInSync,
+                                settingLinkProgressToSubtasks = settingLinkProgressToSubtasks
+                            )
+                            SyncUtil.notifyContentObservers(context)
+                            NotificationPublisher.scheduleNextNotifications(context)
                             onDismiss(true)
                         }
                     }

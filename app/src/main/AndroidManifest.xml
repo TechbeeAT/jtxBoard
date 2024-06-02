@@ -90,6 +90,7 @@
         android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
         <profileable
@@ -152,7 +153,7 @@
             android:name=".ListWidgetConfigActivity"
             android:clearTaskOnLaunch="true"
             android:excludeFromRecents="true"
-            android:exported="false"
+            android:exported="true"
             android:finishOnTaskLaunch="true"
             android:launchMode="singleInstance">
             <intent-filter>
@@ -171,7 +172,7 @@
         <receiver android:name=".GeofenceBroadcastReceiver" />
         <receiver
             android:name=".widgets.ListWidgetReceiver"
-            android:exported="false"> <!-- disabled widget for api levels < 28 as it causes error, check again in future if better support is given when glance goes release -->
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

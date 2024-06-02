@@ -28,7 +28,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutContributors(
     contributors: List<Contributor>,
@@ -53,7 +52,7 @@ fun AboutContributors(
             )
         }
 
-        items(contributors.asReversed()) { contributor ->
+        items(contributors) { contributor ->
             ContributorCard(contributor, modifier = Modifier.padding(bottom = 2.dp))
         }
 

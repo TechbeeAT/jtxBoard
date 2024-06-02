@@ -25,17 +25,10 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.JtxContract
-import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
-import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.properties.AlarmRelativeTo
-import at.techbee.jtx.database.properties.Relatedto
-import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
-import at.techbee.jtx.util.DateTimeUtils.addLongToCSVString
-import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.Date
@@ -649,170 +642,6 @@ data class ICalObject(
 
 
         /**
-         * this function takes a parent [id], the function recursively calls itself and deletes all items and linked children (for local collections)
-         * or updates the linked children and marks them as deleted.
-         */
-        suspend fun deleteItemWithChildren(id: Long, database: ICalDatabaseDao, parentUID: String? = null) {
-
-            if (id == 0L)
-                return // do nothing, the item was never saved in DB
-
-            val item = database.getSync(id)?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
-            val children = database.getRelatedChildren(id)
-            children.forEach { child ->
-                    deleteItemWithChildren(child.id, database, item.property.uid)    // call the function again to recursively delete all children, then delete the item
-            }
-
-            if(item.property.rrule != null)
-                database.deleteRecurringInstances(item.property.uid)  // recurring instances are always physically deleted
-
-            // if the entry has multiple parents, we only delete the reference, but not the entry itself
-            if((item.relatedto?.filter { it.reltype == Reltype.PARENT.name }?.size?:0) > 1) {
-                item.relatedto?.find { it.text == parentUID && it.reltype == Reltype.PARENT.name }?.let {
-                    database.deleteRelatedto(it)
-                    item.property.makeDirty()
-                    database.update(item.property)
-                    return
-                }
-            }
-
-            when {
-                item.property.recurid != null -> {
-                    unlinkFromSeries(item.property, database)   // if the current item
-                    database.deleteICalObjectsbyId(id)
-                }
-                item.ICalCollection?.accountType == LOCAL_ACCOUNT_TYPE -> database.deleteICalObjectsbyId(item.property.id) // Elements in local collection are physically deleted
-                else -> database.updateToDeleted(item.property.id, System.currentTimeMillis())
-            }
-        }
-
-
-        /**
-         * @param [id] the id of the item for which the collection needs to be updated
-         * @param [parentId] is needed for the recursive call in order to provide it for the movItemToNewCollection(...) function. For the initial call this would be null as the function should initially always be called from the top parent.
-         *
-         * this function takes care of
-         * 1. moving the item to a new collection (by copying and deleting the current item)
-         * 2. determining the children of this item and calling itself recusively to to the same again for each child.
-         *
-         * @return The new id of the item in the new collection
-         */
-        suspend fun updateCollectionWithChildren(id: Long, parentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long? {
-
-            val newParentId = moveItemToNewCollection(id, parentId, newCollectionId, database, context)
-
-            // then determine the children and recursively call the function again. The possible child becomes the new parent and is added to the list until there are no more children.
-            val children = database.getRelatedChildren(id)
-            children.forEach { child ->
-                updateCollectionWithChildren(child.id, newParentId, newCollectionId, database, context)
-            }
-            return newParentId
-        }
-
-
-        /**
-         * @param [id] is the id of the original item that should be moved to another collection. On the recursive call this is the id of the original child.
-         * @param [newParentId] is the id of the parent that was already copied into the new collection. This is needed in order to re-create the relation between the parent and the child.
-         *
-         * This function creates a copy of an item with all it's children in the new collection and then
-         * deletes (or marks as deleted) the original item.
-         *
-         * @return the new id of the item that was inserted (that becomes the newParentId)
-         *
-         */
-        private suspend fun moveItemToNewCollection(id: Long, newParentId: Long?, newCollectionId: Long, database: ICalDatabaseDao, context: Context): Long? {
-
-                val item = database.getSync(id)
-                val oldUID = item?.property?.uid
-                val newUID = generateNewUID()
-                if (item != null) {
-
-                    if(item.property.recurid != null)  // recur instances are ignored, changed recur instances are updated below
-                        return null
-
-                    item.property.id = 0L
-                    item.property.collectionId = newCollectionId
-                    item.property.sequence = 0
-                    item.property.dirty = true
-                    item.property.lastModified = System.currentTimeMillis()
-                    item.property.created = System.currentTimeMillis()
-                    item.property.dtstamp = System.currentTimeMillis()
-                    item.property.uid = newUID
-                    item.property.flags = null
-                    item.property.scheduleTag = null
-                    item.property.eTag = null
-                    item.property.fileName = null
-
-                    val newId = database.insertICalObject(item.property)
-
-                    item.attendees?.forEach {
-                        it.icalObjectId = newId
-                        database.insertAttendee(it)
-                    }
-
-                    item.resources?.forEach {
-                        it.icalObjectId = newId
-                        database.insertResource(it)
-                    }
-
-                    item.categories?.forEach {
-                        it.icalObjectId = newId
-                        database.insertCategory(it)
-                    }
-
-                    item.comments?.forEach {
-                        it.icalObjectId = newId
-                        database.insertComment(it)
-                    }
-
-                    if (item.organizer?.caladdress != null) {
-                        item.organizer?.icalObjectId = newId
-                        database.insertOrganizer(item.organizer!!)
-                    }
-
-                    item.attachments?.forEach {
-                        it.icalObjectId = newId
-                        database.insertAttachment(it)
-                    }
-
-                    item.alarms?.forEach {
-                        it.icalObjectId = newId
-                        database.insertAlarm(it)
-                    }
-
-                    // relations need to be rebuilt from the new child to the parent
-                    if (newParentId != null) {
-                        val parent = database.getSync(newParentId)
-                        val relParent2Child = Relatedto()
-                        relParent2Child.icalObjectId = newId
-                        relParent2Child.reltype = Reltype.PARENT.name
-                        relParent2Child.text = parent?.property?.uid
-                        database.insertRelatedto(relParent2Child)
-                    }
-
-                    database.updateRecurringInstanceUIDs(oldUID, newUID, newCollectionId)
-                    NotificationPublisher.scheduleNextNotifications(context)
-                    return newId
-                }
-            return null
-        }
-
-        suspend fun unlinkFromSeries(item: ICalObject, database: ICalDatabaseDao): ICalObject {
-            database.getRecurSeriesElement(item.uid)?.let { series ->
-                val newExceptionList = addLongToCSVString(database.getRecurExceptions(series.id), item.dtstart)
-                database.setRecurExceptions(
-                    series.id,
-                    newExceptionList
-                )
-            }
-            item.uid = generateNewUID()
-            item.recurid = null
-            item.makeDirty()
-            database.update(item)
-            return item
-        }
-
-        /**
          * This function checks if the given timezone is a timezone that can be processed by the app
          * @param [tz] the timezone that needs to be validated
          * @return If the string is null or TZ_ALLDAY, then the input parameter is just returned.
@@ -830,7 +659,7 @@ data class ICalObject(
         }
 
 
-        fun getMapLink(geoLat: Double?, geoLong: Double?, flavor: BuildFlavor): Uri? {
+        fun getMapLink(geoLat: Double?, geoLong: Double?, location: String?, flavor: BuildFlavor): Uri? {
             return if(geoLat != null || geoLong != null) {
                 try {
                     if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
@@ -838,6 +667,11 @@ data class ICalObject(
                     else
                         Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")
                 } catch (e: java.lang.IllegalArgumentException) { null }
+            } else if (!location.isNullOrEmpty()) {
+                if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
+                    Uri.parse("https://www.google.com/maps/search/$location/")
+                else
+                    Uri.parse("https://www.openstreetmap.org/search?query=$location")
             } else null
         }
 
@@ -865,13 +699,13 @@ data class ICalObject(
             if(due == null)
                 return null
 
-            val localNow = ZonedDateTime.now()
+            val localNow = ZonedDateTime.now(requireTzId(dueTimezone))
             val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dueTimezone))
 
             return ChronoUnit.MINUTES.between(localNow, localDue) < 0L
         }
 
-        fun getDtstartTextInfo(module: Module, dtstart: Long?, dtstartTimezone: String?, daysOnly: Boolean = false, context: Context): String {
+        fun getDtstartTextInfo(module: Module, dtstart: Long?, dtstartTimezone: String?, daysOnly: Boolean = false, shortStyle: Boolean = false, context: Context): String {
 
             if(dtstart == null && module == Module.TODO)
                 return context.getString(R.string.list_start_without)
@@ -891,52 +725,47 @@ data class ICalObject(
 
             var finalString = ""
 
-            if(module == Module.TODO) {
+            fun getTimeAndTimezone(): String {
+                var timeAndTimezone = ""
+                if(timezone2show != TZ_ALLDAY && !daysOnly)
+                    timeAndTimezone += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
+                if(timezone2show != null && timezone2show != TZ_ALLDAY && !daysOnly)
+                    timeAndTimezone += " ${requireTzId(timezone2show).id}"
+                return timeAndTimezone
+            }
+
+            if(module == Module.TODO && !shortStyle) {
                  when {
                      localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
                      ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> finalString += context.getString(R.string.list_start_past)
                      ChronoUnit.HOURS.between(localNow, localStart) < 1L -> finalString += context.getString(R.string.list_start_shortly)
                      localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
                      localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
-                        finalString += context.getString(R.string.list_start_tomorrow)
-                         if(timezone2show != TZ_ALLDAY)
-                             finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
-                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                             finalString += " ${requireTzId(timezone2show).id}"
+                         finalString += context.getString(R.string.list_start_tomorrow)
+                         finalString += getTimeAndTimezone()
                      }
                      ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> {
                          finalString += context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                         if(timezone2show != TZ_ALLDAY)
-                             finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
-                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                             finalString += " ${requireTzId(timezone2show).id}"
+                         finalString += getTimeAndTimezone()
                      }
                      else -> {
-                         finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
-                         if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                             finalString += " ${requireTzId(timezone2show).id}"
+                         finalString += DateTimeUtils.convertLongToMediumDateString(dtstart, timezone2show)
+                         finalString += getTimeAndTimezone()
                      }
                 }
             } else {
                 when {
                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> {
                         finalString += context.getString(R.string.list_date_today)
-                        if(timezone2show != TZ_ALLDAY)
-                            finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
-                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                            finalString += " ${requireTzId(timezone2show).id}"
+                        finalString += getTimeAndTimezone()
                     }
                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
                         finalString += context.getString(R.string.list_date_tomorrow)
-                        if(timezone2show != TZ_ALLDAY)
-                            finalString += " ${DateTimeUtils.convertLongToShortTimeString(dtstart, timezone2show)}"
-                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                            finalString += " ${requireTzId(timezone2show).id}"
+                        finalString += getTimeAndTimezone()
                     }
                     else -> {
-                        finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(dtstart, timezone2show)
-                        if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                            finalString += " ${requireTzId(timezone2show).id}"
+                        finalString += DateTimeUtils.convertLongToMediumDateString(dtstart, timezone2show)
+                        finalString += getTimeAndTimezone()
                     }
                 }
             }
@@ -957,11 +786,20 @@ data class ICalObject(
                 else
                     null
 
-            val localNow = ZonedDateTime.now()
+            val localNow = ZonedDateTime.now(requireTzId(timezone2show))
             val localTomorrow = localNow.plusDays(1)
             val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(timezone2show))
 
             var finalString = ""
+
+            fun getTimeAndTimezone(): String {
+                var timeAndTimezone = ""
+                if(timezone2show != TZ_ALLDAY && !daysOnly)
+                    timeAndTimezone += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
+                if(timezone2show != null && timezone2show != TZ_ALLDAY && !daysOnly)
+                    timeAndTimezone += " ${requireTzId(timezone2show).id}"
+                return timeAndTimezone
+            }
 
             when {
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_due_today)
@@ -970,66 +808,21 @@ data class ICalObject(
                 localDue.year == localNow.year && localDue.month == localNow.month && localDue.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_due_inXhours, ChronoUnit.HOURS.between(localNow, localDue))
                 localDue.year == localTomorrow.year && localDue.month == localTomorrow.month && localDue.dayOfMonth == localTomorrow.dayOfMonth -> {
                     finalString += context.getString(R.string.list_due_tomorrow)
-                    if(timezone2show != TZ_ALLDAY)
-                        finalString += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
-                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                        finalString += " ${requireTzId(timezone2show).id}"
+                    finalString += getTimeAndTimezone()
                 }
                 ChronoUnit.DAYS.between(localNow, localDue) <= 7 -> {
                     finalString += context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                    if(timezone2show != TZ_ALLDAY)
-                        finalString += " ${DateTimeUtils.convertLongToShortTimeString(due, timezone2show)}"
-                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                        finalString += " ${requireTzId(timezone2show).id}"
+                    finalString += getTimeAndTimezone()
                 }
                 else -> {
-                    finalString += DateTimeUtils.convertLongToMediumDateShortTimeString(due, timezone2show)
-                    if(timezone2show != null && timezone2show != TZ_ALLDAY)
-                        finalString += " ${requireTzId(timezone2show).id}"
+                    finalString += DateTimeUtils.convertLongToMediumDateString(due, timezone2show)
+                    finalString += getTimeAndTimezone()
                 }
             }
 
             return finalString
         }
 
-        suspend fun findTopParent(iCalObjectId: Long, database: ICalDatabaseDao): ICalObject? {
-
-            val allRelatedTo = database.getAllRelatedtoSync()
-            var topParent = database.getICalObjectById(iCalObjectId)
-
-            while(allRelatedTo.any { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}) {
-                if(allRelatedTo.filter { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name }.size > 1) {
-                    Log.w("findTopParent", "Entry has multiple parents, cannot return single parent.")
-                    return null
-                }
-
-                val parentUID = allRelatedTo.find { it.icalObjectId == topParent?.id && it.reltype == Reltype.PARENT.name}?.text
-                parentUID?.let { uid -> database.getICalObjectFor(uid)?.let { topParent = it } }
-
-                //make sure no endless loop occurs in the error case that an entry links to itself
-                if(allRelatedTo.any { it.icalObjectId == topParent?.id && it.text == topParent?.uid }) {
-                    Log.w("findTopParent", "Entry links to itself, cannot return parent.")
-                    return null
-                }
-            }
-            return topParent
-        }
-
-        suspend fun updateProgressOfParents(parentId: Long, database: ICalDatabaseDao, keepInSync: Boolean) {
-
-            val children = database.getRelatedChildren(parentId).filter { it.module == Module.TODO.name }
-            if(children.isNotEmpty()) {
-                children.forEach { child ->
-                    updateProgressOfParents(child.id, database, keepInSync)
-                }
-                val newProgress = children.map { it.percent ?:0 }.average().toInt()
-                val parent = database.getICalObjectByIdSync(parentId)
-                parent?.setUpdatedProgress(newProgress, keepInSync)
-                parent?.let { database.update(it) }
-            }
-        }
-
-        @VisibleForTesting
         fun getAsRecurId(datetime: Long, recuridTimezone: String?) = when {
                 recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> Date(datetime).toString()
                 recuridTimezone == TimeZone.getTimeZone("UTC").id -> DateTime(datetime).apply { this.isUtc = true }.toString()
@@ -1157,19 +950,6 @@ data class ICalObject(
         lastModified = System.currentTimeMillis()
         sequence += 1
         dirty = true
-    }
-
-    /**
-     * finds the series definition and makes it dirty
-     * necessary when a series instance changes
-     */
-    suspend fun makeSeriesDirty(database: ICalDatabaseDao) {
-        if(recurid?.isNotEmpty() == true) {
-            database.getRecurSeriesElement(uid)?.let {
-                it.makeDirty()
-                database.update(it)
-            }
-        }
     }
 
 
@@ -1326,7 +1106,7 @@ data class ICalObject(
                     Recur.Frequency.DAILY -> it - (365).days.inWholeMilliseconds
                     Recur.Frequency.WEEKLY -> it - (365).days.inWholeMilliseconds
                     Recur.Frequency.MONTHLY -> it - (3650).days.inWholeMilliseconds
-                    Recur.Frequency.YEARLY -> it - (3650).days.inWholeMilliseconds
+                    Recur.Frequency.YEARLY -> it - (36500).days.inWholeMilliseconds
                     else -> it - (365).days.inWholeMilliseconds
                 }
             })
@@ -1338,7 +1118,7 @@ data class ICalObject(
                     Recur.Frequency.DAILY -> it + (365).days.inWholeMilliseconds
                     Recur.Frequency.WEEKLY -> it + (365).days.inWholeMilliseconds
                     Recur.Frequency.MONTHLY -> it + (3650).days.inWholeMilliseconds
-                    Recur.Frequency.YEARLY -> it + (3650).days.inWholeMilliseconds
+                    Recur.Frequency.YEARLY -> it + (36500).days.inWholeMilliseconds
                     else -> it + (365).days.inWholeMilliseconds
                 }
             })
@@ -1352,122 +1132,6 @@ data class ICalObject(
         } catch (e: IllegalArgumentException) {
             Log.d("IllegalArgument", e.stackTraceToString())
             return emptyList()
-        }
-    }
-
-
-    fun recreateRecurring(context: Context) {
-        val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
-
-        if(recurid?.isNotEmpty() == true) {
-            database.getRecurSeriesElement(uid)?.recreateRecurring(context)
-            return
-        }
-
-        database.deleteUnchangedRecurringInstances(uid)
-        // delete also exceptions (as recurring instances might still exist):
-        val exceptions = getLongListfromCSVString(this.exdate)
-        exceptions.forEach { exceptionDate ->
-            database.getRecurInstance(uid, getAsRecurId(exceptionDate, dtstartTimezone))?.let {
-                database.delete(it)
-            }
-        }
-
-        if(dtstart == null || rrule.isNullOrEmpty())
-            return
-
-        val original = database.getSync(id) ?: return
-        val timeToDue = if(original.property.component == Component.VTODO.name && original.property.due != null)
-            original.property.due!! - original.property.dtstart!!
-        else
-            0L
-
-        getInstancesFromRrule().forEach { recurrenceDate ->
-            val instance = original.copy()
-
-            instance.property.dtstart = recurrenceDate
-            instance.property.recurid = getAsRecurId(recurrenceDate, instance.property.dtstartTimezone)
-            instance.property.recuridTimezone = instance.property.dtstartTimezone
-
-            if(database.getRecurInstance(uid = uid, recurid = instance.property.recurid!!) != null)
-                return@forEach   // skip the entry if there is an existing linked entry that was changed (and therefore not deleted before)
-
-            instance.property.id = 0L
-            //instance.property.uid = generateNewUID()
-            instance.property.dtstamp = System.currentTimeMillis()
-            instance.property.created = System.currentTimeMillis()
-            instance.property.lastModified = System.currentTimeMillis()
-            instance.property.rrule = null
-            instance.property.rdate = null
-            instance.property.exdate = null
-            instance.property.sequence = 0
-            instance.property.fileName = null
-            instance.property.eTag = null
-            instance.property.scheduleTag = null
-            instance.property.dirty = false
-
-
-            if(instance.property.component == Component.VTODO.name && original.property.due != null)
-                instance.property.due = recurrenceDate + timeToDue
-
-            val instanceId = database.insertICalObjectSync(instance.property)
-
-            instance.categories?.forEach {
-                it.categoryId = 0L
-                it.icalObjectId = instanceId
-                database.insertCategorySync(it)
-            }
-            instance.comments?.forEach {
-                it.commentId = 0L
-                it.icalObjectId = instanceId
-                database.insertCommentSync(it)
-            }
-            instance.attachments?.forEach {
-                it.attachmentId = 0L
-                it.icalObjectId = instanceId
-                database.insertAttachmentSync(it)
-            }
-            instance.organizer.apply {
-                this?.organizerId = 0L
-                this?.icalObjectId = instanceId
-                this?.let { database.insertOrganizerSync(it) }
-            }
-            instance.attendees?.forEach {
-                it.attendeeId = 0L
-                it.icalObjectId = instanceId
-                database.insertAttendeeSync(it)
-            }
-            instance.resources?.forEach {
-                it.resourceId = 0L
-                it.icalObjectId = instanceId
-                database.insertResourceSync(it)
-            }
-            instance.relatedto?.forEach {
-                it.relatedtoId = 0L
-                it.icalObjectId = instanceId
-                database.insertRelatedtoSync(it)
-            }
-            instance.alarms?.forEach {
-                if(it.triggerRelativeDuration != null) {    // only relative alarms are considered
-                    it.alarmId = 0L
-                    it.icalObjectId = instanceId
-
-                    try {
-                        val dur = Duration.parse(it.triggerRelativeDuration!!)
-                        if(it.triggerRelativeTo == AlarmRelativeTo.END.name) {
-                            it.triggerTime = instance.property.due!! + dur.inWholeMilliseconds
-                            it.triggerTimezone = instance.property.dueTimezone
-                        } else {
-                            it.triggerTime = instance.property.dtstart!! + dur.inWholeMilliseconds
-                            it.triggerTimezone = instance.property.dtstartTimezone
-                        }
-                        database.insertAlarmSync(it)
-                    } catch (e: IllegalArgumentException) {
-                        Log.w("DurationParsing", "Duration could not be parsed for instance, skipping this alarm.")
-                    }
-                }
-            }
-            NotificationPublisher.scheduleNextNotifications(context)
         }
     }
 

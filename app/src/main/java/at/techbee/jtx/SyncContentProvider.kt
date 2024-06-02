@@ -22,6 +22,7 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.FileProvider
+import androidx.glance.appwidget.updateAll
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_NAME
 import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_TYPE
@@ -79,6 +80,10 @@ import at.techbee.jtx.database.properties.Unknown
 import at.techbee.jtx.flavored.GeofenceClient
 import at.techbee.jtx.util.SyncApp
 import at.techbee.jtx.util.SyncUtil
+import at.techbee.jtx.widgets.ListWidget
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 import java.io.File
 import java.io.IOException
@@ -245,6 +250,10 @@ class SyncContentProvider : ContentProvider() {
         )
             database.removeOrphans()    // remove orpahns (recurring instances of a deleted original item)
 
+        CoroutineScope(Dispatchers.Default).launch {
+            context?.let { ListWidget().updateAll(it) }
+        }
+
         return count
     }
 
@@ -321,7 +330,9 @@ class SyncContentProvider : ContentProvider() {
         if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
             && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true)
         )
-            database.getRecurringToPopulate(id)?.recreateRecurring(context!!)
+            database.getRecurringToPopulate(id)?.let {
+                database.recreateRecurring(it)
+            }
 
         if (sUriMatcher.match(uri) == CODE_ALARM_DIR) {
             val alarm = database.getAlarmSync(id) ?: return null
@@ -348,6 +359,10 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
+
+        CoroutineScope(Dispatchers.Default).launch {
+            context?.let { ListWidget().updateAll(it) }
+        }
 
         return ContentUris.withAppendedId(uri, id)
     }
@@ -573,7 +588,9 @@ class SyncContentProvider : ContentProvider() {
             try {
                 val id: Long = uri.lastPathSegment?.toLong()
                     ?: throw NumberFormatException("Last path segment was null")
-                database.getRecurringToPopulate(id)?.recreateRecurring(context!!)
+                database.getRecurringToPopulate(id)?.let {
+                    database.recreateRecurring(it)
+                }
             } catch (e: NumberFormatException) {
                 throw  java.lang.IllegalArgumentException("Could not convert path segment to Long: $uri\n$e")
             }
@@ -618,6 +635,10 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
+
+        CoroutineScope(Dispatchers.Default).launch {
+            context?.let { ListWidget().updateAll(it) }
+        }
 
         return 1
     }
@@ -666,7 +687,7 @@ class SyncContentProvider : ContentProvider() {
 
         val isSyncAdapter = uri.getBooleanQueryParameter(CALLER_IS_SYNCADAPTER, false)
         if (isSyncAdapter) {
-            val syncApp = SyncApp.values().firstOrNull { it.packageName == callingPackage }
+            val syncApp = SyncApp.entries.firstOrNull { it.packageName == callingPackage }
             if(syncApp != null && !SyncUtil.isSyncAppCompatible(syncApp, context!!))
                 throw java.lang.IllegalArgumentException(context!!.getString(R.string.dialog_sync_app_outdated_message, syncApp.appName, syncApp.minVersionName ))
              else

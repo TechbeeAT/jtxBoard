@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.settings
 
+import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
@@ -45,6 +46,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,6 +66,7 @@ import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_DUE_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_START_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DISPLAY_TIMEZONE
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_FONT
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROGRESS_STEP
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROTECT_BIOMETRIC
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_THEME
@@ -86,6 +89,10 @@ import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_STICKY_ALARMS
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SYNC_ON_START
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -93,6 +100,7 @@ import java.util.Locale
 
 enum class SettingsScreenSection { APP_SETTINGS, ACTIVE_MODUES, ITEM_LIST, JOURNALS_SETTINGS, NOTES_SETTINGS, TASKS_SETTINGS, TASKS_SETTINGS_STATUS, ALARMS_SETTINGS, SYNC_SETTINGS }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
@@ -123,6 +131,15 @@ fun SettingsScreen(
         SETTING_PROTECT_BIOMETRIC.saveSetting(pendingSettingProtectiometric!!, settingsStateHolder.prefs)
         pendingSettingProtectiometric = null
     }
+
+    val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    ) else null
+
+
 
     Scaffold(
         topBar = {
@@ -165,6 +182,15 @@ fun SettingsScreen(
                                     DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                                     else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                                 }
+                            }
+                        )
+
+                        DropdownSettingElement(
+                            setting = SETTING_FONT,
+                            selected = settingsStateHolder.settingFont.value,
+                            onSelectionChanged = { selection ->
+                                settingsStateHolder.settingFont.value = selection
+                                SETTING_FONT.saveSetting(selection, settingsStateHolder.prefs)
                             }
                         )
 
@@ -374,9 +400,11 @@ fun SettingsScreen(
                         SwitchSettingElement(
                             setting = SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION,
                             checked = settingsStateHolder.settingSetDefaultCurrentLocationJournals,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = it
-                                SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
+                            onCheckedChanged = { checked ->
+                                settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = checked
+                                SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(checked, settingsStateHolder.prefs)
+                                if(checked && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
+                                    locationPermissionState.launchMultiplePermissionRequest()
                             })
                     }
 
@@ -389,9 +417,11 @@ fun SettingsScreen(
                         SwitchSettingElement(
                             setting = SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION,
                             checked = settingsStateHolder.settingSetDefaultCurrentLocationNotes,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = it
-                                SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
+                            onCheckedChanged = { checked ->
+                                settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = checked
+                                SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.saveSetting(checked, settingsStateHolder.prefs)
+                                if(checked && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
+                                    locationPermissionState.launchMultiplePermissionRequest()
                             })
                     }
 
@@ -483,9 +513,11 @@ fun SettingsScreen(
                         SwitchSettingElement(
                             setting = SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION,
                             checked = settingsStateHolder.settingSetDefaultCurrentLocationTasks,
-                            onCheckedChanged = {
-                                settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = it
-                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(it, settingsStateHolder.prefs)
+                            onCheckedChanged = { checked ->
+                                settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = checked
+                                SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(checked, settingsStateHolder.prefs)
+                                if(checked && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
+                                    locationPermissionState.launchMultiplePermissionRequest()
                             }
                         )
                     }

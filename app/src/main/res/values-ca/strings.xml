@@ -19,6 +19,7 @@
     <string name="longitude">"Longitud"</string>
     <string name="unlink">"Desvincular"</string>
     <string name="off">"Desconnectat"</string>
+    <string name="location_permission_denied">"S'ha denegat l'accés a la ubicació"</string>
     <string name="permissions">"Permisos"</string>
     <string name="current_location">"Ubicació actual"</string>
     <string name="toolbar_text_add_journal">"Afegir Entrada"</string>
@@ -318,6 +319,7 @@
     <string name="filter_no_resource">Sense recursos</string>
     <string name="filter_subtasks_order_by">Ordena sub-tasques per</string>
     <string name="filter_subnotes_order_by">Ordena les notes enllaçades per</string>
+    <string name="order_by_drag_and_drop">"Arrossega &amp; Deixa Anar"</string>
     <string name="filter_no_filter">"Sense filtres"</string>
     <string name="filter_options_more_entries">"Més (%1$d)"</string>
     <string name="filter_options_less_entries">"Menys"</string>
@@ -356,6 +358,7 @@
     <string name="settings_timezone_display_local">"Mostra l'hora a la zona horària local"</string>
     <string name="settings_timezone_display_original">"Mostra l'hora a la zona horària original"</string>
     <string name="settings_timezone_display_local_and_original">"Mostra l'hora a la zona horària actual i original (només a la vista detallada)"</string>
+    <string name="settings_font">"Tipus de lletra"</string>
     <string name="donate_dialog_title">"T'agrada jtx Board?"</string>
     <string name="donate_dialog_message">"El desenvolupament d'una aplicació és un tema complex, i tant el manteniment com el mateix desenvolupament és un treball dur. Si t'agrada l'aplicació, i t'agradaria que no es detingués el desenvolupament, per favor, considera una donació :-)
 Gràcies!"</string>
@@ -385,6 +388,16 @@ Gràcies!"</string>
     <string name="back">"Enrere"</string>
     <string name="details">"Detalls"</string>
     <string name="date">"Data"</string>
+    <string name="group_by_date_day">"Data (dia)"</string>
+    <string name="group_by_date_week">"Data (setmana)"</string>
+    <string name="group_by_date_month">"Data (mes)"</string>
+    <string name="group_by_started_day">"Inici(at) (dia)"</string>
+    <string name="group_by_started_week">"Inici(at) (setmana)"</string>
+    <string name="group_by_started_month">"Inici(at) (mes)"</string>
+    <string name="group_by_due_day">"Venç (dia)"</string>
+    <string name="group_by_due_week">"Venç (setmana)"</string>
+    <string name="group_by_due_month">"Venç (mes)"</string>
+    <string name="week_number_year">"Setmana %1$d/%2$d"</string>
     <string name="summary_description">"Sumari/Descripció"</string>
     <string name="status_classification_priority">"Estat/Classificació/Prioritat"</string>
     <string name="timezone">"Fus horari"</string>
@@ -430,6 +443,7 @@ Gràcies!"</string>
     <string name="details_go_to_series">"Vés a la sèrie"</string>
     <string name="details_detach_from_series">"Desenllaçar de la sèrie"</string>
     <string name="details_detach_all_instances">"Desenllaça totes les instàncies"</string>
+    <string name="details_show_all_instances">"Mostra totes les instàncies (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Desenllaça del superior"</string>
     <string name="dialog_unlink_from_parent_message">"Eliminar la relació com a subentrada? Es quedarà com una independent."</string>
     <string name="edit_comment">"Editar comentari"</string>
@@ -471,6 +485,7 @@ Gràcies!"</string>
     <string name="dialog_add_audio_entry_title">"Afegeix una entrada d'àudio"</string>
     <string name="menu_list_viewmode_compact">"Vista compacta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
+    <string name="menu_list_viewmode_week">"Vista setmanal"</string>
     <string name="settings_tasks">"Configuració de tasques"</string>
     <string name="settings_alarms">"Configuració d'Alarmes"</string>
     <string name="settings_tasks_status_progress">"Configuració de Tasques (estat/progrés)"</string>
@@ -502,6 +517,7 @@ Gràcies!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Mantè l'estat, progrés i completat en sincronització"</string>
     <string name="settings_attention_experimental_feature">"Atenció: Aquesta és una funció experimental"</string>
     <string name="settings_create_with_current_location">"Crea noves entrades amb la ubicació actual"</string>
+    <string name="settings_create_with_current_location_sub">"Per favor, dona permís per accedir a la teva ubicació en fer servir aquesta app per a fer servir la funció."</string>
     <string name="settings_sticky_alarms">"Alarmes fixades"</string>
     <string name="settings_sticky_alarms_sub">"Manté les notificacions fins que es marquen com a completades o es posposen"</string>
     <string name="settings_fullscreen_alarms">"Alarmes a pantalla completa"</string>
@@ -530,6 +546,10 @@ Gràcies!"</string>
     <string name="filter_any">"Cualsevol"</string>
     <string name="filter_all">"Tots"</string>
     <string name="filter_none">"Cap"</string>
+    <string name="filter_date_from_to">"Data: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Inici(at): %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Venç: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completat: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data al passat"</string>
     <string name="list_date_today">"Avui"</string>
@@ -592,6 +612,7 @@ Gràcies!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Actualitzant el widget"</string>
     <string name="widget_list_opacity_warning">"Nota: Aquesta és una funció experimental! Amb canvis d'opacitat subtils en el tema de color pot ser no es mostren els canvis inmediatament!"</string>
     <string name="widget_list_color_warning">"Nota: Aquesta és una funció experimental! Els canvis al tema de color no es veuran reflectits! No tries cap color per a tornar al predefinit pel sistema."</string>
+    <string name="widget_list_default_categories">"Estableix les categories per defecte per a noves entrades des del widget"</string>
     <string name="opacity">"Opacitat"</string>
     <string name="general">"General"</string>
     <string name="list_collapse">"Col·lapsa"</string>
@@ -648,4 +669,12 @@ Gràcies!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board et pot notificar quan estàs prop de les coordenades indicades. Per favor, estableix el permís d'ubicació a \"Permet tota l'estona\", i dona permís per a enviar notificacions, i podràs fer ús d'aquesta funció."</string>
     <string name="geofence_notification_summary">"Geo-tanca activada"</string>
     <string name="exact_alarm_permission_dialog_message">"Cal que jtx Board tingui permís per a programar alarmes exactes, en cas de no ser així, les notificacions podrien endarrerir-se. Per favor, dona aquest permís per a fer servir aquesta funció."</string>
+    <string name="call_contact">"Truca a %1$s"</string>
+    <string name="email_contact">"Correu a %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Crear subtasques en grup</string>
+    <string name="dialog_create_multiple_subnotes">Crea notes enllaçades en grup</string>
+    <string name="dialog_detected_multiple_subtasks">El text possiblement conté múltiples subtasques. Vols crear %d subtasques?</string>
+    <string name="dialog_detected_multiple_subnotes">El text possiblement conté múltiples notes enllaçades. Vols crear %d notes enllaçades?</string>
+    <string name="dialog_confirm_create_multiple">Crea\'n múltiples</string>
+    <string name="dialog_confirm_create_single">Crea\'n una</string>
 </resources>

@@ -33,6 +33,7 @@ import at.techbee.jtx.AUTHORITY_FILEPROVIDER
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalDatabaseDao
 import at.techbee.jtx.database.ICalObject
@@ -44,7 +45,6 @@ import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Comment
 import at.techbee.jtx.database.properties.Relatedto
-import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
@@ -68,10 +68,13 @@ import java.io.FileOutputStream
 class DetailViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _application = application
-    private var database: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
+    private var databaseDao: ICalDatabaseDao = ICalDatabase.getInstance(application).iCalDatabaseDao()
 
-    var icalEntity: LiveData<ICalEntity?> = MutableLiveData(ICalEntity(ICalObject(), null, null, null, null, null))
-    var initialEntity = mutableStateOf<ICalEntity?>(null)
+    private var mainICalObjectId: Long? = null
+
+    var icalObject: LiveData<ICalObject?> = MutableLiveData(null)
+    private var relatedTo: LiveData<List<Relatedto>> = MutableLiveData(emptyList())
+    var collection: LiveData<ICalCollection> = MutableLiveData(null)
     var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedSubtasks: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedParents: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
@@ -88,15 +91,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     val mutableAttachments = mutableStateListOf<Attachment>()
     val mutableAlarms = mutableStateListOf<Alarm>()
 
-    var allCategories = database.getAllCategoriesAsText()
-    var allResources = database.getAllResourcesAsText()
-    val storedCategories = database.getStoredCategories()
-    val storedResources = database.getStoredResources()
-    val storedStatuses = database.getStoredStatuses()
-    var allWriteableCollections = database.getAllWriteableCollections()
+    var allCategories = databaseDao.getAllCategoriesAsText()
+    var allResources = databaseDao.getAllResourcesAsText()
+    val storedCategories = databaseDao.getStoredCategories()
+    val storedResources = databaseDao.getStoredResources()
+    val storedStatuses = databaseDao.getStoredStatuses()
+    var allWriteableCollections = databaseDao.getAllWriteableCollections()
 
-    private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var selectFromAllList: LiveData<List<ICal4ListRel>> = selectFromAllListQuery.switchMap {database.getIcal4ListRel(it) }
+    private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> =
+        MutableLiveData<SimpleSQLiteQuery>()
+    var selectFromAllList: LiveData<List<ICal4ListRel>> =
+        selectFromAllListQuery.switchMap { databaseDao.getIcal4ListRel(it) }
 
     var navigateToId = mutableStateOf<Long?>(null)
     var changeState = mutableStateOf(DetailChangeState.LOADING)
@@ -115,139 +120,173 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun load(icalObjectId: Long, isAuthenticated: Boolean) {
+        mainICalObjectId = icalObjectId
         _isAuthenticated = isAuthenticated
         viewModelScope.launch {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
-            withContext(Dispatchers.IO) { initialEntity.value = database.getSync(icalObjectId) }
-            icalEntity = database.get(icalObjectId)
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
-            relatedParents = icalEntity.switchMap {
-                it?.relatedto?.map { relatedto ->  relatedto.text }?.let { uids ->
-                    database.getICal4ListByUIDs(uids)
+            withContext(Dispatchers.IO) {
+                originalEntry = databaseDao.getSync(icalObjectId)
+                mutableICalObject = originalEntry?.property
+                mutableCategories.clear()
+                mutableCategories.addAll(databaseDao.getCategoriesSync(icalObjectId))
+                mutableResources.clear()
+                mutableResources.addAll(databaseDao.getResourcesSync(icalObjectId))
+                mutableAttendees.clear()
+                mutableAttendees.addAll(databaseDao.getAttendeesSync(icalObjectId))
+                mutableComments.clear()
+                mutableComments.addAll(databaseDao.getCommentsSync(icalObjectId))
+                mutableAttachments.clear()
+                mutableAttachments.addAll(databaseDao.getAttachmentsSync(icalObjectId))
+                mutableAlarms.clear()
+                mutableAlarms.addAll(databaseDao.getAlarmsSync(icalObjectId))
+            }
+
+            //icalEntity = databaseDao.get(icalObjectId)
+            icalObject = databaseDao.getICalObject(icalObjectId)
+            relatedTo = databaseDao.getRelatedTo(icalObjectId)
+
+            collection = icalObject.switchMap {
+                it?.let { cur -> databaseDao.getCollection(cur.collectionId) }
+
+            }
+
+            relatedParents = relatedTo.switchMap {
+                it.map { relatedto -> relatedto.text }.let { uids ->
+                    databaseDao.getICal4ListByUIDs(uids)
                 }
             }
-            relatedSubtasks = icalEntity.switchMap {
-                it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(
+            relatedSubtasks = icalObject.switchMap {
+                it?.uid?.let { parentUid ->
+                    databaseDao.getIcal4List(
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
                             component = Component.VTODO,
-                            hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
-                            orderBy = detailSettings.listSettings?.subtasksOrderBy?.value ?: OrderBy.CREATED,
-                            sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value ?: SortOrder.DESC
+                            hideBiometricProtected = if (_isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(
+                                _application
+                            ),
+                            orderBy = detailSettings.listSettings?.subtasksOrderBy?.value
+                                ?: OrderBy.CREATED,
+                            sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value
+                                ?: SortOrder.DESC
                         )
                     )
                 }
             }
-            relatedSubnotes = icalEntity.switchMap {
-                it?.property?.uid?.let { parentUid ->
-                    database.getIcal4List(
+            relatedSubnotes = icalObject.switchMap {
+                it?.uid?.let { parentUid ->
+                    databaseDao.getIcal4List(
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
                             component = Component.VJOURNAL,
-                            hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application),
-                            orderBy = detailSettings.listSettings?.subnotesOrderBy?.value ?: OrderBy.CREATED,
-                            sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value ?: SortOrder.DESC
+                            hideBiometricProtected = if (_isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(
+                                _application
+                            ),
+                            orderBy = detailSettings.listSettings?.subnotesOrderBy?.value
+                                ?: OrderBy.CREATED,
+                            sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value
+                                ?: SortOrder.DESC
                         )
                     )
                 }
             }
-            seriesElement = icalEntity.switchMap { database.getSeriesICalObjectIdByUID(it?.property?.uid) }
-            seriesInstances = icalEntity.switchMap { database.getSeriesInstancesICalObjectsByUID(it?.property?.uid) }
-            isChild = database.isChild(icalObjectId)
+            seriesElement = icalObject.switchMap { databaseDao.getSeriesICalObjectIdByUID(it?.uid) }
+            seriesInstances =
+                icalObject.switchMap { databaseDao.getSeriesInstancesICalObjectsByUID(it?.uid) }
+            isChild = databaseDao.isChild(icalObjectId)
 
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            originalEntry = database.getSync(icalObjectId)  // store original entry for revert option
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
         }
 
         //remove notification (if not sticky)
-        if(!settingsStateHolder.settingStickyAlarms.value)
+        if (!settingsStateHolder.settingStickyAlarms.value)
             NotificationManagerCompat.from(_application).cancel(icalObjectId.toInt())
     }
 
-    fun updateSelectFromAllListQuery(searchText: String, modules: List<Module>, sameCollection: Boolean, sameAccount: Boolean) {
-        selectFromAllListQuery.postValue(ICal4List.constructQuery(
-            modules = modules,
-            searchText = searchText,
-            searchCollection = if(sameCollection) icalEntity.value?.ICalCollection?.displayName?.let { listOf(it) }?: emptyList() else emptyList(),
-            searchAccount = if(sameAccount) icalEntity.value?.ICalCollection?.accountName?.let { listOf(it) }?: emptyList() else emptyList(),
-            orderBy = OrderBy.LAST_MODIFIED,
-            sortOrder = SortOrder.DESC,
-            hideBiometricProtected = if(_isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
-        ))
+    fun updateSelectFromAllListQuery(
+        searchText: String,
+        modules: List<Module>,
+        sameCollection: Boolean,
+        sameAccount: Boolean
+    ) {
+        selectFromAllListQuery.postValue(
+            ICal4List.constructQuery(
+                modules = modules,
+                searchText = searchText,
+                searchCollection = if (sameCollection) collection.value?.displayName?.let {
+                    listOf(
+                        it
+                    )
+                } ?: emptyList() else emptyList(),
+                searchAccount = if (sameAccount) collection.value?.accountName?.let { listOf(it) }
+                    ?: emptyList() else emptyList(),
+                orderBy = OrderBy.LAST_MODIFIED,
+                sortOrder = SortOrder.DESC,
+                hideBiometricProtected = if (_isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(
+                    _application
+                )
+            )
+        )
     }
 
 
     fun updateProgress(id: Long, newPercent: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-            val item = database.getICalObjectById(id) ?: return@launch
-            try {
-                item.setUpdatedProgress(newPercent, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-                database.update(item)
-                item.makeSeriesDirty(database)
-                if(settingsStateHolder.settingLinkProgressToSubtasks.value) {
-                    ICalObject.findTopParent(id, database)?.let {
-                        ICalObject.updateProgressOfParents(it.id, database, settingsStateHolder.settingKeepStatusProgressCompletedInSync.value)
-                    }
-                }
-                onChangeDone()
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-            } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", "Corrupted ID: $id")
-                Log.d("SQLConstraint", e.stackTraceToString())
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
-            }
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+            databaseDao.updateProgress(
+                id = id,
+                newPercent = newPercent,
+                settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
+                settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
+            )
+            onChangeDone()
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
     }
 
     fun updateSummary(icalObjectId: Long, newSummary: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-            val icalObject = database.getICalObjectById(icalObjectId) ?: return@launch
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+            val icalObject = databaseDao.getICalObjectById(icalObjectId) ?: return@launch
             icalObject.summary = newSummary
             icalObject.makeDirty()
-            icalObject.makeSeriesDirty(database)
+            databaseDao.makeSeriesDirty(icalObject.uid)
             try {
-                database.update(icalObject)
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-                SyncUtil.notifyContentObservers(getApplication())
+                databaseDao.update(icalObject)
+                withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             } catch (e: SQLiteConstraintException) {
                 Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
+                withContext(Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
             }
             onChangeDone()
         }
     }
 
-    fun unlinkFromSeries(instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) {
+    fun updateSortOrder(list: List<ICal4List>) {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+            databaseDao.updateSortOrder(list.map { it.id })
+            onChangeDone()
+        }
+    }
 
-            instances.forEach { instance ->
-                val children = database.getRelatedChildren(instance.id)
-                val updatedEntry = ICalObject.unlinkFromSeries(instance, database)
-                children.forEach forEachChild@ { child ->
-                    val childEntity = database.getSync(child.id) ?: return@forEachChild
-                    createCopy(childEntity, child.getModuleFromString(), updatedEntry.uid)
-                }
-                instance.makeSeriesDirty(database)
-            }
+    fun unlinkFromSeries(
+        instances: List<ICalObject>,
+        series: ICalObject?,
+        deleteAfterUnlink: Boolean
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+            databaseDao.unlinkFromSeries(instances, series, deleteAfterUnlink)
 
-            if(deleteAfterUnlink) {
-                series?.id?.let {
-                    deleteById(it)
-                    withContext (Dispatchers.Main) { changeState.value = DetailChangeState.DELETED }
+            withContext(Dispatchers.Main) {
+                if (deleteAfterUnlink) {
+                    changeState.value = DetailChangeState.DELETED_BACK_TO_LIST
+                } else {
+                    changeState.value = DetailChangeState.CHANGESAVED
                 }
-            } else {
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             }
             onChangeDone()
-
         }
     }
 
@@ -257,29 +296,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun linkNewSubentries(newSubEntries: List<ICal4List>) {
         viewModelScope.launch(Dispatchers.IO) {
-            newSubEntries.forEach { newSubEntry ->
-                if(icalEntity.value?.property?.uid == null)
-                    return@forEach
 
-                if(newSubEntry.uid == icalEntity.value?.property?.uid)
-                    return@forEach
-
-                val existing = icalEntity.value?.property?.uid?.let { database.findRelatedTo(newSubEntry.id, it, Reltype.PARENT.name) != null } ?: return@forEach
-                if(!existing) {
-                    database.insertRelatedto(
-                        Relatedto(
-                            icalObjectId = newSubEntry.id,
-                            text = icalEntity.value?.property?.uid!!,
-                            reltype = Reltype.PARENT.name
-                        )
-                    )
-                    database.getICalObjectById(newSubEntry.id)?.let {
-                        it.makeDirty()
-                        database.update(it)
-                    }
-                    onChangeDone()
-                }
-            }
+            databaseDao.linkChildren(
+                parentId = mainICalObjectId!!,
+                childrenIds = newSubEntries.map { it.id }
+            )
+            onChangeDone()
         }
     }
 
@@ -289,37 +311,41 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun linkNewParents(newParents: List<ICal4List>) {
         viewModelScope.launch(Dispatchers.IO) {
-            newParents.forEach { newParent ->
-                if(newParent.uid == null)
-                    return@forEach
-
-                if(newParent.uid == icalEntity.value?.property?.uid)
-                    return@forEach
-
-                val existing = newParent.uid?.let { database.findRelatedTo(icalEntity.value?.property?.id!!, it, Reltype.PARENT.name) != null } ?: return@forEach
-                if(!existing) {
-                    database.insertRelatedto(
-                        Relatedto(
-                            icalObjectId = icalEntity.value?.property?.id!!,
-                            text = newParent.uid,
-                            reltype = Reltype.PARENT.name
-                        )
-                    )
-                    database.getICalObjectById(icalEntity.value?.property?.id!!)?.let {
-                        it.makeDirty()
-                        database.update(it)
-                    }
-                }
-            }
+            databaseDao.linkParents(
+                parentIds = newParents.map { it.id },
+                childId = mainICalObjectId!!
+            )
+            onChangeDone()
         }
     }
 
     fun moveToNewCollection(newCollectionId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+
             mutableICalObject?.let {
-                save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
-                move(it, newCollectionId)
+                // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
+                icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
+                icalObject.value?.flags.let { currentFlags -> it.flags = currentFlags }
+                icalObject.value?.scheduleTag.let { currentScheduleTag ->
+                    it.scheduleTag = currentScheduleTag
+                }
+                icalObject.value?.fileName.let { currentFileName ->
+                    it.fileName = currentFileName
+                }
+
+                saveSuspend()
+                val newId = databaseDao.moveToCollection(it.id, newCollectionId)
+                if(newId == null) {
+                    withContext(Dispatchers.Main) {
+                        changeState.value = DetailChangeState.SQLERROR
+                    }
+                    return@launch
+                }
+                load(newId, _isAuthenticated)
             }
+
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
             onChangeDone()
         }
     }
@@ -334,7 +360,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                         it.dtstart = DateTimeUtils.getTodayAsLong()
                         it.dtstartTimezone = ICalObject.TZ_ALLDAY
                     }
-                    if(module == Module.NOTE) {
+                    if (module == Module.NOTE) {
                         it.dtstart = null
                         it.dtstartTimezone = null
                         it.rrule = null
@@ -351,187 +377,117 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     it.priority = null
                     it.percent = null
 
-                    if(Status.valuesFor(Module.JOURNAL).none { status -> status.status == it.status })
+                    if (Status.valuesFor(Module.JOURNAL)
+                            .none { status -> status.status == it.status }
+                    )
                         it.status = Status.FINAL.status
 
                 } else if (module == Module.TODO) {
                     it.component = Component.VTODO.name
-                    if(Status.valuesFor(Module.TODO).none { status -> status.status == it.status })
+                    if (Status.valuesFor(Module.TODO)
+                            .none { status -> status.status == it.status }
+                    )
                         it.status = Status.NEEDS_ACTION.status
                 }
-                it.makeDirty()
-                save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
+                databaseDao.saveAll(
+                    it,
+                    mutableCategories,
+                    mutableComments,
+                    mutableAttendees,
+                    mutableResources,
+                    mutableAttachments,
+                    mutableAlarms,
+                    mutableICalObject!!.id != mainICalObjectId
+
+                )
             }
             onChangeDone()
         }
     }
-
-
-    private suspend fun move(icalObject: ICalObject, newCollectionId: Long) {
-        withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-
-        try {
-            val newId = ICalObject.updateCollectionWithChildren(icalObject.id, null, newCollectionId, database, _application)
-            newId?.let { load(it, _isAuthenticated) }
-            // once the newId is there, the local entries can be deleted (or marked as deleted)
-            ICalObject.deleteItemWithChildren(icalObject.id, database)        // make sure to delete the old item (or marked as deleted - this is already handled in the function)
-            if (icalObject.rrule != null)
-                icalObject.recreateRecurring(_application)
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-        } catch (e: SQLiteConstraintException) {
-            Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
-            Log.d("SQLConstraint", e.stackTraceToString())
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
-        }
-        onChangeDone()
-    }
-
 
 
     fun saveEntry() {
+        mutableICalObject?.let {
+            // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
+            icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
+            icalObject.value?.flags.let { currentFlags -> it.flags = currentFlags }
+            icalObject.value?.scheduleTag.let { currentScheduleTag ->
+                it.scheduleTag = currentScheduleTag
+            }
+            icalObject.value?.fileName.let { currentFileName ->
+                it.fileName = currentFileName
+            }
+        }
         viewModelScope.launch(Dispatchers.IO) {
-            mutableICalObject?.let {
-                // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
-                icalEntity.value?.property?.eTag.let { currentETag -> it.eTag = currentETag }
-                icalEntity.value?.property?.flags.let { currentFlags -> it.flags = currentFlags }
-                icalEntity.value?.property?.scheduleTag.let { currentScheduleTag -> it.scheduleTag = currentScheduleTag }
-                icalEntity.value?.property?.fileName.let { currentFileName -> it.fileName = currentFileName }
-
-                save(it, mutableCategories, mutableComments, mutableAttendees, mutableResources, mutableAttachments, mutableAlarms)
-            }
-            onChangeDone()
-        }
-    }
-
-
-    private suspend fun save(icalObject: ICalObject,
-             categories: List<Category>,
-             comments: List<Comment>,
-             attendees: List<Attendee>,
-             resources: List<Resource>,
-             attachments: List<Attachment>,
-             alarms: List<Alarm>
-    ) {
-        withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-
-        try {
-            if (icalEntity.value?.categories != categories || icalEntity.value?.property?.id != icalObject.id) {
-                icalObject.makeDirty()
-                database.deleteCategories(icalObject.id)
-                categories.forEach { changedCategory ->
-                    changedCategory.icalObjectId = icalObject.id
-                    database.insertCategory(changedCategory)
-                }
-            }
-
-            if (icalEntity.value?.comments != comments || icalEntity.value?.property?.id != icalObject.id) {
-                icalObject.makeDirty()
-                database.deleteComments(icalObject.id)
-                comments.forEach { changedComment ->
-                    changedComment.icalObjectId = icalObject.id
-                    database.insertComment(changedComment)
-                }
-            }
-
-            if (icalEntity.value?.attendees != attendees || icalEntity.value?.property?.id != icalObject.id) {
-                icalObject.makeDirty()
-                database.deleteAttendees(icalObject.id)
-                attendees.forEach { changedAttendee ->
-                    changedAttendee.icalObjectId = icalObject.id
-                    database.insertAttendee(changedAttendee)
-                }
-            }
-
-            if (icalEntity.value?.resources != resources || icalEntity.value?.property?.id != icalObject.id) {
-                icalObject.makeDirty()
-                database.deleteResources(icalObject.id)
-                resources.forEach { changedResource ->
-                    changedResource.icalObjectId = icalObject.id
-                    database.insertResource(changedResource)
-                }
-            }
-
-            if (icalEntity.value?.attachments != attachments || icalEntity.value?.property?.id != icalObject.id) {
-                icalObject.makeDirty()
-                database.deleteAttachments(icalObject.id)
-                attachments.forEach { changedAttachment ->
-                    changedAttachment.icalObjectId = icalObject.id
-                    database.insertAttachment(changedAttachment)
-                }
-                Attachment.scheduleCleanupJob(getApplication())
-            }
-
-            if (icalEntity.value?.alarms != alarms || icalEntity.value?.property?.id != icalObject.id) {
-                icalObject.makeDirty()
-                database.deleteAlarms(icalObject.id)
-                alarms.forEach { changedAlarm ->
-                    changedAlarm.icalObjectId = icalObject.id
-                    changedAlarm.alarmId = database.insertAlarm(changedAlarm)
-                }
-            }
-
-            icalObject.makeDirty()
-            database.update(icalObject)
-            icalObject.makeSeriesDirty(database)
-            icalObject.recreateRecurring(_application)
-            onChangeDone()
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+            saveSuspend()
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-        } catch (e: SQLiteConstraintException) {
-            Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
-            Log.d("SQLConstraint", e.stackTraceToString())
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
         }
     }
+
+    private suspend fun saveSuspend() {
+        mutableICalObject?.let {
+            databaseDao.saveAll(
+                it,
+                mutableCategories,
+                mutableComments,
+                mutableAttendees,
+                mutableResources,
+                mutableAttachments,
+                mutableAlarms,
+                mutableICalObject!!.id != mainICalObjectId
+            )
+        }
+    }
+
+
 
     /**
      * reverts the current entry back to the original values that were stored in originalEntry
      */
     fun revert() {
-        val originalICalObject = originalEntry?.property?: return
+        val originalICalObject = originalEntry?.property ?: return
         viewModelScope.launch(Dispatchers.IO) {
-            save(
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+            databaseDao.saveAll(
                 icalObject = originalICalObject.apply {
-                    eTag = icalEntity.value?.property?.eTag
-                    sequence = (icalEntity.value?.property?.sequence?:0)+1
+                    eTag = icalObject.value?.eTag
+                    sequence = (icalObject.value?.sequence ?: 0) + 1
                 },
                 categories = originalEntry?.categories ?: emptyList(),
                 comments = originalEntry?.comments ?: emptyList(),
-
                 attendees = originalEntry?.attendees ?: emptyList(),
                 resources = originalEntry?.resources ?: emptyList(),
                 attachments = originalEntry?.attachments ?: emptyList(),
-                alarms = originalEntry?.alarms ?: emptyList()
+                alarms = originalEntry?.alarms ?: emptyList(),
+                enforceUpdateAll = mutableICalObject!!.id != mainICalObjectId
+
             )
-            navigateToId.value = icalEntity.value?.property?.id
+            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
+            navigateToId.value = icalObject.value?.id
             onChangeDone()
         }
     }
 
+    fun addSubEntries(subEntries: List<ICalObject>, collectionId: Long) {
+        subEntries.forEach { addSubEntry(it, null, collectionId) }
+    }
 
-    fun addSubEntry(subEntry: ICalObject, attachment: Attachment?) {
+    fun addSubEntry(subEntry: ICalObject, attachment: Attachment?, collectionId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
-            subEntry.collectionId = icalEntity.value?.property?.collectionId!!
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+            subEntry.collectionId = collectionId
 
-            try {
-                val subEntryId = database.insertICalObject(subEntry)
-                attachment?.let {
-                    it.icalObjectId = subEntryId
-                    database.insertAttachment(it)
-                }
-                database.insertRelatedto(
-                    Relatedto(
-                        icalObjectId = subEntryId,
-                        reltype = Reltype.PARENT.name,
-                        text = icalEntity.value?.property?.uid!!
-                    )
-                )
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-                onChangeDone()
-            } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", e.stackTraceToString())
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
+            databaseDao.addSubEntry(
+                parentUID = icalObject.value?.uid!!,
+                subEntry = subEntry,
+                attachment = attachment
+            )
+
+            withContext(Dispatchers.Main) {
+                    changeState.value = DetailChangeState.CHANGESAVED
             }
+            onChangeDone()
         }
     }
 
@@ -539,155 +495,65 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * Deletes the current entry with its children
      */
-    fun delete() {
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.DELETING }
-            try {
-                if(icalEntity.value?.property?.recurid != null) {
-                    ICalObject.unlinkFromSeries(icalEntity.value?.property!!, database)
-                    //toastMessage.value = _application.getString(R.string.toast_item_is_now_recu_exception)
-                }
-                icalEntity.value?.property?.id?.let { id ->
-                    ICalObject.deleteItemWithChildren(id, database)
-                    SyncUtil.notifyContentObservers(getApplication())
-                    withContext (Dispatchers.Main) { changeState.value = DetailChangeState.DELETED }
-                    toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
-                }
-            } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", "Corrupted ID: ${icalEntity.value?.property?.id}")
-                Log.d("SQLConstraint", e.stackTraceToString())
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
-            }
-            onChangeDone()
-        }
-    }
+    fun delete() = deleteById(icalObjectId = mainICalObjectId!!, mainICalObjectDeleted = true)
 
     /**
      * Delete function for subtasks and subnotes
      * @param [icalObjectId] of the subtask/subnote to be deleted
      */
-    fun deleteById(icalObjectId: Long) {
+    fun deleteById(icalObjectId: Long, mainICalObjectDeleted: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
-            try {
-                ICalObject.deleteItemWithChildren(icalObjectId, database)
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
+            databaseDao.deleteICalObject(icalObjectId)
+            withContext(Dispatchers.Main) {
+                changeState.value = DetailChangeState.CHANGESAVED
                 toastMessage.value = _application.getString(R.string.details_toast_entry_deleted)
-                SyncUtil.notifyContentObservers(getApplication())
-            } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
-                Log.d("SQLConstraint", e.stackTraceToString())
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
+                if(mainICalObjectDeleted)
+                    changeState.value = DetailChangeState.DELETED
             }
             onChangeDone()
         }
     }
 
     fun unlinkFromParent(icalObjectId: Long, parentUID: String?) {
-        if(parentUID == null)
+        if (parentUID == null)
             return
 
         viewModelScope.launch(Dispatchers.IO) {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
-            database.deleteRelatedto(icalObjectId, parentUID)
-            database.getICalObjectByIdSync(icalObjectId)?.let {
-                it.makeDirty()
-                database.update(it)
-            }
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
+            databaseDao.unlinkFromParent(icalObjectId, parentUID)
             onChangeDone()
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
     }
 
     fun createCopy(newModule: Module) {
-        icalEntity.value?.let { createCopy(it, newModule) }
-    }
-
-    private fun createCopy(icalEntityToCopy: ICalEntity, newModule: Module, newParentUID: String? = null) {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
-            val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
-            try {
-                val newId = database.insertICalObject(newEntity.property)
-                newEntity.alarms?.forEach { alarm ->
-                    database.insertAlarm(
-                        alarm.copy(
-                            alarmId = 0L,
-                            icalObjectId = newId
-                        )
-                    )
-                }
-                newEntity.attachments?.forEach { attachment ->
-                    database.insertAttachment(
-                        attachment.copy(
-                            icalObjectId = newId,
-                            attachmentId = 0L
-                        )
-                    )
-                }
-                newEntity.attendees?.forEach { attendee ->
-                    database.insertAttendee(attendee.copy(icalObjectId = newId, attendeeId = 0L))
-                }
-                newEntity.categories?.forEach { category ->
-                    database.insertCategory(category.copy(icalObjectId = newId, categoryId = 0L))
-                }
-                newEntity.comments?.forEach { comment ->
-                    database.insertComment(comment.copy(icalObjectId = newId, commentId = 0L))
-                }
-                newEntity.resources?.forEach { resource ->
-                    database.insertResource(resource.copy(icalObjectId = newId, resourceId = 0L))
-                }
-                newEntity.unknown?.forEach { unknown ->
-                    database.insertUnknownSync(unknown.copy(icalObjectId = newId, unknownId = 0L))
-                }
-                newEntity.organizer?.let { organizer ->
-                    database.insertOrganizer(organizer.copy(icalObjectId = newId, organizerId = 0L))
-                }
 
-                newEntity.relatedto?.forEach { relatedto ->
-                    if (relatedto.reltype == Reltype.PARENT.name && newParentUID != null) {
-                        database.insertRelatedto(
-                            relatedto.copy(
-                                relatedtoId = 0L,
-                                icalObjectId = newId,
-                                text = newParentUID
-                            )
-                        )
-                    }
-                }
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
-                val children = database.getRelatedChildren(icalEntityToCopy.property.id)
-                children.forEach { child ->
-                    database.getSync(child.id)?.let {
-                        createCopy(
-                            icalEntityToCopy = it,
-                            newModule = it.property.getModuleFromString(),
-                            newParentUID = newEntity.property.uid
-                        )
-                    }
-                }
-
-                onChangeDone()
-
-                if(newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
-                    navigateToId.value = newId
-
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-            } catch (e: SQLiteConstraintException) {
-                Log.d("SQLConstraint", e.stackTraceToString())
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }
+            val newId = databaseDao.createCopy(
+                iCalObjectIdToCopy = mainICalObjectId!!,
+                newModule = newModule,
+            )
+            withContext(Dispatchers.Main) {
+                changeState.value = DetailChangeState.CHANGESAVED
             }
+            onChangeDone()
+            newId?.let { navigateToId.value = it }
         }
     }
+
 
     /**
      * Creates a share intent to share the current entry as .ics file
      */
     fun shareAsICS(context: Context) {
-        viewModelScope.launch(Dispatchers.IO)  {
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-            val iCalEntity = icalEntity.value ?: return@launch
-            val icsContentUri = createContentUri(iCalEntity) ?: return@launch
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+            val icsContentUri = databaseDao.getSync(mainICalObjectId!!)?.let {
+                createContentUri(it)
+            } ?: return@launch
 
             try {
                 ShareCompat.IntentBuilder(context)
@@ -698,7 +564,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 Log.i("ActivityNotFound", "No activity found to open file.")
                 toastMessage.value = "No app found to open this file."
             } finally {
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
+                withContext(Dispatchers.Main) {
+                    changeState.value = DetailChangeState.UNCHANGED
+                }
             }
         }
     }
@@ -709,9 +577,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * text (the contents as a text representation) and attachments
      */
     fun shareAsText(context: Context) {
-        viewModelScope.launch(Dispatchers.IO)  {
-            val iCalEntity = icalEntity.value ?: return@launch
-            withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
+        viewModelScope.launch(Dispatchers.IO) {
+            val iCalEntity = databaseDao.getSync(mainICalObjectId!!) ?: return@launch
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
 
             val shareText = iCalEntity.getShareText(context)
             val subject = iCalEntity.property.summary
@@ -762,9 +630,12 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 shareIntentBuilder.startChooser()
             } catch (e: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to send this entry.")
-                toastMessage.value = _application.getString(R.string.error_no_app_found_to_open_entry)
+                toastMessage.value =
+                    _application.getString(R.string.error_no_app_found_to_open_entry)
             } finally {
-                withContext (Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
+                withContext(Dispatchers.Main) {
+                    changeState.value = DetailChangeState.UNCHANGED
+                }
             }
         }
     }
@@ -822,7 +693,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
      * @param list
      */
     private suspend fun addChildrenOf(parent: Long, list: MutableList<Long>) {
-        val children = database.getRelatedChildren(parent)
+        val children = databaseDao.getRelatedChildren(parent)
         list.addAll(children.map { it.id })
         children.forEach { addChildrenOf(it.id, list) }
     }
@@ -830,6 +701,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * Notifies the contentObservers
      * schedules the notifications
+     * sets geofences
      * updates the widget
      */
     private suspend fun onChangeDone() {
@@ -839,5 +711,5 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         ListWidget().updateAll(getApplication())
     }
 
-    enum class DetailChangeState { LOADING, UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED, DELETING, DELETED, SQLERROR }
+    enum class DetailChangeState { LOADING, UNCHANGED, CHANGEUNSAVED, SAVINGREQUESTED, CHANGESAVING, CHANGESAVED, DELETING, DELETED, DELETED_BACK_TO_LIST, SQLERROR }
 }
