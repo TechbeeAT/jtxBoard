@@ -403,11 +403,12 @@ fun DetailsScreen(
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
                                 onClick = {
+                                    val currentICalObjectId = detailViewModel.mutableICalObject?.id ?: return@DropdownMenuItem
                                     scope.launch(Dispatchers.IO) {
                                         ICalDatabase
                                             .getInstance(context)
                                             .iCalDatabaseDao()
-                                            .getSync(iCalObject.value?.id!!)
+                                            .getSync(currentICalObjectId)
                                             ?.let {
                                                 val text = it.getShareText(context)
                                                 val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
