@@ -31,8 +31,8 @@ android {
         buildConfigField "long", "buildTime", System.currentTimeMillis() + "L"
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 207080003
-        versionName "2.07.08"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode 207090011
+        versionName "2.07.09-beta06"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField "String", "versionCodename", "\"Love always wins ❤️💪\""
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -258,7 +258,7 @@ dependencies {
     // permissions from accompanist
     implementation "com.google.accompanist:accompanist-permissions:$version_accompanist"
 
-    implementation "androidx.glance:glance-appwidget:1.0.0"
+    implementation "androidx.glance:glance-appwidget:1.1.0-rc01"
 
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
     
