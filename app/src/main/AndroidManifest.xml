@@ -82,8 +82,10 @@
         </intent>
     </queries>
 
+    <!-- 'tools:replace="android:allowBackup"' necessary for Huawei flavor -->
     <application
         android:allowBackup="true"
+        tools:replace="android:allowBackup"
         android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

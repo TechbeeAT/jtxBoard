@@ -13,7 +13,7 @@ plugins {
     id "kotlin-parcelize"
     id "kotlinx-serialization"
     id "com.google.devtools.ksp"
-    //id "com.huawei.agconnect"
+    id "com.huawei.agconnect"
 }
 
 
@@ -193,7 +193,9 @@ dependencies {
     amazonImplementation "com.google.android.gms:play-services-location:21.2.0"
 
     // Huawei billing
-    //huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
+    huaweiImplementation "com.huawei.hms:iap:$version_huawei_iap"
+    huaweiImplementation "com.huawei.hms:appservice:6.10.0.300"
+
 
     // Google Maps
     gplayImplementation "com.google.maps.android:maps-compose:5.0.1"
@@ -261,7 +263,7 @@ dependencies {
     implementation "androidx.glance:glance-appwidget:1.1.0-rc01"
 
     implementation "androidx.biometric:biometric-ktx:1.2.0-alpha05"
-    
+
     implementation "androidx.profileinstaller:profileinstaller:1.3.1"
 
     //image loading from the web

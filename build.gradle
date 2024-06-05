@@ -30,8 +30,8 @@ buildscript {
         version_review = "2.0.1"
         version_compose = "1.6.7"
         version_about_libraries = "11.2.0"
-        version_huawei = "1.8.1.300"
-        version_huawei_iap = "6.10.0.300"
+        version_huawei = "1.9.1.302"
+        version_huawei_iap = "6.13.0.300"
         version_accompanist = "0.34.0"
         version_osmdroid = "6.1.18"
     }
@@ -44,7 +44,7 @@ buildscript {
         maven { url "https://plugins.gradle.org/m2/" }
 
         // Huawei - only for use in Huawei branch
-        //maven { url 'https://developer.huawei.com/repo/' }
+        maven { url 'https://developer.huawei.com/repo/' }
     }
 
     dependencies {
@@ -53,7 +53,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$version_kotlin"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$version_kotlin"
         // Huawei - only for use in Huawei branch
-        //classpath "com.huawei.agconnect:agcp:$version_huawei"
+        classpath "com.huawei.agconnect:agcp:$version_huawei"
     }
 }
 
