@@ -1,0 +1,4 @@
+* Fixed task duplication when changing collections
+* Fixed potential crashes when adding a subtask
+* Fixed broken alarms
+* Upgraded widget (including layout changes to comply with default widgets)
