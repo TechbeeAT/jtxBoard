@@ -19,24 +19,24 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowDropUp
 import androidx.compose.material.icons.outlined.VerticalAlignTop
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -61,6 +62,7 @@ import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
@@ -71,13 +73,17 @@ import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import kotlinx.coroutines.launch
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.util.UUID
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
+)
 @Composable
 fun ListScreenList(
     groupedList: Map<String, List<ICal4ListRel>>,
@@ -103,6 +109,7 @@ fun ListScreenList(
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
+    isListDragAndDropEnabled: Boolean,
     isSubtaskDragAndDropEnabled: Boolean,
     isSubnoteDragAndDropEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
@@ -122,26 +129,36 @@ fun ListScreenList(
     val storedResources by storedResourcesLive.observeAsState(emptyList())
     val storedStatuses by storedStatusesLive.observeAsState(emptyList())
 
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scrollId by scrollOnceId.observeAsState(null)
     val listState = rememberLazyListState()
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = false,
-        onRefresh = { onSyncRequested() }
+    val reorderableLazyListState = rememberReorderableLazyListState(listState) { from, to ->
+        val reordered = groupedList.flatMap { it.value }.map { it.iCal4List }.toMutableList().apply {
+            val fromIndex = indexOfFirst { it.id == from.key }
+            val toIndex = indexOfFirst { it.id == to.key }
+            add(toIndex, removeAt(fromIndex))
+        }
+        ICalDatabase.getInstance(context).iCalDatabaseDao().updateSortOrder(reordered.map { it.id })
+    }
+    val pullToRefreshState = rememberPullToRefreshState(
+        enabled = { isPullRefreshEnabled }
     )
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if(pullToRefreshState.isRefreshing) {
+            onSyncRequested()
+            pullToRefreshState.endRefresh()
+        }
+    }
+
 
     Box(
         contentAlignment = Alignment.TopCenter,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().nestedScroll(pullToRefreshState.nestedScrollConnection)
     ) {
 
         LazyColumn(
-            modifier = if(isPullRefreshEnabled)
-                Modifier
-                    .padding(start = 8.dp, end = 8.dp, top = 4.dp)
-                    .pullRefresh(pullRefreshState)
-                else
-                    Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
+            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
             state = listState,
         ) {
             groupedList.forEach { (groupName, group) ->
@@ -214,69 +231,75 @@ fun ListScreenList(
                             }
                         }
 
-                        ListCard(
-                            iCalObject = iCal4ListRelObject.iCal4List,
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
-                            subtasks = currentSubtasks,
-                            subnotes = currentSubnotes,
-                            parents = currentParents,
-                            storedCategories = storedCategories,
-                            storedResources = storedResources,
-                            storedStatuses = storedStatuses,
-                            selected = selectedEntries,
-                            attachments = currentAttachments ?: emptyList(),
-                            isSubtasksExpandedDefault = isSubtasksExpandedDefault,
-                            isSubnotesExpandedDefault = isSubnotesExpandedDefault,
-                            isAttachmentsExpandedDefault = isAttachmentsExpandedDefault,
-                            settingShowProgressMaintasks = settingShowProgressMaintasks,
-                            settingShowProgressSubtasks = settingShowProgressSubtasks,
-                            settingDisplayTimezone = settingDisplayTimezone,
-                            settingIsAccessibilityMode = settingIsAccessibilityMode,
-                            progressIncrement = settingProgressIncrement.getProgressStepKeyAsInt(),
-                            linkProgressToSubtasks = settingLinkProgressToSubtasks,
-                            markdownEnabled = markdownEnabled,
-                            onClick = onClick,
-                            onLongClick = onLongClick,
-                            onProgressChanged = onProgressChanged,
-                            onExpandedChanged = onExpandedChanged,
-                            onUpdateSortOrder = onUpdateSortOrder,
-                            player = player,
-                            isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
-                            isSubnoteDragAndDropEnabled = isSubnoteDragAndDropEnabled,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp)
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = {
-                                        onClick(
-                                            iCal4ListRelObject.iCal4List.id,
-                                            groupedList
-                                                .flatMap { it.value }
-                                                .map { it.iCal4List },
-                                            iCal4ListRelObject.iCal4List.isReadOnly
-                                        )
-                                    },
-                                    onLongClick = {
-                                        if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(
+                        ReorderableItem(reorderableLazyListState, key = iCal4ListRelObject.iCal4List.id) {
+                            ListCard(
+                                iCalObject = iCal4ListRelObject.iCal4List,
+                                categories = iCal4ListRelObject.categories,
+                                resources = iCal4ListRelObject.resources,
+                                subtasks = currentSubtasks,
+                                subnotes = currentSubnotes,
+                                parents = currentParents,
+                                storedCategories = storedCategories,
+                                storedResources = storedResources,
+                                storedStatuses = storedStatuses,
+                                selected = selectedEntries,
+                                attachments = currentAttachments ?: emptyList(),
+                                isSubtasksExpandedDefault = isSubtasksExpandedDefault,
+                                isSubnotesExpandedDefault = isSubnotesExpandedDefault,
+                                isAttachmentsExpandedDefault = isAttachmentsExpandedDefault,
+                                settingShowProgressMaintasks = settingShowProgressMaintasks,
+                                settingShowProgressSubtasks = settingShowProgressSubtasks,
+                                settingDisplayTimezone = settingDisplayTimezone,
+                                settingIsAccessibilityMode = settingIsAccessibilityMode,
+                                progressIncrement = settingProgressIncrement.getProgressStepKeyAsInt(),
+                                linkProgressToSubtasks = settingLinkProgressToSubtasks,
+                                markdownEnabled = markdownEnabled,
+                                onClick = onClick,
+                                onLongClick = onLongClick,
+                                onProgressChanged = onProgressChanged,
+                                onExpandedChanged = onExpandedChanged,
+                                onUpdateSortOrder = onUpdateSortOrder,
+                                player = player,
+                                isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
+                                isSubnoteDragAndDropEnabled = isSubnoteDragAndDropEnabled,
+                                dragHandle = {
+                                    if(isListDragAndDropEnabled)
+                                        DragHandleLazy(this)
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = {
+                                            onClick(
                                                 iCal4ListRelObject.iCal4List.id,
                                                 groupedList
                                                     .flatMap { it.value }
-                                                    .map { it.iCal4List })
-                                    }
-                                )
-                                .testTag("benchmark:ListCard")
-                        )
+                                                    .map { it.iCal4List },
+                                                iCal4ListRelObject.iCal4List.isReadOnly
+                                            )
+                                        },
+                                        onLongClick = {
+                                            if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                                onLongClick(
+                                                    iCal4ListRelObject.iCal4List.id,
+                                                    groupedList
+                                                        .flatMap { it.value }
+                                                        .map { it.iCal4List })
+                                        }
+                                    )
+                                    .testTag("benchmark:ListCard")
+                            )
+                        }
                     }
                 }
             }
         }
 
-        PullRefreshIndicator(
-            refreshing = false,
-            state = pullRefreshState
+        PullToRefreshContainer(
+            modifier = Modifier.align(Alignment.TopCenter).offset(y = (-30).dp),
+            state = pullToRefreshState,
         )
 
         Crossfade(listState.canScrollBackward, label = "showScrollUp") {
@@ -366,6 +389,7 @@ fun ListScreenList_TODO() {
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
+            isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
             isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
@@ -449,6 +473,7 @@ fun ListScreenList_JOURNAL() {
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
+            isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
             isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },

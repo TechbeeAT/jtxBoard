@@ -9,9 +9,16 @@
 package at.techbee.jtx.ui.reusable.cards
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -28,7 +35,6 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BuyProCard(
     priceLive: LiveData<String?>,
@@ -68,7 +74,8 @@ fun BuyProCard(
                     Text(
                         stringResource(id = R.string.buypro_purchase_header),
                         style = Typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f)
                     )
 
                     Text(

@@ -8,7 +8,12 @@
 
 package at.techbee.jtx.ui.about
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Translate
 import androidx.compose.material3.ElevatedCard
@@ -46,11 +51,12 @@ fun TranslatorCard(
             Column(modifier = Modifier.fillMaxWidth().weight(1f).padding(end = 8.dp)) {
                 Text(
                     stringResource(id = R.string.about_translations_thanks_to),
-                    style = Typography.bodyMedium
+                    style = Typography.bodyMedium, 
+                    modifier = Modifier.alpha(0.7f)
                 )
                 Text(
                     name,
-                    style = Typography.titleLarge,
+                    style = Typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
             }

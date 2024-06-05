@@ -38,21 +38,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
-
+import at.techbee.jtx.ui.detail.DetailTopAppBarMode.ADD_SUBNOTE
+import at.techbee.jtx.ui.detail.DetailTopAppBarMode.ADD_SUBTASK
 
 enum class DetailTopAppBarMode { ADD_SUBTASK, ADD_SUBNOTE }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsTopAppBar(
-    detailTopAppBarMode: DetailTopAppBarMode = DetailTopAppBarMode.ADD_SUBTASK,
+    detailTopAppBarMode: DetailTopAppBarMode = ADD_SUBTASK,
     readonly: Boolean,
     goBack: () -> Unit,
     onAddSubtask: (String) -> Unit,
     onAddSubnote: (String) -> Unit,
     actions: @Composable () -> Unit = { }
 ) {
-
     var textFieldText by rememberSaveable { mutableStateOf("") }
 
     CenterAlignedTopAppBar(
@@ -77,8 +77,8 @@ fun DetailsTopAppBar(
                 placeholder = {
                 Crossfade(detailTopAppBarMode, label = "detailTopAppBarMode") {
                     when(it) {
-                        DetailTopAppBarMode.ADD_SUBTASK -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
-                        DetailTopAppBarMode.ADD_SUBNOTE -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
+                        ADD_SUBTASK -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
+                        ADD_SUBNOTE -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
                     }
                 }
                     },
@@ -98,16 +98,16 @@ fun DetailsTopAppBar(
                             IconButton(onClick = {
                                 if(textFieldText.isNotBlank()) {
                                     when(detailTopAppBarMode) {
-                                        DetailTopAppBarMode.ADD_SUBTASK -> onAddSubtask(textFieldText)
-                                        DetailTopAppBarMode.ADD_SUBNOTE -> onAddSubnote(textFieldText)
+                                        ADD_SUBTASK -> onAddSubtask(textFieldText)
+                                        ADD_SUBNOTE -> onAddSubnote(textFieldText)
                                     }
                                 }
                                 textFieldText = ""
                             }) {
                                 Crossfade(detailTopAppBarMode, label = "detailTopAppBarMode") {
                                     when(it) {
-                                        DetailTopAppBarMode.ADD_SUBTASK -> Icon(Icons.Outlined.AddTask, stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
-                                        DetailTopAppBarMode.ADD_SUBNOTE -> Icon(Icons.AutoMirrored.Outlined.NoteAdd, stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
+                                        ADD_SUBTASK -> Icon(Icons.Outlined.AddTask, stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
+                                        ADD_SUBNOTE -> Icon(Icons.AutoMirrored.Outlined.NoteAdd, stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
                                     }
                                 }
                             }
@@ -119,8 +119,8 @@ fun DetailsTopAppBar(
                 keyboardActions = KeyboardActions(onDone = {
                     if(textFieldText.isNotBlank()) {
                         when(detailTopAppBarMode) {
-                            DetailTopAppBarMode.ADD_SUBTASK -> onAddSubtask(textFieldText)
-                            DetailTopAppBarMode.ADD_SUBNOTE -> onAddSubnote(textFieldText)
+                            ADD_SUBTASK -> onAddSubtask(textFieldText)
+                            ADD_SUBNOTE -> onAddSubnote(textFieldText)
                         }
                     }
                     textFieldText = ""
@@ -129,8 +129,6 @@ fun DetailsTopAppBar(
         }
     )
 }
-
-
 
 @Preview(showBackground = true)
 @Composable
@@ -141,8 +139,8 @@ fun DetailsTopAppBar_Preview_withSubtitle() {
                 DetailsTopAppBar(
                     readonly = false,
                     goBack = { },
-                    onAddSubnote = { },
-                    onAddSubtask = { }
+                    onAddSubnote = {},
+                    onAddSubtask = {}
                 )
             },
             content = { paddingValues ->

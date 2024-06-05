@@ -16,21 +16,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
-import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
-import androidx.glance.appwidget.appWidgetBackground
 import androidx.glance.appwidget.provideContent
-import androidx.glance.background
 import androidx.glance.currentState
-import androidx.glance.layout.fillMaxSize
-import androidx.glance.layout.padding
 import androidx.glance.unit.ColorProvider
+import androidx.glance.unit.FixedColorProvider
 import at.techbee.jtx.ListWidgetConfigActivity
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
@@ -49,6 +44,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val MAX_WIDGET_ENTRIES = 50
+const val MIN_ALPHA_FOR_TEXT = 0.8f
 
 class ListWidget : GlanceAppWidget() {
 
@@ -148,7 +144,7 @@ class ListWidget : GlanceAppWidget() {
                 else if ((listWidgetConfig.widgetAlpha) < 1F && listWidgetConfig.widgetColor == null)
                     ColorProvider(defaultBackgroundColor.getColor(context).copy(alpha = listWidgetConfig.widgetAlpha))
                 else
-                    ColorProvider(Color(listWidgetConfig.widgetColor!!).copy(alpha = listWidgetConfig.widgetAlpha))
+                    FixedColorProvider(Color(listWidgetConfig.widgetColor!!).copy(alpha = listWidgetConfig.widgetAlpha))
             }
 
             val defaultTextColor = GlanceTheme.colors.onPrimaryContainer
@@ -156,11 +152,11 @@ class ListWidget : GlanceAppWidget() {
                 if (listWidgetConfig.widgetColor == null)
                     defaultTextColor
                 else
-                    ColorProvider(
-                        if(UiUtil.isDarkColor(defaultBackgroundColor.getColor(context)))
-                            Color.White.copy(alpha = listWidgetConfig.widgetAlpha)
+                    FixedColorProvider(
+                        if(UiUtil.isDarkColor(backgorundColor.getColor(context)))
+                            Color.White
                         else
-                            Color.Black.copy(alpha = listWidgetConfig.widgetAlpha)
+                            Color.Black
                     )
             }
 
@@ -171,7 +167,7 @@ class ListWidget : GlanceAppWidget() {
                 else if (listWidgetConfig.widgetAlphaEntries < 1F && listWidgetConfig.widgetColorEntries == null)
                     ColorProvider(defaultSurfaceColor.getColor(context).copy(alpha = listWidgetConfig.widgetAlphaEntries))
                 else
-                    ColorProvider(Color(listWidgetConfig.widgetColorEntries!!).copy(alpha = listWidgetConfig.widgetAlphaEntries))
+                    FixedColorProvider(Color(listWidgetConfig.widgetColorEntries!!).copy(alpha = listWidgetConfig.widgetAlphaEntries))
             }
 
             val defaultOnSurfaceColor = GlanceTheme.colors.onSurface
@@ -179,15 +175,13 @@ class ListWidget : GlanceAppWidget() {
                 if (listWidgetConfig.widgetColorEntries == null)
                     defaultOnSurfaceColor
                 else
-                    ColorProvider(
-                        if(UiUtil.isDarkColor(defaultSurfaceColor.getColor(context)))
-                            Color.White.copy(alpha = listWidgetConfig.widgetAlphaEntries)
+                    FixedColorProvider(
+                        if(UiUtil.isDarkColor(entryColor.getColor(context)))
+                            Color.White.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
                         else
-                            Color.Black.copy(alpha = listWidgetConfig.widgetAlphaEntries)
+                            Color.Black.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
                     )
             }
-
-            val entryOverdueTextColor = GlanceTheme.colors.error
 
             GlanceTheme {
                 ListWidgetContent(
@@ -195,10 +189,10 @@ class ListWidget : GlanceAppWidget() {
                     list = list,
                     subtasks = subtasks,
                     subnotes = subnotes,
+                    backgroundColor = backgorundColor,
                     textColor = textColor,
                     entryColor = entryColor,
                     entryTextColor = entryTextColor,
-                    entryOverdueTextColor = entryOverdueTextColor,
                     onCheckedChange = { iCalObjectId, checked ->
                         scope.launch(Dispatchers.IO) {
                             val settingsStateHolder = SettingsStateHolder(context)
@@ -231,6 +225,9 @@ class ListWidget : GlanceAppWidget() {
                             listWidgetConfig.searchCollection.firstOrNull()?.let {
                                 putExtra(MainActivity2.INTENT_EXTRA_COLLECTION2PRESELECT, it)
                             }
+                            val categoriesArray = arrayListOf<String>()
+                            categoriesArray.addAll(listWidgetConfig.defaultCategories)
+                            putStringArrayListExtra(MainActivity2.INTENT_EXTRA_CATEGORIES2PRESELECT, categoriesArray)
                         }
                         context.startActivity(addNewIntent)
                     },
@@ -241,12 +238,7 @@ class ListWidget : GlanceAppWidget() {
                             putExtra(MainActivity2.INTENT_EXTRA_LISTWIDGETCONFIG, Json.encodeToString(listWidgetConfig))
                         }
                         context.startActivity(openFilteredListIntent)
-                    },
-                    modifier = GlanceModifier
-                        .appWidgetBackground()
-                        .fillMaxSize()
-                        .padding(horizontal = 4.dp)
-                        .background(backgorundColor)
+                    }
                 )
             }
         }

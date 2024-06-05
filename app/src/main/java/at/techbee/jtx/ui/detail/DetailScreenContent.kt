@@ -147,7 +147,8 @@ fun DetailScreenContent(
     saveEntry: () -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onMoveToNewCollection: (newCollection: ICalCollection) -> Unit,
-    onSubEntryAdded: (icalObject: ICalObject, attachment: Attachment?) -> Unit,
+    onAudioSubEntryAdded: (iCalObject: ICalObject, attachment: Attachment) -> Unit,
+    onSubEntryAdded: (module: Module, text: String) -> Unit,
     onSubEntryDeleted: (icalObjectId: Long) -> Unit,
     onSubEntryUpdated: (icalObjectId: Long, newText: String) -> Unit,
     onUnlinkSubEntry: (icalObjectId: Long, parentUID: String?) -> Unit,
@@ -687,7 +688,7 @@ fun DetailScreenContent(
                             onProgressChanged = { itemId, newPercent ->
                                 onProgressChanged(itemId, newPercent)
                             },
-                            onSubtaskAdded = { subtask -> onSubEntryAdded(subtask, null) },
+                            onSubtaskAdded = { text -> onSubEntryAdded(Module.TODO, text) },
                             onSubtaskUpdated = { icalObjectId, newText ->
                                 onSubEntryUpdated(
                                     icalObjectId,
@@ -722,11 +723,14 @@ fun DetailScreenContent(
                             isEditMode = isEditMode,
                             enforceSavingSubnote = changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED || changeState.value == DetailViewModel.DetailChangeState.CHANGESAVING,
                             isSubnoteDragAndDropEnabled = isSubnoteDragAndDropEnabled,
-                            onSubnoteAdded = { subnote, attachment ->
-                                onSubEntryAdded(
-                                    subnote,
+                            onAudioSubnoteAdded = { iCalObject, attachment ->
+                                onAudioSubEntryAdded(
+                                    iCalObject,
                                     attachment
                                 )
+                            },
+                            onSubnoteAdded = { text ->
+                                onSubEntryAdded(Module.NOTE, text)
                             },
                             onSubnoteUpdated = { icalObjectId, newText ->
                                 onSubEntryUpdated(
@@ -1064,7 +1068,8 @@ fun DetailScreenContent_JOURNAL() {
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
-            onSubEntryAdded = { _, _ -> },
+            onAudioSubEntryAdded = { _,  _ -> },
+            onSubEntryAdded = { _,  _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _, _ -> },
@@ -1130,7 +1135,8 @@ fun DetailScreenContent_TODO_editInitially() {
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
-            onSubEntryAdded = { _, _ -> },
+            onAudioSubEntryAdded = { _,  _ -> },
+            onSubEntryAdded = { _,  _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _, _ -> },
@@ -1196,7 +1202,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
-            onSubEntryAdded = { _, _ -> },
+            onAudioSubEntryAdded = { _,  _ -> },
+            onSubEntryAdded = { _,  _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _, _ -> },
@@ -1256,7 +1263,8 @@ fun DetailScreenContent_failedLoading() {
             saveEntry = { },
             onProgressChanged = { _, _ -> },
             onMoveToNewCollection = { },
-            onSubEntryAdded = { _, _ -> },
+            onAudioSubEntryAdded = { _,  _ -> },
+            onSubEntryAdded = { _,  _ -> },
             onSubEntryDeleted = { },
             onSubEntryUpdated = { _, _ -> },
             goToDetail = { _, _, _, _ -> },

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.automirrored.outlined.Note
 import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.Alarm
+import androidx.compose.material.icons.outlined.AssignmentLate
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.CloudSync
 import androidx.compose.material.icons.outlined.ContactMail
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -62,13 +64,15 @@ fun ListTopRow(
     enableScroll: Boolean = true,
     showAttachments: Boolean = true,
     showSubtasks: Boolean = true,
-    showSubnotes: Boolean = true
+    showSubnotes: Boolean = true,
 ) {
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(3.dp),
+        verticalAlignment = Alignment.CenterVertically,
         modifier = if(enableScroll) modifier.horizontalScroll(rememberScrollState()) else modifier
     ) {
+
         ListBadge(
             icon = Icons.Outlined.FolderOpen,
             iconDesc = stringResource(id = R.string.collection),
@@ -116,7 +120,7 @@ fun ListTopRow(
                     dtstartTimezone = ical4List.dtstartTimezone,
                     context = LocalContext.current
                 ),
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
@@ -131,7 +135,7 @@ fun ListTopRow(
                     dtstartTimezone = ical4List.dtstartTimezone,
                     context = LocalContext.current
                 ),
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
@@ -153,29 +157,17 @@ fun ListTopRow(
                         ical4List.due,
                         ical4List.dueTimezone
                     ) == true
-                ) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer,
+                ) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
-        categories.forEach { category ->
+        AnimatedVisibility(ical4List.priority in 1..9) {
             ListBadge(
-                icon = Icons.AutoMirrored.Outlined.Label,
-                iconDesc = stringResource(id = R.string.category),
-                text = category.text,
-                containerColor = StoredCategory.getColorForCategory(category.text, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer,
-                isAccessibilityMode = isAccessibilityMode,
-                modifier = Modifier.padding(vertical = 2.dp)
-            )
-        }
-
-        resources.forEach { resource ->
-            ListBadge(
-                icon = Icons.Outlined.WorkOutline,
-                iconDesc = stringResource(id = R.string.resources),
-                text = resource.text,
-                containerColor = StoredResource.getColorForResource(resource.text?:"", storedResources) ?: MaterialTheme.colorScheme.primaryContainer,
+                icon = Icons.Outlined.AssignmentLate,
+                iconDesc = stringResource(id = R.string.priority),
+                text = if (ical4List.priority in 1..9) stringArrayResource(id = R.array.priority)[ical4List.priority!!] else null,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
@@ -211,16 +203,27 @@ fun ListTopRow(
             )
         }
 
-        AnimatedVisibility(ical4List.priority in 1..9) {
+        categories.forEach { category ->
             ListBadge(
-                icon = Icons.Outlined.WorkOutline,
-                iconDesc = stringResource(id = R.string.priority),
-                text = if (ical4List.priority in 1..9) stringArrayResource(id = R.array.priority)[ical4List.priority!!] else null,
+                icon = Icons.AutoMirrored.Outlined.Label,
+                iconDesc = stringResource(id = R.string.category),
+                text = category.text,
+                containerColor = StoredCategory.getColorForCategory(category.text, storedCategories) ?: MaterialTheme.colorScheme.primaryContainer,
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
 
+        resources.forEach { resource ->
+            ListBadge(
+                icon = Icons.Outlined.WorkOutline,
+                iconDesc = stringResource(id = R.string.resources),
+                text = resource.text,
+                containerColor = StoredResource.getColorForResource(resource.text?:"", storedResources) ?: MaterialTheme.colorScheme.primaryContainer,
+                isAccessibilityMode = isAccessibilityMode,
+                modifier = Modifier.padding(vertical = 2.dp)
+            )
+        }
 
         AnimatedVisibility(ical4List.numAttendees > 0) {
             ListBadge(
@@ -335,7 +338,8 @@ fun ListTopRow_Preview() {
             storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
             storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
             extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
-            isAccessibilityMode = false
+            isAccessibilityMode = false,
+            includeJournalDate = true,
         )
     }
 }

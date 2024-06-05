@@ -118,6 +118,7 @@ class MainActivity2 : AppCompatActivity() {
         const val INTENT_ACTION_OPEN_ICALOBJECT = "openICalObject"
         const val INTENT_EXTRA_ITEM2SHOW = "item2show"
         const val INTENT_EXTRA_COLLECTION2PRESELECT = "collection2preselect"
+        const val INTENT_EXTRA_CATEGORIES2PRESELECT = "categories2preselect"
         const val INTENT_EXTRA_LISTWIDGETCONFIG = "listWidgetConfig"
     }
 
@@ -237,18 +238,24 @@ class MainActivity2 : AppCompatActivity() {
                     globalStateHolder.icalFromIntentString.value = ""
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.getStringArrayListExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)?.let { globalStateHolder.icalFromIntentCategories.addAll(it) }
+                    intent.removeExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)
                 }
                 INTENT_ACTION_ADD_NOTE -> {
                     globalStateHolder.icalFromIntentModule.value = Module.NOTE
                     globalStateHolder.icalFromIntentString.value = ""
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.getStringArrayListExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)?.let { globalStateHolder.icalFromIntentCategories.addAll(it) }
+                    intent.removeExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)
                 }
                 INTENT_ACTION_ADD_TODO -> {
                     globalStateHolder.icalFromIntentModule.value = Module.TODO
                     globalStateHolder.icalFromIntentString.value = ""
                     globalStateHolder.icalFromIntentCollection.value = intent.getStringExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
                     intent.removeExtra(INTENT_EXTRA_COLLECTION2PRESELECT)
+                    intent.getStringArrayListExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)?.let { globalStateHolder.icalFromIntentCategories.addAll(it) }
+                    intent.removeExtra(INTENT_EXTRA_CATEGORIES2PRESELECT)
                 }
                 INTENT_ACTION_OPEN_FILTERED_LIST -> {
                     intent.getStringExtra(INTENT_EXTRA_LISTWIDGETCONFIG)?.let {
@@ -343,7 +350,9 @@ fun MainNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = NavigationDrawerDestination.BOARD.name
+        startDestination = if(globalStateHolder.filteredList2Load.value != null)
+            FilteredListDestination.FilteredListFromWidget.route
+            else NavigationDrawerDestination.BOARD.name
     ) {
         composable(NavigationDrawerDestination.BOARD.name) {
             ListScreenTabContainer(
@@ -358,9 +367,9 @@ fun MainNavHost(
             arguments = FilteredListDestination.FilteredList.args
         ) { backStackEntry ->
 
-            val module = Module.entries.find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.argModule) } ?: return@composable
+            val module = Module.entries.find { it.name == backStackEntry.arguments?.getString(FilteredListDestination.ARG_MODULE) } ?: return@composable
             val storedListSettingData = backStackEntry.arguments?.getString(
-                FilteredListDestination.argStoredListSettingData)?.let {
+                FilteredListDestination.ARG_STORED_LIST_SETTING_DATA)?.let {
                     Json.decodeFromString<StoredListSettingData>(it)
                 }
 
@@ -371,6 +380,25 @@ fun MainNavHost(
                 initialModule = module,
                 storedListSettingData = storedListSettingData
             )
+        }
+        composable(
+            FilteredListDestination.FilteredListFromWidget.route,
+            arguments = emptyList()
+        ) {
+
+            val storedListSettingData = globalStateHolder.filteredList2Load.value?.let { listWidgetConfig ->
+                val listSettings = ListSettings.fromListWidgetConfig(listWidgetConfig)
+                StoredListSettingData.fromListSettings(listSettings)
+            }
+
+            ListScreenTabContainer(
+                navController = navController,
+                globalStateHolder = globalStateHolder,
+                settingsStateHolder = settingsStateHolder,
+                initialModule = globalStateHolder.filteredList2Load.value?.module ?: Module.NOTE,
+                storedListSettingData = storedListSettingData
+            )
+            //globalStateHolder.filteredList2Load.value = null
         }
         composable(
             DetailDestination.Detail.route,
@@ -487,13 +515,6 @@ fun MainNavHost(
 
     globalStateHolder.icalObject2Open.value?.let { id ->
         navController.navigate(DetailDestination.Detail.getRoute(iCalObjectId = id, icalObjectIdList = emptyList(), isEditMode = false, returnToLauncher = true))
-    }
-
-    globalStateHolder.filteredList2Load.value?.let { listWidgetConfig ->
-        val listSettings = ListSettings.fromListWidgetConfig(listWidgetConfig)
-        val storedListSettingData = StoredListSettingData.fromListSettings(listSettings)
-        navController.navigate(FilteredListDestination.FilteredList.getRoute(listWidgetConfig.module, storedListSettingData))
-        globalStateHolder.filteredList2Load.value = null
     }
 
     if (!settingsStateHolder.proInfoShown.value && !isProPurchased.value) {

@@ -88,22 +88,26 @@ interface ICalDatabaseDao {
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
-    @Transaction
-    @Query("SELECT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_CATEGORY_TEXT ORDER BY count(*) DESC, $COLUMN_CATEGORY_TEXT ASC")
+    @Query("SELECT DISTINCT $COLUMN_CATEGORY_TEXT FROM $TABLE_NAME_CATEGORY WHERE $COLUMN_CATEGORY_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_CATEGORY_TEXT ORDER BY count(*) DESC, $COLUMN_CATEGORY_TEXT ASC")
     fun getAllCategoriesAsText(): LiveData<List<String>>
 
     /**
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
      * @return a list of [Category.text] as LiveData<List<String>>
      */
-    @Transaction
-    @Query("SELECT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
+    @Query("SELECT DISTINCT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
     fun getAllResourcesAsText(): LiveData<List<String>>
+
+    /**
+     * Retrieve an list of all DISTINCT Colors for ICalObjects as Int in a LiveData object
+     */
+    @Query("SELECT DISTINCT $COLUMN_COLOR FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_COLOR IS NOT NULL")
+    fun getAllColors(): LiveData<List<Int>>
+
 
 
     /**
      * Retrieve an list of all Attachment Uris
-     *
      * @return a list of [Attachment.uri] as List<String>
      */
     @Query("SELECT $COLUMN_ATTACHMENT_URI FROM $TABLE_NAME_ATTACHMENT")
@@ -617,27 +621,27 @@ interface ICalDatabaseDao {
 
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getIcal4ListRel(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     suspend fun getIcal4ListRelSync(query: SupportSQLiteQuery): List<ICal4ListRel>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4List::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getIcal4ListFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4ListRel::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getSubEntries(query: SupportSQLiteQuery): LiveData<List<ICal4ListRel>>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4ListRel::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getSubEntriesSync(query: SupportSQLiteQuery): List<ICal4ListRel>
 
     @Transaction
-    @RawQuery(observedEntities = [ICal4ListRel::class])
+    @RawQuery(observedEntities = [ICal4List::class, Relatedto::class, Category::class, Resource::class])
     fun getSubEntriesFlow(query: SupportSQLiteQuery): Flow<List<ICal4ListRel>>
 
     @Transaction
@@ -811,8 +815,8 @@ interface ICalDatabaseDao {
         if (id == 0L)
             return // do nothing, the item was never saved in DB
 
-        val item = getSync(id)
-            ?: return   // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
+        // if the item could not be found, just return (this can happen on mass deletion from the list view, when a recur-instance was passed to delete, but it was already deleted through the original entry
+        val item = getSync(id) ?: return
         val children = getRelatedChildren(id)
         children.forEach { child ->
             deleteICalObjectWithChildren(
@@ -854,7 +858,7 @@ interface ICalDatabaseDao {
 
     @Transaction
     suspend fun moveToCollection(iCalObjectIds: List<Long>, newCollectionId: Long): List<Long> {
-            val newEntries = mutableListOf<Long>()
+        val newEntries = mutableListOf<Long>()
 
         iCalObjectIds.forEach { iCalObjectId ->
                 try {
@@ -1022,36 +1026,70 @@ interface ICalDatabaseDao {
     }
 
 
-    suspend fun updateProgress(id: Long, newPercent: Int?, settingKeepStatusProgressCompletedInSync: Boolean, settingLinkProgressToSubtasks: Boolean) {
-        val item = getICalObjectById(id) ?: return
+    @Transaction
+    suspend fun updateProgress(id: Long, newPercent: Int?, settingKeepStatusProgressCompletedInSync: Boolean, settingLinkProgressToSubtasks: Boolean, uid: String? = null) {
+        val fetchedUID = uid ?: getUid(id) ?: return
+
+            //val item = getICalObjectById(id) ?: return
         try {
-            //splitting update in two transaction to make the update on checkbox-click faster
-            updateProgressOfSingleEntry(item, newPercent, settingKeepStatusProgressCompletedInSync)
-            updateProgressOfSeriesAndParents(item, newPercent, settingKeepStatusProgressCompletedInSync, settingLinkProgressToSubtasks)
+
+            updateSingleProgress(id, fetchedUID, newPercent, settingKeepStatusProgressCompletedInSync)
+
+            if(settingLinkProgressToSubtasks) {
+                findTopParent(id)?.let {
+                    updateProgressOfParents(it.id, it.uid, settingKeepStatusProgressCompletedInSync)
+                }
+            }
         } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: $id")
             Log.d("SQLConstraint", e.stackTraceToString())
         }
     }
 
-    @Transaction
-    suspend fun updateProgressOfSingleEntry(item: ICalObject, newPercent: Int?, settingKeepStatusProgressCompletedInSync: Boolean) {
-        item.setUpdatedProgress(newPercent, settingKeepStatusProgressCompletedInSync)
-        update(item)
+    private suspend fun updateSingleProgress(id: Long, uid: String, newPercent: Int?, settingKeepStatusProgressCompletedInSync: Boolean) {
+        if(settingKeepStatusProgressCompletedInSync) {
+            updateProgressKeepSync(
+                id = id,
+                progress = if (newPercent == 0) null else newPercent,
+                status = when (newPercent) {
+                    100 -> Status.COMPLETED.status
+                    in 1..99 -> Status.IN_PROCESS.status
+                    else -> Status.NEEDS_ACTION.status
+                },
+                completed = if (newPercent == 100) System.currentTimeMillis() else null
+            )
+        } else {
+            updateProgressNotSync(
+                id = id,
+                progress = if (newPercent == 0) null else newPercent
+            )
+        }
+        makeSeriesDirty(uid)
     }
 
-    @Transaction
-    suspend fun updateProgressOfSeriesAndParents(item: ICalObject, newPercent: Int?, settingKeepStatusProgressCompletedInSync: Boolean, settingLinkProgressToSubtasks: Boolean) {
-        makeSeriesDirty(item)
-        if(settingLinkProgressToSubtasks) {
-            findTopParent(item.id)?.let {
-                updateProgressOfParents(it.id, settingKeepStatusProgressCompletedInSync)
-            }
-        }
-    }
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET " +
+            "$COLUMN_PERCENT = :progress, " +
+            "$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
+            "$COLUMN_LAST_MODIFIED = :lastModified, " +
+            "$COLUMN_DIRTY = 1 " +
+            "WHERE $COLUMN_ID = :id")
+    suspend fun updateProgressNotSync(id: Long, progress: Int?, lastModified: Long = System.currentTimeMillis())
+
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET " +
+            "$COLUMN_PERCENT = :progress, " +
+            "$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
+            "$COLUMN_LAST_MODIFIED = :lastModified, " +
+            "$COLUMN_DIRTY = 1, " +
+            "$COLUMN_STATUS = :status, " +
+            "$COLUMN_COMPLETED = :completed " +
+            "WHERE $COLUMN_ID = :id")
+    suspend fun updateProgressKeepSync(id: Long, progress: Int?, status: String?, completed: Long?, lastModified: Long = System.currentTimeMillis())
+
+
 
     private suspend fun updateProgressOfParents(
         parentId: Long,
+        parentUid: String,
         keepInSync: Boolean
     ) {
 
@@ -1059,9 +1097,11 @@ interface ICalDatabaseDao {
             getRelatedChildren(parentId).filter { it.module == Module.TODO.name }
         if (children.isNotEmpty()) {
             children.forEach { child ->
-                updateProgressOfParents(child.id, keepInSync)
+                updateProgressOfParents(child.id, child.uid, keepInSync)
             }
             val newProgress = children.map { it.percent ?: 0 }.average().toInt()
+            updateSingleProgress(parentId, parentUid, newProgress, keepInSync)
+
             val parent = getICalObjectByIdSync(parentId)
             parent?.setUpdatedProgress(newProgress, keepInSync)
             parent?.let { update(it) }
@@ -1084,7 +1124,7 @@ interface ICalDatabaseDao {
             }
             currentItem.makeDirty()
             update(currentItem)
-            makeSeriesDirty(currentItem)
+            makeSeriesDirty(currentItem.uid)
         }
     }
 
@@ -1098,22 +1138,21 @@ interface ICalDatabaseDao {
         val currentItem = getICalObjectById(iCalObjectId) ?: return
         currentItem.makeDirty()
         update(currentItem)
-        makeSeriesDirty(currentItem)
+        makeSeriesDirty(currentItem.uid)
     }
 
 
     /**
-     * finds the series definition and makes it dirty
-     * necessary when a series instance changes
+     * updates the item and makes it dirty
+     * this automatically takes the series definition
+     * and ignores series instances
      */
-    suspend fun makeSeriesDirty(iCalObject: ICalObject) {
-        if (iCalObject.recurid?.isNotEmpty() == true) {
-            getRecurSeriesElement(iCalObject.uid)?.let {
-                it.makeDirty()
-                update(it)
-            }
-        }
-    }
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET " +
+            "$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
+            "$COLUMN_LAST_MODIFIED = :lastModified, " +
+            "$COLUMN_DIRTY = 1 " +
+            "WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL")
+    suspend fun makeSeriesDirty(uid: String, lastModified: Long = System.currentTimeMillis())
 
 
     @Transaction
@@ -1267,11 +1306,13 @@ interface ICalDatabaseDao {
             children.forEach forEachChild@{ child ->
                 createCopy(child.id, child.getModuleFromString(), updatedEntry.uid)
             }
-            makeSeriesDirty(instance)
         }
+
 
         if (deleteAfterUnlink)
             series?.id?.let { deleteICalObject(it) }
+        else
+            series?.let { makeSeriesDirty(it.uid) }
     }
 
 
@@ -1551,7 +1592,7 @@ interface ICalDatabaseDao {
 
                 icalObject.makeDirty()
                 update(icalObject)
-                makeSeriesDirty(icalObject)
+                makeSeriesDirty(icalObject.uid)
                 recreateRecurring(icalObject)
             } catch (e: SQLiteConstraintException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
@@ -1584,11 +1625,11 @@ interface ICalDatabaseDao {
             }
         }
 
-        iCalObjectIds.forEach {iCalObjectId ->
+        iCalObjectIds.forEach { iCalObjectId ->
             getICalObjectById(iCalObjectId)?.let {
                 it.makeDirty()
                 update(it)
-                makeSeriesDirty(it)
+                makeSeriesDirty(it.uid)
             }
         }
     }
@@ -1621,7 +1662,7 @@ interface ICalDatabaseDao {
             getICalObjectById(iCalObjectId)?.let {
                 it.makeDirty()
                 update(it)
-                makeSeriesDirty(it)
+                makeSeriesDirty(it.uid)
             }
         }
     }
@@ -1639,7 +1680,7 @@ interface ICalDatabaseDao {
                 it.classification = newClassification.classification
                 it.makeDirty()
                 update(it)
-                makeSeriesDirty(it)
+                makeSeriesDirty(it.uid)
             }
         }
     }
@@ -1656,7 +1697,7 @@ interface ICalDatabaseDao {
                 it.priority = newPriority
                 it.makeDirty()
                 update(it)
-                makeSeriesDirty(it)
+                makeSeriesDirty(it.uid)
             }
         }
     }
@@ -1698,4 +1739,12 @@ interface ICalDatabaseDao {
             return null
         }
     }
+
+    /**
+     * Retrieve the UID of an iCalObjectId
+     * @return the uid or null if not found
+     */
+    @Query("SELECT $COLUMN_UID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :iCalObjectId")
+    fun getUid(iCalObjectId: Long): String?
+
 }

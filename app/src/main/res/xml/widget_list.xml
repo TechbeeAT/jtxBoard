@@ -18,4 +18,5 @@
     android:configure="at.techbee.jtx.ListWidgetConfigActivity"
     android:widgetFeatures="reconfigurable"
     android:previewImage="@drawable/widget_preview"
+    android:initialLayout="@layout/glance_default_loading_layout"
     />

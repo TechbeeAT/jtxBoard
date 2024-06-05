@@ -64,7 +64,7 @@ fun ContributorCard(
                 contentDescription = null,
                 placeholder = painterResource(id = R.drawable.ic_person_pin),
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(32.dp)
                     .clip(CircleShape)
             )
 

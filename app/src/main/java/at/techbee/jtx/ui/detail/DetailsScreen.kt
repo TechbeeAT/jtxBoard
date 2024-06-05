@@ -57,7 +57,6 @@ import androidx.navigation.NavHostController
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Reltype
@@ -68,6 +67,7 @@ import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
 import at.techbee.jtx.ui.reusable.destinations.NavigationDrawerDestination
+import at.techbee.jtx.ui.reusable.dialogs.CreateSingleOrMultipleSubitemsDialog
 import at.techbee.jtx.ui.reusable.dialogs.DeleteEntryDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.LinkExistingEntryDialog
@@ -110,7 +110,6 @@ fun DetailsScreen(
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
     val scrollToSection = remember { mutableStateOf<DetailsScreenSection?>(null) }
 
-    //val icalEntity = detailViewModel.icalEntity.observeAsState(null)
     val iCalObject = detailViewModel.icalObject.observeAsState(null)
     val collection = detailViewModel.collection.observeAsState()
 
@@ -121,6 +120,9 @@ fun DetailsScreen(
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val isProActionAvailable by remember(isProPurchased, collection) { derivedStateOf { isProPurchased.value || collection.value?.accountType == ICalCollection.LOCAL_ACCOUNT_TYPE } }
+
+    var newSubtaskTextToProcess by remember { mutableStateOf("") }
+    var newSubnoteTextToProcess by remember { mutableStateOf("") }
 
     iCalObject.value?.getModuleFromString()?.let {
         detailViewModel.detailSettings.load(it, context)
@@ -241,10 +243,6 @@ fun DetailsScreen(
             preselectedLinkEntryModules = linkEntryDialogModule,
             preselectedLinkEntryReltype = linkEntryDialogReltype ?: Reltype.CHILD,
             allEntriesLive = detailViewModel.selectFromAllList,
-            storedCategories = storedCategories,
-            storedResources = storedResources,
-            extendedStatuses = storedStatuses,
-            settingIsAccessibilityMode = detailViewModel.settingsStateHolder.settingAccessibilityMode.value,
             player = detailViewModel.mediaPlayer,
             onAllEntriesSearchTextUpdated = { searchText, modules, sameCollection, sameAccount -> detailViewModel.updateSelectFromAllListQuery(searchText, modules, sameCollection, sameAccount) },
             onEntriesToLinkConfirmed = { selected, reltype ->
@@ -258,6 +256,30 @@ fun DetailsScreen(
                 linkEntryDialogModule = emptyList()
                 linkEntryDialogReltype = null
             }
+        )
+    }
+
+    if(newSubtaskTextToProcess.isNotEmpty()) {
+        CreateSingleOrMultipleSubitemsDialog(
+            textToProcess = newSubtaskTextToProcess,
+            module = Module.TODO,
+            onCreate = { itemList ->
+                detailViewModel.addSubEntries(itemList, iCalObject.value?.uid!!, iCalObject.value?.collectionId!!)
+                scrollToSection.value = DetailsScreenSection.SUBTASKS
+            },
+            onDismiss = { newSubtaskTextToProcess = ""}
+        )
+    }
+
+    if(newSubnoteTextToProcess.isNotEmpty()) {
+        CreateSingleOrMultipleSubitemsDialog(
+            textToProcess = newSubnoteTextToProcess,
+            module = Module.NOTE,
+            onCreate = { itemList ->
+                detailViewModel.addSubEntries(itemList, iCalObject.value?.uid!!, iCalObject.value?.collectionId!!)
+                scrollToSection.value = DetailsScreenSection.SUBNOTES
+            },
+            onDismiss = { newSubnoteTextToProcess = ""}
         )
     }
 
@@ -288,14 +310,8 @@ fun DetailsScreen(
                     navigateUp = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
                 detailTopAppBarMode = detailViewModel.settingsStateHolder.detailTopAppBarMode.value,
-                onAddSubnote = { subnoteText ->
-                    detailViewModel.addSubEntry(ICalObject.createNote(subnoteText), null)
-                    scrollToSection.value = DetailsScreenSection.SUBNOTES
-                               },
-                onAddSubtask = { subtaskText ->
-                    detailViewModel.addSubEntry(ICalObject.createTask(subtaskText), null)
-                    scrollToSection.value = DetailsScreenSection.SUBTASKS
-                               },
+                onAddSubnote = { subnoteText -> newSubnoteTextToProcess = subnoteText },
+                onAddSubtask = { subtaskText -> newSubtaskTextToProcess = subtaskText },
                 actions = {
                     val menuExpanded = remember { mutableStateOf(false) }
 
@@ -387,11 +403,12 @@ fun DetailsScreen(
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
                                 onClick = {
+                                    val currentICalObjectId = detailViewModel.mutableICalObject?.id ?: return@DropdownMenuItem
                                     scope.launch(Dispatchers.IO) {
                                         ICalDatabase
                                             .getInstance(context)
                                             .iCalDatabaseDao()
-                                            .getSync(iCalObject.value?.id!!)
+                                            .getSync(currentICalObjectId)
                                             ?.let {
                                                 val text = it.getShareText(context)
                                                 val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
@@ -527,14 +544,13 @@ fun DetailsScreen(
                 },
                 onProgressChanged = { itemId, newPercent -> detailViewModel.updateProgress(itemId, newPercent) },
                 onMoveToNewCollection = { newCollection -> detailViewModel.moveToNewCollection(newCollection.collectionId) },
-                onSubEntryAdded = { icalObject, attachment ->
-                    detailViewModel.addSubEntry(icalObject, attachment)
-                    when(icalObject.getModuleFromString()) {
-                        Module.JOURNAL -> scrollToSection.value = DetailsScreenSection.SUBNOTES
-                        Module.NOTE -> scrollToSection.value = DetailsScreenSection.SUBNOTES
-                        Module.TODO -> scrollToSection.value = DetailsScreenSection.SUBTASKS
+                onAudioSubEntryAdded = { subEntry, attachment -> detailViewModel.addSubEntry(subEntry, attachment, iCalObject.value?.uid!!, iCalObject.value?.collectionId!!) },
+                onSubEntryAdded = { module, text ->
+                    when(module) {
+                        Module.TODO -> newSubtaskTextToProcess = text
+                        else -> newSubnoteTextToProcess = text
                     }
-                                  },
+                },
                 onSubEntryDeleted = { icalObjectId -> detailViewModel.deleteById(icalObjectId) },
                 onSubEntryUpdated = { icalObjectId, newText -> detailViewModel.updateSummary(icalObjectId, newText) },
                 onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },

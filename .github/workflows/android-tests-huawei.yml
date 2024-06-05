@@ -6,46 +6,30 @@ on:
 jobs:
   test_on_emulator:
     name: Tests with emulator
-    runs-on: ubuntu-latest-4-cores
-    strategy:
-      matrix:
-        api-level: [ 31 ]
+    runs-on: privileged
+    container:
+      image: ghcr.io/bitfireat/docker-android-ci:main
+      options: --privileged
+      env:
+        ANDROID_HOME: /sdk
+        ANDROID_AVD_HOME: /root/.android/avd
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: true
-
-      - uses: gradle/wrapper-validation-action@v2
+      - uses: gradle/wrapper-validation-action@v3
 
       - name: Cache gradle dependencies
         uses: actions/cache@v4
         with:
+          key: ${{ runner.os }}
           path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
-
-      - name: Create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          arch: x86_64
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
-
-      - name: Run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          arch: x86_64
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: ./gradlew app:connectedHuaweiDebugAndroidTest
-
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+      - name: Start emulator
+        run: start-emulator.sh
+      - name: Run connected tests
+        run: ./gradlew app:connectedHuaweiDebugAndroidTest
       - name: Archive results
         if: always()
         uses: actions/upload-artifact@v4

@@ -10,6 +10,7 @@ package at.techbee.jtx.widgets
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.ColorFilter
@@ -19,11 +20,11 @@ import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.CheckBox
+import androidx.glance.appwidget.CheckboxDefaults
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.Alignment
-import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.fillMaxWidth
@@ -34,8 +35,10 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import androidx.glance.unit.FixedColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
@@ -47,7 +50,6 @@ fun ListEntry(
     obj: ICal4List,
     entryColor: ColorProvider,
     textColor: ColorProvider,
-    textColorOverdue: ColorProvider,
     checkboxPosition: CheckboxPosition,
     showDescription: Boolean,
     onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
@@ -55,10 +57,13 @@ fun ListEntry(
 ) {
 
     val context = LocalContext.current
-    val textStyleDate = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = textColor)
-    val textStyleDateOverdue = textStyleDate.copy(color = textColorOverdue, fontWeight = FontWeight.Bold)
+    val metaBarColor = ColorProvider(textColor.getColor(context).copy(alpha = 0.7f))
+    val textStyleMetaInfo = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = metaBarColor)
+    val textStyleDateOverdue = textStyleMetaInfo.copy(color = ColorProvider(Color.Red), fontWeight = FontWeight.Bold)
     val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
     val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp)
+
+    val textColorFixed = FixedColorProvider(textColor.getColor(context))  // needs to be fixed, otherwise checkbox coloring would crash
 
     val intent = Intent(context, MainActivity2::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -69,7 +74,7 @@ fun ListEntry(
     val imageSize = 18.dp
     val checked = obj.percent == 100 || obj.status == Status.COMPLETED.status
 
-    Box(modifier = modifier) {
+    Column(modifier = modifier) {
 
         Row(
             modifier = GlanceModifier
@@ -84,7 +89,8 @@ fun ListEntry(
             if (obj.module == Module.TODO.name && checkboxPosition == CheckboxPosition.START && !obj.isReadOnly){
                 CheckBox(
                     checked = checked,
-                    onCheckedChange = { onCheckedChange(obj.id, checked) }
+                    onCheckedChange = { onCheckedChange(obj.id, checked) },
+                    colors = CheckboxDefaults.colors(checkedColor = textColorFixed, uncheckedColor = textColorFixed)
                 )
             }
 
@@ -92,47 +98,97 @@ fun ListEntry(
                 modifier = GlanceModifier.defaultWeight()
             ) {
 
-                if (obj.dtstart != null || obj.due != null) {
-                    Row(
-                        modifier = GlanceModifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (obj.dtstart != null) {
-                            Image(
-                                provider = ImageProvider(if (obj.module == Module.TODO.name) R.drawable.ic_widget_start else R.drawable.ic_start2),
-                                contentDescription = context.getString(R.string.started),
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                                colorFilter = ColorFilter.tint(textColor)
-                            )
-                            Text(
-                                text = ICalObject.getDtstartTextInfo(
-                                    module = obj.getModule(),
-                                    dtstart = obj.dtstart,
-                                    dtstartTimezone = obj.dtstartTimezone,
-                                    context = context
-                                ),
-                                style = textStyleDate,
-                                modifier = GlanceModifier.padding(end = 8.dp)
-                            )
-                        }
-                        if (obj.due != null) {
-                            Image(
-                                provider = ImageProvider(R.drawable.ic_widget_due),
-                                contentDescription = context.getString(R.string.due),
-                                modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                                colorFilter = ColorFilter.tint(textColor)
-                            )
-                            Text(
-                                text = ICalObject.getDueTextInfo(
-                                    status = obj.status,
-                                    due = obj.due,
-                                    dueTimezone = obj.dueTimezone,
-                                    percent = obj.percent,
-                                    context = context
-                                ),
-                                style = if(ICalObject.isOverdue(obj.status, obj.percent, obj.due, obj.dueTimezone) == true) textStyleDateOverdue else textStyleDate,
-                            )
-                        }
+                Row(
+                    modifier = GlanceModifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    if (obj.dtstart != null) {
+                        Image(
+                            provider = ImageProvider(if (obj.module == Module.TODO.name) R.drawable.ic_widget_start else R.drawable.ic_start2),
+                            contentDescription = context.getString(R.string.started),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = ICalObject.getDtstartTextInfo(
+                                module = obj.getModule(),
+                                dtstart = obj.dtstart,
+                                dtstartTimezone = obj.dtstartTimezone,
+                                shortStyle = true,
+                                context = context
+                            ),
+                            style = textStyleMetaInfo,
+                            maxLines = 1,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
+                    }
+                    if (obj.due != null) {
+                        Image(
+                            provider = ImageProvider(R.drawable.ic_widget_due),
+                            contentDescription = context.getString(R.string.due),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = ICalObject.getDueTextInfo(
+                                status = obj.status,
+                                due = obj.due,
+                                dueTimezone = obj.dueTimezone,
+                                percent = obj.percent,
+                                context = context
+                            ),
+                            maxLines = 1,
+                            style = if(ICalObject.isOverdue(obj.status, obj.percent, obj.due, obj.dueTimezone) == true) textStyleDateOverdue else textStyleMetaInfo,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
+                    }
+
+                    if (obj.priority in 1..9) {
+                        Image(
+                            provider = ImageProvider(R.drawable.ic_priority),
+                            contentDescription = context.getString(R.string.priority),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = obj.priority.toString(),
+                            maxLines = 1,
+                            style = textStyleMetaInfo,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
+                    }
+
+                    if ((obj.status != null && obj.status != Status.FINAL.status) || obj.xstatus != null) {
+                        Image(
+                            provider = ImageProvider(R.drawable.ic_status),
+                            contentDescription = context.getString(R.string.status),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = obj.xstatus
+                                ?: Status.getStatusFromString(obj.status)?.stringResource?.let { context.getString(it) }
+                                ?:"",
+                            maxLines = 1,
+                            style = textStyleMetaInfo,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
+                    }
+
+                    if (obj.classification != null && obj.classification != Classification.PUBLIC.classification) {
+                        Image(
+                            provider = ImageProvider(R.drawable.ic_classification),
+                            contentDescription = context.getString(R.string.classification),
+                            modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
+                            colorFilter = ColorFilter.tint(metaBarColor)
+                        )
+                        Text(
+                            text = Classification.getClassificationFromString(obj.classification)?.let { context.getString(it.stringResource) } ?: "",
+                            maxLines = 1,
+                            style = textStyleMetaInfo,
+                            modifier = GlanceModifier.padding(end = 8.dp)
+                        )
                     }
                 }
 
@@ -156,7 +212,8 @@ fun ListEntry(
             if (obj.module == Module.TODO.name && checkboxPosition == CheckboxPosition.END && !obj.isReadOnly) {
                 CheckBox(
                     checked = checked,
-                    onCheckedChange = { onCheckedChange(obj.id, checked) }
+                    onCheckedChange = { onCheckedChange(obj.id, checked) },
+                    colors = CheckboxDefaults.colors(checkedColor = textColorFixed, uncheckedColor = textColorFixed)
                 )
             }
         }
