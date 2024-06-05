@@ -121,7 +121,7 @@ class MainActivity2 : AppCompatActivity() {
         const val INTENT_EXTRA_LISTWIDGETCONFIG = "listWidgetConfig"
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
     }

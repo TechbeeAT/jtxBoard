@@ -154,7 +154,7 @@ fun AttachmentCard(
 
                 if(attachment.uri?.startsWith("content://") == true) {
                     IconButton(onClick = {
-                        launcherExportSingle.launch(attachment.filename)
+                        attachment.filename?.let { launcherExportSingle.launch(it) }
                     }) {
                         Icon(Icons.Outlined.Download, stringResource(id = R.string.save))
                     }

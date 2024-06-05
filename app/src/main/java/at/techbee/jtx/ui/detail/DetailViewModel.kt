@@ -465,17 +465,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun addSubEntries(subEntries: List<ICalObject>, collectionId: Long) {
-        subEntries.forEach { addSubEntry(it, null, collectionId) }
+    fun addSubEntries(subEntries: List<ICalObject>, parentUID: String, collectionId: Long) {
+        subEntries.forEach { addSubEntry(it, null, parentUID, collectionId) }
     }
 
-    fun addSubEntry(subEntry: ICalObject, attachment: Attachment?, collectionId: Long) {
+    fun addSubEntry(subEntry: ICalObject, attachment: Attachment?, parentUID: String, collectionId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
             subEntry.collectionId = collectionId
 
             databaseDao.addSubEntry(
-                parentUID = icalObject.value?.uid!!,
+                parentUID = parentUID,
                 subEntry = subEntry,
                 attachment = attachment
             )

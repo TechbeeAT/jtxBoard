@@ -267,7 +267,7 @@ fun DetailsScreen(
             textToProcess = newSubtaskTextToProcess,
             module = Module.TODO,
             onCreate = { itemList ->
-                detailViewModel.addSubEntries(itemList, iCalObject.value?.collectionId!!)
+                detailViewModel.addSubEntries(itemList, iCalObject.value?.uid!!, iCalObject.value?.collectionId!!)
                 scrollToSection.value = DetailsScreenSection.SUBTASKS
             },
             onDismiss = { newSubtaskTextToProcess = ""}
@@ -279,7 +279,7 @@ fun DetailsScreen(
             textToProcess = newSubnoteTextToProcess,
             module = Module.NOTE,
             onCreate = { itemList ->
-                detailViewModel.addSubEntries(itemList, iCalObject.value?.collectionId!!)
+                detailViewModel.addSubEntries(itemList, iCalObject.value?.uid!!, iCalObject.value?.collectionId!!)
                 scrollToSection.value = DetailsScreenSection.SUBNOTES
             },
             onDismiss = { newSubnoteTextToProcess = ""}
@@ -662,7 +662,7 @@ fun DetailsScreen(
                 },
                 onProgressChanged = { itemId, newPercent -> detailViewModel.updateProgress(itemId, newPercent) },
                 onMoveToNewCollection = { newCollection -> detailViewModel.moveToNewCollection(newCollection.collectionId) },
-                onAudioSubEntryAdded = { subEntry, attachment -> detailViewModel.addSubEntry(subEntry, attachment, iCalObject.value?.collectionId!!) },
+                onAudioSubEntryAdded = { subEntry, attachment -> detailViewModel.addSubEntry(subEntry, attachment, iCalObject.value?.uid!!, iCalObject.value?.collectionId!!) },
                 onSubEntryAdded = { module, text ->
                     when(module) {
                         Module.TODO -> newSubtaskTextToProcess = text
