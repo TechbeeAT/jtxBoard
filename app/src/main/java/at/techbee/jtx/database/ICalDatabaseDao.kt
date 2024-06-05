@@ -1064,6 +1064,7 @@ interface ICalDatabaseDao {
                 progress = if (newPercent == 0) null else newPercent
             )
         }
+        makeSeriesDirty(uid)
     }
 
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET " +

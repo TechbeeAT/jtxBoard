@@ -335,6 +335,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
 
                 saveSuspend()
+                onChangeDone()
                 val newId = databaseDao.moveToCollection(it.id, newCollectionId)
                 if(newId == null) {
                     withContext(Dispatchers.Main) {
@@ -344,9 +345,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 }
                 load(newId, _isAuthenticated)
             }
-
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-            onChangeDone()
+
         }
     }
 
@@ -421,6 +421,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch(Dispatchers.IO) {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
             saveSuspend()
+            onChangeDone()
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
     }
@@ -469,17 +470,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun addSubEntries(subEntries: List<ICalObject>, collectionId: Long) {
-        subEntries.forEach { addSubEntry(it, null, collectionId) }
+    fun addSubEntries(subEntries: List<ICalObject>, parentUID: String, collectionId: Long) {
+        subEntries.forEach { addSubEntry(it, null, parentUID, collectionId) }
     }
 
-    fun addSubEntry(subEntry: ICalObject, attachment: Attachment?, collectionId: Long) {
+    fun addSubEntry(subEntry: ICalObject, attachment: Attachment?, parentUID: String, collectionId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
             subEntry.collectionId = collectionId
 
             databaseDao.addSubEntry(
-                parentUID = icalObject.value?.uid!!,
+                parentUID = parentUID,
                 subEntry = subEntry,
                 attachment = attachment
             )
