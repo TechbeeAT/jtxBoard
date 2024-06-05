@@ -700,10 +700,7 @@ data class ICalObject(
                 return null
 
             val localNow = ZonedDateTime.now()
-            val localDue = if(dueTimezone == TZ_ALLDAY)
-                    ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameLocal(ZoneId.systemDefault())
-                else
-                    ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), requireTzId(dueTimezone))
+            val localDue = DateTimeUtils.getZonedDateTime(due, dueTimezone)
 
             return ChronoUnit.MINUTES.between(localNow, localDue) < 0L
         }
@@ -724,10 +721,7 @@ data class ICalObject(
 
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localStart = if(dtstartTimezone == TZ_ALLDAY)
-                ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart), ZoneId.of("UTC")).withZoneSameLocal(ZoneId.systemDefault())
-            else
-                ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart), requireTzId(dtstartTimezone))
+            val localStart = DateTimeUtils.getZonedDateTime(dtstart, dtstartTimezone)
             var finalString = ""
 
             fun getTimeAndTimezone(): String {
@@ -793,10 +787,7 @@ data class ICalObject(
 
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localDue = if(dueTimezone == TZ_ALLDAY)
-                ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameLocal(ZoneId.systemDefault())
-            else
-                ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), requireTzId(dueTimezone))
+            val localDue = DateTimeUtils.getZonedDateTime(due, dueTimezone)
             var finalString = ""
 
             fun getTimeAndTimezone(): String {

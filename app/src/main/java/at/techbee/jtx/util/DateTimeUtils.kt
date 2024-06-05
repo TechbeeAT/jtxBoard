@@ -259,6 +259,18 @@ object DateTimeUtils {
      */
     fun getTodayAsLong() = LocalDate.now().atStartOfDay().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()
 
+    /**
+     * @param datetime as Long
+     * @param timezone as String or null
+     * @return if the timezone is TZ_ALLDAY, this returns the ZonedDateTime at the beginning of the day in the local time,
+     * if the timezone is empy, it returns the ZonedDateTime in the current timezone, otherwise in the given timezone
+     */
+    fun getZonedDateTime(datetime: Long, timezone: String?): ZonedDateTime {
+        return if(timezone == TZ_ALLDAY)
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(datetime), ZoneId.of("UTC")).withZoneSameLocal(ZoneId.systemDefault())
+        else
+            ZonedDateTime.ofInstant(Instant.ofEpochMilli(datetime), requireTzId(timezone))
+    }
 
     /*
     fun getDateWithoutTime(date: Long?, timezone: String?): Long? = date?.let {
