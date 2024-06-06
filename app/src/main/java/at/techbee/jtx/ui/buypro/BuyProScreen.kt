@@ -31,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,6 +44,7 @@ import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.cards.BuyProCard
 import at.techbee.jtx.ui.reusable.cards.BuyProCardPurchased
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.ui.theme.pacifico
 
 
 @Composable
@@ -106,18 +106,17 @@ fun BuyProScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-
         Image(
-            painter = painterResource(id = R.drawable.bg_adfree),
+            painter = painterResource(id = R.drawable.ic_jtx_logo),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
-                .padding(top = 32.dp, bottom = 32.dp)
+                .padding(top = 8.dp, bottom = 8.dp)
         )
         Text(
             text = stringResource(id = R.string.buypro_text),
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
             style = Typography.bodyLarge,
             textAlign = TextAlign.Center
         )
@@ -135,26 +134,18 @@ fun BuyProScreenContent(
                         purchaseDateLive = purchaseDateLive,
                         orderIdLive = orderIdLive
                     )
-                    Text(
-                        text = stringResource(id = R.string.buypro_success_thankyou),
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .fillMaxWidth(),
-                        style = Typography.displaySmall,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Image(
-                        painter = painterResource(id = R.drawable.bg_thankyou),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(240.dp)
-                            .padding(top = 32.dp, bottom = 32.dp)
-                    )
                 }
             }
         }
+
+        Text(
+            text = stringResource(id = R.string.buypro_success_thankyou),
+            modifier = Modifier
+                .padding(top = 48.dp)
+                .fillMaxWidth(),
+            style = Typography.displaySmall.copy(fontFamily = pacifico),
+            textAlign = TextAlign.Center
+        )
     }
 }
 

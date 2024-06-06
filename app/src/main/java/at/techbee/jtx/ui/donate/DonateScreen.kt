@@ -45,6 +45,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.theme.Typography
+import at.techbee.jtx.ui.theme.pacifico
 
 
 @Composable
@@ -186,10 +187,9 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
 
         Text(
             text = stringResource(id = R.string.donate_thank_you),
-            modifier = Modifier.padding(top = 16.dp),
-            style = Typography.displaySmall,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold
+            modifier = Modifier.padding(top = 32.dp),
+            style = Typography.displaySmall.copy(fontFamily = pacifico),
+            textAlign = TextAlign.Center
         )
     }
 }

@@ -31,3 +31,5 @@ val robotoFont = FontFamily(Font(googleFont = GoogleFont("Roboto"), fontProvider
 val notoFont = FontFamily(Font(googleFont = GoogleFont("Noto Sans"), fontProvider = fontProvider))
 
 val montserratAlternatesFont = FontFamily(Font(googleFont = GoogleFont("Montserrat Alternates"), fontProvider = fontProvider))
+
+val pacifico = FontFamily(Font(googleFont = GoogleFont("Pacifico"), fontProvider = fontProvider))
