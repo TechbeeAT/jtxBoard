@@ -459,7 +459,7 @@ const val COLUMN_IS_ALARM_NOTIFICATION_ACTIVE = "isAlarmNotificationActive"
 data class ICalObject(
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = COLUMN_ID)
+    @ColumnInfo(index = true, name = COLUMN_ID)
     var id: Long = 0L,
 
     @ColumnInfo(name = COLUMN_MODULE) var module: String = Module.NOTE.name,
@@ -517,7 +517,7 @@ data class ICalObject(
     @ColorInt
     var color: Int? = null,
 
-    @ColumnInfo(name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
+    @ColumnInfo(index = true, name = COLUMN_ICALOBJECT_COLLECTIONID) var collectionId: Long = 1L,
 
     @ColumnInfo(name = COLUMN_DIRTY) var dirty: Boolean = false,
     @ColumnInfo(name = COLUMN_DELETED) var deleted: Boolean = false,

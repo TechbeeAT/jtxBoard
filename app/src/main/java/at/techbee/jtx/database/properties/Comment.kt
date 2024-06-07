@@ -69,14 +69,14 @@ const val COLUMN_COMMENT_OTHER = "other"
 data class Comment (
 
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = COLUMN_COMMENT_ID)
-        var commentId: Long = 0L,
+    @ColumnInfo(index = true, name = COLUMN_COMMENT_ID)
+    var commentId: Long = 0L,
 
-        @ColumnInfo(name = COLUMN_COMMENT_ICALOBJECT_ID)        var icalObjectId: Long = 0L,
-        @ColumnInfo(name = COLUMN_COMMENT_TEXT)                 var text: String = "",
-        @ColumnInfo(name = COLUMN_COMMENT_ALTREP)               var altrep: String? = null,
-        @ColumnInfo(name = COLUMN_COMMENT_LANGUAGE)             var language: String? = null,
-        @ColumnInfo(name = COLUMN_COMMENT_OTHER)                var other: String? = null
+        @ColumnInfo(index = true, name = COLUMN_COMMENT_ICALOBJECT_ID) var icalObjectId: Long = 0L,
+        @ColumnInfo(name = COLUMN_COMMENT_TEXT)                        var text: String = "",
+        @ColumnInfo(name = COLUMN_COMMENT_ALTREP)                 var altrep: String? = null,
+        @ColumnInfo(name = COLUMN_COMMENT_LANGUAGE)               var language: String? = null,
+        @ColumnInfo(name = COLUMN_COMMENT_OTHER)                      var other: String? = null
 ): Parcelable
 
 

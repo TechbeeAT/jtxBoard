@@ -82,10 +82,10 @@ const val COLUMN_ORGANIZER_OTHER = "other"
 data class Organizer (
 
         @PrimaryKey(autoGenerate = true)
-        @ColumnInfo(name = COLUMN_ORGANIZER_ID)
+        @ColumnInfo(index = true, name = COLUMN_ORGANIZER_ID)
         var organizerId: Long = 0L,
 
-        @ColumnInfo(name = COLUMN_ORGANIZER_ICALOBJECT_ID) var icalObjectId: Long = 0L,
+        @ColumnInfo(index = true, name = COLUMN_ORGANIZER_ICALOBJECT_ID) var icalObjectId: Long = 0L,
         @ColumnInfo(name = COLUMN_ORGANIZER_CALADDRESS)     var caladdress: String = "",
         @ColumnInfo(name = COLUMN_ORGANIZER_CN)     var cn: String? = null,
         @ColumnInfo(name = COLUMN_ORGANIZER_DIR)     var dir: String? = null,
