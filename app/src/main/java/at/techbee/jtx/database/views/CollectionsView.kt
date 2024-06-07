@@ -62,7 +62,7 @@ const val VIEW_NAME_COLLECTIONS_VIEW = "collectionsView"
 )
 
 data class CollectionsView (
-    @ColumnInfo(name = COLUMN_COLLECTION_ID)  var collectionId: Long = 0L,
+    @ColumnInfo(index = true, name = COLUMN_COLLECTION_ID)  var collectionId: Long = 0L,
     @ColumnInfo(name = COLUMN_COLLECTION_URL)               var url: String = ICalCollection.LOCAL_COLLECTION_URL,
     @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME)       var displayName: String? = null,
     @ColumnInfo(name = COLUMN_COLLECTION_DESCRIPTION)       var description: String? = null,

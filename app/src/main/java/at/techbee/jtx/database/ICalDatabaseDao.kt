@@ -551,12 +551,12 @@ iCalObject.percent != 100
                 "INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
                 "WHERE $COLUMN_DELETED = 0 " +
                 "AND $COLUMN_RRULE IS NULL " +
-                "AND $COLUMN_ALARM_TRIGGER_TIME > :now " +
+                "AND $COLUMN_ALARM_TRIGGER_TIME > :minDate " +
                 "AND ($COLUMN_PERCENT IS NULL OR $COLUMN_PERCENT < 100) " +
                 "AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS != 'COMPLETED')" +
                 "ORDER BY $COLUMN_ALARM_TRIGGER_TIME ASC LIMIT :limit"
     )
-    fun getNextAlarms(limit: Int = 10, now: Long = System.currentTimeMillis()): List<Alarm>
+    fun getNextAlarms(limit: Int = 10, minDate: Long = System.currentTimeMillis()): List<Alarm>
 
     /**
      * Gets ICalObjects with lat/long and geofence radius
@@ -598,11 +598,11 @@ iCalObject.percent != 100
     @Update(onConflict = OnConflictStrategy.ABORT)
     suspend fun updateCollection(collection: ICalCollection)
 
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :now, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:id)")
-    suspend fun updateToDeleted(id: Long, now: Long = System.currentTimeMillis())
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DELETED = 1, $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID in (:id)")
+    suspend fun updateToDeleted(id: Long, lastModified: Long = System.currentTimeMillis())
 
-    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :now, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
-    suspend fun updateSetDirty(id: Long, now: Long = System.currentTimeMillis())
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_LAST_MODIFIED = :lastModified, $COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, $COLUMN_DIRTY = 1 WHERE $COLUMN_ID = :id")
+    suspend fun updateSetDirty(id: Long, lastModified: Long = System.currentTimeMillis())
 
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SUBTASKS_EXPANDED = :isSubtasksExpanded, $COLUMN_SUBNOTES_EXPANDED = :isSubnotesExpanded, $COLUMN_ATTACHMENTS_EXPANDED = :isAttachmentsExpanded, $COLUMN_PARENTS_EXPANDED = :isParentsExpanded WHERE $COLUMN_ID = :id")
     suspend fun updateExpanded(

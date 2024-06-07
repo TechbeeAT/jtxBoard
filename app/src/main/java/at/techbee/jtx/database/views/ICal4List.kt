@@ -177,7 +177,7 @@ const val CONCAT_DELIMITER = "|||"
 @kotlinx.serialization.Serializable
 data class ICal4List(
 
-    @ColumnInfo(name = COLUMN_ID) var id: Long,
+    @ColumnInfo(index = true, name = COLUMN_ID) var id: Long,
     @ColumnInfo(name = COLUMN_MODULE) var module: String,
     @ColumnInfo(name = COLUMN_COMPONENT) var component: String,
     @ColumnInfo(name = COLUMN_SUMMARY) var summary: String?,
