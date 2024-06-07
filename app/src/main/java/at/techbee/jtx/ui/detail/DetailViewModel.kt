@@ -334,7 +334,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     it.fileName = currentFileName
                 }
 
-                saveSuspend()
+                saveSuspend(false)
                 onChangeDone()
                 val newId = databaseDao.moveToCollection(it.id, newCollectionId)
                 if(newId == null) {
@@ -406,7 +406,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
-    fun saveEntry() {
+    fun saveEntry(triggerImmediateAlarm: Boolean) {
         mutableICalObject?.let {
             // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
             icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
@@ -420,13 +420,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
         viewModelScope.launch(Dispatchers.IO) {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-            saveSuspend()
+            saveSuspend(triggerImmediateAlarm)
             onChangeDone()
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
     }
 
-    private suspend fun saveSuspend() {
+    private suspend fun saveSuspend(triggerImmediateAlarm: Boolean) {
         mutableICalObject?.let {
             databaseDao.saveAll(
                 it,
@@ -438,6 +438,9 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 mutableAlarms,
                 mutableICalObject!!.id != mainICalObjectId
             )
+            if(triggerImmediateAlarm)
+                NotificationPublisher.triggerImmediateAlarm(it, _application)
+
         }
     }
 

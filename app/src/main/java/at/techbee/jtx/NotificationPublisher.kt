@@ -74,7 +74,10 @@ class NotificationPublisher : BroadcastReceiver() {
             }
             ACTION_DISMISS -> CoroutineScope(Dispatchers.IO).launch {
                 Log.d("NotificationPublisher", "Notification dismissed")
-                database.setAlarmNotification(icalObjectId, false)
+                if(settingsStateHolder.settingStickyAlarms.value)
+                    restoreAlarms(context)
+                else
+                    database.setAlarmNotification(icalObjectId, false)
             }
             else -> {
                 // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
@@ -203,6 +206,26 @@ class NotificationPublisher : BroadcastReceiver() {
                     .getInstance(context)
                     .iCalDatabaseDao()
                     .setAlarmNotification(iCalObject.id, true)
+            }
+        }
+
+        fun restoreAlarms(context: Context) {
+            val notificationManager = NotificationManagerCompat.from(context)
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+
+            database.getICalObjectsWithActiveAlarms().forEach { iCalObject ->
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                    val notification = Alarm.createNotification(
+                        iCalObject.id,
+                        0L,
+                        iCalObject.summary,
+                        iCalObject.description,
+                        true,
+                        MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
+                        context
+                    )
+                    notificationManager.notify(iCalObject.id.toInt(), notification)
+                }
             }
         }
     }

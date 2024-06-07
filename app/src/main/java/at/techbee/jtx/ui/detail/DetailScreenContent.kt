@@ -53,7 +53,6 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -71,7 +70,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection
@@ -97,7 +95,6 @@ import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.detail.models.DetailsScreenSection
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
-import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import com.arnyminerz.markdowntext.MarkdownText
 import kotlinx.coroutines.delay
@@ -140,11 +137,12 @@ fun DetailScreenContent(
     linkProgressToSubtasks: Boolean,
     markdownState: MutableState<MarkdownState>,
     scrollToSectionState: MutableState<DetailsScreenSection?>,
+    alarmSetting: DropdownSettingOption,
     modifier: Modifier = Modifier,
     player: MediaPlayer?,
     isSubtaskDragAndDropEnabled: Boolean,
     isSubnoteDragAndDropEnabled: Boolean,
-    saveEntry: () -> Unit,
+    saveEntry: (triggerImmediateAlarm: Boolean) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onMoveToNewCollection: (newCollection: ICalCollection) -> Unit,
     onAudioSubEntryAdded: (iCalObject: ICalObject, attachment: Attachment) -> Unit,
@@ -162,9 +160,6 @@ fun DetailScreenContent(
     if(iCalObject == null)
         return
 
-    val context = LocalContext.current
-    val localInspectionMode = LocalInspectionMode.current
-
     val parents = parentsLive.observeAsState(emptyList())
     val subtasks = subtasksLive.observeAsState(emptyList())
     val subnotes = subnotesLive.observeAsState(emptyList())
@@ -172,12 +167,6 @@ fun DetailScreenContent(
     val isChild = isChildLive.observeAsState(false)
     val allWriteableCollections = allWriteableCollectionsLive.observeAsState(emptyList())
 
-    val autoAlarmSetting by remember {
-        if (!localInspectionMode)
-            SettingsStateHolder(context).settingAutoAlarm
-        else
-            mutableStateOf(false)
-    }
 
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, observedICalObject.value) {
@@ -258,11 +247,8 @@ fun DetailScreenContent(
 
     val previousIsEditModeState = rememberSaveable { mutableStateOf(isEditMode.value) }
     if (previousIsEditModeState.value && !isEditMode.value) {  //changed from edit to view mode
-        saveEntry()
-
+        saveEntry(iCalObject.getModuleFromString() == Module.TODO && alarmSetting == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
         // trigger alarm immediately if setting is active
-        if(iCalObject.getModuleFromString() == Module.TODO && autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
-            NotificationPublisher.triggerImmediateAlarm(iCalObject, context)
     }
     previousIsEditModeState.value = isEditMode.value
 
@@ -271,7 +257,7 @@ fun DetailScreenContent(
     if (changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] != false) {
         LaunchedEffect(changeState) {
             delay((10).seconds.inWholeMilliseconds)
-            saveEntry()
+            saveEntry(false)
         }
     }
 
@@ -298,14 +284,14 @@ fun DetailScreenContent(
         }
 
         //handle autoAlarm
-        val autoAlarm = if (autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_DUE && iCalObject.due != null) {
+        val autoAlarm = if (alarmSetting == DropdownSettingOption.AUTO_ALARM_ON_DUE && iCalObject.due != null) {
             Alarm.createDisplayAlarm(
                 dur = (0).minutes,
                 alarmRelativeTo = AlarmRelativeTo.END,
                 referenceDate = iCalObject.due!!,
                 referenceTimezone = iCalObject.dueTimezone
             )
-        } else if (autoAlarmSetting == DropdownSettingOption.AUTO_ALARM_ON_START && iCalObject.dtstart != null) {
+        } else if (alarmSetting == DropdownSettingOption.AUTO_ALARM_ON_START && iCalObject.dtstart != null) {
             Alarm.createDisplayAlarm(
                 dur = (0).minutes,
                 alarmRelativeTo = null,
@@ -320,7 +306,7 @@ fun DetailScreenContent(
 
 
     if (changeState.value == DetailViewModel.DetailChangeState.SAVINGREQUESTED) {
-        saveEntry()
+        saveEntry(false)
     }
 
     val detailElementModifier = Modifier
@@ -1078,7 +1064,8 @@ fun DetailScreenContent_JOURNAL() {
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { }, 
             onShowLinkExistingDialog = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            alarmSetting = DropdownSettingOption.AUTO_ALARM_ON_START
         )
     }
 }
@@ -1145,7 +1132,8 @@ fun DetailScreenContent_TODO_editInitially() {
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
             onShowLinkExistingDialog = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            alarmSetting = DropdownSettingOption.AUTO_ALARM_ON_START
         )
     }
 }
@@ -1212,7 +1200,8 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
             onShowLinkExistingDialog = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            alarmSetting = DropdownSettingOption.AUTO_ALARM_ON_START
         )
     }
 }
@@ -1273,7 +1262,8 @@ fun DetailScreenContent_failedLoading() {
             onUnlinkSubEntry = { _, _ ->  },
             goToFilteredList = { },
             onShowLinkExistingDialog = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            alarmSetting = DropdownSettingOption.AUTO_ALARM_ON_START
         )
     }
 }
