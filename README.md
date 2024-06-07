@@ -4,7 +4,7 @@
 Elevate the power of the iCalendar standard to the next level, use the potential of the combination of journals (VJournal), notes (VJournal) and tasks (VTodo) out of one app and use DAVx5 to synchronize your entries with the CalDAV-server of your choice!
 
 ### iCal standard compliant
-Using the iCal standard ensures compatibility and interoparability with other apps and services independent of a dedicated provider or infrastructure. Journals and Notes are compliant to the definition of the VJOURNAL component, Tasks are compliant to the VTODO component. Future features will also include import and export functionalities to and from .ics files :-)
+Using the iCal standard ensures compatibility and interoperability with other apps and services independent of a dedicated provider or infrastructure. Journals and Notes are compliant to the definition of the VJOURNAL component, Tasks are compliant to the VTODO component. Future features will also include import and export functionalities to and from .ics files :-)
 
 ### Combine journals, notes & tasks
 Instead of using separate apps for journals, notes & tasks you can use them out of one hand, combine and link them to each other, e.g. create meeting minutes and link your tasks to them. 

@@ -610,6 +610,7 @@
     <string name="widget_list_compat_updating_widget_notification">"Ενημέρωση widget"</string>
     <string name="widget_list_opacity_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Με μειωμένες αλλαγές αδιαφάνειας στο χρωματικό θέμα μπορεί να μην αντικατοπτρίζονται αμέσως!"</string>
     <string name="widget_list_color_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Οι αλλαγές στο χρώμα θέμα δε θα αντικατοπτρίζονται! Επιλέξτε κανένα χρώμα για να επιστρέψετε στην προεπιλογή συστήματος."</string>
+    <string name="widget_list_default_categories">"Ορίστε προεπιλεγμένες κατηγορίες για νέες καταχωρήσεις από το widget"</string>
     <string name="opacity">"Αδιαφάνεια"</string>
     <string name="general">"Γενικά"</string>
     <string name="list_collapse">"Αποτυχία"</string>
@@ -668,4 +669,10 @@
     <string name="exact_alarm_permission_dialog_message">"Το jtx Board χρειάζεται την άδεια για τον προγραμματισμό ακριβών ειδοποιήσεων, διαφορετικά ενδέχεται να καθυστερήσει η ειδοποίηση. Παρακαλούμε χορηγήστε αυτό το δικαίωμα για να χρησιμοποιήσετε αυτήν τη δυνατότητα."</string>
     <string name="call_contact">"Κλήση %1$s"</string>
     <string name="email_contact">"E-mail %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Μαζική δημιουργία υποεργασιών</string>
+    <string name="dialog_create_multiple_subnotes">Μαζική δημιουργία συνδεδεμένων σημειώσεων</string>
+    <string name="dialog_detected_multiple_subtasks">Το κείμενο πιθανώς περιέχει πολλαπλές υποεργασίες. Θέλετε να δημιουργήσετε υποεργασίεςchar@@0 %d υποεργασίες;</string>
+    <string name="dialog_detected_multiple_subnotes">Το κείμενο πιθανόν να περιέχει πολλαπλές συνδεδεμένες σημειώσεις. Θέλετε να δημιουργήσετε %d συνδεδεμένες σημειώσεις;</string>
+    <string name="dialog_confirm_create_multiple">Δημιουργία πολλαπλών</string>
+    <string name="dialog_confirm_create_single">Δημιουργία μοναδικού</string>
 </resources>

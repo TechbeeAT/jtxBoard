@@ -10,7 +10,7 @@ package at.techbee.jtx.ui.reusable.elements
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -24,15 +24,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
 
 
 @Composable
 fun ColorSelectorRow(
     selectedColor: Color?,
     modifier: Modifier = Modifier,
+    additionalColorsInt: List<Int> = emptyList(),
     onColorChanged: (Color?) -> Unit
 ) {
 
@@ -47,10 +48,12 @@ fun ColorSelectorRow(
         Color.LightGray
     )
 
+    val additionalColors = additionalColorsInt.map { Color(it) }
 
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
+
+    Column(
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
         LazyRow {
@@ -74,6 +77,31 @@ fun ColorSelectorRow(
                 )
             }
         }
+
+        if(additionalColors.isNotEmpty()) {
+            LazyRow {
+                items(additionalColors) { color ->
+
+                    SmallFloatingActionButton(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .border(
+                                2.dp,
+                                if (selectedColor == color) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                RoundedCornerShape(16.dp)
+                            ),
+                        containerColor = if (color == Color.Transparent) Color.White else color,
+                        onClick = {
+                            onColorChanged(if (color == Color.Transparent) null else color)
+                        },
+                        content = {
+                            if (color == Color.Transparent)
+                                Icon(Icons.Outlined.FormatColorReset, null)
+                        }
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -83,7 +111,8 @@ fun ColorSelectorRow_Preview() {
     MaterialTheme {
         ColorSelectorRow(
             selectedColor = Color.Cyan,
-            onColorChanged = { }
+            onColorChanged = { },
+            additionalColorsInt = listOf(Color.DarkGray.toArgb(), Color.Black.toArgb())
         )
     }
 }

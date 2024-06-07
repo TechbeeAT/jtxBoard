@@ -110,15 +110,13 @@ fun ListOptionsGroupSort(
         // SORT ORDER 1
         FlowRow(modifier = Modifier.fillMaxWidth()) {
             OrderBy.getValuesFor(module).forEach { orderBy ->
-                if(orderBy == OrderBy.DRAG_AND_DROP)
-                    return@forEach  //TODO
-
                 FilterChip(
                     selected = listSettings.orderBy.value == orderBy,
                     enabled = listSettings.groupBy.value == null,
                     onClick = {
                         if (listSettings.orderBy.value != orderBy)
                             listSettings.orderBy.value = orderBy
+                        listSettings.sortOrder.value = SortOrder.ASC
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = orderBy.stringResource)) },
@@ -130,6 +128,7 @@ fun ListOptionsGroupSort(
             SortOrder.entries.forEach { sortOrder ->
                 FilterChip(
                     selected = listSettings.sortOrder.value == sortOrder,
+                    enabled = listSettings.orderBy.value != OrderBy.DRAG_AND_DROP,
                     onClick = {
                         if (listSettings.sortOrder.value != sortOrder)
                             listSettings.sortOrder.value = sortOrder
@@ -157,6 +156,7 @@ fun ListOptionsGroupSort(
                     onClick = {
                         if (listSettings.orderBy2.value != orderBy)
                             listSettings.orderBy2.value = orderBy
+                        listSettings.sortOrder2.value = SortOrder.ASC
                         onListSettingsChanged()
                     },
                     label = { Text(stringResource(id = orderBy.stringResource)) },
@@ -168,6 +168,7 @@ fun ListOptionsGroupSort(
             SortOrder.entries.forEach { sortOrder2 ->
                 FilterChip(
                     selected = listSettings.sortOrder2.value == sortOrder2,
+                    enabled = listSettings.orderBy2.value != OrderBy.DRAG_AND_DROP,
                     onClick = {
                         if (listSettings.sortOrder2.value != sortOrder2)
                             listSettings.sortOrder2.value = sortOrder2

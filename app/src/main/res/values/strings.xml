@@ -629,6 +629,7 @@ Thank you!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Updating widget"</string>
     <string name="widget_list_opacity_warning">"Note: This is an experimental feature! With reduced opacity changes in the color theme might not be reflected immediately!"</string>
     <string name="widget_list_color_warning">"Note: This is an experimental feature! Changes in the color theme will not be reflected! Choose no color to return to system default."</string>
+    <string name="widget_list_default_categories">"Set default categories for new entries from widget"</string>
     <string name="opacity">"Opacity"</string>
     <string name="link_jtx_mastodon" translatable="false">"https://fosstodon.org/@jtx"</string>
     <string name="mastodon_account_name" translatable="false">"@jtx@fosstodon.org"</string>
@@ -689,4 +690,10 @@ Thank you!"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board needs the permission to schedule exact alarms, otherwise alarm-notifications might be delayed. Please grant this permission in order to use this feature."</string>
     <string name="call_contact">"Call %1$s"</string>
     <string name="email_contact">"E-Mail %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Bulk create subtasks</string>
+    <string name="dialog_create_multiple_subnotes">Bulk create linked notes</string>
+    <string name="dialog_detected_multiple_subtasks">Text possibly contains multiple subtasks. Do you want to create %d subtasks?</string>
+    <string name="dialog_detected_multiple_subnotes">Text possibly contains multiple linked notes. Do you want to create %d linked notes?</string>
+    <string name="dialog_confirm_create_multiple">Create multiple</string>
+    <string name="dialog_confirm_create_single">Create single</string>
 </resources>

@@ -705,12 +705,12 @@ data class ICalObject(
                 return null
 
             val localNow = ZonedDateTime.now()
-            val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(dueTimezone))
+            val localDue = DateTimeUtils.getZonedDateTime(due, dueTimezone)
 
             return ChronoUnit.MINUTES.between(localNow, localDue) < 0L
         }
 
-        fun getDtstartTextInfo(module: Module, dtstart: Long?, dtstartTimezone: String?, daysOnly: Boolean = false, context: Context): String {
+        fun getDtstartTextInfo(module: Module, dtstart: Long?, dtstartTimezone: String?, daysOnly: Boolean = false, shortStyle: Boolean = false, context: Context): String {
 
             if(dtstart == null && module == Module.TODO)
                 return context.getString(R.string.list_start_without)
@@ -726,8 +726,7 @@ data class ICalObject(
 
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localStart = ZonedDateTime.ofInstant(Instant.ofEpochMilli(dtstart), requireTzId(timezone2show))
-
+            val localStart = DateTimeUtils.getZonedDateTime(dtstart, dtstartTimezone)
             var finalString = ""
 
             fun getTimeAndTimezone(): String {
@@ -739,7 +738,7 @@ data class ICalObject(
                 return timeAndTimezone
             }
 
-            if(module == Module.TODO) {
+            if(module == Module.TODO && !shortStyle) {
                  when {
                      localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
                      ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> finalString += context.getString(R.string.list_start_past)
@@ -793,8 +792,7 @@ data class ICalObject(
 
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localDue = ZonedDateTime.ofInstant(Instant.ofEpochMilli(due), ZoneId.of("UTC")).withZoneSameInstant(requireTzId(timezone2show))
-
+            val localDue = DateTimeUtils.getZonedDateTime(due, dueTimezone)
             var finalString = ""
 
             fun getTimeAndTimezone(): String {

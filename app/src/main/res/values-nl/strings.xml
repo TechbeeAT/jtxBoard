@@ -669,4 +669,10 @@ Dank u!"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board heeft de toegang nodig om exacte meldingen te plannen, anders kunnen waarschuwingsberichten vertraagd worden. Geef deze toegang om de functie te kunnen gebruiken."</string>
     <string name="call_contact">"Bel %1$s"</string>
     <string name="email_contact">"E-mail %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Bulk maken van subtaken</string>
+    <string name="dialog_create_multiple_subnotes">Bulk maken gekoppelde notities</string>
+    <string name="dialog_detected_multiple_subtasks">De tekst bevat mogelijk meerdere subtaken. Wilt u %d subtaken aanmaken?</string>
+    <string name="dialog_detected_multiple_subnotes">De tekst bevat mogelijk meerdere gekoppelde notities. Wilt u %d gekoppelde notities aanmaken?</string>
+    <string name="dialog_confirm_create_multiple">Meerdere aanmaken</string>
+    <string name="dialog_confirm_create_single">Eén aanmaken</string>
 </resources>

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 38,
-    "identityHash": "4eb1338ca5d4df23a340b7b6422fb474",
+    "identityHash": "8a5edd706bc57ea1d16fcac9aab2cfe7",
     "entities": [
       {
         "tableName": "attendee",
@@ -105,7 +105,26 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_attendee__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attendee__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_attendee_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attendee_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "icalobject",
@@ -161,7 +180,45 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_category__id_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "_id",
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_category__id_icalObjectId` ON `${TABLE_NAME}` (`_id`, `icalObjectId`)"
+          },
+          {
+            "name": "index_category_text",
+            "unique": false,
+            "columnNames": [
+              "text"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_category_text` ON `${TABLE_NAME}` (`text`)"
+          },
+          {
+            "name": "index_category__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_category__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_category_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_category_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "icalobject",
@@ -223,7 +280,26 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_comment__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_comment__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_comment_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_comment_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "icalobject",
@@ -339,12 +415,22 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_collection__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_collection__id` ON `${TABLE_NAME}` (`_id`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
         "tableName": "icalobject",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `module` TEXT NOT NULL, `component` TEXT NOT NULL, `summary` TEXT, `description` TEXT, `dtstart` INTEGER, `dtstarttimezone` TEXT, `dtend` INTEGER, `dtendtimezone` TEXT, `status` TEXT, `xstatus` TEXT, `classification` TEXT, `url` TEXT, `contact` TEXT, `geolat` REAL, `geolong` REAL, `location` TEXT, `locationaltrep` TEXT, `geofenceRadius` INTEGER, `percent` INTEGER, `priority` INTEGER, `due` INTEGER, `duetimezone` TEXT, `completed` INTEGER, `completedtimezone` TEXT, `duration` TEXT, `uid` TEXT NOT NULL, `created` INTEGER NOT NULL, `dtstamp` INTEGER NOT NULL, `lastmodified` INTEGER NOT NULL, `sequence` INTEGER NOT NULL, `rrule` TEXT, `exdate` TEXT, `rdate` TEXT, `recurid` TEXT, `recuridtimezone` TEXT, `rstatus` TEXT, `color` INTEGER, `collectionId` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `filename` TEXT, `etag` TEXT, `scheduletag` TEXT, `flags` INTEGER, `subtasksExpanded` INTEGER, `subnotesExpanded` INTEGER, `parentsExpanded` INTEGER, `attachmentsExpanded` INTEGER, `sortIndex` INTEGER, `isAlarmNotificationActive` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`collectionId`) REFERENCES `collection`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `module` TEXT NOT NULL, `component` TEXT NOT NULL, `summary` TEXT, `description` TEXT, `dtstart` INTEGER, `dtstarttimezone` TEXT, `dtend` INTEGER, `dtendtimezone` TEXT, `status` TEXT, `xstatus` TEXT, `classification` TEXT, `url` TEXT, `contact` TEXT, `geolat` REAL, `geolong` REAL, `location` TEXT, `locationaltrep` TEXT, `geofenceRadius` INTEGER, `percent` INTEGER, `priority` INTEGER, `due` INTEGER, `duetimezone` TEXT, `completed` INTEGER, `completedtimezone` TEXT, `duration` TEXT, `uid` TEXT NOT NULL, `created` INTEGER NOT NULL, `dtstamp` INTEGER NOT NULL, `lastmodified` INTEGER NOT NULL, `sequence` INTEGER NOT NULL, `rrule` TEXT, `exdate` TEXT, `rdate` TEXT, `recurid` TEXT, `recuridtimezone` TEXT, `rstatus` TEXT, `color` INTEGER, `collectionId` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `filename` TEXT, `etag` TEXT, `scheduletag` TEXT, `flags` INTEGER, `subtasksExpanded` INTEGER, `subnotesExpanded` INTEGER, `parentsExpanded` INTEGER, `attachmentsExpanded` INTEGER, `sortIndex` INTEGER, FOREIGN KEY(`collectionId`) REFERENCES `collection`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -645,13 +731,6 @@
             "columnName": "sortIndex",
             "affinity": "INTEGER",
             "notNull": false
-          },
-          {
-            "fieldPath": "isAlarmNotificationActive",
-            "columnName": "isAlarmNotificationActive",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -660,7 +739,37 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_icalobject__id_summary_description",
+            "unique": false,
+            "columnNames": [
+              "_id",
+              "summary",
+              "description"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_icalobject__id_summary_description` ON `${TABLE_NAME}` (`_id`, `summary`, `description`)"
+          },
+          {
+            "name": "index_icalobject__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_icalobject__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_icalobject_collectionId",
+            "unique": false,
+            "columnNames": [
+              "collectionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_icalobject_collectionId` ON `${TABLE_NAME}` (`collectionId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "collection",
@@ -734,7 +843,26 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_organizer__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_organizer__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_organizer_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_organizer_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "icalobject",
@@ -796,7 +924,56 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_relatedto_icalObjectId_linkedICalObjectId_reltype_text",
+            "unique": true,
+            "columnNames": [
+              "icalObjectId",
+              "linkedICalObjectId",
+              "reltype",
+              "text"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_relatedto_icalObjectId_linkedICalObjectId_reltype_text` ON `${TABLE_NAME}` (`icalObjectId`, `linkedICalObjectId`, `reltype`, `text`)"
+          },
+          {
+            "name": "index_relatedto_text",
+            "unique": false,
+            "columnNames": [
+              "text"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_relatedto_text` ON `${TABLE_NAME}` (`text`)"
+          },
+          {
+            "name": "index_relatedto__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_relatedto__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_relatedto_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_relatedto_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          },
+          {
+            "name": "index_relatedto_linkedICalObjectId",
+            "unique": false,
+            "columnNames": [
+              "linkedICalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_relatedto_linkedICalObjectId` ON `${TABLE_NAME}` (`linkedICalObjectId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "icalobject",
@@ -858,7 +1035,26 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_resource__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_resource__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_resource_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_resource_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "icalobject",
@@ -968,7 +1164,26 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_alarm__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_alarm__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_alarm_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_alarm_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "icalobject",
@@ -1012,7 +1227,26 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_unknown__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_unknown__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_unknown_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_unknown_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "icalobject",
@@ -1092,7 +1326,26 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_attachment__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attachment__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_attachment_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attachment_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
         "foreignKeys": [
           {
             "table": "icalobject",
@@ -1142,7 +1395,17 @@
             "_id"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_stored_list_settings__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stored_list_settings__id` ON `${TABLE_NAME}` (`_id`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -1168,7 +1431,17 @@
             "category"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_stored_categories_category",
+            "unique": false,
+            "columnNames": [
+              "category"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stored_categories_category` ON `${TABLE_NAME}` (`category`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -1194,7 +1467,17 @@
             "resource"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_stored_resources_resource",
+            "unique": false,
+            "columnNames": [
+              "resource"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stored_resources_resource` ON `${TABLE_NAME}` (`resource`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -1233,14 +1516,24 @@
             "module"
           ]
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_extended_status_xstatus",
+            "unique": false,
+            "columnNames": [
+              "xstatus"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extended_status_xstatus` ON `${TABLE_NAME}` (`xstatus`)"
+          }
+        ],
         "foreignKeys": []
       }
     ],
     "views": [
       {
         "viewName": "ical4list",
-        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT DISTINCT main_icalobject._id, main_icalobject.module, main_icalobject.component, main_icalobject.summary, main_icalobject.description, main_icalobject.location, main_icalobject.geolat, main_icalobject.geolong, main_icalobject.url, main_icalobject.contact, main_icalobject.dtstart, main_icalobject.dtstarttimezone, main_icalobject.dtend, main_icalobject.dtendtimezone, main_icalobject.status, main_icalobject.xstatus, main_icalobject.classification, main_icalobject.percent, main_icalobject.priority, main_icalobject.due, main_icalobject.duetimezone, main_icalobject.completed, main_icalobject.completedtimezone, main_icalobject.duration, main_icalobject.created, main_icalobject.dtstamp, main_icalobject.lastmodified, main_icalobject.sequence, main_icalobject.uid, main_icalobject.rrule, main_icalobject.recurid, collection.color as colorCollection, main_icalobject.color as colorItem, main_icalobject.collectionId, collection.accountname, collection.displayname, main_icalobject.deleted, CASE WHEN collection.accounttype = 'LOCAL' THEN 0 WHEN main_icalobject.recurid IS NOT NULL THEN (SELECT series.dirty FROM icalobject series WHERE series.recurid IS NULL AND series.uid = main_icalobject.uid) ELSE main_icalobject.dirty END as uploadPending, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'JOURNAL' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'NOTE' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'TODO' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, (SELECT group_concat(sub.text, ', ') FROM (SELECT * FROM category ORDER BY text) as sub WHERE main_icalobject._id = sub.icalObjectId) as categories, (SELECT group_concat(sub.text, ', ') FROM (SELECT * FROM resource ORDER BY text) as sub WHERE main_icalobject._id = sub.icalObjectId) as resources, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.icalObjectId AND sub_icalobject.component = 'VTODO' AND sub_relatedto.text = main_icalobject.uid AND sub_relatedto.reltype = 'PARENT' AND sub_icalobject.deleted = 0 AND sub_icalobject.rrule IS NULL) as numSubtasks, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.icalObjectId AND sub_icalobject.component = 'VJOURNAL' AND sub_relatedto.text = main_icalobject.uid AND sub_relatedto.reltype = 'PARENT' AND sub_icalobject.deleted = 0 AND sub_icalobject.rrule IS NULL) as numSubnotes, (SELECT count(*) FROM attachment WHERE icalObjectId = main_icalobject._id  ) as numAttachments, (SELECT count(*) FROM attendee WHERE icalObjectId = main_icalobject._id  ) as numAttendees, (SELECT count(*) FROM comment WHERE icalObjectId = main_icalobject._id  ) as numComments, (SELECT count(*) FROM relatedto WHERE icalObjectId = main_icalobject._id  ) as numRelatedTodos, (SELECT count(*) FROM resource WHERE icalObjectId = main_icalobject._id  ) as numResources, (SELECT count(*) FROM alarm WHERE icalObjectId = main_icalobject._id  ) as numAlarms, (SELECT uri FROM attachment WHERE icalObjectId = main_icalobject._id AND (fmttype LIKE 'audio/%' OR fmttype LIKE 'video/%') LIMIT 1 ) as audioAttachment, collection.readonly as isReadOnly, main_icalobject.subtasksExpanded, main_icalobject.subnotesExpanded, main_icalobject.parentsExpanded, main_icalobject.attachmentsExpanded, main_icalobject.sortIndex FROM icalobject main_icalobject INNER JOIN collection collection ON main_icalobject.collectionId = collection._id WHERE main_icalobject.deleted = 0 AND (main_icalobject.rrule IS NULL OR (main_icalobject.dtstart IS NULL AND main_icalobject.rrule IS NOT NULL))"
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT DISTINCT main_icalobject._id, main_icalobject.module, main_icalobject.component, main_icalobject.summary, main_icalobject.description, main_icalobject.location, main_icalobject.geolat, main_icalobject.geolong, main_icalobject.url, main_icalobject.contact, main_icalobject.dtstart, main_icalobject.dtstarttimezone, main_icalobject.dtend, main_icalobject.dtendtimezone, main_icalobject.status, main_icalobject.xstatus, main_icalobject.classification, main_icalobject.percent, main_icalobject.priority, main_icalobject.due, main_icalobject.duetimezone, main_icalobject.completed, main_icalobject.completedtimezone, main_icalobject.duration, main_icalobject.created, main_icalobject.dtstamp, main_icalobject.lastmodified, main_icalobject.sequence, main_icalobject.uid, main_icalobject.rrule, main_icalobject.recurid, collection.color as colorCollection, main_icalobject.color as colorItem, main_icalobject.collectionId, collection.accountname, collection.displayname, main_icalobject.deleted, CASE WHEN collection.accounttype = 'LOCAL' THEN 0 WHEN main_icalobject.recurid IS NOT NULL THEN (SELECT series.dirty FROM icalobject series WHERE series.recurid IS NULL AND series.uid = main_icalobject.uid) ELSE main_icalobject.dirty END as uploadPending, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'JOURNAL' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'NOTE' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'TODO' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, (SELECT group_concat(sub.text, '|||') FROM (SELECT * FROM category ORDER BY text) as sub WHERE main_icalobject._id = sub.icalObjectId) as categories, (SELECT group_concat(sub.text, '|||') FROM (SELECT * FROM resource ORDER BY text) as sub WHERE main_icalobject._id = sub.icalObjectId) as resources, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.icalObjectId AND sub_icalobject.component = 'VTODO' AND sub_relatedto.text = main_icalobject.uid AND sub_relatedto.reltype = 'PARENT' AND sub_icalobject.deleted = 0 AND sub_icalobject.rrule IS NULL) as numSubtasks, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.icalObjectId AND sub_icalobject.component = 'VJOURNAL' AND sub_relatedto.text = main_icalobject.uid AND sub_relatedto.reltype = 'PARENT' AND sub_icalobject.deleted = 0 AND sub_icalobject.rrule IS NULL) as numSubnotes, (SELECT count(*) FROM attachment WHERE icalObjectId = main_icalobject._id  ) as numAttachments, (SELECT count(*) FROM attendee WHERE icalObjectId = main_icalobject._id  ) as numAttendees, (SELECT count(*) FROM comment WHERE icalObjectId = main_icalobject._id  ) as numComments, (SELECT count(*) FROM relatedto WHERE icalObjectId = main_icalobject._id  ) as numRelatedTodos, (SELECT count(*) FROM resource WHERE icalObjectId = main_icalobject._id  ) as numResources, (SELECT count(*) FROM alarm WHERE icalObjectId = main_icalobject._id  ) as numAlarms, (SELECT uri FROM attachment WHERE icalObjectId = main_icalobject._id AND (fmttype LIKE 'audio/%' OR fmttype LIKE 'video/%') LIMIT 1 ) as audioAttachment, collection.readonly as isReadOnly, main_icalobject.subtasksExpanded, main_icalobject.subnotesExpanded, main_icalobject.parentsExpanded, main_icalobject.attachmentsExpanded, main_icalobject.sortIndex FROM icalobject main_icalobject INNER JOIN collection collection ON main_icalobject.collectionId = collection._id WHERE main_icalobject.deleted = 0 AND (main_icalobject.rrule IS NULL OR (main_icalobject.dtstart IS NULL AND main_icalobject.rrule IS NOT NULL))"
       },
       {
         "viewName": "collectionsView",
@@ -1249,7 +1542,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4eb1338ca5d4df23a340b7b6422fb474')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8a5edd706bc57ea1d16fcac9aab2cfe7')"
     ]
   }
 }

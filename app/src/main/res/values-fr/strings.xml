@@ -319,6 +319,7 @@
     <string name="filter_no_resource">Sans ressources</string>
     <string name="filter_subtasks_order_by">Trier les sous-tâches par</string>
     <string name="filter_subnotes_order_by">Trier les notes liées par</string>
+    <string name="order_by_drag_and_drop">"Glisser &amp; Déposer"</string>
     <string name="filter_no_filter">"Aucun filtre"</string>
     <string name="filter_options_more_entries">"Plus (%1$d)"</string>
     <string name="filter_options_less_entries">"Moins"</string>
@@ -482,6 +483,7 @@ Merci !"</string>
     <string name="dialog_add_audio_entry_title">"Ajouter un enregistrement audio"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
+    <string name="menu_list_viewmode_week">"Vue semaine"</string>
     <string name="settings_tasks">"Paramètres des tâches"</string>
     <string name="settings_alarms">"Paramètres d'alarme"</string>
     <string name="settings_tasks_status_progress">"Paramètres des tâches (statut/progression)"</string>
@@ -665,4 +667,10 @@ Merci !"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board a besoin de l'autorisation pour programmer des alarmes exactes, sinon les notifications d'alarme pourraient être retardées. Veuillez accorder cette autorisation afin d'utiliser cette fonctionnalité."</string>
     <string name="call_contact">"Appeler %1$s"</string>
     <string name="email_contact">"E-Mail %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Créer des sous-tâches en masse</string>
+    <string name="dialog_create_multiple_subnotes">Créer des notes liées en masse</string>
+    <string name="dialog_detected_multiple_subtasks">Le texte contient probablement plusieurs sous-tâches. Voulez-vous créer des sous-tâches %d?</string>
+    <string name="dialog_detected_multiple_subnotes">Le texte contient probablement plusieurs notes liées. Voulez-vous créer des notes liées à %d?</string>
+    <string name="dialog_confirm_create_multiple">Créer plusieurs</string>
+    <string name="dialog_confirm_create_single">Créer une seule</string>
 </resources>

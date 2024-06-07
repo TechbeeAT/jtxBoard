@@ -52,7 +52,7 @@ fun AboutContributors(
             )
         }
 
-        items(contributors.asReversed()) { contributor ->
+        items(contributors) { contributor ->
             ContributorCard(contributor, modifier = Modifier.padding(bottom = 2.dp))
         }
 

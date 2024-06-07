@@ -54,7 +54,6 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.GlobalStateHolder
@@ -117,13 +116,14 @@ fun SettingsScreen(
         expandedSection = if (expandedSection == selectedSection) null else selectedSection
     }
 
-    val languageOptions = mutableListOf<Locale?>(null)
-    for (language in BuildConfig.TRANSLATION_ARRAY) {
-        if(language == "zh-rTW")
-            languageOptions.add(Locale.TRADITIONAL_CHINESE)
-        else
-            languageOptions.add(Locale.forLanguageTag(language))
-    }
+    val languageOptions =
+        listOf("en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu", "vi", "sv")
+            .map {
+                if(it == "zh-rTW")
+                    Locale.TRADITIONAL_CHINESE
+                else
+                    Locale.forLanguageTag(it) }
+
 
     var pendingSettingProtectiometric: DropdownSettingOption? by remember { mutableStateOf(null) }
     if(globalStateHolder.isAuthenticated.value && pendingSettingProtectiometric != null) {

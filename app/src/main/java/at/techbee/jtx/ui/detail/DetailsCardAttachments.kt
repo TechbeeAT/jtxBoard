@@ -169,7 +169,7 @@ fun DetailsCardAttachments(
                         Button(onClick = {
                             Attachment.getNewAttachmentUriForPhoto(context)?.let {
                                 newPictureUri.value = it
-                                takePictureLauncher.launch(newPictureUri.value)
+                                takePictureLauncher.launch(it)
                             }
                         }) {
                             Icon(

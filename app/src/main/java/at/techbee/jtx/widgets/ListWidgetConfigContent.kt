@@ -180,6 +180,7 @@ fun ListWidgetConfigContent(
                         tabIndexGeneral -> {
                             ListWidgetConfigGeneral(
                                 selectedModule = selectedModule,
+                                allCategoriesLive = database.getAllCategoriesAsText(),
                                 listSettings = listSettings
                             )
                         }
@@ -254,6 +255,7 @@ fun ListWidgetConfigContent(
                                     showSubtasks = listSettings.showSubtasks.value
                                     showSubnotes = listSettings.showSubnotes.value
                                     widgetHeader = listSettings.widgetHeader.value
+                                    defaultCategories = listSettings.defaultCategories
 
                                     isExcludeDone = listSettings.isExcludeDone.value
                                     isFilterOverdue = listSettings.isFilterOverdue.value
@@ -378,5 +380,7 @@ data class ListWidgetConfig(
     var showSubnotes: Boolean = true,
     var widgetHeader: String = "",
     var widgetColor: Int? = null,
-    var widgetColorEntries: Int? = null
+    var widgetColorEntries: Int? = null,
+
+    var defaultCategories: List<String> = emptyList()
 )

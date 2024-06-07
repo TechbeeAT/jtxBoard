@@ -8,6 +8,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
@@ -28,6 +29,7 @@ class GlobalStateHolder(context: Context) {
     var icalFromIntentAttachment: MutableState<Attachment?> = mutableStateOf(null)
     var icalFromIntentModule: MutableState<Module?> = mutableStateOf(null)
     var icalFromIntentCollection: MutableState<String?> = mutableStateOf(null)
+    var icalFromIntentCategories = mutableStateListOf<String>()
 
     var isAuthenticated = mutableStateOf(false)
     var authenticationTimeout: Long? = null

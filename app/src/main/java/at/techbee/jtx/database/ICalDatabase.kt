@@ -65,7 +65,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 38,
+    version = 39,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -102,7 +102,8 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 34, to = 35),  // new/updated indices
         AutoMigration (from = 35, to = 36),  // new/updated indices
         AutoMigration (from = 36, to = 37),  // new/updated indices
-        AutoMigration (from = 37, to = 38),  // new column isAlarmNotificationActive + migration spec to remove indices
+        AutoMigration (from = 37, to = 38),  // view udpate
+        AutoMigration (from = 38, to = 39),  // new column isAlarmNotificationActive + migration spec to remove indices
     ]
 )
 @TypeConverters(Converters::class)
@@ -167,41 +168,6 @@ abstract class ICalDatabase : RoomDatabase() {
             }
         }
 
-        private val MIGRATION_37_38 = object : Migration(37, 38) {
-            override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("DROP INDEX IF EXISTS index_attendee__id")
-                db.execSQL("DROP INDEX IF EXISTS index_attendee_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_category__id_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_category_text")
-                db.execSQL("DROP INDEX IF EXISTS index_category__id")
-                db.execSQL("DROP INDEX IF EXISTS index_category_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_comment__id")
-                db.execSQL("DROP INDEX IF EXISTS index_comment_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_collection__id")
-                db.execSQL("DROP INDEX IF EXISTS index_icalobject__id_summary_description")
-                db.execSQL("DROP INDEX IF EXISTS index_icalobject__id")
-                db.execSQL("DROP INDEX IF EXISTS index_icalobject_collectionId")
-                db.execSQL("DROP INDEX IF EXISTS index_organizer__id")
-                db.execSQL("DROP INDEX IF EXISTS index_organizer_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_relatedto_text")
-                db.execSQL("DROP INDEX IF EXISTS index_relatedto__id")
-                db.execSQL("DROP INDEX IF EXISTS index_relatedto_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_relatedto_linkedICalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_resource__id")
-                db.execSQL("DROP INDEX IF EXISTS index_resource_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_alarm__id")
-                db.execSQL("DROP INDEX IF EXISTS index_alarm_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_unknown__id")
-                db.execSQL("DROP INDEX IF EXISTS index_unknown_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_attachment__id")
-                db.execSQL("DROP INDEX IF EXISTS index_attachment_icalObjectId")
-                db.execSQL("DROP INDEX IF EXISTS index_stored_list_settings__id")
-                db.execSQL("DROP INDEX IF EXISTS index_stored_categories_category")
-                db.execSQL("DROP INDEX IF EXISTS index_stored_resources_resource")
-                db.execSQL("DROP INDEX IF EXISTS index_extended_status_xstatus")
-            }
-        }
-
         @Volatile
         private var INSTANCE: ICalDatabase? = null
 
@@ -238,7 +204,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31, MIGRATION_37_38)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about
@@ -280,7 +246,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             }
                         })
                         // see https://developer.android.com/topic/performance/sqlite-performance-best-practices#consider-without
-                        .setJournalMode(JournalMode.WRITE_AHEAD_LOGGING)
+                        .setJournalMode(JournalMode.AUTOMATIC)
                         .build()
 
                     // Assign INSTANCE to the newly created database.

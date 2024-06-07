@@ -15,7 +15,11 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,8 +39,9 @@ import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 fun ColorPickerDialog(
     initialColor: Int?,
     onColorChanged: (Int?) -> Unit,
-    onDismiss: () -> Unit
-) {
+    onDismiss: () -> Unit,
+    additionalColorsInt: List<Int> = emptyList()
+    ) {
 
     var selectedColor by remember { mutableStateOf(initialColor?.let {Color(it)}) }
 
@@ -51,7 +56,9 @@ fun ColorPickerDialog(
 
                 ColorSelectorRow(
                     selectedColor = selectedColor,
-                    onColorChanged = { selectedColor = it })
+                    onColorChanged = { selectedColor = it },
+                    additionalColorsInt = additionalColorsInt
+                )
 
                 HarmonyColorPicker(
                     color = if(selectedColor == null || selectedColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(selectedColor!!),
@@ -120,6 +127,20 @@ fun ColorPickerDialog_Preview_initially_null() {
             initialColor = null,
             onColorChanged = { },
             onDismiss = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ColorPickerDialog_Preview_additional_colors() {
+    MaterialTheme {
+
+        ColorPickerDialog(
+            initialColor = null,
+            onColorChanged = { },
+            onDismiss = { },
+            additionalColorsInt = listOf(Color.DarkGray.toArgb(), Color.Black.toArgb())
         )
     }
 }

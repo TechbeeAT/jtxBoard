@@ -38,16 +38,16 @@ class ListSettings {
     var searchClassification = mutableStateListOf<Classification>()
     var searchCollection = mutableStateListOf<String>()
     var searchAccount = mutableStateListOf<String>()
-    var orderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
+    var orderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.DRAG_AND_DROP)
     var sortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var orderBy2: MutableState<OrderBy> = mutableStateOf(OrderBy.SUMMARY)
     var sortOrder2: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var groupBy: MutableState<GroupBy?> = mutableStateOf(null)
     var showOnlySearchMatchingSubentries: MutableState<Boolean> = mutableStateOf(false)
-    var subtasksOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
-    var subtasksSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.DESC)
-    var subnotesOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.CREATED)
-    var subnotesSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.DESC)
+    var subtasksOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.DRAG_AND_DROP)
+    var subtasksSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
+    var subnotesOrderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.DRAG_AND_DROP)
+    var subnotesSortOrder: MutableState<SortOrder> = mutableStateOf(SortOrder.ASC)
     var isExcludeDone: MutableState<Boolean> = mutableStateOf(false)
     var isFilterOverdue: MutableState<Boolean> = mutableStateOf(false)
     var isFilterDueToday: MutableState<Boolean> = mutableStateOf(false)
@@ -97,6 +97,7 @@ class ListSettings {
     var showDescription: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubtasks: MutableState<Boolean> = mutableStateOf(true)  // widget only
     var showSubnotes: MutableState<Boolean> = mutableStateOf(true)  // widget only
+    var defaultCategories = mutableStateListOf<String>() // widget only
 
     companion object {
         private const val PREFS_COLLECTION = "prefsCollection"
@@ -210,17 +211,17 @@ class ListSettings {
             searchCollection.addAll(prefs.getStringSet(PREFS_COLLECTION, emptySet())?.toList() ?: emptyList())
             searchAccount.addAll(prefs.getStringSet(PREFS_ACCOUNT, emptySet())?.toList() ?: emptyList())
 
-            orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
+            orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DRAG_AND_DROP
             sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
-            orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DUE
+            orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.SUMMARY
             sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
             groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } }
             showOnlySearchMatchingSubentries.value = prefs.getBoolean(PREFS_SHOW_ONLY_SEARCH_MATCHING_SUBENTRIES, false)
 
-            subtasksOrderBy.value = prefs.getString(PREFS_SUBTASKS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
-            subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.DESC
-            subnotesOrderBy.value = prefs.getString(PREFS_SUBNOTES_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.CREATED
-            subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.DESC
+            subtasksOrderBy.value = prefs.getString(PREFS_SUBTASKS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DRAG_AND_DROP
+            subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+            subnotesOrderBy.value = prefs.getString(PREFS_SUBNOTES_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DRAG_AND_DROP
+            subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
 
             viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
@@ -302,6 +303,8 @@ class ListSettings {
             widgetHeader.value = listWidgetConfig.widgetHeader
             widgetColor.value = listWidgetConfig.widgetColor
             widgetColorEntries.value = listWidgetConfig.widgetColorEntries
+            defaultCategories.clear()
+            defaultCategories.addAll(listWidgetConfig.defaultCategories)
         }
     }
 

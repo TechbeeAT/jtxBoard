@@ -12,9 +12,23 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import at.techbee.jtx.util.DateTimeUtils
-import com.android.billingclient.api.*
+import com.android.billingclient.api.AcknowledgePurchaseParams
+import com.android.billingclient.api.BillingClient
+import com.android.billingclient.api.BillingClientStateListener
+import com.android.billingclient.api.BillingFlowParams
+import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.PendingPurchasesParams
+import com.android.billingclient.api.ProductDetails
+import com.android.billingclient.api.Purchase
+import com.android.billingclient.api.PurchasesUpdatedListener
+import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.QueryPurchasesParams
+import com.android.billingclient.api.acknowledgePurchase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -107,19 +121,17 @@ class BillingManager :
                     || billingPrefs?.getString(PREFS_BILLING_PURCHASE_STATE, null) == Purchase.PurchaseState.PURCHASED.toString()
             }
 
-        billingClient = BillingClient.newBuilder(context)
+        billingClient = BillingClient
+            .newBuilder(context)
             .setListener(purchasesUpdatedListener)
-            .enablePendingPurchases()
+            .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
             .build()
-
 
         billingClient?.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                     Log.d("Billing Client", "Connection OK")
-
-                    // The BillingClient is ready. You can query purchases here.
-                    queryProductDetails()
+                    queryProductDetails() // The BillingClient is ready. You can query purchases here.
                 }
             }
 
@@ -170,6 +182,8 @@ class BillingManager :
      * The passed skuDetails are currently [BillingManager.proProductDetails].
      */
     override fun launchBillingFlow(activity: Activity) {
+
+        updatePurchases()
 
         if (billingClient != null && proProductDetails.value != null) {
 

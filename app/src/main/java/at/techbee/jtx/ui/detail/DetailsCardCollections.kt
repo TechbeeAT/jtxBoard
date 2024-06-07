@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -30,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionInfoColumn
@@ -54,6 +56,7 @@ fun DetailsCardCollections(
     ) {
 
     var showColorPicker by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
 
     if (showColorPicker) {
         ColorPickerDialog(
@@ -65,7 +68,14 @@ fun DetailsCardCollections(
             },
             onDismiss = {
                 showColorPicker = false
-            }
+            },
+            additionalColorsInt = ICalDatabase
+                .getInstance(context)
+                .iCalDatabaseDao()
+                .getAllColors()
+                .observeAsState(
+                    initial = emptyList()
+                ).value
         )
     }
 

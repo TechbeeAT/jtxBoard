@@ -25,17 +25,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -64,7 +65,6 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
-import at.techbee.jtx.database.locals.StoredResource
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
@@ -73,22 +73,21 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
+)
 @Composable
 fun ListScreenKanban(
     module: Module,
     list: List<ICal4ListRel>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
     storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedResourcesLive: LiveData<List<StoredResource>>,
-    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
+    storedStatusesLive: LiveData<List<ExtendedStatus>>,
     selectedEntries: SnapshotStateList<Long>,
     kanbanColumnsStatus: SnapshotStateList<String?>,
     kanbanColumnsXStatus: SnapshotStateList<String>,
     kanbanColumnsCategory: SnapshotStateList<String>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
-    settingIsAccessibilityMode: Boolean,
     isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
@@ -121,9 +120,8 @@ fun ListScreenKanban(
         }
     }
     val subtasks by subtasksLive.observeAsState(emptyList())
+    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
     val storedCategories by storedCategoriesLive.observeAsState(emptyList())
-    val storedResources by storedResourcesLive.observeAsState(emptyList())
-    val extendedStatuses by extendedStatusesLive.observeAsState(emptyList())
 
     val columns = when {
         kanbanColumnsStatus.isNotEmpty() -> kanbanColumnsStatus.map { Status.getStatusFromString(it)?.let { status -> context.getString(status.stringResource) } ?: context.getString(Status.NO_STATUS.stringResource)}
@@ -138,13 +136,18 @@ fun ListScreenKanban(
         }
     }
 
-
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = false,
-        onRefresh = { onSyncRequested() }
+    val pullToRefreshState = rememberPullToRefreshState(
+        enabled = { isPullRefreshEnabled }
     )
+    LaunchedEffect(pullToRefreshState.isRefreshing) {
+        if(pullToRefreshState.isRefreshing) {
+            onSyncRequested()
+            pullToRefreshState.endRefresh()
+        }
+    }
 
     Box(
+        modifier = Modifier.fillMaxSize().nestedScroll(pullToRefreshState.nestedScrollConnection),
         contentAlignment = Alignment.TopCenter
     ) {
 
@@ -169,7 +172,7 @@ fun ListScreenKanban(
                     contentPadding = PaddingValues(4.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = if(isPullRefreshEnabled) Modifier.fillMaxWidth().weight(1F).pullRefresh(pullRefreshState) else Modifier.fillMaxWidth().weight(1F)
+                    modifier = Modifier.fillMaxWidth().weight(1F)
                 ) {
 
                     stickyHeader {
@@ -199,14 +202,10 @@ fun ListScreenKanban(
 
                         ListCardKanban(
                             iCal4ListRelObject.iCal4List,
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
                             storedCategories = storedCategories,
-                            storedResources = storedResources,
-                            storedStatuses = extendedStatuses,
+                            storedStatuses = storedStatuses,
                             selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                             markdownEnabled = markdownEnabled,
-                            settingIsAccessibilityMode = settingIsAccessibilityMode,
                             player = player,
                             modifier = Modifier
                                 .clip(jtxCardCornerShape)
@@ -242,7 +241,7 @@ fun ListScreenKanban(
                                             }
 
                                             when {
-                                                kanbanColumnsXStatus.isNotEmpty() -> extendedStatuses
+                                                kanbanColumnsXStatus.isNotEmpty() -> storedStatuses
                                                     .find { xstatus -> xstatus.module == module && xstatus.xstatus == columns[draggedToColumn] }
                                                     ?.let { xstatus ->
                                                         onXStatusChanged(iCal4ListRelObject.iCal4List.id, xstatus, true)
@@ -279,12 +278,10 @@ fun ListScreenKanban(
             }
         }
 
-        if(isPullRefreshEnabled) {
-            PullRefreshIndicator(
-                refreshing = false,
-                state = pullRefreshState
-            )
-        }
+        PullToRefreshContainer(
+            modifier = Modifier.align(Alignment.TopCenter).offset(y = (-30).dp),
+            state = pullToRefreshState,
+        )
     }
 }
 
@@ -328,17 +325,15 @@ fun ListScreenKanban_TODO() {
                 ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
-            subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            extendedStatusesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
+            subtasksLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             kanbanColumnsStatus = remember { mutableStateListOf() },
             kanbanColumnsXStatus = remember { mutableStateListOf() },
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
@@ -394,15 +389,13 @@ fun ListScreenKanban_JOURNAL() {
             ),
             subtasksLive = MutableLiveData(emptyList()),
             storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            extendedStatusesLive = MutableLiveData(emptyList()),
+            storedStatusesLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             kanbanColumnsStatus = remember { mutableStateListOf(Status.FINAL.status?: Status.FINAL.name)  },
             kanbanColumnsXStatus = remember { mutableStateListOf() },
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            settingIsAccessibilityMode = false,
             isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
