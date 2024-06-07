@@ -123,17 +123,17 @@ const val COLUMN_ATTACHMENT_FILESIZE = "filesize"
 data class Attachment (
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = COLUMN_ATTACHMENT_ID)
+    @ColumnInfo(index = true, name = COLUMN_ATTACHMENT_ID)
     var attachmentId: Long = 0L,
 
-    @ColumnInfo(name = COLUMN_ATTACHMENT_ICALOBJECT_ID)        var icalObjectId: Long = 0L,
-    @ColumnInfo(name = COLUMN_ATTACHMENT_URI)                  var uri: String? = null,
+    @ColumnInfo(index = true, name = COLUMN_ATTACHMENT_ICALOBJECT_ID) var icalObjectId: Long = 0L,
+    @ColumnInfo(name = COLUMN_ATTACHMENT_URI)                        var uri: String? = null,
     @ColumnInfo(name = COLUMN_ATTACHMENT_BINARY)               var binary: String? = null,
-    @ColumnInfo(name = COLUMN_ATTACHMENT_FMTTYPE)              var fmttype: String? = null,
-    @ColumnInfo(name = COLUMN_ATTACHMENT_OTHER)                var other: String? = null,
-    @ColumnInfo(name = COLUMN_ATTACHMENT_FILENAME)             var filename: String? = null,
-    @ColumnInfo(name = COLUMN_ATTACHMENT_EXTENSION)            var extension: String? = null,
-    @ColumnInfo(name = COLUMN_ATTACHMENT_FILESIZE)             var filesize: Long? = null
+    @ColumnInfo(name = COLUMN_ATTACHMENT_FMTTYPE)               var fmttype: String? = null,
+    @ColumnInfo(name = COLUMN_ATTACHMENT_OTHER)                      var other: String? = null,
+    @ColumnInfo(name = COLUMN_ATTACHMENT_FILENAME)                      var filename: String? = null,
+    @ColumnInfo(name = COLUMN_ATTACHMENT_EXTENSION)                      var extension: String? = null,
+    @ColumnInfo(name = COLUMN_ATTACHMENT_FILESIZE)                      var filesize: Long? = null
 
 ): Parcelable {
     companion object Factory {

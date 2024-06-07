@@ -51,10 +51,10 @@ const val COLUMN_UNKNOWN_VALUE = "value"
 data class Unknown (
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = COLUMN_UNKNOWN_ID)
+    @ColumnInfo(index = true, name = COLUMN_UNKNOWN_ID)
     var unknownId: Long = 0L,
 
-    @ColumnInfo(name = COLUMN_UNKNOWN_ICALOBJECT_ID) var icalObjectId: Long = 0L,
+    @ColumnInfo(index = true, name = COLUMN_UNKNOWN_ICALOBJECT_ID)var icalObjectId: Long = 0L,
     @ColumnInfo(name = COLUMN_UNKNOWN_VALUE)            var value: String? = null
 ): Parcelable
 
