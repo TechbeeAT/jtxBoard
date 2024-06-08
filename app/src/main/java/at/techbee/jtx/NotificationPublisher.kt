@@ -53,8 +53,14 @@ class NotificationPublisher : BroadcastReceiver() {
             notificationManager.cancel(icalObjectId.toInt())
 
         when (intent.action) {
-            ACTION_SNOOZE_1D -> CoroutineScope(Dispatchers.IO).launch { addPostponedAlarm(alarmId, (1).days.inWholeMilliseconds, context) }
-            ACTION_SNOOZE_1H -> CoroutineScope(Dispatchers.IO).launch { addPostponedAlarm(alarmId, (1).hours.inWholeMilliseconds, context) }
+            ACTION_SNOOZE_1D -> CoroutineScope(Dispatchers.IO).launch {
+                addPostponedAlarm(alarmId, (1).days.inWholeMilliseconds, context)
+                database.setAlarmNotification(icalObjectId, false)
+            }
+            ACTION_SNOOZE_1H -> CoroutineScope(Dispatchers.IO).launch {
+                addPostponedAlarm(alarmId, (1).hours.inWholeMilliseconds, context)
+                database.setAlarmNotification(icalObjectId, false)
+            }
             ACTION_DONE -> CoroutineScope(Dispatchers.IO).launch {
                 database.updateProgress(
                     id = icalObjectId,
@@ -62,8 +68,18 @@ class NotificationPublisher : BroadcastReceiver() {
                     settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
                 )
+                database.setAlarmNotification(icalObjectId, false)
                 SyncUtil.notifyContentObservers(context)
                 scheduleNextNotifications(context)
+            }
+            ACTION_DISMISS -> CoroutineScope(Dispatchers.IO).launch {
+                Log.d("NotificationPublisher", "Notification dismissed")
+                CoroutineScope(Dispatchers.IO).launch {
+                    if (settingsStateHolder.settingStickyAlarms.value)
+                        restoreAlarms(context)
+                    else
+                        database.setAlarmNotification(icalObjectId, false)
+                }
             }
             else -> {
                 // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
@@ -76,10 +92,12 @@ class NotificationPublisher : BroadcastReceiver() {
                         && ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
                         && notification != null
                     ) {
-                        Log.d("notificationManager", "Can use FullScreenIntent: ${notificationManager.canUseFullScreenIntent()}")
+                        //Log.d("notificationManager", "Can use FullScreenIntent: ${notificationManager.canUseFullScreenIntent()}")
                         notificationManager.notify(icalObjectId.toInt(), notification)
+                        database.setAlarmNotification(icalObjectId, true)
                     } else {
-                        Log.d("notificationManager", "Notification skipped")
+                        //Log.d("notificationManager", "Notification skipped")
+                        database.setAlarmNotification(icalObjectId, false)
                     }
                     scheduleNextNotifications(context)
                 }
@@ -96,11 +114,15 @@ class NotificationPublisher : BroadcastReceiver() {
         const val ACTION_SNOOZE_1D = "actionSnooze1d"
         const val ACTION_SNOOZE_1H = "actionSnooze1h"
         const val ACTION_DONE = "actionDone"
+        const val ACTION_DISMISS = "actionDismiss´"
 
-        const val PREFS_SCHEDULED_ALARMS = "prefsScheduledNotifications"  // ICalObjectIds as StringSet
 
         private const val MAX_ALARMS_SCHEDULED = 5
         private const val MAX_DUE_ALARMS_SCHEDULED = 5
+
+        @Deprecated("Not in use anymore, only for legacy handling")
+        const val PREFS_SCHEDULED_ALARMS = "prefsScheduledNotifications"  // ICalObjectIds as StringSet
+
 
 
 
@@ -111,7 +133,7 @@ class NotificationPublisher : BroadcastReceiver() {
                 return
 
             val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
-            val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED).toMutableList()
+            val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED).toMutableSet()
 
             val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
             val settingAutoAlarm = prefs.getString(DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key)
@@ -126,34 +148,22 @@ class NotificationPublisher : BroadcastReceiver() {
                 }
             }
 
-            // determine obsolete Request Codes
-            val stillActiveAlarms = mutableListOf<Int>()
+            alarms.forEach { alarm ->
+                val iCal4List = database.getICal4ListSync(alarm.icalObjectId) ?: return@forEach
+                alarm.scheduleNotification(context = context, requestCode = iCal4List.id.toInt(), isReadOnly = iCal4List.isReadOnly, notificationSummary = iCal4List.summary, notificationDescription = iCal4List.description)
+            }
+
+
+            // Legacy handling - TODO: Remove in Future
             prefs.getStringSet(PREFS_SCHEDULED_ALARMS, null)
                 ?.map { try { it.toInt()} catch (e: NumberFormatException) { return } }
-                ?.toMutableList()
-                ?.apply { removeAll(alarms.map { it.icalObjectId.toInt() }) }
                 ?.let {
-                    //val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                    //cancel obsolete alarms
                     it.forEach { iCalObjectId ->
-                        val iCalObject = database.getICalObjectByIdSync(iCalObjectId.toLong())
-                        if(iCalObject == null || iCalObject.percent == 100 || iCalObject.status == Status.COMPLETED.name)
-                            NotificationManagerCompat.from(context).cancel(iCalObjectId)
-                        else
-                            stillActiveAlarms.add(iCalObjectId)
+                        database.setAlarmNotification(iCalObjectId.toLong(), true)
                     }
                 }
-
-            alarms.sortedBy { it.triggerTime }.asReversed() .forEach { alarm ->
-                val iCalObject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return@forEach
-                val collection = database.getCollectionByIdSync(iCalObject.collectionId) ?: return@forEach
-                alarm.scheduleNotification(context = context, requestCode = iCalObject.id.toInt(), isReadOnly = collection.readonly, notificationSummary = iCalObject.summary, notificationDescription = iCalObject.description)
-            }
-            val scheduledAlarms = mutableSetOf<String>().apply {
-                addAll(stillActiveAlarms.map { it.toString() })
-                addAll(alarms.map { it.icalObjectId.toInt().toString() })
-            }
-            prefs.edit().putStringSet(PREFS_SCHEDULED_ALARMS, scheduledAlarms).apply()
+            prefs.edit().remove(PREFS_SCHEDULED_ALARMS).apply()
+            // End Legacy handling
         }
 
         suspend fun addPostponedAlarm(alarmId: Long, delay: Long, context: Context) {
@@ -164,7 +174,7 @@ class NotificationPublisher : BroadcastReceiver() {
             alarm.triggerRelativeTo = null
             alarm.triggerRelativeDuration = null
             alarm.alarmId = database.insertAlarm(alarm)
-            database.updateSetDirty(alarm.icalObjectId, System.currentTimeMillis())
+            database.updateSetDirty(alarm.icalObjectId)
             SyncUtil.notifyContentObservers(context)
             scheduleNextNotifications(context)
         }
@@ -193,6 +203,30 @@ class NotificationPublisher : BroadcastReceiver() {
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
                 notificationManager.notify(iCalObject.id.toInt(), notification)
+                ICalDatabase
+                    .getInstance(context)
+                    .iCalDatabaseDao()
+                    .setAlarmNotification(iCalObject.id, true)
+            }
+        }
+
+        fun restoreAlarms(context: Context) {
+            val notificationManager = NotificationManagerCompat.from(context)
+            val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+
+            database.getICalObjectsWithActiveAlarms().forEach { iCalObject ->
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                    val notification = Alarm.createNotification(
+                        iCalObject.id,
+                        0L,
+                        iCalObject.summary,
+                        iCalObject.description,
+                        true,
+                        MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
+                        context
+                    )
+                    notificationManager.notify(iCalObject.id.toInt(), notification)
+                }
             }
         }
     }

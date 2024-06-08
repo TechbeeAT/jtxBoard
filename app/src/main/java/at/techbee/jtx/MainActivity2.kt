@@ -116,6 +116,7 @@ class MainActivity2 : AppCompatActivity() {
         const val INTENT_ACTION_OPEN_FILTERED_LIST = "openFilteredList"
         const val INTENT_ACTION_OPEN_ICALOBJECT = "openICalObject"
         const val INTENT_EXTRA_ITEM2SHOW = "item2show"
+        const val INTENT_EXTRA_FORGET_NOTIFICATION = "forgetNotification"
         const val INTENT_EXTRA_COLLECTION2PRESELECT = "collection2preselect"
         const val INTENT_EXTRA_CATEGORIES2PRESELECT = "categories2preselect"
         const val INTENT_EXTRA_LISTWIDGETCONFIG = "listWidgetConfig"
@@ -263,8 +264,15 @@ class MainActivity2 : AppCompatActivity() {
                 }
                 INTENT_ACTION_OPEN_ICALOBJECT -> {
                     val id = intent.getLongExtra(INTENT_EXTRA_ITEM2SHOW, 0L)
-                    if (id > 0L)
+                    if (id > 0L) {
                         globalStateHolder.icalObject2Open.value = id
+
+                        if(intent.getBooleanExtra(INTENT_EXTRA_FORGET_NOTIFICATION, false)) {
+                            lifecycleScope.launch(Dispatchers.IO) {
+                                ICalDatabase.getInstance(applicationContext).iCalDatabaseDao().setAlarmNotification(id, false)
+                            }
+                        }
+                    }
                 }
                 // Take data also from other sharing intents
                 Intent.ACTION_VIEW -> {
