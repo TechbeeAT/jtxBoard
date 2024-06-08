@@ -17,9 +17,9 @@ import androidx.compose.material.icons.automirrored.outlined.Note
 import androidx.compose.material.icons.automirrored.outlined.NoteAdd
 import androidx.compose.material.icons.outlined.AddTask
 import androidx.compose.material.icons.outlined.Alarm
-import androidx.compose.material.icons.outlined.AlarmOff
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.DoneAll
+import androidx.compose.material.icons.outlined.EditOff
 import androidx.compose.material.icons.outlined.FormatSize
 import androidx.compose.material.icons.outlined.Fullscreen
 import androidx.compose.material.icons.outlined.MyLocation
@@ -100,7 +100,7 @@ enum class SwitchSetting(
     ),
     SETTING_DISABLE_ALARMS_FOR_READONLY(
     key = "settings_disable_alarms_for_readonly",
-    icon = { Icon(Icons.Outlined.AlarmOff, contentDescription = null, modifier = Modifier.padding(16.dp)) },
+    icon = { Icon(Icons.Outlined.EditOff, contentDescription = null, modifier = Modifier.padding(16.dp)) },
     title = R.string.settings_disable_alarms_for_readonly,
     default = false
     ),
