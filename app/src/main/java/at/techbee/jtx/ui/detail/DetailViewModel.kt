@@ -53,6 +53,7 @@ import at.techbee.jtx.flavored.GeofenceClient
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.Ical4androidUtil
@@ -192,10 +193,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
         }
-
-        //remove notification (if not sticky)
-        if (!settingsStateHolder.settingStickyAlarms.value)
-            NotificationManagerCompat.from(_application).cancel(icalObjectId.toInt())
     }
 
     fun updateSelectFromAllListQuery(
@@ -234,6 +231,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
             )
+            if(newPercent == 100) {
+                NotificationManagerCompat.from(_application).cancel(id.toInt())
+                databaseDao.setAlarmNotification(id, false)
+            }
             onChangeDone(updateNotifications = true, updateGeofences = false)
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
@@ -329,7 +330,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     it.fileName = currentFileName
                 }
 
-                saveSuspend()
+                saveSuspend(false)
                 onChangeDone()
                 val newId = databaseDao.moveToCollection(it.id, newCollectionId)
                 if(newId == null) {
@@ -401,7 +402,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
 
-    fun saveEntry() {
+    fun saveEntry(triggerImmediateAlarm: Boolean) {
         mutableICalObject?.let {
             // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
             icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
@@ -415,13 +416,13 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
         viewModelScope.launch(Dispatchers.IO) {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-            saveSuspend()
+            saveSuspend(triggerImmediateAlarm)
             onChangeDone()
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
     }
 
-    private suspend fun saveSuspend() {
+    private suspend fun saveSuspend(triggerImmediateAlarm: Boolean) {
         mutableICalObject?.let {
             databaseDao.saveAll(
                 it,
@@ -433,6 +434,20 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 mutableAlarms,
                 mutableICalObject!!.id != mainICalObjectId
             )
+
+            if(
+                (settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE && (mutableICalObject?.due?:0L) > System.currentTimeMillis())
+                || (settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_DUE && (mutableICalObject?.due?:0L) > System.currentTimeMillis())
+                || (settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_START && (mutableICalObject?.dtstart?:0L) > System.currentTimeMillis())
+                || mutableAlarms.any { alarm -> (alarm.triggerTime?:0L) > System.currentTimeMillis() }
+            ) {
+                NotificationManagerCompat.from(_application).cancel(it.id.toInt())
+                databaseDao.setAlarmNotification(it.id, false)
+            }
+
+            if(triggerImmediateAlarm)
+                NotificationPublisher.triggerImmediateAlarm(it, _application)
+
         }
     }
 

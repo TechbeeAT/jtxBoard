@@ -655,9 +655,10 @@ fun DetailsScreen(
                 isSubtaskDragAndDropEnabled = detailViewModel.detailSettings.listSettings?.subtasksOrderBy?.value == OrderBy.DRAG_AND_DROP,
                 isSubnoteDragAndDropEnabled = detailViewModel.detailSettings.listSettings?.subnotesOrderBy?.value == OrderBy.DRAG_AND_DROP,
                 markdownState = markdownState,
+                alarmSetting = detailViewModel.settingsStateHolder.settingAutoAlarm.value,
                 scrollToSectionState = scrollToSection,
-                saveEntry = {
-                    detailViewModel.saveEntry()
+                saveEntry = { triggerImmediateAlarm ->
+                    detailViewModel.saveEntry(triggerImmediateAlarm)
                     onLastUsedCollectionChanged(detailViewModel.mutableICalObject!!.getModuleFromString(), detailViewModel.mutableICalObject!!.collectionId)
                 },
                 onProgressChanged = { itemId, newPercent -> detailViewModel.updateProgress(itemId, newPercent) },

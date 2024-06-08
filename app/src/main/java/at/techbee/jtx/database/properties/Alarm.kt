@@ -27,6 +27,7 @@ import androidx.room.PrimaryKey
 import at.techbee.jtx.AlarmFullscreenActivity
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.MainActivity2.Companion.INTENT_ACTION_OPEN_ICALOBJECT
+import at.techbee.jtx.MainActivity2.Companion.INTENT_EXTRA_FORGET_NOTIFICATION
 import at.techbee.jtx.MainActivity2.Companion.INTENT_EXTRA_ITEM2SHOW
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
@@ -263,8 +264,12 @@ data class Alarm(
 
             val intent = Intent(context, MainActivity2::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                this.action = INTENT_ACTION_OPEN_ICALOBJECT
-                this.putExtra(INTENT_EXTRA_ITEM2SHOW, iCalObjectId)
+                action = INTENT_ACTION_OPEN_ICALOBJECT
+                putExtra(INTENT_EXTRA_ITEM2SHOW, iCalObjectId)
+                if(!isSticky && !ignoreStickySetting) {
+                    putExtra(INTENT_EXTRA_FORGET_NOTIFICATION, true)
+                }
+
             }
             val contentIntent: PendingIntent =
                 PendingIntent.getActivity(context, iCalObjectId.toInt(), intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
@@ -290,6 +295,7 @@ data class Alarm(
                 notificationSummary?.let { setContentTitle(it) }
                 notificationDescription?.let { setContentText(it) }
                 setContentIntent(contentIntent)
+                setDeleteIntent(createActionIntent(NotificationPublisher.ACTION_DISMISS))
                 if(isFullScreen) {
                     val fullScreenIntent = Intent(context, AlarmFullscreenActivity::class.java).apply {
                         putExtra(NotificationPublisher.ALARM_ID, alarmId)
