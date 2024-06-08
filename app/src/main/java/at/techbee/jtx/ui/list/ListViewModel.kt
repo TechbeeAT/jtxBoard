@@ -16,6 +16,7 @@ import android.media.MediaPlayer
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.app.NotificationManagerCompat
 import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -236,6 +237,8 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
             )
+            if(newPercent == 100)
+                NotificationManagerCompat.from(_application).cancel(itemId.toInt())
 
             onChangeDone(updateNotifications = true)
             if(scrollOnce)

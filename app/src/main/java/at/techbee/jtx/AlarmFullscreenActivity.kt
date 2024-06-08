@@ -271,6 +271,7 @@ fun FullscreenAlarmScreen(
                                 settingKeepStatusProgressCompletedInSync = settingKeepStatusProgressCompletedInSync,
                                 settingLinkProgressToSubtasks = settingLinkProgressToSubtasks
                             )
+                            NotificationManagerCompat.from(context).cancel(iCalObject.id.toInt())
                             SyncUtil.notifyContentObservers(context)
                             NotificationPublisher.scheduleNextNotifications(context)
                             onDismiss(true)

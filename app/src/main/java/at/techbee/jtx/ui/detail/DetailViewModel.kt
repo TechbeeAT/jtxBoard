@@ -197,10 +197,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
         }
-
-        //remove notification (if not sticky)
-        if (!settingsStateHolder.settingStickyAlarms.value)
-            NotificationManagerCompat.from(_application).cancel(icalObjectId.toInt())
     }
 
     fun updateSelectFromAllListQuery(
@@ -239,6 +235,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
             )
+            if(newPercent == 100)
+                NotificationManagerCompat.from(_application).cancel(id.toInt())
             onChangeDone()
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }

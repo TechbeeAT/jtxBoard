@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.core.app.NotificationManagerCompat
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
@@ -206,6 +207,8 @@ class ListWidget : GlanceAppWidget() {
                             NotificationPublisher.scheduleNextNotifications(context)
                             SyncUtil.notifyContentObservers(context)
                         }
+                        if(!checked)
+                            NotificationManagerCompat.from(context).cancel(iCalObjectId.toInt())
                     },
                     onOpenWidgetConfig = {
                         val intent = Intent(context, ListWidgetConfigActivity::class.java).apply {
