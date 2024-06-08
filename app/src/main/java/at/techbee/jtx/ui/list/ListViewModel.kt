@@ -237,8 +237,10 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
             )
-            if(newPercent == 100)
+            if(newPercent == 100) {
                 NotificationManagerCompat.from(_application).cancel(itemId.toInt())
+                databaseDao.setAlarmNotification(itemId, false)
+            }
 
             onChangeDone(updateNotifications = true)
             if(scrollOnce)

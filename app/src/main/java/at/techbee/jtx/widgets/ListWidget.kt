@@ -204,11 +204,13 @@ class ListWidget : GlanceAppWidget() {
                                 settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                                 settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
                             )
+                            if(!checked) {
+                                NotificationManagerCompat.from(context).cancel(iCalObjectId.toInt())
+                                database.setAlarmNotification(iCalObjectId, false)
+                            }
                             NotificationPublisher.scheduleNextNotifications(context)
                             SyncUtil.notifyContentObservers(context)
                         }
-                        if(!checked)
-                            NotificationManagerCompat.from(context).cancel(iCalObjectId.toInt())
                     },
                     onOpenWidgetConfig = {
                         val intent = Intent(context, ListWidgetConfigActivity::class.java).apply {

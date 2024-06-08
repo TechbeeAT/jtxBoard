@@ -53,6 +53,7 @@ import at.techbee.jtx.flavored.GeofenceClient
 import at.techbee.jtx.ui.list.ListSettings
 import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.Ical4androidUtil
@@ -235,8 +236,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                 settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value
             )
-            if(newPercent == 100)
+            if(newPercent == 100) {
                 NotificationManagerCompat.from(_application).cancel(id.toInt())
+                databaseDao.setAlarmNotification(id, false)
+            }
             onChangeDone()
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
         }
@@ -436,6 +439,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 mutableAlarms,
                 mutableICalObject!!.id != mainICalObjectId
             )
+
+            if(
+                (settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_DUE && (mutableICalObject?.due?:0L) > System.currentTimeMillis())
+                || (settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_DUE && (mutableICalObject?.due?:0L) > System.currentTimeMillis())
+                || (settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_START && (mutableICalObject?.dtstart?:0L) > System.currentTimeMillis())
+                || mutableAlarms.any { alarm -> (alarm.triggerTime?:0L) > System.currentTimeMillis() }
+            ) {
+                NotificationManagerCompat.from(_application).cancel(it.id.toInt())
+                databaseDao.setAlarmNotification(it.id, false)
+            }
+
             if(triggerImmediateAlarm)
                 NotificationPublisher.triggerImmediateAlarm(it, _application)
 

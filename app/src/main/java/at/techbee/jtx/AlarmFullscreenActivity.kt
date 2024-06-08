@@ -263,8 +263,9 @@ fun FullscreenAlarmScreen(
 
                 TextButton(
                     onClick = {
+                        val databaseDao = ICalDatabase.getInstance(context).iCalDatabaseDao()
                         scope.launch(Dispatchers.IO) {
-                            ICalDatabase.getInstance(context).iCalDatabaseDao().updateProgress(
+                            databaseDao.updateProgress(
                                 id = iCalObject.id,
                                 uid = iCalObject.uid,
                                 newPercent = 100,
@@ -272,6 +273,7 @@ fun FullscreenAlarmScreen(
                                 settingLinkProgressToSubtasks = settingLinkProgressToSubtasks
                             )
                             NotificationManagerCompat.from(context).cancel(iCalObject.id.toInt())
+                            databaseDao.setAlarmNotification(iCalObject.id, false)
                             SyncUtil.notifyContentObservers(context)
                             NotificationPublisher.scheduleNextNotifications(context)
                             onDismiss(true)
