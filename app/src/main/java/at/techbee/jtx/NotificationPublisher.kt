@@ -74,10 +74,12 @@ class NotificationPublisher : BroadcastReceiver() {
             }
             ACTION_DISMISS -> CoroutineScope(Dispatchers.IO).launch {
                 Log.d("NotificationPublisher", "Notification dismissed")
-                if(settingsStateHolder.settingStickyAlarms.value)
-                    restoreAlarms(context)
-                else
-                    database.setAlarmNotification(icalObjectId, false)
+                CoroutineScope(Dispatchers.IO).launch {
+                    if (settingsStateHolder.settingStickyAlarms.value)
+                        restoreAlarms(context)
+                    else
+                        database.setAlarmNotification(icalObjectId, false)
+                }
             }
             else -> {
                 // no action, so here we notify. if we offer snooze depends on the intent (this was decided already on creation of the intent)
@@ -131,7 +133,7 @@ class NotificationPublisher : BroadcastReceiver() {
                 return
 
             val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
-            val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED).toMutableList()
+            val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED).toMutableSet()
 
             val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
             val settingAutoAlarm = prefs.getString(DropdownSetting.SETTING_AUTO_ALARM.key, DropdownSetting.SETTING_AUTO_ALARM.default.key)
@@ -146,10 +148,9 @@ class NotificationPublisher : BroadcastReceiver() {
                 }
             }
 
-            alarms.sortedBy { it.triggerTime }.asReversed() .forEach { alarm ->
-                val iCalObject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return@forEach
-                val collection = database.getCollectionByIdSync(iCalObject.collectionId) ?: return@forEach
-                alarm.scheduleNotification(context = context, requestCode = iCalObject.id.toInt(), isReadOnly = collection.readonly, notificationSummary = iCalObject.summary, notificationDescription = iCalObject.description)
+            alarms.forEach { alarm ->
+                val iCal4List = database.getICal4ListSync(alarm.icalObjectId) ?: return@forEach
+                alarm.scheduleNotification(context = context, requestCode = iCal4List.id.toInt(), isReadOnly = iCal4List.isReadOnly, notificationSummary = iCal4List.summary, notificationDescription = iCal4List.description)
             }
 
 

@@ -180,6 +180,15 @@ interface ICalDatabaseDao {
     fun getICal4ListByUIDs(uids: List<String?>): LiveData<List<ICal4List>>
 
     /**
+     * Retrieves an [ICal4List]
+     * @param iCalObjectId of the entry
+     * @return [ICal4List]
+     */
+    @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_ID = :iCalObject")
+    fun getICal4ListSync(iCalObject: Long): ICal4List?
+
+
+    /**
      * Retrieve an list of all Relatedto ([Relatedto]) as a List
      *
      * @return a list of [Relatedto] as List<Relatedto>

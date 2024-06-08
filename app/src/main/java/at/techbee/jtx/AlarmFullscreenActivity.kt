@@ -49,6 +49,7 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.ui.theme.JtxBoardTheme
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.days
@@ -96,9 +97,13 @@ class AlarmFullscreenActivity : AppCompatActivity() {
                             settingDisplayTimezone = settingsStateHolder.settingDisplayTimezone.value,
                             settingKeepStatusProgressCompletedInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value,
                             settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
-                            onDismiss = {enforceCancelNotification ->
-                                if(enforceCancelNotification || !SettingsStateHolder(this).settingStickyAlarms.value)
+                            onDismiss = { enforceCancelNotification ->
+                                if(enforceCancelNotification || !SettingsStateHolder(this).settingStickyAlarms.value) {
                                     NotificationManagerCompat.from(this).cancel(icalObjectId.toInt())
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        database.setAlarmNotification(icalObjectId, false)
+                                    }
+                                }
                                 setResult(Activity.RESULT_CANCELED)
                                 finish()
                             }
