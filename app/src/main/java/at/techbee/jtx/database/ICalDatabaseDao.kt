@@ -184,8 +184,8 @@ interface ICalDatabaseDao {
      * @param iCalObjectId of the entry
      * @return [ICal4List]
      */
-    @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_ID = :iCalObject")
-    fun getICal4ListSync(iCalObject: Long): ICal4List?
+    @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_ID = :iCalObjectId")
+    fun getICal4ListSync(iCalObjectId: Long): ICal4List?
 
 
     /**
