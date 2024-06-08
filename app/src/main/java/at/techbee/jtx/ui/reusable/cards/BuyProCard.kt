@@ -61,7 +61,7 @@ fun BuyProCard(
                 painterResource(id = R.drawable.ic_jtx_logo),
                 null,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(72.dp)
                     .padding(end = 16.dp)
             )
 

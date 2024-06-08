@@ -29,9 +29,9 @@ android {
         buildConfigField("long", "buildTime", "${System.currentTimeMillis()}L")
         minSdk = 21
         targetSdk = 34
-        versionCode = 207090006
-        versionName = "2.07.09-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
-        buildConfigField("String", "versionCodename", "\"Love always wins ❤️💪\"")
+        versionCode = 209000002
+        versionName = "2.09.00-alpha02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        buildConfigField("String", "versionCodename", "\"Pride is a protest \uD83C\uDF08\"")
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -48,7 +48,7 @@ android {
         //resourceConfigurations += locales
 
         buildConfigField("String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: providers.gradleProperty("crowdin.apikey") ) + "\"")
-        buildConfigField("String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GH_CONTRIBUTORS_API_KEY") ?: providers.gradleProperty("githubcontributors.apikey") ) + "\"")
+        //buildConfigField("String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GH_CONTRIBUTORS_API_KEY") ?: providers.gradleProperty("githubcontributors.apikey") ) + "\"")
         resValue("string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: "")
     }
 
