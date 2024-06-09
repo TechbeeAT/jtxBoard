@@ -425,13 +425,14 @@ fun DetailScreenContent(
 
                 DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> {
                     if(
-                        (!isEditMode.value && (!iCalObject.status.isNullOrEmpty() || !iCalObject.xstatus.isNullOrEmpty() || !iCalObject.classification.isNullOrEmpty() || iCalObject.priority in 1..9))
-                                || (isEditMode.value
-                                && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false
-                                || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false
-                                || (iCalObject.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false)
-                                || showAllOptions)
-                                )
+                        !iCalObject.status.isNullOrEmpty()
+                            || !iCalObject.xstatus.isNullOrEmpty()
+                            || !iCalObject.classification.isNullOrEmpty()
+                            || iCalObject.priority in 1..9
+                            || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false
+                            || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false
+                            || (iCalObject.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false)
+                            || showAllOptions
                     ) {
 
                         DetailsCardStatusClassificationPriority(
@@ -493,7 +494,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.PARENTS -> {
-                    if(parents.value.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false || showAllOptions))) {
+                    if(parents.value.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false || showAllOptions) {
                         DetailsCardParents(
                             parents = parents.value,
                             isEditMode = isEditMode,
@@ -531,7 +532,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.SUBTASKS -> {
-                    if(subtasks.value.isNotEmpty() || (isEditMode.value && collection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
+                    if(subtasks.value.isNotEmpty() || (collection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
                         DetailsCardSubtasks(
                             subtasks = subtasks.value,
                             isEditMode = isEditMode,
@@ -571,7 +572,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.SUBNOTES -> {
-                    if(subnotes.value.isNotEmpty() || (isEditMode.value && collection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
+                    if(subnotes.value.isNotEmpty() || (collection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
                         DetailsCardSubnotes(
                             subnotes = subnotes.value,
                             isEditMode = isEditMode,
@@ -636,7 +637,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.ATTENDEES -> {
-                    if(attendees.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] == true || showAllOptions))) {
+                    if(attendees.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] == true || showAllOptions) {
                         DetailsCardAttendees(
                             attendees = attendees,
                             isEditMode = isEditMode.value,
@@ -648,7 +649,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.CONTACT -> {
-                    if(iCalObject.contact?.isNotBlank() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] == true || showAllOptions))) {
+                    if(iCalObject.contact?.isNotBlank() == true || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] == true || showAllOptions) {
                         DetailsCardContact(
                             initialContact = iCalObject.contact ?: "",
                             isReadOnly = collection?.readonly?:true,
@@ -661,7 +662,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.URL -> {
-                    if(iCalObject.url?.isNotEmpty() == true || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] == true || showAllOptions))) {
+                    if(iCalObject.url?.isNotEmpty() == true || detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] == true || showAllOptions) {
                         DetailsCardUrl(
                             initialUrl = iCalObject.url ?: "",
                             isReadOnly = collection?.readonly?:true,
@@ -674,7 +675,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.LOCATION -> {
-                    if((iCalObject.location?.isNotEmpty() == true || (iCalObject.geoLat != null && iCalObject.geoLong != null)) || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] == true || showAllOptions))) {
+                    if((iCalObject.location?.isNotEmpty() == true || (iCalObject.geoLat != null && iCalObject.geoLong != null)) || detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] == true || showAllOptions) {
                         DetailsCardLocation(
                             initialLocation = iCalObject.location,
                             initialGeoLat = iCalObject.geoLat,
@@ -698,7 +699,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.COMMENTS -> {
-                    if(comments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] == true || showAllOptions))) {
+                    if(comments.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] == true || showAllOptions) {
                         DetailsCardComments(
                             comments = comments,
                             isReadOnly = collection?.readonly?:true,
@@ -710,7 +711,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.ATTACHMENTS -> {
-                    if(attachments.isNotEmpty() || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] == true || showAllOptions))) {
+                    if(attachments.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] == true || showAllOptions) {
                         DetailsCardAttachments(
                             attachments = attachments,
                             isReadOnly = collection?.readonly?:true,
@@ -724,7 +725,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.ALARMS -> {
-                    if(alarms.isNotEmpty() || (isEditMode.value && iCalObject.module == Module.TODO.name && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] == true || showAllOptions))) {
+                    if(alarms.isNotEmpty() || (iCalObject.module == Module.TODO.name && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] == true || showAllOptions))) {
                         DetailsCardAlarms(
                             alarms = alarms,
                             icalObject = iCalObject,
@@ -739,8 +740,9 @@ fun DetailScreenContent(
                 DetailsScreenSection.RECURRENCE -> {
                     if(
                         iCalObject.rrule != null
-                                || iCalObject.recurid != null
-                                || (isEditMode.value && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] == true || (showAllOptions && iCalObject.module != Module.NOTE.name)))
+                            || iCalObject.recurid != null
+                            || detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] == true
+                            || (showAllOptions && iCalObject.module != Module.NOTE.name)
                     ) {   // only Todos have recur!
                         DetailsCardRecur(
                             icalObject = iCalObject,
@@ -812,53 +814,51 @@ fun DetailScreenContent(
             }
         }
 
-        if(!isEditMode.value) {
-            item {
-                val curIndex = icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0)
-                if (icalObjectIdList.size > 1 && curIndex >= 0) {
-                    Row(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp, horizontal = 8.dp)
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+        item {
+            val curIndex = icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0)
+            if (icalObjectIdList.size > 1 && curIndex >= 0) {
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 16.dp, horizontal = 8.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                        if (curIndex > 0) {
-                            IconButton(onClick = {
-                                goToDetail(
-                                    icalObjectIdList[curIndex - 1],
-                                    false,
-                                    icalObjectIdList,
-                                    true
-                                )
-                            }) {
-                                Icon(
-                                    Icons.AutoMirrored.Outlined.NavigateBefore,
-                                    stringResource(id = R.string.previous)
-                                )
-                            }
-                        } else {
-                            Spacer(modifier = Modifier.size(48.dp))
+                    if (curIndex > 0) {
+                        IconButton(onClick = {
+                            goToDetail(
+                                icalObjectIdList[curIndex - 1],
+                                false,
+                                icalObjectIdList,
+                                true
+                            )
+                        }) {
+                            Icon(
+                                Icons.AutoMirrored.Outlined.NavigateBefore,
+                                stringResource(id = R.string.previous)
+                            )
                         }
-                        Text(text = "${icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0) + 1}/${icalObjectIdList.size}")
-                        if (curIndex != icalObjectIdList.lastIndex) {
-                            IconButton(onClick = {
-                                goToDetail(
-                                    icalObjectIdList[curIndex + 1],
-                                    false,
-                                    icalObjectIdList,
-                                    true
-                                )
-                            }) {
-                                Icon(
-                                    Icons.AutoMirrored.Outlined.NavigateNext,
-                                    stringResource(id = R.string.next)
-                                )
-                            }
-                        } else {
-                            Spacer(modifier = Modifier.size(48.dp))
+                    } else {
+                        Spacer(modifier = Modifier.size(48.dp))
+                    }
+                    Text(text = "${icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0) + 1}/${icalObjectIdList.size}")
+                    if (curIndex != icalObjectIdList.lastIndex) {
+                        IconButton(onClick = {
+                            goToDetail(
+                                icalObjectIdList[curIndex + 1],
+                                false,
+                                icalObjectIdList,
+                                true
+                            )
+                        }) {
+                            Icon(
+                                Icons.AutoMirrored.Outlined.NavigateNext,
+                                stringResource(id = R.string.next)
+                            )
                         }
+                    } else {
+                        Spacer(modifier = Modifier.size(48.dp))
                     }
                 }
             }
