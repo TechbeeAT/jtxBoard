@@ -377,103 +377,101 @@ fun DetailsScreen(
 
                         HorizontalDivider()
 
-                        if (!isEditMode.value) {
+
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(R.string.menu_view_share)) },
+                            onClick = { shareOptionsExpanded.value = !shareOptionsExpanded.value },
+                            trailingIcon = { Icon(if(shareOptionsExpanded.value) Icons.Outlined.KeyboardArrowDown else Icons.Outlined.ChevronRight, null)  }
+                        )
+
+                        AnimatedVisibility(shareOptionsExpanded.value) {
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.menu_view_share_mail)) },
+                                onClick = {
+                                    detailViewModel.shareAsText(context)
+                                    menuExpanded.value = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Mail,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            )
+                        }
+                        AnimatedVisibility(shareOptionsExpanded.value) {
 
                             DropdownMenuItem(
-                                text = { Text(text = stringResource(R.string.menu_view_share)) },
-                                onClick = { shareOptionsExpanded.value = !shareOptionsExpanded.value },
-                                trailingIcon = { Icon(if(shareOptionsExpanded.value) Icons.Outlined.KeyboardArrowDown else Icons.Outlined.ChevronRight, null)  }
-                            )
-
-                            AnimatedVisibility(shareOptionsExpanded.value) {
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.menu_view_share_mail)) },
+                                    text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
                                     onClick = {
-                                        detailViewModel.shareAsText(context)
+                                        detailViewModel.shareAsICS(context)
                                         menuExpanded.value = false
                                     },
                                     leadingIcon = {
                                         Icon(
-                                            imageVector = Icons.Outlined.Mail,
+                                            imageVector = Icons.Outlined.Description,
                                             contentDescription = null,
                                             tint = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                 )
-                            }
-                            AnimatedVisibility(shareOptionsExpanded.value) {
-
-                                DropdownMenuItem(
-                                        text = { Text(text = stringResource(id = R.string.menu_view_share_ics)) },
-                                        onClick = {
-                                            detailViewModel.shareAsICS(context)
-                                            menuExpanded.value = false
-                                        },
-                                        leadingIcon = {
-                                            Icon(
-                                                imageVector = Icons.Outlined.Description,
-                                                contentDescription = null,
-                                                tint = MaterialTheme.colorScheme.onSurface
-                                            )
-                                        }
-                                    )
-                            }
-                            AnimatedVisibility(shareOptionsExpanded.value) {
-
-                                DropdownMenuItem(
-                                    text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
-                                    onClick = {
-                                        val currentICalObjectId = detailViewModel.mutableICalObject?.id ?: return@DropdownMenuItem
-
-                                        scope.launch(Dispatchers.IO) {
-                                            ICalDatabase
-                                                .getInstance(context)
-                                                .iCalDatabaseDao()
-                                                .getSync(currentICalObjectId)
-                                                ?.let {
-                                                    val text = it.getShareText(context)
-                                                    val clipboardManager =
-                                                        context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-                                                    clipboardManager.setPrimaryClip(
-                                                        ClipData.newPlainText(
-                                                            "",
-                                                            text
-                                                        )
-                                                    )
-                                                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
-                                                        detailViewModel.toastMessage.value =
-                                                            context.getString(R.string.menu_view_copy_to_clipboard_copied)
-                                                }
-                                        }
-                                        menuExpanded.value = false
-                                    },
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Outlined.ContentPaste,
-                                            contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.onSurface
-                                        )
-                                    }
-                                )
-                            }
                         }
+                        AnimatedVisibility(shareOptionsExpanded.value) {
 
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
+                                onClick = {
+                                    val currentICalObjectId = detailViewModel.mutableICalObject?.id ?: return@DropdownMenuItem
 
-                        if (isEditMode.value) {
-                            CheckboxWithText(
-                                text = stringResource(id = R.string.menu_view_autosave),
-                                onCheckedChange = {
-                                    detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] = it
-                                    detailViewModel.detailSettings.save()
+                                    scope.launch(Dispatchers.IO) {
+                                        ICalDatabase
+                                            .getInstance(context)
+                                            .iCalDatabaseDao()
+                                            .getSync(currentICalObjectId)
+                                            ?.let {
+                                                val text = it.getShareText(context)
+                                                val clipboardManager =
+                                                    context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                                                clipboardManager.setPrimaryClip(
+                                                    ClipData.newPlainText(
+                                                        "",
+                                                        text
+                                                    )
+                                                )
+                                                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
+                                                    detailViewModel.toastMessage.value =
+                                                        context.getString(R.string.menu_view_copy_to_clipboard_copied)
+                                            }
+                                    }
+                                    menuExpanded.value = false
                                 },
-                                isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] ?: true,
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.ContentPaste,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
                             )
                         }
 
                         HorizontalDivider()
 
-                        if(!isEditMode.value
-                            && collection.value?.readonly == false
+
+                        CheckboxWithText(
+                            text = stringResource(id = R.string.menu_view_autosave),
+                            onCheckedChange = {
+                                detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] = it
+                                detailViewModel.detailSettings.save()
+                            },
+                            isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] ?: true,
+                        )
+
+
+                        HorizontalDivider()
+
+                        if(collection.value?.readonly == false
                             && isProActionAvailable) {
 
                             DropdownMenuItem(
@@ -536,10 +534,6 @@ fun DetailsScreen(
                                 }
                             }
 
-                            AnimatedVisibility (copyConvertOptionsExpanded.value) {
-                                HorizontalDivider()
-                            }
-
                             AnimatedVisibility (copyConvertOptionsExpanded.value && collection.value?.supportsVJOURNAL == true) {
                                 DropdownMenuItem(
                                     leadingIcon = { Icon(Icons.Outlined.ContentCopy, null)  },
@@ -573,7 +567,6 @@ fun DetailsScreen(
                             }
 
                             HorizontalDivider()
-
                         }
 
                         if(collection.value?.readonly == false && isProActionAvailable) {
