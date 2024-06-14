@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,6 +61,7 @@ fun DetailsCardRecur(
     seriesInstances: List<ICalObject>,
     seriesElement: ICalObject?,
     hasChildren: Boolean,
+    focusRequested: Boolean,
     onRecurUpdated: (Recur?) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit,
@@ -94,6 +96,11 @@ fun DetailsCardRecur(
             onRecurUpdated = onRecurUpdated,
             onDismiss = { showRecurDialog = false }
         )
+    }
+
+    LaunchedEffect(focusRequested) {
+        if(focusRequested)
+            showRecurDialog = true
     }
 
     ElevatedCard(
@@ -356,6 +363,7 @@ fun DetailsCardRecur_Preview() {
             seriesElement = null,
             isReadOnly = false,
             hasChildren = false,
+            focusRequested = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             unlinkFromSeries = { _, _, _ -> }
@@ -395,6 +403,7 @@ fun DetailsCardRecur_Preview_read_only2() {
             seriesElement = null,
             isReadOnly = true,
             hasChildren = false,
+            focusRequested = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             unlinkFromSeries = { _, _, _ -> }
@@ -428,6 +437,7 @@ fun DetailsCardRecur_Preview_unchanged_recur() {
             seriesElement = null,
             isReadOnly = false,
             hasChildren = false,
+            focusRequested = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             unlinkFromSeries = { _, _, _ -> }
@@ -461,6 +471,7 @@ fun DetailsCardRecur_Preview_changed_recur() {
             seriesElement = null,
             isReadOnly = false,
             hasChildren = true,
+            focusRequested = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             unlinkFromSeries = { _, _, _ -> }
@@ -492,6 +503,7 @@ fun DetailsCardRecur_Preview_off() {
             seriesElement = null,
             isReadOnly = false,
             hasChildren = false,
+            focusRequested = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             unlinkFromSeries = { _, _, _ -> }
@@ -523,6 +535,7 @@ fun DetailsCardRecur_Preview_read_only() {
             seriesElement = null,
             isReadOnly = true,
             hasChildren = false,
+            focusRequested = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             unlinkFromSeries = { _, _, _ -> }
@@ -547,6 +560,7 @@ fun DetailsCardRecur_Preview_view_no_dtstart() {
             seriesElement = null,
             isReadOnly = false,
             hasChildren = false,
+            focusRequested = false,
             onRecurUpdated = { },
             goToDetail = { _, _, _ -> },
             unlinkFromSeries = { _, _, _ -> }

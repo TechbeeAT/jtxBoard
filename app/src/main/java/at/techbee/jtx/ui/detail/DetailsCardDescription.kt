@@ -59,22 +59,23 @@ fun DetailsCardDescription(
     isReadOnly: Boolean,
     markdownState: MutableState<MarkdownState>,
     isMarkdownEnabled: Boolean,
+    focusRequested: Boolean,
     onDescriptionUpdated: (String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val focusRequester = remember { FocusRequester() }
-    var focusRequested by remember { mutableStateOf(false) }
+    var focusRequestedInternally by remember { mutableStateOf(false) }
     var isDescriptionFocused by rememberSaveable { mutableStateOf(false)  }
     var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(
         TextFieldValue(initialDescription?:"")
     ) }
 
-    LaunchedEffect(focusRequested, isDescriptionFocused) {
-        if(focusRequested) {
+    LaunchedEffect(focusRequested, focusRequestedInternally, isDescriptionFocused) {
+        if(focusRequested || focusRequestedInternally) {
             try {
                 focusRequester.requestFocus()
-                focusRequested = false
+                focusRequestedInternally = false
             } catch (e: Exception) {
                 Log.d("DetailsCardDescription", "Requesting Focus failed")
             }
@@ -85,7 +86,7 @@ fun DetailsCardDescription(
     ElevatedCard(
         onClick = {
             if(!isReadOnly) {
-                focusRequested = true
+                focusRequestedInternally = true
             }
         },
         modifier = modifier
@@ -108,7 +109,7 @@ fun DetailsCardDescription(
                         text = stringResource(id = R.string.description)
                     )
 
-                    Crossfade(!focusRequested && !isDescriptionFocused && isMarkdownEnabled,
+                    Crossfade(!focusRequested && !focusRequestedInternally && !isDescriptionFocused && isMarkdownEnabled,
                         label = "descriptionWithMarkdown"
                     ) { withMarkdown ->
 
@@ -122,7 +123,7 @@ fun DetailsCardDescription(
                                 ),
                                 onClick = {
                                     if (!isReadOnly) {
-                                        focusRequested = true
+                                        focusRequestedInternally = true
                                     }
                                 }
                             )
@@ -212,6 +213,7 @@ fun DetailsCardDescription_Preview_no_Markdown() {
         DetailsCardDescription(
             initialDescription = "Test" + System.lineSeparator() + "***Tester***",
             isReadOnly = false,
+            focusRequested = false,
             onDescriptionUpdated = { },
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isMarkdownEnabled = false
@@ -228,6 +230,7 @@ fun DetailsCardDescription_Preview_with_Markdown() {
             initialDescription = "Test" + System.lineSeparator() + "***Tester***",
             isReadOnly = false,
             onDescriptionUpdated = { },
+            focusRequested = false,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             isMarkdownEnabled = true
         )

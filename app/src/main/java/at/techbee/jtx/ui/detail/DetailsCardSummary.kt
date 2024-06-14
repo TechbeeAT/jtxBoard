@@ -21,6 +21,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,6 +46,7 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 fun DetailsCardSummary(
     initialSummary: String?,
     isReadOnly: Boolean,
+    focusRequested: Boolean,
     onSummaryUpdated: (String?) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -52,6 +54,11 @@ fun DetailsCardSummary(
     val focusRequester = remember { FocusRequester() }
     var isSummaryFocused by rememberSaveable { mutableStateOf(false)  }
     var summary by rememberSaveable { mutableStateOf(initialSummary) }
+
+    LaunchedEffect(focusRequested) {
+        if(focusRequested && !isReadOnly)
+            focusRequester.requestFocus()
+    }
 
     ElevatedCard(
         onClick = {
@@ -110,6 +117,7 @@ fun DetailsCardSummary_Preview() {
         DetailsCardSummary(
             initialSummary = "Test",
             isReadOnly = false,
+            focusRequested = false,
             onSummaryUpdated = { }
         )
     }
