@@ -244,18 +244,30 @@ fun SettingsScreen(
                                 expanded = languagesExpanded,
                                 onDismissRequest = { languagesExpanded = false },
                             ) {
-                                languageOptions.sortedBy { it?.displayName }.forEach { locale ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        languagesExpanded = false
+                                        selectedLanguage = null
+                                        AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList())
+                                    },
+                                    text = {
+                                        Text(
+                                            text = stringResource(id = R.string.settings_select_language_system),
+                                            modifier = Modifier.align(Alignment.Start)
+                                        )
+                                    }
+                                )
+
+                                languageOptions.sortedBy { it.displayName }.forEach { locale ->
                                     DropdownMenuItem(
                                         onClick = {
                                             languagesExpanded = false
                                             selectedLanguage = locale
-                                            AppCompatDelegate.setApplicationLocales(
-                                                locale?.let { LocaleListCompat.create(it) } ?:  LocaleListCompat.getEmptyLocaleList()
-                                            )
+                                            AppCompatDelegate.setApplicationLocales(LocaleListCompat.create(locale))
                                         },
                                         text = {
                                             Text(
-                                                text = locale?.displayName ?: stringResource(id = R.string.settings_select_language_system),
+                                                text = locale.displayName ?: stringResource(id = R.string.settings_select_language_system),
                                                 modifier = Modifier
                                                     .align(Alignment.Start)
                                             )
