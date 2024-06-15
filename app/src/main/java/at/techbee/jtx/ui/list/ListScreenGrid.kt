@@ -87,7 +87,7 @@ fun ListScreenGrid(
     isListDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
     onSyncRequested: () -> Unit
 ) {
 
@@ -175,10 +175,7 @@ fun ListScreenGrid(
                                     )
                                 },
                                 onLongClick = {
-                                    if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                        onLongClick(
-                                            iCal4ListRelObject.iCal4List.id,
-                                            list.map { it.iCal4List })
+                                    onLongClick(iCal4ListRelObject.iCal4List.id, iCal4ListRelObject.iCal4List.isReadOnly)
                                 }
                             ),
                         onProgressChanged = onProgressChanged,
@@ -271,7 +268,7 @@ fun ListScreenGrid_TODO() {
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
+            onLongClick = { _, _ ->  },
             onSyncRequested = { },
             isListDragAndDropEnabled = true
         )
@@ -328,7 +325,7 @@ fun ListScreenGrid_JOURNAL() {
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
+            onLongClick = { _, _ ->  },
             onSyncRequested = { },
             isListDragAndDropEnabled = false
         )

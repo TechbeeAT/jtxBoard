@@ -63,7 +63,6 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
@@ -109,7 +108,7 @@ fun ListCard(
     isSubtaskDragAndDropEnabled: Boolean,
     isSubnoteDragAndDropEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit,
@@ -457,8 +456,7 @@ fun ListCard(
                                 .combinedClickable(
                                     onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
                                     onLongClick = {
-                                        if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(subtask.id, subtasks)
+                                        onLongClick(subtask.id, subtask.isReadOnly)
                                     }
                                 )
                         )
@@ -492,8 +490,7 @@ fun ListCard(
                                 .combinedClickable(
                                     onClick = { onClick(subnote.id, subnotes, subnote.isReadOnly) },
                                     onLongClick = {
-                                        if (!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(subnote.id, subnotes)
+                                        onLongClick(subnote.id, subnote.isReadOnly)
                                     },
                                 ),
                             dragHandle = { if(isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
@@ -530,8 +527,7 @@ fun ListCard(
                                             )
                                         },
                                         onLongClick = {
-                                            if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                                onLongClick(parent.id, parents)
+                                            onLongClick(parent.id, parent.isReadOnly)
                                         }
                                     )
                             )
@@ -551,8 +547,7 @@ fun ListCard(
                                             )
                                         },
                                         onLongClick = {
-                                            if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                                onLongClick(parent.id, parents)
+                                            onLongClick(parent.id, parent.isReadOnly)
                                         },
                                     ),
                                 isEditMode = false, //no editing here
