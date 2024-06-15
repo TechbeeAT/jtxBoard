@@ -164,7 +164,7 @@ fun ListScreenTabContainer(
         enabledTabs.indexOf(ListTabDestination.Tasks) -> icalListViewModelTodos
         else -> icalListViewModelJournals  // fallback, should not happen
     }
-    val allWriteableCollections = listViewModel.allWriteableCollections.observeAsState(emptyList())
+    val allWriteableCollections = database.getAllWriteableCollections().observeAsState(emptyList())
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val allUsableCollections by remember(allWriteableCollections) {
         derivedStateOf {

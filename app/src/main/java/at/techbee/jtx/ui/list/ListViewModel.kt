@@ -103,8 +103,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
         return@map list.groupBy { it.icalObjectId }
     }
 
-    val allWriteableCollections = databaseDao.getAllWriteableCollections()
-
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)
     var goToEdit = MutableLiveData<Long?>(null)
