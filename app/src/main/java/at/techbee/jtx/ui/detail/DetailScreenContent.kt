@@ -118,7 +118,6 @@ fun DetailScreenContent(
     subnotesLive: LiveData<List<ICal4List>>,
     parentsLive: LiveData<List<ICal4List>>,
     isChildLive: LiveData<Boolean>,
-    allWriteableCollectionsLive: LiveData<List<ICalCollection>>,
     detailSettings: DetailSettings,
     icalObjectIdList: List<Long>,
     seriesInstancesLive: LiveData<List<ICalObject>>,
@@ -157,12 +156,12 @@ fun DetailScreenContent(
         return
 
     val context = LocalContext.current
+    val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
     val parents = parentsLive.observeAsState(emptyList())
     val subtasks = subtasksLive.observeAsState(emptyList())
     val subnotes = subnotesLive.observeAsState(emptyList())
     val seriesInstances = seriesInstancesLive.observeAsState(emptyList())
     val isChild = isChildLive.observeAsState(false)
-    val allWriteableCollections = allWriteableCollectionsLive.observeAsState(emptyList())
 
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, observedICalObject.value) {
@@ -230,9 +229,6 @@ fun DetailScreenContent(
      */
 
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
-    val allPossibleCollections = allWriteableCollections.value.filter {
-        it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value            // filter remote collections if pro was not purchased
-    }
 
     // Update some fields in the background that might have changed (e.g. by creating a copy)
     if ((observedICalObject.value?.sequence ?: 0) > iCalObject.sequence) {
@@ -356,7 +352,12 @@ fun DetailScreenContent(
                         originalCollection = collection,
                         color = color,
                         changeState = changeState,
-                        allPossibleCollections = allPossibleCollections,
+                        allPossibleCollections = database.getAllWriteableCollections(
+                            supportsVTODO = iCalObject.module == Module.TODO.name,
+                            supportsVJOURNAL = iCalObject.module == Module.NOTE.name || iCalObject.module == Module.JOURNAL.name
+                        ).observeAsState(emptyList()).value.filter {
+                            it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value            // filter remote collections if pro was not purchased
+                        },
                         includeVJOURNAL = if (observedICalObject.value?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
                         includeVTODO = if (observedICalObject.value?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
                         onMoveToNewCollection = onMoveToNewCollection,
@@ -1128,13 +1129,6 @@ fun DetailScreenContent_JOURNAL() {
             isSubnoteDragAndDropEnabled = true,
             markdownState = remember { mutableStateOf(MarkdownState.DISABLED) },
             scrollToSectionState = remember { mutableStateOf(null) },
-            allWriteableCollectionsLive = MutableLiveData(
-                listOf(
-                    ICalCollection.createLocalCollection(
-                        LocalContext.current
-                    )
-                )
-            ),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             saveEntry = { },
@@ -1190,13 +1184,6 @@ fun DetailScreenContent_TODO_editInitially() {
             seriesElement = null,
             isChildLive = MutableLiveData(false),
             player = null,
-            allWriteableCollectionsLive = MutableLiveData(
-                listOf(
-                    ICalCollection.createLocalCollection(
-                        LocalContext.current
-                    )
-                )
-            ),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1261,13 +1248,6 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             seriesElement = null,
             isChildLive = MutableLiveData(true),
             player = null,
-            allWriteableCollectionsLive = MutableLiveData(
-                listOf(
-                    ICalCollection.createLocalCollection(
-                        LocalContext.current
-                    )
-                )
-            ),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,
@@ -1326,13 +1306,6 @@ fun DetailScreenContent_failedLoading() {
             seriesElement = null,
             isChildLive = MutableLiveData(true),
             player = null,
-            allWriteableCollectionsLive = MutableLiveData(
-                listOf(
-                    ICalCollection.createLocalCollection(
-                        LocalContext.current
-                    )
-                )
-            ),
             detailSettings = detailSettings,
             icalObjectIdList = emptyList(),
             sliderIncrement = 10,

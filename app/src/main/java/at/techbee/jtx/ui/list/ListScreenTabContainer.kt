@@ -164,7 +164,7 @@ fun ListScreenTabContainer(
         enabledTabs.indexOf(ListTabDestination.Tasks) -> icalListViewModelTodos
         else -> icalListViewModelJournals  // fallback, should not happen
     }
-    val allWriteableCollections = database.getAllWriteableCollections().observeAsState(emptyList())
+    val allWriteableCollections = database.getAllWriteableCollections(supportsVTODO = true, supportsVJOURNAL = true).observeAsState(emptyList())
     val isProPurchased = BillingManager.getInstance().isProPurchased.observeAsState(true)
     val allUsableCollections by remember(allWriteableCollections) {
         derivedStateOf {
@@ -235,7 +235,7 @@ fun ListScreenTabContainer(
             module = getActiveViewModel().module,
             allCategories = database.getAllCategoriesAsText().observeAsState(emptyList()).value,
             allResources = database.getAllResourcesAsText().observeAsState(emptyList()).value,
-            allCollections = database.getAllWriteableCollections().observeAsState(emptyList()).value,
+            allCollections = database.getAllWriteableCollections(supportsVJOURNAL = getActiveViewModel().module == Module.NOTE || getActiveViewModel().module == Module.JOURNAL, supportsVTODO = getActiveViewModel().module == Module.TODO).observeAsState(emptyList()).value,
             selectFromAllListLive = getActiveViewModel().selectFromAllList,
             storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
             player = getActiveViewModel().mediaPlayer,
@@ -256,7 +256,7 @@ fun ListScreenTabContainer(
         CollectionSelectorDialog(
             module = getActiveViewModel().module,
             presetCollectionId = getActiveViewModel().listSettings.topAppBarCollectionId.value,
-            allCollections = database.getAllCollections(module = getActiveViewModel().module.name).observeAsState(emptyList()).value,
+            allWritableCollections = database.getAllWriteableCollections(supportsVJOURNAL = (listViewModel.module == Module.JOURNAL || listViewModel.module == Module.NOTE), supportsVTODO = listViewModel.module == Module.TODO).observeAsState(emptyList()).value,
             onCollectionConfirmed = { selectedCollection ->
                 getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.ADD_ENTRY
                 getActiveViewModel().listSettings.topAppBarCollectionId.value = selectedCollection.collectionId
@@ -364,7 +364,7 @@ fun ListScreenTabContainer(
                 module = listViewModel.module,
                 initialTab = filterSheetInitialTab,
                 listSettings = listViewModel.listSettings,
-                allCollections = database.getAllCollections(module = listViewModel.module.name).observeAsState(emptyList()).value,
+                allCollections = database.getAllCollections(supportsVJOURNAL = (listViewModel.module == Module.JOURNAL || listViewModel.module == Module.NOTE), supportsVTODO = listViewModel.module == Module.TODO).observeAsState(emptyList()).value,
                 allCategories = database.getAllCategoriesAsText().observeAsState(emptyList()).value,
                 allResources = database.getAllResourcesAsText().observeAsState(emptyList()).value,
                 storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,

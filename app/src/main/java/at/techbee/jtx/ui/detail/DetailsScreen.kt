@@ -639,7 +639,6 @@ fun DetailsScreen(
                 subtasksLive = detailViewModel.relatedSubtasks,
                 subnotesLive = detailViewModel.relatedSubnotes,
                 isChildLive = detailViewModel.isChild,
-                allWriteableCollectionsLive = detailViewModel.allWriteableCollections,
                 detailSettings = detailViewModel.detailSettings,
                 icalObjectIdList = icalObjectIdList,
                 seriesInstancesLive = detailViewModel.seriesInstances,

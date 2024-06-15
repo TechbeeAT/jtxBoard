@@ -33,13 +33,13 @@ import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 fun CollectionSelectorDialog(
     module: Module,
     presetCollectionId: Long,
-    allCollections: List<ICalCollection>,
+    allWritableCollections: List<ICalCollection>,
     onCollectionConfirmed: (selectedCollection: ICalCollection) -> Unit,
     onDismiss: () -> Unit
 ) {
-    if(allCollections.isEmpty())
+    if(allWritableCollections.isEmpty())
         return
-    var selectedCollection by remember { mutableStateOf(allCollections.find { it.collectionId == presetCollectionId } ?: allCollections.first()) }
+    var selectedCollection by remember { mutableStateOf(allWritableCollections.find { it.collectionId == presetCollectionId } ?: allWritableCollections.first()) }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -49,7 +49,7 @@ fun CollectionSelectorDialog(
 
                 Column {
                     CollectionsSpinner(
-                        collections = allCollections,
+                        collections = allWritableCollections,
                         preselected = selectedCollection,
                         includeReadOnly = false,
                         includeVJOURNAL = if(module == Module.JOURNAL || module == Module.NOTE) true else null,
@@ -134,7 +134,7 @@ fun CollectionSelectorDialog_Preview() {
         CollectionSelectorDialog(
             module = Module.JOURNAL,
             presetCollectionId = 3L,
-            allCollections = listOf(collection1, collection2, collection3, collection4),
+            allWritableCollections = listOf(collection1, collection2, collection3, collection4),
             onDismiss = { },
             onCollectionConfirmed = {}
         )

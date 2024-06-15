@@ -92,8 +92,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     val mutableAttachments = mutableStateListOf<Attachment>()
     val mutableAlarms = mutableStateListOf<Alarm>()
 
-    var allWriteableCollections = databaseDao.getAllWriteableCollections()
-
     private var selectFromAllListQuery: MutableLiveData<SimpleSQLiteQuery> =
         MutableLiveData<SimpleSQLiteQuery>()
     var selectFromAllList: LiveData<List<ICal4ListRel>> =
