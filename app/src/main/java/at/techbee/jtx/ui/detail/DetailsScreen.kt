@@ -267,8 +267,10 @@ fun DetailsScreen(
             textToProcess = newSubtaskTextToProcess,
             module = Module.TODO,
             onCreate = { itemList ->
-                detailViewModel.addSubEntries(itemList, iCalObject.value?.uid!!, iCalObject.value?.collectionId!!)
-                scrollToSection.value = DetailsScreenSection.SUBTASKS
+                iCalObject.value?.let {
+                    detailViewModel.addSubEntries(itemList, it.uid, it.collectionId)
+                    scrollToSection.value = DetailsScreenSection.SUBTASKS
+                }
             },
             onDismiss = { newSubtaskTextToProcess = ""}
         )
@@ -279,8 +281,10 @@ fun DetailsScreen(
             textToProcess = newSubnoteTextToProcess,
             module = Module.NOTE,
             onCreate = { itemList ->
-                detailViewModel.addSubEntries(itemList, iCalObject.value?.uid!!, iCalObject.value?.collectionId!!)
-                scrollToSection.value = DetailsScreenSection.SUBNOTES
+                iCalObject.value?.let {
+                    detailViewModel.addSubEntries(itemList, it.uid, it.collectionId)
+                    scrollToSection.value = DetailsScreenSection.SUBNOTES
+                }
             },
             onDismiss = { newSubnoteTextToProcess = ""}
         )

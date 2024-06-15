@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -24,8 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
@@ -36,15 +33,13 @@ import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
 fun CollectionSelectorDialog(
     module: Module,
     presetCollectionId: Long,
-    allCollectionsLive: LiveData<List<ICalCollection>>,
+    allCollections: List<ICalCollection>,
     onCollectionConfirmed: (selectedCollection: ICalCollection) -> Unit,
     onDismiss: () -> Unit
 ) {
-
-    val allCollections = allCollectionsLive.observeAsState(emptyList())
-    if(allCollections.value.isEmpty())
+    if(allCollections.isEmpty())
         return
-    var selectedCollection by remember { mutableStateOf(allCollections.value.find { it.collectionId == presetCollectionId } ?: allCollections.value.first()) }
+    var selectedCollection by remember { mutableStateOf(allCollections.find { it.collectionId == presetCollectionId } ?: allCollections.first()) }
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -54,7 +49,7 @@ fun CollectionSelectorDialog(
 
                 Column {
                     CollectionsSpinner(
-                        collections = allCollections.value,
+                        collections = allCollections,
                         preselected = selectedCollection,
                         includeReadOnly = false,
                         includeVJOURNAL = if(module == Module.JOURNAL || module == Module.NOTE) true else null,
@@ -139,7 +134,7 @@ fun CollectionSelectorDialog_Preview() {
         CollectionSelectorDialog(
             module = Module.JOURNAL,
             presetCollectionId = 3L,
-            allCollectionsLive = MutableLiveData(listOf(collection1, collection2, collection3, collection4)),
+            allCollections = listOf(collection1, collection2, collection3, collection4),
             onDismiss = { },
             onCollectionConfirmed = {}
         )

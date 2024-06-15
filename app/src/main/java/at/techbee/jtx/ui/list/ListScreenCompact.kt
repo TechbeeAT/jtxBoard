@@ -83,8 +83,8 @@ import java.util.UUID
 fun ListScreenCompact(
     groupedList: Map<String, List<ICal4ListRel>>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
-    storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedStatusesLive: LiveData<List<ExtendedStatus>>,
+    storedCategories: List<StoredCategory>,
+    storedStatuses: List<ExtendedStatus>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     listSettings: ListSettings,
@@ -114,9 +114,6 @@ fun ListScreenCompact(
         ICalDatabase.getInstance(context).iCalDatabaseDao().updateSortOrder(reordered.map { it.id })
     }
     val scope = rememberCoroutineScope()
-
-    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
-    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
 
     val pullToRefreshState = rememberPullToRefreshState(
         enabled = { isPullRefreshEnabled }
@@ -332,8 +329,8 @@ fun ListScreenCompact_TODO() {
             )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             scrollOnceId = MutableLiveData(null),
             selectedEntries = remember { mutableStateListOf() },
             listSettings = listSettings,
@@ -399,8 +396,8 @@ fun ListScreenCompact_JOURNAL() {
             )
                 .groupBy { it.iCal4List.status ?: "" },
             subtasksLive = MutableLiveData(emptyList()),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             listSettings = listSettings,
