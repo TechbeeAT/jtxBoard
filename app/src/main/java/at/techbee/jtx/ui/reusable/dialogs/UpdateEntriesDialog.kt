@@ -96,9 +96,9 @@ enum class UpdateEntriesDialogMode(@StringRes val stringResource: Int) {
 @Composable
 fun UpdateEntriesDialog(
     module: Module,
-    allCategoriesLive: LiveData<List<String>>,
-    allResourcesLive: LiveData<List<String>>,
-    allCollectionsLive: LiveData<List<ICalCollection>>,
+    allCategories: List<String>,
+    allResources: List<String>,
+    allCollections: List<ICalCollection>,
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
     extendedStatusesLive: LiveData<List<ExtendedStatus>>,
     player: MediaPlayer?,
@@ -114,9 +114,6 @@ fun UpdateEntriesDialog(
     onDismiss: () -> Unit
 ) {
 
-    val allCategories by allCategoriesLive.observeAsState(emptyList())
-    val allResources by allResourcesLive.observeAsState(emptyList())
-    val allCollections by allCollectionsLive.observeAsState(emptyList())
     val selectFromAllList by selectFromAllListLive.observeAsState(emptyList())
     val storedStatuses by extendedStatusesLive.observeAsState(emptyList())
 
@@ -501,9 +498,9 @@ fun UpdateEntriesDialog_Preview() {
 
         UpdateEntriesDialog(
             module = Module.JOURNAL,
-            allCategoriesLive = MutableLiveData(listOf("cat1", "Hello")),
-            allResourcesLive = MutableLiveData(listOf("1234", "aaa")),
-            allCollectionsLive = MutableLiveData(listOf(ICalCollection())),
+            allCategories = listOf("cat1", "Hello"),
+            allResources = listOf("1234", "aaa"),
+            allCollections = listOf(ICalCollection()),
             selectFromAllListLive = MutableLiveData(listOf()),
             extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))),
             player = null,

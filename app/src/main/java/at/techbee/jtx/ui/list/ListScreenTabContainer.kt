@@ -71,6 +71,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.locals.StoredListSettingData
@@ -114,6 +115,7 @@ fun ListScreenTabContainer(
 ) {
 
     val context = LocalContext.current
+    val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
     val keyboardController = LocalSoftwareKeyboardController.current
     val scope = rememberCoroutineScope()
     val locationPermissionState = if (!LocalInspectionMode.current) rememberMultiplePermissionsState(
@@ -172,12 +174,8 @@ fun ListScreenTabContainer(
             }
         }
     }
-    val storedCategories by listViewModel.storedCategories.observeAsState(emptyList())
-    val storedResources by listViewModel.storedResources.observeAsState(emptyList())
-    val storedListSettings by listViewModel.storedListSettings.observeAsState(emptyList())
 
     val iCal4ListRel by listViewModel.iCal4ListRel.observeAsState(initial = emptyList())
-    val numAllEntries by listViewModel.numAllEntries.observeAsState(initial = 0)
 
     var timeout by remember { mutableStateOf(false) }
     LaunchedEffect(timeout, allWriteableCollections.value) {
@@ -235,9 +233,9 @@ fun ListScreenTabContainer(
     if (showUpdateEntriesDialog) {
         UpdateEntriesDialog(
             module = getActiveViewModel().module,
-            allCategoriesLive = getActiveViewModel().allCategories,
-            allResourcesLive = getActiveViewModel().allResources,
-            allCollectionsLive = getActiveViewModel().allWriteableCollections,
+            allCategories = database.getAllCategoriesAsText().observeAsState(emptyList()).value,
+            allResources = database.getAllResourcesAsText().observeAsState(emptyList()).value,
+            allCollections = database.getAllWriteableCollections().observeAsState(emptyList()).value,
             selectFromAllListLive = getActiveViewModel().selectFromAllList,
             extendedStatusesLive = getActiveViewModel().extendedStatuses,
             player = getActiveViewModel().mediaPlayer,
@@ -258,7 +256,7 @@ fun ListScreenTabContainer(
         CollectionSelectorDialog(
             module = getActiveViewModel().module,
             presetCollectionId = getActiveViewModel().listSettings.topAppBarCollectionId.value,
-            allCollectionsLive = getActiveViewModel().allCollections,
+            allCollections = database.getAllCollections(module = getActiveViewModel().module.name).observeAsState(emptyList()).value,
             onCollectionConfirmed = { selectedCollection ->
                 getActiveViewModel().listSettings.topAppBarMode.value = ListTopAppBarMode.ADD_ENTRY
                 getActiveViewModel().listSettings.topAppBarCollectionId.value = selectedCollection.collectionId
@@ -366,12 +364,12 @@ fun ListScreenTabContainer(
                 module = listViewModel.module,
                 initialTab = filterSheetInitialTab,
                 listSettings = listViewModel.listSettings,
-                allCollectionsLive = listViewModel.allCollections,
-                allCategoriesLive = listViewModel.allCategories,
-                allResourcesLive = listViewModel.allResources,
-                storedStatusesLive = listViewModel.extendedStatuses,
-                storedCategoriesLive = listViewModel.storedCategories,
-                storedListSettingLive = listViewModel.storedListSettings,
+                allCollections = database.getAllCollections(module = listViewModel.module.name).observeAsState(emptyList()).value,
+                allCategories = database.getAllCategoriesAsText().observeAsState(emptyList()).value,
+                allResources = database.getAllResourcesAsText().observeAsState(emptyList()).value,
+                storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
+                storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                storedListSettings = database.getStoredListSettings(listOf(listViewModel.module.name)).observeAsState(emptyList()).value,
                 onListSettingsChanged = {
                     listViewModel.updateSearch(
                         saveListSettings = true,
@@ -711,11 +709,11 @@ fun ListScreenTabContainer(
                             ListActiveFiltersRow(
                                 listSettings = listViewModel.listSettings,
                                 module = listViewModel.module,
-                                storedCategories = storedCategories,
-                                storedResources = storedResources,
-                                storedListSettings = storedListSettings,
+                                storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                                storedResources = database.getStoredResources().observeAsState(emptyList()).value,
+                                storedListSettings = database.getStoredListSettings(listOf(listViewModel.module.name)).observeAsState(emptyList()).value,
                                 numShownEntries = iCal4ListRel.size,
-                                numAllEntries = numAllEntries,
+                                numAllEntries = database.getICal4ListCount(module = listViewModel.module.name).observeAsState(0).value,
                                 isFilterActive = listViewModel.listSettings.isFilterActive(),
                                 isAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
