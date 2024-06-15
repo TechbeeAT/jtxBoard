@@ -80,8 +80,8 @@ fun ListScreenKanban(
     module: Module,
     list: List<ICal4ListRel>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
-    storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedStatusesLive: LiveData<List<ExtendedStatus>>,
+    storedCategories: List<StoredCategory>,
+    storedStatuses: List<ExtendedStatus>,
     selectedEntries: SnapshotStateList<Long>,
     kanbanColumnsStatus: SnapshotStateList<String?>,
     kanbanColumnsXStatus: SnapshotStateList<String>,
@@ -120,8 +120,6 @@ fun ListScreenKanban(
         }
     }
     val subtasks by subtasksLive.observeAsState(emptyList())
-    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
-    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
 
     val columns = when {
         kanbanColumnsStatus.isNotEmpty() -> kanbanColumnsStatus.map { Status.getStatusFromString(it)?.let { status -> context.getString(status.stringResource) } ?: context.getString(Status.NO_STATUS.stringResource)}
@@ -325,8 +323,8 @@ fun ListScreenKanban_TODO() {
                 ICal4ListRel(icalobject, emptyList(), emptyList(), emptyList()),
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             subtasksLive = MutableLiveData(emptyList()),
             selectedEntries = remember { mutableStateListOf() },
             kanbanColumnsStatus = remember { mutableStateListOf() },
@@ -388,8 +386,8 @@ fun ListScreenKanban_JOURNAL() {
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
             subtasksLive = MutableLiveData(emptyList()),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selectedEntries = remember { mutableStateListOf() },
             kanbanColumnsStatus = remember { mutableStateListOf(Status.FINAL.status?: Status.FINAL.name)  },
             kanbanColumnsXStatus = remember { mutableStateListOf() },

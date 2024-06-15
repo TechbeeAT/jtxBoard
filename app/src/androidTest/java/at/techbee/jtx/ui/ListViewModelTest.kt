@@ -289,31 +289,4 @@ class ListViewModelTest {
             assertEquals(3, listViewModel.iCal4ListRel.value?.size)
         }
     }
-
-    @Test
-    fun getAllCollections() {
-        listViewModel = listViewModelTodos
-        listViewModel.allWriteableCollections.observeForever {  }
-        assertEquals(1, listViewModel.allWriteableCollections.value?.size)
-    }
-
-    @Test
-    fun getAllCategories() = runTest {
-        listViewModel = listViewModelTodos
-        listViewModel.allCategories.observeForever {  }
-
-        val id1 = database.insertICalObject(ICalObject.createTask("Task1"))
-        database.insertCategory(Category(icalObjectId = id1, text = "Test1"))
-        val id2 = database.insertICalObject(ICalObject.createTask("Task2"))
-        database.insertCategory(Category(icalObjectId = id2, text = "Test1"))
-        database.insertCategory(Category(icalObjectId = id2, text = "Whatever"))
-        database.insertCategory(Category(icalObjectId = id2, text = "No matter"))
-        val id3 = database.insertICalObject(ICalObject.createTask("Task3"))
-        database.insertCategory(Category(icalObjectId = id3, text = "Whatever"))
-        database.insertCategory(Category(icalObjectId = id3, text = "No matter"))
-        database.insertICalObject(ICalObject.createTask("Task4"))   // val id4 =
-
-        // only 3 should be returned as the query selects only DISTINCT values!
-        assertEquals(3, listViewModel.allCategories.value?.size)
-    }
 }

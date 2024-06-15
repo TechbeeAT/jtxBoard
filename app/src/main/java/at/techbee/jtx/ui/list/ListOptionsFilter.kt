@@ -35,9 +35,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,8 +46,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
@@ -70,36 +66,25 @@ const val MAX_ITEMS_PER_SECTION = 5
 fun ListOptionsFilter(
     module: Module,
     listSettings: ListSettings,
-    allCollectionsLive: LiveData<List<ICalCollection>>,
-    allCategoriesLive: LiveData<List<String>>,
-    allResourcesLive: LiveData<List<String>>,
-    storedListSettingLive: LiveData<List<StoredListSetting>>,
-    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
+    allCollections: List<ICalCollection>,
+    allCategories: List<String>,
+    allResources: List<String>,
+    storedListSettings: List<StoredListSetting>,
+    extendedStatuses: List<ExtendedStatus>,
     onListSettingsChanged: () -> Unit,
     onSaveStoredListSetting: (StoredListSetting) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
     modifier: Modifier = Modifier,
     isWidgetConfig: Boolean = false
 ) {
-    val allCollectionsState = allCollectionsLive.observeAsState(emptyList())
-    val allCategories by allCategoriesLive.observeAsState(emptyList())
-    val allResources by allResourcesLive.observeAsState(emptyList())
-    val allCollections by remember {
-        derivedStateOf {
-            allCollectionsState.value.map {
-                it.displayName ?: ""
-            }.sortedBy { it.lowercase() }
-        }
-    }
-    val allAccounts by remember {
-        derivedStateOf {
-            allCollectionsState.value.map {
-                it.accountName ?: ""
-            }.distinct().sortedBy { it.lowercase() }
-        }
-    }
-    val storedListSettings by storedListSettingLive.observeAsState(emptyList())
-    val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
+   val allCollectionsNames = allCollections
+       .map { it.displayName ?: "" }
+       .sortedBy { it.lowercase() }
+    val allAccounts = allCollections
+            .map { it.accountName ?: "" }
+            .distinct()
+            .sortedBy { it.lowercase() }
+
     var showSaveListSettingsPresetDialog by rememberSaveable { mutableStateOf(false) }
 
     var showFilterDateRangeStartDialog by rememberSaveable { mutableStateOf(false) }
@@ -730,7 +715,7 @@ fun ListOptionsFilter(
                 onListSettingsChanged()
             },
             onInvertSelection = {
-                val missing = allCollections.toMutableList()
+                val missing = allCollectionsNames.toMutableList()
                     .apply { removeAll(listSettings.searchCollection) }
                 listSettings.searchCollection.clear()
                 listSettings.searchCollection.addAll(missing)
@@ -739,7 +724,7 @@ fun ListOptionsFilter(
         {
             var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
 
-            allCollections.forEachIndexed { index, collection ->
+            allCollectionsNames.forEachIndexed { index, collection ->
                 if (index > maxEntries - 1)
                     return@forEachIndexed
 
@@ -756,12 +741,12 @@ fun ListOptionsFilter(
                 )
             }
 
-            if (allCollections.size > maxEntries) {
+            if (allCollectionsNames.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                     Text(
                         stringResource(
                             R.string.filter_options_more_entries,
-                            allCollections.size - maxEntries
+                            allCollectionsNames.size - maxEntries
                         )
                     )
                 }
@@ -985,8 +970,7 @@ fun ListOptionsFilter_Preview_TODO() {
         ListOptionsFilter(
             module = Module.TODO,
             listSettings = listSettings,
-            allCollectionsLive = MutableLiveData(
-                listOf(
+            allCollections = listOf(
                     ICalCollection(
                         collectionId = 1L,
                         displayName = "Collection 1",
@@ -997,28 +981,23 @@ fun ListOptionsFilter_Preview_TODO() {
                         displayName = "Collection 2",
                         accountName = "Account 2"
                     )
-                )
             ),
-            allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            extendedStatusesLive = MutableLiveData(
-                listOf(
+            allCategories = listOf("Category1", "#MyHashTag", "Whatever"),
+            allResources = listOf("Resource1", "Whatever"),
+            extendedStatuses = listOf(
                     ExtendedStatus(
                         "individual",
                         Module.JOURNAL,
                         Status.FINAL,
                         null
                     )
-                )
             ),
-            storedListSettingLive = MutableLiveData(
-                listOf(
+            storedListSettings = listOf(
                     StoredListSetting(
                         module = Module.JOURNAL,
                         name = "test",
                         storedListSettingData = StoredListSettingData()
                     )
-                )
             ),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { },
@@ -1043,7 +1022,7 @@ fun ListOptionsFilter_Preview_JOURNAL() {
         ListOptionsFilter(
             module = Module.JOURNAL,
             listSettings = listSettings,
-            allCollectionsLive = MutableLiveData(
+            allCollections =
                 listOf(
                     ICalCollection(
                         collectionId = 1L,
@@ -1055,28 +1034,24 @@ fun ListOptionsFilter_Preview_JOURNAL() {
                         displayName = "Collection 2",
                         accountName = "Account 2"
                     )
-                )
+
             ),
-            allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            storedListSettingLive = MutableLiveData(
-                listOf(
+            allCategories = listOf("Category1", "#MyHashTag", "Whatever"),
+            allResources = listOf("Resource1", "Whatever"),
+            storedListSettings = listOf(
                     StoredListSetting(
                         module = Module.JOURNAL,
                         name = "test",
                         storedListSettingData = StoredListSettingData()
                     )
-                )
             ),
-            extendedStatusesLive = MutableLiveData(
-                listOf(
+            extendedStatuses = listOf(
                     ExtendedStatus(
                         "individual",
                         Module.JOURNAL,
                         Status.FINAL,
                         null
                     )
-                )
             ),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { },

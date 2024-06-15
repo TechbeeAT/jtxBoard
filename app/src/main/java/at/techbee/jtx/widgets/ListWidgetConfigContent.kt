@@ -35,6 +35,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -188,11 +189,11 @@ fun ListWidgetConfigContent(
                             ListOptionsFilter(
                                 module = selectedModule.value,
                                 listSettings = listSettings,
-                                allCollectionsLive = database.getAllCollections(module = selectedModule.value.name),
-                                allCategoriesLive = database.getAllCategoriesAsText(),
-                                allResourcesLive = database.getAllResourcesAsText(),
-                                extendedStatusesLive = database.getStoredStatuses(),
-                                storedListSettingLive = database.getStoredListSettings(modules = listOf(selectedModule.value.name)),
+                                allCollections = database.getAllCollections(module = selectedModule.value.name).observeAsState(emptyList()).value,
+                                allCategories = database.getAllCategoriesAsText().observeAsState(emptyList()).value,
+                                allResources = database.getAllResourcesAsText().observeAsState(emptyList()).value,
+                                extendedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
+                                storedListSettings = database.getStoredListSettings(modules = listOf(selectedModule.value.name)).observeAsState(emptyList()).value,
                                 onListSettingsChanged = { /* nothing to do, only relevant for states for filter bottom sheet, not for widget config */ },
                                 isWidgetConfig = true,
                                 onSaveStoredListSetting = { /* no saving option in list widget config*/ },

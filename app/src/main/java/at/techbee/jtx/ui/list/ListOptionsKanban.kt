@@ -16,13 +16,10 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ViewColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,8 +28,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
@@ -41,19 +36,16 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.ui.reusable.elements.FilterSection
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListOptionsKanban(
     module: Module,
     listSettings: ListSettings,
-    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
-    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    extendedStatuses: List<ExtendedStatus>,
+    storedCategories: List<StoredCategory>,
     onListSettingsChanged: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val extendedStatuses by extendedStatusesLive.observeAsState(initial = emptyList())
-    val storedCategories by storedCategoriesLive.observeAsState(initial = emptyList())
-
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
@@ -185,8 +177,8 @@ fun ListOptionsKanban_Preview() {
         ListOptionsKanban(
             module = Module.TODO,
             listSettings = listSettings,
-            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.TODO, Status.FINAL, null))),
-            storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
+            extendedStatuses = listOf(ExtendedStatus("individual", Module.TODO, Status.FINAL, null)),
+            storedCategories = listOf(StoredCategory("cat1", Color.Green.toArgb())),
             onListSettingsChanged = { },
         )
     }

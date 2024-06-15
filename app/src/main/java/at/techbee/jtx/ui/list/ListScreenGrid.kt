@@ -76,8 +76,8 @@ import sh.calvin.reorderable.rememberReorderableLazyStaggeredGridState
 fun ListScreenGrid(
     list: List<ICal4ListRel>,
     subtasksLive: LiveData<List<ICal4ListRel>>,
-    storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedStatusesLive: LiveData<List<ExtendedStatus>>,
+    storedCategories: List<StoredCategory>,
+    storedStatuses: List<ExtendedStatus>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
@@ -104,9 +104,6 @@ fun ListScreenGrid(
         ICalDatabase.getInstance(context).iCalDatabaseDao().updateSortOrder(reordered.map { it.id })
     }
     val scope = rememberCoroutineScope()
-
-    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
-    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
 
     if (scrollId != null) {
         LaunchedEffect(list) {
@@ -264,8 +261,8 @@ fun ListScreenGrid_TODO() {
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
             subtasksLive = MutableLiveData(emptyList()),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
@@ -321,8 +318,8 @@ fun ListScreenGrid_JOURNAL() {
                 ICal4ListRel(icalobject2, emptyList(), emptyList(), emptyList())
             ),
             subtasksLive = MutableLiveData(emptyList()),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedStatuses = emptyList(),
             selectedEntries = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,

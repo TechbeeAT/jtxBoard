@@ -90,9 +90,9 @@ fun ListScreenList(
     subtasksLive: LiveData<List<ICal4ListRel>>,
     subnotesLive: LiveData<List<ICal4ListRel>>,
     parentsLive: LiveData<List<ICal4ListRel>>,
-    storedCategoriesLive: LiveData<List<StoredCategory>>,
-    storedResourcesLive: LiveData<List<StoredResource>>,
-    storedStatusesLive: LiveData<List<ExtendedStatus>>,
+    storedCategories: List<StoredCategory>,
+    storedResources: List<StoredResource>,
+    storedStatuses: List<ExtendedStatus>,
     selectedEntries: SnapshotStateList<Long>,
     attachmentsLive: LiveData<Map<Long, List<Attachment>>>,
     scrollOnceId: MutableLiveData<Long?>,
@@ -125,9 +125,6 @@ fun ListScreenList(
     val subnotes by subnotesLive.observeAsState(emptyList())
     val parents by parentsLive.observeAsState(emptyList())
     val attachments by attachmentsLive.observeAsState(emptyMap())
-    val storedCategories by storedCategoriesLive.observeAsState(emptyList())
-    val storedResources by storedResourcesLive.observeAsState(emptyList())
-    val storedStatuses by storedStatusesLive.observeAsState(emptyList())
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -371,9 +368,9 @@ fun ListScreenList_TODO() {
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),
             parentsLive = MutableLiveData(emptyList()),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            storedStatuses = emptyList(),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),
@@ -455,9 +452,9 @@ fun ListScreenList_JOURNAL() {
             subtasksLive = MutableLiveData(emptyList()),
             subnotesLive = MutableLiveData(emptyList()),
             parentsLive = MutableLiveData(emptyList()),
-            storedCategoriesLive = MutableLiveData(emptyList()),
-            storedResourcesLive = MutableLiveData(emptyList()),
-            storedStatusesLive = MutableLiveData(emptyList()),
+            storedCategories = emptyList(),
+            storedResources = emptyList(),
+            storedStatuses = emptyList(),
             selectedEntries = remember { mutableStateListOf() },
             attachmentsLive = MutableLiveData(emptyMap()),
             scrollOnceId = MutableLiveData(null),

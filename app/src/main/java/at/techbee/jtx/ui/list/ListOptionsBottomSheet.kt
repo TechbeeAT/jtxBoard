@@ -34,8 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
@@ -53,12 +51,12 @@ fun ListOptionsBottomSheet(
     module: Module,
     initialTab: ListOptionsBottomSheetTabs,
     listSettings: ListSettings,
-    allCollectionsLive: LiveData<List<ICalCollection>>,
-    allCategoriesLive: LiveData<List<String>>,
-    allResourcesLive: LiveData<List<String>>,
-    storedStatusesLive: LiveData<List<ExtendedStatus>>,
-    storedListSettingLive: LiveData<List<StoredListSetting>>,
-    storedCategoriesLive: LiveData<List<StoredCategory>>,
+    allCollections: List<ICalCollection>,
+    allCategories: List<String>,
+    allResources: List<String>,
+    storedStatuses: List<ExtendedStatus>,
+    storedListSettings: List<StoredListSetting>,
+    storedCategories: List<StoredCategory>,
     onListSettingsChanged: () -> Unit,
     onSaveStoredListSetting: (StoredListSetting) -> Unit,
     onDeleteStoredListSetting: (StoredListSetting) -> Unit,
@@ -111,11 +109,11 @@ fun ListOptionsBottomSheet(
                     ListOptionsFilter(
                         module = module,
                         listSettings = listSettings,
-                        allCollectionsLive = allCollectionsLive,
-                        allCategoriesLive = allCategoriesLive,
-                        allResourcesLive = allResourcesLive,
-                        extendedStatusesLive = storedStatusesLive,
-                        storedListSettingLive = storedListSettingLive,
+                        allCollections = allCollections,
+                        allCategories = allCategories,
+                        allResources = allResources,
+                        extendedStatuses = storedStatuses,
+                        storedListSettings = storedListSettings,
                         onListSettingsChanged = onListSettingsChanged,
                         onSaveStoredListSetting = onSaveStoredListSetting,
                         onDeleteStoredListSetting = onDeleteStoredListSetting,
@@ -140,8 +138,8 @@ fun ListOptionsBottomSheet(
                     ListOptionsKanban(
                         module = module,
                         listSettings = listSettings,
-                        extendedStatusesLive = storedStatusesLive,
-                        storedCategoriesLive = storedCategoriesLive,
+                        extendedStatuses = storedStatuses,
+                        storedCategories = storedCategories,
                         onListSettingsChanged = onListSettingsChanged,
                         modifier = modifier
                             .fillMaxSize()
@@ -171,7 +169,7 @@ fun ListOptionsBottomSheet_Preview_TODO() {
             module = Module.TODO,
             initialTab = ListOptionsBottomSheetTabs.FILTER,
             listSettings = listSettings,
-            allCollectionsLive = MutableLiveData(
+            allCollections =
                 listOf(
                     ICalCollection(
                         collectionId = 1L,
@@ -183,13 +181,12 @@ fun ListOptionsBottomSheet_Preview_TODO() {
                         displayName = "Collection 2",
                         accountName = "Account 2"
                     )
-                )
             ),
-            allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
-            storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
-            storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
+            allCategories = listOf("Category1", "#MyHashTag", "Whatever"),
+            allResources = listOf("Resource1", "Whatever"),
+            storedStatuses = listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null)),
+            storedCategories = listOf(StoredCategory("cat1", Color.Green.toArgb())),
+            storedListSettings = listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData())),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }
@@ -215,7 +212,7 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
             module = Module.JOURNAL,
             initialTab = ListOptionsBottomSheetTabs.FILTER,
             listSettings = listSettings,
-            allCollectionsLive = MutableLiveData(
+            allCollections =
                 listOf(
                     ICalCollection(
                         collectionId = 1L,
@@ -227,13 +224,12 @@ fun ListOptionsBottomSheet_Preview_JOURNAL() {
                         displayName = "Collection 2",
                         accountName = "Account 2"
                     )
-                )
             ),
-            allCategoriesLive = MutableLiveData(listOf("Category1", "#MyHashTag", "Whatever")),
-            allResourcesLive = MutableLiveData(listOf("Resource1", "Whatever")),
-            storedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null))),
-            storedCategoriesLive = MutableLiveData(listOf(StoredCategory("cat1", Color.Green.toArgb()))),
-            storedListSettingLive = MutableLiveData(listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData()))),
+            allCategories = listOf("Category1", "#MyHashTag", "Whatever"),
+            allResources = listOf("Resource1", "Whatever"),
+            storedStatuses = listOf(ExtendedStatus("individual", Module.JOURNAL, Status.FINAL, null)),
+            storedCategories = listOf(StoredCategory("cat1", Color.Green.toArgb())),
+            storedListSettings = listOf(StoredListSetting(module = Module.JOURNAL, name = "test", storedListSettingData = StoredListSettingData())),
             onListSettingsChanged = { },
             onSaveStoredListSetting = { },
             onDeleteStoredListSetting = { }

@@ -18,6 +18,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
+import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
@@ -32,6 +33,7 @@ fun ListScreen(
     navController: NavController
 ) {
     val context = LocalContext.current
+    val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
     val settingsStateHolder = SettingsStateHolder(context)
     val isPullRefreshEnabled = SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) } && settingsStateHolder.settingSyncOnPullRefresh.value
 
@@ -83,9 +85,9 @@ fun ListScreen(
                     attachmentsLive = listViewModel.allAttachmentsMap,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
-                    storedCategoriesLive = listViewModel.storedCategories,
-                    storedResourcesLive = listViewModel.storedResources,
-                    storedStatusesLive = listViewModel.extendedStatuses,
+                    storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                    storedResources = database.getStoredResources().observeAsState(emptyList()).value,
+                    storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
                     isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks.value,
                     isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes.value,
                     isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments.value,
@@ -124,8 +126,8 @@ fun ListScreen(
                 ListScreenGrid(
                     list = list,
                     subtasksLive = listViewModel.allSubtasks,
-                    storedCategoriesLive = listViewModel.storedCategories,
-                    storedStatusesLive = listViewModel.extendedStatuses,
+                    storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                    storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
@@ -145,8 +147,8 @@ fun ListScreen(
                 ListScreenCompact(
                     groupedList = groupedList,
                     subtasksLive = listViewModel.allSubtasks,
-                    storedCategoriesLive = listViewModel.storedCategories,
-                    storedStatusesLive = listViewModel.extendedStatuses,
+                    storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                    storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     listSettings = listViewModel.listSettings,
@@ -168,8 +170,8 @@ fun ListScreen(
                     module = listViewModel.module,
                     list = list,
                     subtasksLive = listViewModel.allSubtasks,
-                    storedCategoriesLive = listViewModel.storedCategories,
-                    storedStatusesLive = listViewModel.extendedStatuses,
+                    storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                    storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
                     selectedEntries = listViewModel.selectedEntries,
                     kanbanColumnsStatus = listViewModel.listSettings.kanbanColumnsStatus,
                     kanbanColumnsXStatus = listViewModel.listSettings.kanbanColumnsXStatus,
