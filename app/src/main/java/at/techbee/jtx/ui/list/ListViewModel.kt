@@ -104,9 +104,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     val allWriteableCollections = databaseDao.getAllWriteableCollections()
-    val storedCategories = databaseDao.getStoredCategories()
-    val storedResources = databaseDao.getStoredResources()
-    val extendedStatuses = databaseDao.getStoredStatuses()
 
     var sqlConstraintException = mutableStateOf(false)
     val scrollOnceId = MutableLiveData<Long?>(null)

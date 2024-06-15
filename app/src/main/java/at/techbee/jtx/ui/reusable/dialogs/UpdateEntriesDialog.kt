@@ -100,7 +100,7 @@ fun UpdateEntriesDialog(
     allResources: List<String>,
     allCollections: List<ICalCollection>,
     selectFromAllListLive: LiveData<List<ICal4ListRel>>,
-    extendedStatusesLive: LiveData<List<ExtendedStatus>>,
+    storedStatuses: List<ExtendedStatus>,
     player: MediaPlayer?,
     onSelectFromAllListSearchTextUpdated: (String) -> Unit,
     onCategoriesChanged: (addedCategories: List<String>, removedCategories: List<String>) -> Unit,
@@ -115,7 +115,6 @@ fun UpdateEntriesDialog(
 ) {
 
     val selectFromAllList by selectFromAllListLive.observeAsState(emptyList())
-    val storedStatuses by extendedStatusesLive.observeAsState(emptyList())
 
     val addedCategories = remember { mutableStateListOf<String>() }
     val removedCategories = remember { mutableStateListOf<String>() }
@@ -502,7 +501,7 @@ fun UpdateEntriesDialog_Preview() {
             allResources = listOf("1234", "aaa"),
             allCollections = listOf(ICalCollection()),
             selectFromAllListLive = MutableLiveData(listOf()),
-            extendedStatusesLive = MutableLiveData(listOf(ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb()))),
+            storedStatuses = listOf(ExtendedStatus("individual", Module.JOURNAL, Status.NO_STATUS, Color.Green.toArgb())),
             player = null,
             onSelectFromAllListSearchTextUpdated = { },
             onCategoriesChanged = { _, _ -> },
