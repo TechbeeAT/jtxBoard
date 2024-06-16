@@ -131,7 +131,6 @@ interface ICalDatabaseDao {
 
     /**
      * Retrieve an list of all Collections ([Collection]) that have entries for a given module as a LiveData-List
-     * @param module (Module.name) for which there are existing entries for a collection
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
     @Transaction
@@ -233,12 +232,15 @@ interface ICalDatabaseDao {
     fun getCount(): Int
 
     /**
-     * Retrieve the number of items in the table of [ICal4List] for a specific module as Int.
-     * @param
+     * Retrieve the number of iCalObjects that are not deleted,
+     * that don't have an RRULE
+     * and that are not present in related to (meaning they are not sub-entries)
+     * for a specific module
+     * @param [module]
      * @return Int with the total number of [ICal4List] in the table for the given module.
      */
-    @Query("SELECT count(*) FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_MODULE = :module AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 ")
-    fun getICal4ListCount(module: String): LiveData<Int?>
+    @Query("SELECT count(*) FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module AND $COLUMN_RRULE IS NULL AND $COLUMN_DELETED = 0 AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID NOT IN (SELECT $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO)")
+    fun getCount4List(module: String): LiveData<Int?>
 
     /**
      * Retrieve an [ICalObject] by Id as LiveData

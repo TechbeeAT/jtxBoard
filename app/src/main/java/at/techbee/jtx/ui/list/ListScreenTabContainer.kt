@@ -698,7 +698,7 @@ fun ListScreenTabContainer(
                                 storedResources = database.getStoredResources().observeAsState(emptyList()).value,
                                 storedListSettings = database.getStoredListSettings(listOf(listViewModel.module.name)).observeAsState(emptyList()).value,
                                 numShownEntries = iCal4ListRel.size,
-                                numAllEntries = database.getICal4ListCount(module = listViewModel.module.name).observeAsState(0).value,
+                                numAllEntries = database.getCount4List(module = listViewModel.module.name).observeAsState(0).value,
                                 isFilterActive = listViewModel.listSettings.isFilterActive(),
                                 isAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
