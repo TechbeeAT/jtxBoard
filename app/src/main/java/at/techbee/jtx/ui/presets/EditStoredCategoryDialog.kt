@@ -8,15 +8,27 @@
 
 package at.techbee.jtx.ui.presets
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -28,12 +40,11 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
-import com.godaddy.android.colorpicker.HsvColor
-import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
-import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
+import com.github.skydoves.colorpicker.compose.BrightnessSlider
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EditStoredCategoryDialog(
     storedCategory: StoredCategory,
@@ -41,10 +52,9 @@ fun EditStoredCategoryDialog(
     onDeleteStoredCategory: (StoredCategory) -> Unit,
     onDismiss: () -> Unit
 ) {
-
+    val colorController = rememberColorPickerController()
     val keyboardController = LocalSoftwareKeyboardController.current
     var storedCategoryName by remember { mutableStateOf(storedCategory.category) }
-    var storedCategoryColor by remember { mutableStateOf(storedCategory.color?.let { Color(it) }) }
 
 
     AlertDialog(
@@ -81,14 +91,31 @@ fun EditStoredCategoryDialog(
                 }
 
                 ColorSelectorRow(
-                    selectedColor = storedCategoryColor,
-                    onColorChanged = { storedCategoryColor = it })
+                    selectedColor = colorController.selectedColor.value,
+                    onColorChanged = { colorController.selectByColor(it, true) }
+                )
 
-                HarmonyColorPicker(
-                    color = if(storedCategoryColor == null || storedCategoryColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(storedCategoryColor!!),
-                    harmonyMode = ColorHarmonyMode.NONE,
-                    modifier = Modifier.size(300.dp),
-                    onColorChanged = { hsvColor -> storedCategoryColor = hsvColor.toColor() })
+                HsvColorPicker(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .padding(20.dp),
+                    controller = colorController,
+                    initialColor = storedCategory.color?.let { Color(it) }
+                )
+
+                BrightnessSlider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .height(24.dp)
+                        .padding(horizontal = 20.dp),
+                    controller = colorController,
+                    borderRadius = 12.dp,
+                    borderSize = 4.dp,
+                    borderColor = colorController.selectedColor.value,
+                    initialColor = storedCategory.color?.let { Color(it) }
+                )
             }
         },
         confirmButton = {
@@ -115,7 +142,7 @@ fun EditStoredCategoryDialog(
 
                 TextButton(
                     onClick = {
-                        onStoredCategoryChanged(StoredCategory(storedCategoryName, storedCategoryColor?.toArgb()))
+                        onStoredCategoryChanged(StoredCategory(storedCategoryName, if(colorController.selectedColor.value == Color.Transparent) null else colorController.selectedColor.value.toArgb()))
                         onDismiss()
                     },
                     enabled = storedCategoryName.isNotEmpty()

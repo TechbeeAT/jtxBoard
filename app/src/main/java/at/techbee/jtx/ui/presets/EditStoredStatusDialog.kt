@@ -14,14 +14,13 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -33,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -48,12 +46,12 @@ import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
-import com.godaddy.android.colorpicker.HsvColor
-import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
-import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
+import com.github.skydoves.colorpicker.compose.BrightnessSlider
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun EditStoredStatusDialog(
     storedStatus: ExtendedStatus,
@@ -62,10 +60,10 @@ fun EditStoredStatusDialog(
     onDismiss: () -> Unit
 ) {
 
+    val colorController = rememberColorPickerController()
     val keyboardController = LocalSoftwareKeyboardController.current
     var storedStatusName by remember { mutableStateOf(storedStatus.xstatus) }
     var storedStatusRfcStatus by remember { mutableStateOf(storedStatus.rfcStatus) }
-    var storedStatusColor by remember { mutableStateOf(storedStatus.color?.let { Color(it) }) }
 
 
     AlertDialog(
@@ -125,14 +123,31 @@ fun EditStoredStatusDialog(
 
 
                 ColorSelectorRow(
-                    selectedColor = storedStatusColor,
-                    onColorChanged = { storedStatusColor = it })
+                    selectedColor = colorController.selectedColor.value,
+                    onColorChanged = { colorController.selectByColor(it, true) }
+                )
 
-                HarmonyColorPicker(
-                    color = if(storedStatusColor == null || storedStatusColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(storedStatusColor!!),
-                    harmonyMode = ColorHarmonyMode.NONE,
-                    modifier = Modifier.size(300.dp),
-                    onColorChanged = { hsvColor -> storedStatusColor = hsvColor.toColor() })
+                HsvColorPicker(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .padding(20.dp),
+                    controller = colorController,
+                    initialColor = storedStatus.color?.let { Color(it) }
+                )
+
+                BrightnessSlider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .height(24.dp)
+                        .padding(horizontal = 20.dp),
+                    controller = colorController,
+                    borderRadius = 12.dp,
+                    borderSize = 4.dp,
+                    borderColor = colorController.selectedColor.value,
+                    initialColor = storedStatus.color?.let { Color(it) }
+                )
             }
         },
         confirmButton = {
@@ -159,7 +174,14 @@ fun EditStoredStatusDialog(
 
                 TextButton(
                     onClick = {
-                        onStoredStatusChanged(ExtendedStatus(storedStatusName, storedStatus.module, storedStatusRfcStatus, storedStatusColor?.toArgb()))
+                        onStoredStatusChanged(
+                            ExtendedStatus(
+                                storedStatusName,
+                                storedStatus.module,
+                                storedStatusRfcStatus,
+                                if(colorController.selectedColor.value == Color.Transparent) null else colorController.selectedColor.value.toArgb()
+                            )
+                        )
                         onDismiss()
                     },
                     enabled = storedStatusName.isNotEmpty()
