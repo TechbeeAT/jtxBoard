@@ -27,7 +27,7 @@ android {
     defaultConfig {
         applicationId = "at.techbee.jtx"
         buildConfigField("long", "buildTime", "${System.currentTimeMillis()}L")
-        minSdk = 21
+        minSdk = 23
         targetSdk = 34
         versionCode = 209000007
         versionName = "2.09.00-alpha07"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
