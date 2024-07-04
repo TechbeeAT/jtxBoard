@@ -29,8 +29,8 @@ android {
         buildConfigField("long", "buildTime", "${System.currentTimeMillis()}L")
         minSdk = 23
         targetSdk = 34
-        versionCode = 209000007
-        versionName = "2.09.00-alpha07"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode = 209000008
+        versionName = "2.09.00-alpha08"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField("String", "versionCodename", "\"Pride is a protest \uD83C\uDF08\"")
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
