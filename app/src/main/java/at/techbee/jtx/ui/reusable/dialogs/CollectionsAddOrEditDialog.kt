@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -24,7 +24,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -39,9 +38,9 @@ import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
-import com.godaddy.android.colorpicker.HsvColor
-import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
-import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
+import com.github.skydoves.colorpicker.compose.BrightnessSlider
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
 @Composable
@@ -51,9 +50,9 @@ fun CollectionsAddOrEditDialog(
     onDismiss: () -> Unit
 ) {
 
+    val colorController = rememberColorPickerController()
     val keyboardController = LocalSoftwareKeyboardController.current
     var collectionName by rememberSaveable { mutableStateOf(current.displayName ?: "") }
-    var collectionColor by remember { mutableStateOf(current.color?.let { Color(it) }) }
     var noCollectionNameError by rememberSaveable { mutableStateOf(false) }
 
 
@@ -94,17 +93,31 @@ fun CollectionsAddOrEditDialog(
                 }
 
                 ColorSelectorRow(
-                    selectedColor = collectionColor,
-                    onColorChanged = { collectionColor = it })
+                    selectedColor = colorController.selectedColor.value,
+                    onColorChanged = { colorController.selectByColor(it, true) }
+                )
 
-                HarmonyColorPicker(
-                    color = if(collectionColor == null || collectionColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(collectionColor!!),
-                    harmonyMode = ColorHarmonyMode.NONE,
-                    modifier = Modifier.size(300.dp),
-                    onColorChanged = { hsvColor ->
-                        collectionColor = hsvColor.toColor()
-                    })
+                HsvColorPicker(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .padding(20.dp),
+                    controller = colorController,
+                    initialColor = current.color?.let { Color(it) }
+                )
 
+                BrightnessSlider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .height(24.dp)
+                        .padding(horizontal = 20.dp),
+                    controller = colorController,
+                    borderRadius = 12.dp,
+                    borderSize = 4.dp,
+                    borderColor = colorController.selectedColor.value,
+                    initialColor = current.color?.let { Color(it) }
+                )
             }
         },
         confirmButton = {
@@ -114,7 +127,7 @@ fun CollectionsAddOrEditDialog(
                         noCollectionNameError = true
                     else {
                         current.displayName = collectionName
-                        current.color = collectionColor?.toArgb()
+                        current.color = if(colorController.selectedColor.value == Color.Transparent) null else colorController.selectedColor.value.toArgb()
                         onCollectionChanged(current)
                         onDismiss()
                     }

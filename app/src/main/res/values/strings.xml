@@ -249,6 +249,7 @@
     <string name="menu_collections_add_local">"Add local Collection"</string>
     <string name="navigation_drawer_website_news">"News &amp; Release Notes"</string>
     <string name="color">"Color"</string>
+    <string name="no_color">"No color"</string>
     <string name="priority_0_no_priority">"No priority"</string>
     <string name="priority_1_highest">"1 - Highest"</string>
     <string name="priority_2_higher">"2 - Higher"</string>

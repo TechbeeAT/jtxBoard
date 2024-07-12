@@ -34,7 +34,7 @@ fun ColorSelectorRow(
     selectedColor: Color?,
     modifier: Modifier = Modifier,
     additionalColorsInt: List<Int> = emptyList(),
-    onColorChanged: (Color?) -> Unit
+    onColorChanged: (Color) -> Unit
 ) {
 
     val defaultColors = arrayListOf(
@@ -68,7 +68,7 @@ fun ColorSelectorRow(
                         ),
                     containerColor = if (color == Color.Transparent) Color.White else color,
                     onClick = {
-                        onColorChanged(if (color == Color.Transparent) null else color)
+                        onColorChanged(color)
                     },
                     content = {
                         if (color == Color.Transparent)
@@ -92,7 +92,7 @@ fun ColorSelectorRow(
                             ),
                         containerColor = if (color == Color.Transparent) Color.White else color,
                         onClick = {
-                            onColorChanged(if (color == Color.Transparent) null else color)
+                            onColorChanged(color)
                         },
                         content = {
                             if (color == Color.Transparent)

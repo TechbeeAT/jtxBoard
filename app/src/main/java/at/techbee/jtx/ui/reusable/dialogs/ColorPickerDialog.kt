@@ -9,17 +9,14 @@
 package at.techbee.jtx.ui.reusable.dialogs
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
-import com.godaddy.android.colorpicker.HsvColor
-import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
-import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
+import com.github.skydoves.colorpicker.compose.BrightnessSlider
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
 @Composable
@@ -41,9 +38,9 @@ fun ColorPickerDialog(
     onColorChanged: (Int?) -> Unit,
     onDismiss: () -> Unit,
     additionalColorsInt: List<Int> = emptyList()
-    ) {
+) {
 
-    var selectedColor by remember { mutableStateOf(initialColor?.let {Color(it)}) }
+    val colorController = rememberColorPickerController()
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -55,24 +52,41 @@ fun ColorPickerDialog(
 
 
                 ColorSelectorRow(
-                    selectedColor = selectedColor,
-                    onColorChanged = { selectedColor = it },
+                    selectedColor = colorController.selectedColor.value,
+                    onColorChanged = { color ->
+                            colorController.selectByColor(color, true)
+                    },
                     additionalColorsInt = additionalColorsInt
                 )
 
-                HarmonyColorPicker(
-                    color = if(selectedColor == null || selectedColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(selectedColor!!),
-                    harmonyMode = ColorHarmonyMode.NONE,
-                    modifier = Modifier.size(300.dp),
-                    onColorChanged = { hsvColor -> selectedColor = hsvColor.toColor()
-                    })
+                HsvColorPicker(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .padding(20.dp),
+                    controller = colorController,
+                    initialColor = initialColor?.let { Color(it) }
+                )
+
+                BrightnessSlider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .height(24.dp)
+                        .padding(horizontal = 20.dp),
+                    controller = colorController,
+                    borderRadius = 12.dp,
+                    borderSize = 4.dp,
+                    borderColor = colorController.selectedColor.value,
+                    initialColor = initialColor?.let { Color(it) }
+                )
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onColorChanged(selectedColor?.toArgb())
-                        onDismiss()
+                    onColorChanged(if(colorController.selectedColor.value == Color.Transparent) null else colorController.selectedColor.value.toArgb())
+                    onDismiss()
                 }
             ) {
                 Text(stringResource(id = R.string.save))
@@ -89,7 +103,7 @@ fun ColorPickerDialog(
         }
     )
 
- }
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -111,7 +125,7 @@ fun ColorPickerDialog_Preview_ColorWheel() {
     MaterialTheme {
 
         ColorPickerDialog(
-            initialColor = Color.Red.toArgb()+1,
+            initialColor = Color.Red.toArgb() + 1,
             onColorChanged = { },
             onDismiss = { }
         )
