@@ -33,8 +33,8 @@ android {
         create("gplay") { dimension = "version" }
         create("amazon") { dimension = "version" }
         create("ose") { dimension = "version" }
-        create("generic") { dimension = "version" }
-        create("huawei") { dimension = "version" }
+        //create("generic") { dimension = "version" }
+        //create("huawei") { dimension = "version" }
     }
 
     // This code creates the gradle managed device used to generate baseline profiles.
