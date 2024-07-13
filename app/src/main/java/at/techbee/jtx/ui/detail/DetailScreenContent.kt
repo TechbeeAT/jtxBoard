@@ -144,6 +144,7 @@ fun DetailScreenContent(
     onUnlinkSubEntry: (icalObjectId: Long, parentUID: String?) -> Unit,
     onCategoriesUpdated: (List<Category>) -> Unit,
     onResourcesUpdated: (List<Resource>) -> Unit,
+    onAttendeesUpdated: (List<Attendee>) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>, popBackStack: Boolean) -> Unit,
     goBack: () -> Unit,
     goToFilteredList: (StoredListSettingData) -> Unit,
@@ -679,9 +680,10 @@ fun DetailScreenContent(
                     if (attendees.isNotEmpty() || detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] == true || showAllOptions) {
                         DetailsCardAttendees(
                             attendees = attendees,
-                            isEditMode = isEditMode.value,
+                            isReadOnly = collection?.readonly ?: true,
                             onAttendeesUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                                onAttendeesUpdated(it)
                             },
                             modifier = detailElementModifier
                         )
@@ -1147,6 +1149,7 @@ fun DetailScreenContent_JOURNAL() {
             onUpdateSortOrder = { },
             onCategoriesUpdated = { },
             onResourcesUpdated = { },
+            onAttendeesUpdated = { },
             alarmSetting = DropdownSettingOption.AUTO_ALARM_ON_START
         )
     }
@@ -1211,6 +1214,7 @@ fun DetailScreenContent_TODO_editInitially() {
             onUpdateSortOrder = { },
             onCategoriesUpdated = { },
             onResourcesUpdated = { },
+            onAttendeesUpdated = { },
             alarmSetting = DropdownSettingOption.AUTO_ALARM_ON_START
         )
     }
@@ -1275,6 +1279,7 @@ fun DetailScreenContent_TODO_editInitially_isChild() {
             onUpdateSortOrder = { },
             onCategoriesUpdated = { },
             onResourcesUpdated = { },
+            onAttendeesUpdated = { },
             alarmSetting = DropdownSettingOption.AUTO_ALARM_ON_START
         )
     }
@@ -1333,6 +1338,7 @@ fun DetailScreenContent_failedLoading() {
             onUpdateSortOrder = { },
             onCategoriesUpdated = { },
             onResourcesUpdated = { },
+            onAttendeesUpdated = { },
             alarmSetting = DropdownSettingOption.AUTO_ALARM_ON_START
         )
     }

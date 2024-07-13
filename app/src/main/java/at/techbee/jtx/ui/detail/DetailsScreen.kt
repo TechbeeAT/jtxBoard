@@ -671,6 +671,7 @@ fun DetailsScreen(
                 onUnlinkSubEntry = { icalObjectId, parentUID -> detailViewModel.unlinkFromParent(icalObjectId, parentUID) },
                 onCategoriesUpdated = { categories -> detailViewModel.updateCategories(categories) },
                 onResourcesUpdated = { resources -> detailViewModel.updateResources(resources) },
+                onAttendeesUpdated = { attendees -> detailViewModel.updateAttendees(attendees) },
                 player = detailViewModel.mediaPlayer,
                 goToDetail = { itemId, editMode, list, popBackStack ->
                     if(popBackStack)

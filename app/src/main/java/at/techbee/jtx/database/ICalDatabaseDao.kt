@@ -42,6 +42,7 @@ import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_ICALOBJECT_ID
 import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_ID
 import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_URI
 import at.techbee.jtx.database.properties.COLUMN_ATTENDEE_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTENDEE_ID
 import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ICALOBJECT_ID
 import at.techbee.jtx.database.properties.COLUMN_CATEGORY_TEXT
 import at.techbee.jtx.database.properties.COLUMN_COMMENT_ICALOBJECT_ID
@@ -97,6 +98,14 @@ interface ICalDatabaseDao {
      */
     @Query("SELECT DISTINCT $COLUMN_RESOURCE_TEXT FROM $TABLE_NAME_RESOURCE WHERE $COLUMN_RESOURCE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) GROUP BY $COLUMN_RESOURCE_TEXT ORDER BY count(*) DESC, $COLUMN_RESOURCE_TEXT ASC")
     fun getAllResourcesAsText(): LiveData<List<String>>
+
+    /**
+     * Retrieve an list of all Attendees as a LiveData-List
+     * @return a list of [Attendee]
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) ORDER BY $COLUMN_ATTENDEE_ID DESC")
+    fun getAllAttendees(): LiveData<List<Attendee>>
+
 
     /**
      * Retrieve an list of all DISTINCT Colors for ICalObjects as Int in a LiveData object
@@ -1573,7 +1582,6 @@ iCalObject.percent != 100
 
     @Transaction
     suspend fun updateResources(iCalObjectId: Long, uid: String, resources: List<Resource>) {
-
         deleteResources(iCalObjectId)
         resources.forEach { it.icalObjectId = iCalObjectId }
         upsertResources(resources)
@@ -1583,6 +1591,18 @@ iCalObject.percent != 100
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertResources(resources: List<Resource>)
+
+    @Transaction
+    suspend fun updateAttendees(iCalObjectId: Long, uid: String, attendees: List<Attendee>) {
+        deleteAttendees(iCalObjectId)
+        attendees.forEach { it.icalObjectId = iCalObjectId }
+        upsertAttendees(attendees)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAttendees(attendees: List<Attendee>)
 
     @Transaction
     suspend fun saveAll(

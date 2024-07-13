@@ -560,6 +560,18 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun updateAttendees(attendees: List<Attendee>) {
+        mutableAttendees.clear()
+        mutableAttendees.addAll(attendees)
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
+            val uid = mutableICalObject?.uid!!
+            databaseDao.updateAttendees(mainICalObjectId!!, uid, attendees)
+            onChangeDone(updateNotifications = false, updateGeofences = false)
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
+        }
+    }
+
     fun createCopy(newModule: Module) {
         viewModelScope.launch(Dispatchers.IO) {
 
