@@ -13,6 +13,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -120,6 +121,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
             if (firstInstall > 1641596400000L)
                 addWelcomeEntries(application)
             settings.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseDao.getICalEntity4List().forEach {
+                Log.d("ICalEntity4List", it.toString())
+            }
         }
     }
 

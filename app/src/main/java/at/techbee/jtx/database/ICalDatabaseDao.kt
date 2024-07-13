@@ -66,6 +66,7 @@ import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
 import at.techbee.jtx.database.properties.Unknown
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
+import at.techbee.jtx.database.relations.ICalEntity4List
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_COLLECTIONS_VIEW
@@ -83,6 +84,7 @@ interface ICalDatabaseDao {
     /*
     SELECTs (global selects without parameter)
      */
+
 
     /**
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
@@ -1802,5 +1804,10 @@ iCalObject.percent != 100
      */
     @Query("SELECT $COLUMN_UID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :iCalObjectId")
     fun getUid(iCalObjectId: Long): String?
+
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT")
+    fun getICalEntity4List(): List<ICalEntity4List>
 
 }
