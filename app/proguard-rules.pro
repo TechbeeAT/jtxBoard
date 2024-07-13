@@ -13,6 +13,9 @@
 # ical4j: keep all iCalendar properties/parameters (used via reflection)
 -keep class net.fortuna.ical4j.** { *; }
 
+# DAVx⁵ + libs
+#-keep class at.bitfire.** { *; }       # all DAVx⁵ code is required
+
 # we use enum classes (https://www.guardsquare.com/en/products/proguard/manual/examples#enumerations)
 -keepclassmembers,allowoptimization enum * {
     public static **[] values();
@@ -57,6 +60,31 @@
 -dontwarn org.conscrypt.Conscrypt$Version
 -dontwarn org.conscrypt.Conscrypt
 -dontwarn org.conscrypt.ConscryptHostnameVerifier
+
+-dontwarn com.github.erosb.jsonsKema.IJsonValue
+-dontwarn com.github.erosb.jsonsKema.JsonParser
+-dontwarn com.github.erosb.jsonsKema.JsonValue
+-dontwarn com.github.erosb.jsonsKema.Schema
+-dontwarn com.github.erosb.jsonsKema.SchemaLoader
+-dontwarn com.github.erosb.jsonsKema.ValidationFailure
+-dontwarn com.github.erosb.jsonsKema.Validator
+-dontwarn javax.cache.Cache
+-dontwarn javax.cache.CacheManager
+-dontwarn javax.cache.Caching
+-dontwarn javax.cache.configuration.Configuration
+-dontwarn javax.cache.configuration.MutableConfiguration
+-dontwarn javax.cache.spi.CachingProvider
+-dontwarn org.jparsec.OperatorTable
+-dontwarn org.jparsec.Parser$Reference
+-dontwarn org.jparsec.Parser
+-dontwarn org.jparsec.Parsers
+-dontwarn org.jparsec.Scanners
+-dontwarn org.jparsec.Terminals$Builder
+-dontwarn org.jparsec.Terminals$Identifier
+-dontwarn org.jparsec.Terminals$IntegerLiteral
+-dontwarn org.jparsec.Terminals$StringLiteral
+-dontwarn org.jparsec.Terminals
+-dontwarn org.jparsec.functors.Map3
 
 
 # Great resource with explanations:
