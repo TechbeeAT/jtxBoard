@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,18 +30,24 @@ import androidx.compose.material.icons.automirrored.outlined.InsertComment
 import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
 import androidx.compose.material.icons.automirrored.outlined.NavigateNext
 import androidx.compose.material.icons.outlined.AlarmAdd
+import androidx.compose.material.icons.outlined.AssignmentLate
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.ContactMail
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.EventRepeat
+import androidx.compose.material.icons.outlined.GppMaybe
 import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.NewLabel
 import androidx.compose.material.icons.outlined.Place
+import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.ViewHeadline
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -65,14 +72,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -328,6 +338,7 @@ fun DetailScreenContent(
     val detailElementModifier = Modifier
         .padding(top = 8.dp)
         .fillMaxWidth()
+        .heightIn(min = 48.dp)
     val listState = rememberLazyListState()
 
     LaunchedEffect(scrollToSectionState.value) {
@@ -556,55 +567,214 @@ fun DetailScreenContent(
                     }
                 }
 
-                DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> {
-                    if (
-                        !iCalObject.status.isNullOrEmpty()
-                        || !iCalObject.xstatus.isNullOrEmpty()
-                        || !iCalObject.classification.isNullOrEmpty()
-                        || iCalObject.priority in 1..9
-                        || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false
-                        || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false
-                        || (iCalObject.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false)
+                DetailsScreenSection.STATUS -> {
+                    var statusMenuExpanded by remember { mutableStateOf(false) }
+
+                    if(detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false
                         || showAllOptions
-                    ) {
+                        || !iCalObject.status.isNullOrEmpty()
+                        || !iCalObject.xstatus.isNullOrEmpty())
+                    {
+                        ElevatedAssistChip(
+                            enabled = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                            label = {
 
-                        DetailsCardStatusClassificationPriority(
-                            icalObject = iCalObject,
-                            isReadOnly = collection?.readonly ?: true,
-                            enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true || showAllOptions,
-                            enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true || showAllOptions,
-                            enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true || showAllOptions,
-                            allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
-                            extendedStatuses = ICalDatabase
-                                .getInstance(context)
-                                .iCalDatabaseDao()
-                                .getStoredStatuses()
-                                .observeAsState(emptyList()).value,
-                            onStatusChanged = { newStatus ->
-                                if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
-                                    when (newStatus) {
-                                        Status.IN_PROCESS -> iCalObject.setUpdatedProgress(
-                                            if (iCalObject.percent !in 1..99) 1 else iCalObject.percent,
-                                            true
-                                        )
+                                Column {
+                                    Text(
+                                        text = stringResource(id = R.string.status),
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
 
-                                        Status.COMPLETED -> iCalObject.setUpdatedProgress(100, true)
-                                        else -> {}
-                                    }
+                                    Text(
+                                        text = if (!iCalObject.xstatus.isNullOrEmpty())
+                                            iCalObject.xstatus!!
+                                        else
+                                            Status.entries.find { it.status == iCalObject.status }?.stringResource?.let { stringResource(id = it) }
+                                                ?: iCalObject.status ?: "",
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
                                 }
-                                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+
+                                DropdownMenu(
+                                    expanded = statusMenuExpanded,
+                                    onDismissRequest = { statusMenuExpanded = false }
+                                ) {
+
+                                    Status.valuesFor(iCalObject.getModuleFromString()).forEach { status ->
+                                        DropdownMenuItem(
+                                            text = { Text(stringResource(id = status.stringResource)) },
+                                            onClick = {
+                                                iCalObject.status = status.status
+                                                iCalObject.xstatus = null
+                                                statusMenuExpanded = false
+
+                                                if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
+                                                    when (status) {
+                                                        Status.IN_PROCESS -> iCalObject.setUpdatedProgress(
+                                                            if (iCalObject.percent !in 1..99) 1 else iCalObject.percent,
+                                                            true
+                                                        )
+                                                        Status.COMPLETED -> iCalObject.setUpdatedProgress(100, true)
+                                                        else -> {}
+                                                    }
+                                                }
+                                                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                                            }
+                                        )
+                                    }
+                                    ICalDatabase
+                                        .getInstance(context)
+                                        .iCalDatabaseDao()
+                                        .getStoredStatuses()
+                                        .observeAsState(emptyList()).value
+                                        .filter { it.module == iCalObject.getModuleFromString() }
+                                        .forEach { storedStatus ->
+                                            DropdownMenuItem(
+                                                text = { Text(storedStatus.xstatus) },
+                                                onClick = {
+                                                    iCalObject.xstatus = storedStatus.xstatus
+                                                    iCalObject.status = storedStatus.rfcStatus.status
+                                                    statusMenuExpanded = false
+                                                    if (keepStatusProgressCompletedInSync && iCalObject.getModuleFromString() == Module.TODO) {
+                                                        when (storedStatus.rfcStatus) {
+                                                            Status.IN_PROCESS -> iCalObject.setUpdatedProgress(
+                                                                if (iCalObject.percent !in 1..99) 1 else iCalObject.percent,
+                                                                true
+                                                            )
+                                                            Status.COMPLETED -> iCalObject.setUpdatedProgress(100, true)
+                                                            else -> {}
+                                                        }
+                                                    }
+                                                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED                                                }
+                                            )
+                                        }
+                                }
                             },
-                            onClassificationChanged = { newClassification ->
-                                iCalObject.classification = newClassification.classification
-                                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.PublishedWithChanges,
+                                    stringResource(id = R.string.status)
+                                )
                             },
-                            onPriorityChanged = { newPriority ->
-                                iCalObject.priority = newPriority
-                                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                            onClick = {
+                                if(collection?.readonly == false)
+                                    statusMenuExpanded = true
                             },
-                            modifier = detailElementModifier.fillMaxWidth()
+                            modifier = detailElementModifier
                         )
                     }
+                }
+                DetailsScreenSection.CLASSIFICATION -> {
+                    var classificationMenuExpanded by remember { mutableStateOf(false) }
+
+                    if(detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false
+                        || showAllOptions
+                        || !iCalObject.classification.isNullOrEmpty()) {
+                        ElevatedAssistChip(
+                            label = {
+                                Column {
+                                    Text(
+                                        text = stringResource(id = R.string.classification),
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                    Text(
+                                        Classification.entries.find { it.classification == iCalObject.classification }?.stringResource?.let {
+                                            stringResource(
+                                                id = it
+                                            )
+                                        } ?: iCalObject.classification ?: "",
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+
+                                DropdownMenu(
+                                    expanded = classificationMenuExpanded,
+                                    onDismissRequest = { classificationMenuExpanded = false }
+                                ) {
+
+                                    Classification.entries.forEach { clazzification ->
+                                        DropdownMenuItem(
+                                            text = { Text(stringResource(id = clazzification.stringResource)) },
+                                            onClick = {
+                                                iCalObject.classification = clazzification.classification
+                                                classificationMenuExpanded = false
+                                                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                                            }
+                                        )
+                                    }
+                                }
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.GppMaybe,
+                                    stringResource(id = R.string.classification)
+                                )
+                            },
+                            onClick = {
+                                if(collection?.readonly == false)
+                                    classificationMenuExpanded = true
+                            },
+                            modifier = detailElementModifier
+                        )
+                    }
+                }
+                DetailsScreenSection.PRIORITY -> {
+                    var priorityMenuExpanded by remember { mutableStateOf(false) }
+                    val priorityStrings = stringArrayResource(id = R.array.priority)
+
+                        if(iCalObject.priority in 1..9
+                            || (iCalObject.getModuleFromString() == Module.TODO && detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false)
+                            || showAllOptions) {
+
+                            ElevatedAssistChip(
+                                label = {
+                                    Column {
+                                        Text(
+                                            text = stringResource(id = R.string.priority),
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+
+                                        Text(
+                                            if (iCalObject.priority in priorityStrings.indices)
+                                                stringArrayResource(id = R.array.priority)[iCalObject.priority ?: 0]
+                                            else
+                                                stringArrayResource(id = R.array.priority)[0],
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+
+                                    DropdownMenu(
+                                        expanded = priorityMenuExpanded,
+                                        onDismissRequest = { priorityMenuExpanded = false }
+                                    ) {
+                                        stringArrayResource(id = R.array.priority).forEachIndexed { index, prio ->
+                                            DropdownMenuItem(
+                                                text = { Text(prio) },
+                                                onClick = {
+                                                    iCalObject.priority = if(index == 0) null else index
+                                                    priorityMenuExpanded = false
+                                                    changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                                                }
+                                            )
+                                        }
+                                    }
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Outlined.AssignmentLate,
+                                        stringResource(id = R.string.priority)
+                                    )
+                                },
+                                onClick = {
+                                    if(collection?.readonly == false)
+                                        priorityMenuExpanded = true
+                                },
+                                modifier = detailElementModifier
+                            )
+                        }
                 }
 
                 DetailsScreenSection.CATEGORIES -> {
@@ -963,8 +1133,9 @@ fun DetailScreenContent(
                         }
 
                         DetailsScreenSection.PROGRESS -> {}
-
-                        DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> {} // TODO refactor first
+                        DetailsScreenSection.STATUS -> {} // TODO
+                        DetailsScreenSection.CLASSIFICATION -> {} // TODO
+                        DetailsScreenSection.PRIORITY -> {} // TODO
 
                         DetailsScreenSection.CATEGORIES -> {
                             AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != true) {
@@ -1084,7 +1255,6 @@ fun DetailScreenContent(
                                 }
                             }
                         }
-
                     }
                 }
             }

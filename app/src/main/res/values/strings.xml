@@ -414,7 +414,6 @@ Thank you!"</string>
     <string name="group_by_due_month">"Due (month)"</string>
     <string name="week_number_year">"Week %1$d/%2$d"</string>
     <string name="summary_description">"Summary/Description"</string>
-    <string name="status_classification_priority">"Status/Classification/Priority"</string>
     <string name="timezone">"Timezone"</string>
     <string name="not_set2">"Not set"</string>
     <string name="invert_selection">"Invert selection"</string>
