@@ -175,7 +175,11 @@ fun DetailOptionsBottomSheet(
                                     onClick = { },
                                     enabled = when (setting) {
                                         DetailsScreenSection.COLLECTION -> true
-                                        DetailsScreenSection.DATES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
+                                        DetailsScreenSection.DATE -> true //TODO
+                                        DetailsScreenSection.STARTED -> true //TODO
+                                        DetailsScreenSection.DUE -> true //TODO
+                                        DetailsScreenSection.COMPLETED -> true //TODO
+                                        //DetailsScreenSection.DATES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
                                         DetailsScreenSection.SUMMARY -> true    //TODO
                                         DetailsScreenSection.DESCRIPTION -> true //TODO
                                         DetailsScreenSection.PROGRESS -> module == Module.TODO

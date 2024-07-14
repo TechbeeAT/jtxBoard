@@ -1604,6 +1604,18 @@ iCalObject.percent != 100
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAttendees(attendees: List<Attendee>)
 
+    /*
+    @Transaction
+    suspend fun updateDates(iCalObjectId: Long, uid: String, dtstart: Long?, dtstartTimezone: String?, due: Long?, dueTimezone: String?, completed: Long?, completedTimezone: String?) {
+        setDates(iCalObjectId, dtstart, dtstartTimezone, due, dueTimezone, completed, completedTimezone)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DTSTART = :dtstart, $COLUMN_DTSTART_TIMEZONE = :dtstartTimezone, $COLUMN_DUE = :due, $COLUMN_DUE_TIMEZONE = :dueTimezone, $COLUMN_COMPLETED = :completed, $COLUMN_COMPLETED_TIMEZONE = :completedTimezone WHERE $COLUMN_ID = :iCalObjectId")
+    suspend fun setDates(iCalObjectId: Long, dtstart: Long?, dtstartTimezone: String?, due: Long?, dueTimezone: String?, completed: Long?, completedTimezone: String?)
+     */
+
     @Transaction
     suspend fun saveAll(
         icalObject: ICalObject,

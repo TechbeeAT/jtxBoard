@@ -572,6 +572,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    /*
+    fun updateDates(iCalObjectId: Long, uid: String, dtstart: Long?, dtstartTimezone: String?, due: Long?, dueTimezone: String?, completed: Long?, completedTimezone: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
+            databaseDao.updateDates(iCalObjectId, uid, dtstart, dtstartTimezone, due, dueTimezone, completed, completedTimezone)
+            onChangeDone(updateNotifications = true, updateGeofences = false)
+            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
+        }
+    }
+     */
+
     fun createCopy(newModule: Module) {
         viewModelScope.launch(Dispatchers.IO) {
 

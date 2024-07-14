@@ -9,6 +9,7 @@
 package at.techbee.jtx.ui.detail
 
 import android.media.MediaPlayer
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -77,6 +78,7 @@ import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.StoredListSettingData
@@ -92,10 +94,13 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.detail.models.DetailsScreenSection
+import at.techbee.jtx.ui.reusable.cards.HorizontalDateCard
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.coroutines.delay
+import java.time.Instant
+import java.time.ZonedDateTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -145,6 +150,7 @@ fun DetailScreenContent(
     onCategoriesUpdated: (List<Category>) -> Unit,
     onResourcesUpdated: (List<Resource>) -> Unit,
     onAttendeesUpdated: (List<Attendee>) -> Unit,
+    //onUpdateDates: (iCalObjectId: Long, uid: String, dtstart: Long?, dtstartTimezone: String?, due: Long?, dueTimezone: String?, completed: Long?, completedTimezone: String?) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>, popBackStack: Boolean) -> Unit,
     goBack: () -> Unit,
     goToFilteredList: (StoredListSettingData) -> Unit,
@@ -366,38 +372,130 @@ fun DetailScreenContent(
                     )
                 }
 
-                DetailsScreenSection.DATES -> {
-
-                    DetailsCardDates(
-                        icalObject = iCalObject,
-                        isReadOnly = collection?.readonly ?: true,
-                        enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] ?: true || iCalObject.getModuleFromString() == Module.JOURNAL,
+                //TODO: Berücksichtigen!!
+                /*
+                                        enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] ?: true || iCalObject.getModuleFromString() == Module.JOURNAL,
                         enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE]
                             ?: true,
                         enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED]
                             ?: true,
-                        allowCompletedChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
-                        onDtstartChanged = { datetime, timezone ->
+                 */
+
+                DetailsScreenSection.DATE -> {
+                    HorizontalDateCard(
+                        datetime = iCalObject.dtstart,
+                        timezone = iCalObject.dtstartTimezone,
+                        allowNull = false,
+                        dateOnly = false,
+                        isReadOnly = collection?.readonly ?: true,
+                        labelTop = stringResource(id = DetailsScreenSection.DATE.stringRes),
+                        onDateTimeChanged = { datetime, timezone ->
                             iCalObject.dtstart = datetime
                             iCalObject.dtstartTimezone = timezone
                             updateAlarms()
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
-                        onDueChanged = { datetime, timezone ->
-                            iCalObject.due = datetime
-                            iCalObject.dueTimezone = timezone
-                            updateAlarms()
+                        modifier = detailElementModifier
+                    )
+                }
+
+                DetailsScreenSection.STARTED -> {
+                    HorizontalDateCard(
+                        datetime = iCalObject.dtstart,
+                        timezone = iCalObject.dtstartTimezone,
+                        allowNull = true,
+                        dateOnly = false,
+                        isReadOnly = collection?.readonly ?: true,
+                        labelTop = stringResource(id = DetailsScreenSection.STARTED.stringRes),
+                        pickerMaxDate = iCalObject.due?.let { Instant.ofEpochMilli(it).atZone(DateTimeUtils.requireTzId(iCalObject.dueTimezone)) },
+                        onDateTimeChanged = { datetime, timezone ->
+                            if((iCalObject.due ?: Long.MAX_VALUE) <= (datetime ?: Long.MIN_VALUE)) {
+                                Toast.makeText(context, context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart), Toast.LENGTH_LONG).show()
+                            } else {
+                                iCalObject.dtstart = datetime
+                                iCalObject.dtstartTimezone = timezone
+                                updateAlarms()
+
+                                if (datetime != null) {
+
+                                    iCalObject.due?.let {
+                                        val dueZoned =
+                                            ZonedDateTime.ofInstant(
+                                                Instant.ofEpochMilli(it),
+                                                DateTimeUtils.requireTzId(iCalObject.dueTimezone)
+                                            )
+                                        if ((iCalObject.dueTimezone == TZ_ALLDAY && iCalObject.dtstartTimezone != TZ_ALLDAY)) {
+                                            iCalObject.due =
+                                                dueZoned.withHour(0).withMinute(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
+                                                    .toInstant().toEpochMilli()
+                                            iCalObject.dueTimezone = timezone
+                                        } else if (iCalObject.dueTimezone != TZ_ALLDAY && iCalObject.dtstartTimezone == TZ_ALLDAY) {
+                                            iCalObject.due =
+                                                dueZoned.withHour(0).withMinute(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
+                                                    .toInstant().toEpochMilli()
+                                            iCalObject.dueTimezone = TZ_ALLDAY
+                                        }
+                                    }
+                                }
+                                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                            }
+                        },
+                        modifier = detailElementModifier
+                    )
+                }
+
+
+                DetailsScreenSection.DUE -> {
+                    HorizontalDateCard(
+                        datetime = iCalObject.due,
+                        timezone = iCalObject.dueTimezone,
+                        allowNull = true,
+                        dateOnly = false,
+                        isReadOnly = collection?.readonly ?: true,
+                        labelTop = stringResource(id = DetailsScreenSection.DUE.stringRes),
+                        pickerMinDate = iCalObject.dtstart?.let { Instant.ofEpochMilli(it).atZone(DateTimeUtils.requireTzId(iCalObject.dtstartTimezone)) },
+                        onDateTimeChanged = { datetime, timezone ->
+                            if((datetime ?: Long.MAX_VALUE) <= (iCalObject.dtstart ?: Long.MIN_VALUE)) {
+                                Toast.makeText(
+                                    context,
+                                    context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            } else {
+                                iCalObject.due = datetime
+                                iCalObject.dueTimezone = timezone
+                            }
+
+                            if(datetime != null) {
+                                iCalObject.dtstart?.let {
+                                    if ((iCalObject.dtstartTimezone == TZ_ALLDAY && iCalObject.dueTimezone != TZ_ALLDAY) || (iCalObject.dtstartTimezone != TZ_ALLDAY && iCalObject.dueTimezone == TZ_ALLDAY)) {
+                                        val dtstartZoned =
+                                            ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(iCalObject.dtstartTimezone))
+                                        iCalObject.dtstart =
+                                            dtstartZoned.withHour(0).withMinute(0).withZoneSameLocal(DateTimeUtils.requireTzId(timezone))
+                                                .toInstant().toEpochMilli()
+                                        iCalObject.dtstartTimezone = timezone
+                                    }
+                                }
+                            }
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
-                        onCompletedChanged = { datetime, timezone ->
+                        modifier = detailElementModifier
+                    )
+                }
+
+                DetailsScreenSection.COMPLETED -> {
+                    HorizontalDateCard(
+                        datetime = iCalObject.completed,
+                        timezone = iCalObject.completedTimezone,
+                        allowNull = true,
+                        dateOnly = false,
+                        isReadOnly = (collection?.readonly ?: true) && !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                        labelTop = stringResource(id = DetailsScreenSection.COMPLETED.stringRes),
+                        pickerMinDate = iCalObject.dtstart?.let { Instant.ofEpochMilli(it).atZone(DateTimeUtils.requireTzId(iCalObject.dtstartTimezone)) },
+                        onDateTimeChanged = { datetime, timezone ->
                             iCalObject.completed = datetime
                             iCalObject.completedTimezone = timezone
-                            if (keepStatusProgressCompletedInSync) {
-                                if (datetime == null)
-                                    iCalObject.setUpdatedProgress(null, true)
-                                else
-                                    iCalObject.setUpdatedProgress(100, true)
-                            }
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
                         modifier = detailElementModifier
@@ -835,7 +933,11 @@ fun DetailScreenContent(
                 detailSettings.detailSettingOrder.forEach { section ->
                     when (section) {
                         DetailsScreenSection.COLLECTION -> {}  // skip
-                        DetailsScreenSection.DATES -> {}  //TODO() refactor to show them individually
+
+                        DetailsScreenSection.DATE -> {} //TODO() add buttons
+                        DetailsScreenSection.STARTED -> {} //TODO() add buttons
+                        DetailsScreenSection.DUE -> {} //TODO() add buttons
+                        DetailsScreenSection.COMPLETED -> {} //TODO() add buttons
 
                         DetailsScreenSection.SUMMARY -> {
                             AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] != true) {
@@ -982,6 +1084,7 @@ fun DetailScreenContent(
                                 }
                             }
                         }
+
                     }
                 }
             }
