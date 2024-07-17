@@ -452,10 +452,20 @@ data class Alarm(
 
         // the alarmManager finally takes care, that the pendingIntent is queued to start the notification Intent that on click would start the contentIntent
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms()) || Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
-        else
-            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
+        try {
+            if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && alarmManager.canScheduleExactAlarms()) || Build.VERSION.SDK_INT < Build.VERSION_CODES.S)
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
+            else
+                alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
+        } catch (e: IllegalStateException) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                alarmManager.cancelAll()
+            } else {
+                while(alarmManager.nextAlarmClock!=null) {
+                    alarmManager.cancel(alarmManager.nextAlarmClock.showIntent)
+                }
+            }
+        }
     }
 
     /**
