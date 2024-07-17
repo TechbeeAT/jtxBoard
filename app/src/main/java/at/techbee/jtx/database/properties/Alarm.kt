@@ -418,14 +418,6 @@ data class Alarm(
         if (isReadOnly && SettingsStateHolder(context).settingDisableAlarmsReadonly.value)   // don't schedule alarm for read only if option was deactivated!
             return
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            Log.i(
-                "scheduleNotification",
-                "Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)"
-            )
-            return
-        }
-
         val notification = createNotification(
             icalObjectId,
             alarmId,
