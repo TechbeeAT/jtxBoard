@@ -1,0 +1,4 @@
+* Improved alarm handling
+* Version updates and several technical upgrades
+
+Attention: From this version the minimum required Android version is Android 6. Due to dependencies Android 5 is not supported anymore.
