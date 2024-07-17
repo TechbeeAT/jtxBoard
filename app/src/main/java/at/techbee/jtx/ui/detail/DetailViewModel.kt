@@ -113,6 +113,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     val mediaPlayer = MediaPlayer()
 
     private var _isAuthenticated = false
+    private var immediateAlarmTriggeredOnce = false
 
     companion object {
         const val PREFS_DETAIL_JOURNALS = "prefsDetailJournals"
@@ -123,6 +124,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun load(icalObjectId: Long, isAuthenticated: Boolean) {
         mainICalObjectId = icalObjectId
         _isAuthenticated = isAuthenticated
+        immediateAlarmTriggeredOnce = false
         viewModelScope.launch {
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
@@ -450,9 +452,16 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 databaseDao.setAlarmNotification(it.id, false)
             }
 
-            if(triggerImmediateAlarm)
-                NotificationPublisher.triggerImmediateAlarm(it, _application)
+            val triggerInPastButNotDone =
+                mutableAlarms.any { alarm -> (alarm.triggerTime?:0L) <= System.currentTimeMillis() }
+                        && mutableAlarms.none  { alarm -> (alarm.triggerTime?:0L) > System.currentTimeMillis() }
+                        && it.percent != 100
+                        && it.status != Status.COMPLETED.status
 
+            if(!immediateAlarmTriggeredOnce && (triggerImmediateAlarm || triggerInPastButNotDone)) {
+                NotificationPublisher.triggerImmediateAlarm(it, _application)
+                immediateAlarmTriggeredOnce = true
+            }
         }
     }
 
