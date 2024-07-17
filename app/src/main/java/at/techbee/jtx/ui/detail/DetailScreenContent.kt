@@ -26,23 +26,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.InsertComment
 import androidx.compose.material.icons.automirrored.outlined.NavigateBefore
 import androidx.compose.material.icons.automirrored.outlined.NavigateNext
-import androidx.compose.material.icons.outlined.AlarmAdd
-import androidx.compose.material.icons.outlined.AssignmentLate
-import androidx.compose.material.icons.outlined.AttachFile
-import androidx.compose.material.icons.outlined.ContactMail
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.EventRepeat
-import androidx.compose.material.icons.outlined.GppMaybe
-import androidx.compose.material.icons.outlined.Groups
-import androidx.compose.material.icons.outlined.Link
-import androidx.compose.material.icons.outlined.NewLabel
-import androidx.compose.material.icons.outlined.Place
-import androidx.compose.material.icons.outlined.PublishedWithChanges
-import androidx.compose.material.icons.outlined.ViewHeadline
-import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -651,12 +636,7 @@ fun DetailScreenContent(
                                         }
                                 }
                             },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.PublishedWithChanges,
-                                    stringResource(id = R.string.status)
-                                )
-                            },
+                            leadingIcon = { DetailsScreenSection.STATUS.Icon() },
                             onClick = {
                                 if(collection?.readonly == false)
                                     statusMenuExpanded = true
@@ -706,12 +686,7 @@ fun DetailScreenContent(
                                     }
                                 }
                             },
-                            leadingIcon = {
-                                Icon(
-                                    Icons.Outlined.GppMaybe,
-                                    stringResource(id = R.string.classification)
-                                )
-                            },
+                            leadingIcon = { DetailsScreenSection.CLASSIFICATION.Icon() },
                             onClick = {
                                 if(collection?.readonly == false)
                                     classificationMenuExpanded = true
@@ -762,12 +737,7 @@ fun DetailScreenContent(
                                         }
                                     }
                                 },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Outlined.AssignmentLate,
-                                        stringResource(id = R.string.priority)
-                                    )
-                                },
+                                leadingIcon = { DetailsScreenSection.PRIORITY.Icon() },
                                 onClick = {
                                     if(collection?.readonly == false)
                                         priorityMenuExpanded = true
@@ -1102,12 +1072,48 @@ fun DetailScreenContent(
             ) {
                 detailSettings.detailSettingOrder.forEach { section ->
                     when (section) {
-                        DetailsScreenSection.COLLECTION -> {}  // skip
+                        DetailsScreenSection.COLLECTION -> {
+                            AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COLLECTION] != true) {
+                                IconButton(onClick = {
+                                    detailSettings.detailSetting[DetailSettingsOption.ENABLE_COLLECTION] = true
+                                    scrollToSectionState.value = DetailsScreenSection.COLLECTION
+                                }) {
+                                    DetailsScreenSection.COLLECTION.Icon()
+                                }
+                            }
+                        }
 
-                        DetailsScreenSection.DATE -> {} //TODO() add buttons
-                        DetailsScreenSection.STARTED -> {} //TODO() add buttons
-                        DetailsScreenSection.DUE -> {} //TODO() add buttons
-                        DetailsScreenSection.COMPLETED -> {} //TODO() add buttons
+                        DetailsScreenSection.DATE -> {} // cannot be hidden by user
+                        DetailsScreenSection.STARTED -> {
+                            AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != true) {
+                                IconButton(onClick = {
+                                    detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] = true
+                                    scrollToSectionState.value = DetailsScreenSection.STARTED
+                                }) {
+                                    DetailsScreenSection.STARTED.Icon()
+                                }
+                            }
+                        }
+                        DetailsScreenSection.DUE -> {
+                            AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != true) {
+                                IconButton(onClick = {
+                                    detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] = true
+                                    scrollToSectionState.value = DetailsScreenSection.DUE
+                                }) {
+                                    DetailsScreenSection.DUE.Icon()
+                                }
+                            }
+                        }
+                        DetailsScreenSection.COMPLETED -> {
+                            AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != true) {
+                                IconButton(onClick = {
+                                    detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] = true
+                                    scrollToSectionState.value = DetailsScreenSection.COMPLETED
+                                }) {
+                                    DetailsScreenSection.COMPLETED.Icon()
+                                }
+                            }
+                        }
 
                         DetailsScreenSection.SUMMARY -> {
                             AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] != true) {
@@ -1115,11 +1121,10 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUMMARY] = true
                                     scrollToSectionState.value = DetailsScreenSection.SUMMARY
                                 }) {
-                                    Icon(Icons.Outlined.ViewHeadline, stringResource(id = R.string.summary))
+                                    DetailsScreenSection.SUMMARY.Icon()
                                 }
                             }
                         }
-
 
                         DetailsScreenSection.DESCRIPTION -> {
                             AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] != true) {
@@ -1127,15 +1132,42 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_DESCRIPTION] = true
                                     scrollToSectionState.value = DetailsScreenSection.DESCRIPTION
                                 }) {
-                                    Icon(Icons.Outlined.Description, stringResource(id = R.string.description))
+                                    DetailsScreenSection.DESCRIPTION.Icon()
                                 }
                             }
                         }
 
                         DetailsScreenSection.PROGRESS -> {}
-                        DetailsScreenSection.STATUS -> {} // TODO
-                        DetailsScreenSection.CLASSIFICATION -> {} // TODO
-                        DetailsScreenSection.PRIORITY -> {} // TODO
+                        DetailsScreenSection.STATUS -> {
+                            AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != true) {
+                                IconButton(onClick = {
+                                    detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] = true
+                                    scrollToSectionState.value = DetailsScreenSection.STATUS
+                                }) {
+                                    DetailsScreenSection.STATUS.Icon()
+                                }
+                            }
+                        }
+                        DetailsScreenSection.CLASSIFICATION -> {
+                            AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != true) {
+                                IconButton(onClick = {
+                                    detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] = true
+                                    scrollToSectionState.value = DetailsScreenSection.CLASSIFICATION
+                                }) {
+                                    DetailsScreenSection.PRIORITY.Icon()
+                                }
+                            }
+                        }
+                        DetailsScreenSection.PRIORITY -> {
+                            AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != true) {
+                                IconButton(onClick = {
+                                    detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] = true
+                                    scrollToSectionState.value = DetailsScreenSection.PRIORITY
+                                }) {
+                                    DetailsScreenSection.PRIORITY.Icon()
+                                }
+                            }
+                        }
 
                         DetailsScreenSection.CATEGORIES -> {
                             AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != true) {
@@ -1143,7 +1175,7 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] = true
                                     scrollToSectionState.value = DetailsScreenSection.CATEGORIES
                                 }) {
-                                    Icon(Icons.Outlined.NewLabel, stringResource(id = R.string.categories))
+                                    DetailsScreenSection.CATEGORIES.Icon()
                                 }
                             }
                         }
@@ -1158,7 +1190,7 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] = true
                                     scrollToSectionState.value = DetailsScreenSection.RESOURCES
                                 }) {
-                                    Icon(Icons.Outlined.WorkOutline, stringResource(id = R.string.resources))
+                                    DetailsScreenSection.RESOURCES.Icon()
                                 }
                             }
                         }
@@ -1169,11 +1201,10 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] = true
                                     scrollToSectionState.value = DetailsScreenSection.ATTENDEES
                                 }) {
-                                    Icon(Icons.Outlined.Groups, stringResource(id = R.string.attendees))
+                                    DetailsScreenSection.ATTENDEES.Icon()
                                 }
                             }
                         }
-
 
                         DetailsScreenSection.CONTACT -> {
                             AnimatedVisibility (detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] != true) {
@@ -1181,7 +1212,7 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] = true
                                     scrollToSectionState.value = DetailsScreenSection.CONTACT
                                 }) {
-                                    Icon(Icons.Outlined.ContactMail, stringResource(id = R.string.contact))
+                                    DetailsScreenSection.CONTACT.Icon()
                                 }
                             }
                         }
@@ -1192,7 +1223,7 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] = true
                                     scrollToSectionState.value = DetailsScreenSection.URL
                                 }) {
-                                    Icon(Icons.Outlined.Link, stringResource(id = R.string.url))
+                                    DetailsScreenSection.URL.Icon()
                                 }
                             }
                         }
@@ -1203,7 +1234,7 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] = true
                                     scrollToSectionState.value = DetailsScreenSection.LOCATION
                                 }) {
-                                    Icon(Icons.Outlined.Place, stringResource(id = R.string.location))
+                                    DetailsScreenSection.LOCATION.Icon()
                                 }
                             }
                         }
@@ -1213,10 +1244,7 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] = true
                                     scrollToSectionState.value = DetailsScreenSection.COMMENTS
                                 }) {
-                                    Icon(
-                                        Icons.AutoMirrored.Outlined.InsertComment,
-                                        stringResource(id = R.string.comments)
-                                    )
+                                    DetailsScreenSection.COMMENTS.Icon()
                                 }
                             }
                         }
@@ -1227,10 +1255,7 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] = true
                                     scrollToSectionState.value = DetailsScreenSection.ATTACHMENTS
                                 }) {
-                                    Icon(
-                                        Icons.Outlined.AttachFile,
-                                        stringResource(id = R.string.attachments)
-                                    )
+                                    DetailsScreenSection.ATTACHMENTS.Icon()
                                 }
                             }
                         }
@@ -1239,7 +1264,7 @@ fun DetailScreenContent(
                                 IconButton(onClick = {
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] = true
                                 }) {
-                                    Icon(Icons.Outlined.AlarmAdd, stringResource(id = R.string.alarms))
+                                    DetailsScreenSection.ALARMS.Icon()
                                     scrollToSectionState.value = DetailsScreenSection.ALARMS
                                 }
                             }
@@ -1251,7 +1276,7 @@ fun DetailScreenContent(
                                     detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] = true
                                     scrollToSectionState.value = DetailsScreenSection.RECURRENCE
                                 }) {
-                                    Icon(Icons.Outlined.EventRepeat, stringResource(id = R.string.recurrence))
+                                    DetailsScreenSection.RECURRENCE.Icon()
                                 }
                             }
                         }
