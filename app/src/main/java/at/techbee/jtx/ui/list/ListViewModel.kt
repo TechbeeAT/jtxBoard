@@ -213,6 +213,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
         selectFromAllListQuery.postValue(ICal4List.constructQuery(
             modules = listOf(Module.JOURNAL, Module.NOTE, Module.TODO),
             searchText = searchText,
+            flatView = true,
+            orderBy = OrderBy.LAST_MODIFIED,
+            sortOrder = SortOrder.DESC,
             hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
         ))
     }

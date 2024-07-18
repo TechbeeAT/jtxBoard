@@ -219,6 +219,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 } ?: emptyList() else emptyList(),
                 searchAccount = if (sameAccount) collection.value?.accountName?.let { listOf(it) }
                     ?: emptyList() else emptyList(),
+                flatView = true,
                 orderBy = OrderBy.LAST_MODIFIED,
                 sortOrder = SortOrder.DESC,
                 hideBiometricProtected = if (_isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(
