@@ -1,18 +1,18 @@
 package at.techbee.jtx.ui.reusable.elements
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.FolderOpen
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -38,11 +37,15 @@ import at.techbee.jtx.flavored.BillingManager
 fun CollectionsSpinner(
     collections: List<ICalCollection>,
     preselected: ICalCollection,
+    enableSelector: Boolean,
     modifier: Modifier = Modifier,
     includeReadOnly: Boolean,
+    showSyncButton: Boolean,
+    showColorPicker: Boolean,
+    onColorPicked: (Int?) -> Unit,
     includeVJOURNAL: Boolean? = null,
     includeVTODO: Boolean? = null,
-    enabled: Boolean = true,
+    border: BorderStroke? = null,
     onSelectionChanged: (collection: ICalCollection) -> Unit
 ) {
 
@@ -51,10 +54,13 @@ fun CollectionsSpinner(
     var expanded by remember { mutableStateOf(false) } // initial value
     val isProPurchased by if(LocalInspectionMode.current) remember { mutableStateOf(true)} else BillingManager.getInstance().isProPurchased.observeAsState(true)
 
-    OutlinedCard(
+    Card(
+        colors = CardDefaults.elevatedCardColors(),
+        elevation = CardDefaults.elevatedCardElevation(),
         modifier = modifier,
+        border = border,
         onClick = {
-            if (enabled)
+            if (!selected.readonly && enableSelector)
                 expanded = !expanded
         }
     ) {
@@ -75,11 +81,12 @@ fun CollectionsSpinner(
             )
             CollectionInfoColumn(
                 collection = selected,
-                modifier = Modifier
-                    .weight(1f)
-                    .alpha(if (!enabled) 0.5f else 1f)
+                showSyncButton = showSyncButton,
+                showColorPicker = showColorPicker,
+                onColorPicked = onColorPicked,
+                showDropdownArrow = !selected.readonly,
+                //modifier = Modifier.alpha(if (!enabled) 0.5f else 1f)
             )
-            Icon(Icons.Outlined.ArrowDropDown, null)
 
             DropdownMenu(
                 expanded = expanded,
@@ -108,7 +115,13 @@ fun CollectionsSpinner(
                             }
                         },
                         text = {
-                            CollectionInfoColumn(collection = collection)
+                            CollectionInfoColumn(
+                                collection = collection,
+                                showSyncButton = false,
+                                showColorPicker = false,
+                                showDropdownArrow = false,
+                                onColorPicked = { }
+                            )
                         }
                     )
                 }
@@ -150,9 +163,13 @@ fun CollectionsSpinner_Preview() {
         CollectionsSpinner(
             listOf(collection1, collection2, collection3),
             preselected = collection2,
+            enableSelector = true,
             includeReadOnly = true,
             includeVJOURNAL = true,
             includeVTODO = true,
+            showSyncButton = true,
+            showColorPicker = true,
+            onColorPicked = { },
             onSelectionChanged = { },
             modifier = Modifier.fillMaxWidth()
         )
@@ -175,11 +192,14 @@ fun CollectionsSpinner_Preview_notenabled() {
         CollectionsSpinner(
             listOf(collection1),
             preselected = collection1,
+            enableSelector = false,
             includeReadOnly = true,
             includeVJOURNAL = true,
             includeVTODO = true,
+            showSyncButton = false,
+            showColorPicker = false,
+            onColorPicked = { },
             onSelectionChanged = { },
-            enabled = false,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -202,11 +222,14 @@ fun CollectionsSpinner_Preview_no_color() {
         CollectionsSpinner(
             listOf(collection1),
             preselected = collection1,
+            enableSelector = true,
             includeReadOnly = true,
             includeVJOURNAL = true,
             includeVTODO = true,
+            showSyncButton = true,
+            showColorPicker = true,
+            onColorPicked = { },
             onSelectionChanged = { },
-            enabled = false,
             modifier = Modifier.fillMaxWidth()
         )
     }

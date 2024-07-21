@@ -95,7 +95,7 @@ fun ListScreenCompact(
     isSubtaskDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
     onSyncRequested: () -> Unit,
     onSaveListSettings: () -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit
@@ -230,12 +230,7 @@ fun ListScreenCompact(
                                             )
                                         },
                                         onLongClick = {
-                                            if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                                onLongClick(
-                                                    iCal4ListRelObject.iCal4List.id,
-                                                    groupedList
-                                                        .flatMap { it.value }
-                                                        .map { it.iCal4List })
+                                                onLongClick(iCal4ListRelObject.iCal4List.id, iCal4ListRelObject.iCal4List.isReadOnly)
                                         }
                                     ),
                                 onProgressChanged = onProgressChanged,

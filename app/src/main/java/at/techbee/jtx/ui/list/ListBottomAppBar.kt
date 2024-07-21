@@ -29,7 +29,6 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.FilterListOff
-import androidx.compose.material.icons.outlined.LibraryAddCheck
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material.icons.outlined.SyncProblem
@@ -82,7 +81,6 @@ fun ListBottomAppBar(
     isSyncInProgress: Boolean,
     listSettings: ListSettings,
     showQuickEntry: MutableState<Boolean>,
-    multiselectEnabled: MutableState<Boolean>,
     selectedEntries: SnapshotStateList<Long>,
     allowNewEntries: Boolean,
     isBiometricsEnabled: Boolean,
@@ -167,17 +165,11 @@ fun ListBottomAppBar(
     BottomAppBar(
         actions = {
 
-            AnimatedVisibility(!multiselectEnabled.value) {
+            AnimatedVisibility(selectedEntries.isEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = { multiselectEnabled.value = true }) {
-                        Icon(
-                            Icons.Outlined.LibraryAddCheck,
-                            contentDescription = "select multiple"
-                        )
-                    }
                     IconButton(onClick = { onFilterIconClicked() }) {
                         Icon(
                             Icons.Outlined.FilterList,
@@ -288,14 +280,13 @@ fun ListBottomAppBar(
             }
 
 
-            AnimatedVisibility(multiselectEnabled.value) {
+            AnimatedVisibility(selectedEntries.isNotEmpty()) {
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(onClick = {
                         selectedEntries.clear()
-                        multiselectEnabled.value = false
                     }) {
                         Icon(
                             Icons.Outlined.Close,
@@ -354,7 +345,7 @@ fun ListBottomAppBar(
         },
         floatingActionButton = {
             // TODO(b/228588827): Replace with Secondary FAB when available.
-            AnimatedVisibility(allowNewEntries && !multiselectEnabled.value) {
+            AnimatedVisibility(allowNewEntries && selectedEntries.isEmpty()) {
                 FloatingActionButton(
                     onClick = { onAddNewEntry() },
                 ) {
@@ -390,7 +381,6 @@ fun ListBottomAppBar_Preview_Journal() {
             isBiometricsEnabled = false,
             isBiometricsUnlocked = false,
             incompatibleSyncApps = emptyList(),
-            multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },
@@ -423,7 +413,6 @@ fun ListBottomAppBar_Preview_Note() {
             isBiometricsEnabled = false,
             isBiometricsUnlocked = false,
             incompatibleSyncApps = listOf(SyncApp.DAVX5),
-            multiselectEnabled = remember { mutableStateOf(true) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(false) },
@@ -456,7 +445,6 @@ fun ListBottomAppBar_Preview_Todo() {
             incompatibleSyncApps = listOf(SyncApp.DAVX5),
             isBiometricsEnabled = true,
             isBiometricsUnlocked = false,
-            multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },
@@ -490,7 +478,6 @@ fun ListBottomAppBar_Preview_Todo_filterActive() {
             isBiometricsEnabled = true,
             isBiometricsUnlocked = true,
             incompatibleSyncApps = listOf(SyncApp.DAVX5),
-            multiselectEnabled = remember { mutableStateOf(false) },
             selectedEntries = remember { mutableStateListOf() },
             onAddNewEntry = { },
             showQuickEntry = remember { mutableStateOf(true) },

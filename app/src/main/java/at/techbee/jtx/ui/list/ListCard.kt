@@ -13,7 +13,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachFile
 import androidx.compose.material.icons.outlined.Forum
@@ -65,7 +63,6 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.cards.SubnoteCard
 import at.techbee.jtx.ui.reusable.cards.SubtaskCard
@@ -111,7 +108,7 @@ fun ListCard(
     isSubtaskDragAndDropEnabled: Boolean,
     isSubnoteDragAndDropEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit,
@@ -417,29 +414,10 @@ fun ListCard(
             AnimatedVisibility(visible = isAttachmentsExpanded) {
                 Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        attachments.asReversed().filter { it.fmttype?.startsWith("image/") == true }
-                            .forEach { attachment ->
-                                AttachmentCard(
-                                    attachment = attachment,
-                                    isEditMode = false,
-                                    isRemoteCollection = false,   // ATTENTION: We pass false here, because the warning for large file sizes is only relevant for edit mode
-                                    player = player,
-                                    onAttachmentDeleted = { /* nothing to do, no edit here */ },
-                                    modifier = Modifier.size(100.dp, 140.dp)
-                                )
-                            }
-                    }
-
-                    attachments.asReversed().filter { it.fmttype == null || it.fmttype?.startsWith("image/") == false }.forEach { attachment ->
+                    attachments.asReversed().forEach { attachment ->
                         AttachmentCard(
                             attachment = attachment,
-                            isEditMode = false,
+                            isReadOnly = true,
                             isRemoteCollection = false,   // ATTENTION: We pass false here, because the warning for large file sizes is only relevant for edit mode
                             player = player,
                             onAttachmentDeleted = { /* nothing to do, no edit here */ },
@@ -478,8 +456,7 @@ fun ListCard(
                                 .combinedClickable(
                                     onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
                                     onLongClick = {
-                                        if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(subtask.id, subtasks)
+                                        onLongClick(subtask.id, subtask.isReadOnly)
                                     }
                                 )
                         )
@@ -513,8 +490,7 @@ fun ListCard(
                                 .combinedClickable(
                                     onClick = { onClick(subnote.id, subnotes, subnote.isReadOnly) },
                                     onLongClick = {
-                                        if (!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(subnote.id, subnotes)
+                                        onLongClick(subnote.id, subnote.isReadOnly)
                                     },
                                 ),
                             dragHandle = { if(isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
@@ -551,8 +527,7 @@ fun ListCard(
                                             )
                                         },
                                         onLongClick = {
-                                            if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                                onLongClick(parent.id, parents)
+                                            onLongClick(parent.id, parent.isReadOnly)
                                         }
                                     )
                             )
@@ -572,8 +547,7 @@ fun ListCard(
                                             )
                                         },
                                         onLongClick = {
-                                            if (!parent.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                                onLongClick(parent.id, parents)
+                                            onLongClick(parent.id, parent.isReadOnly)
                                         },
                                     ),
                                 isEditMode = false, //no editing here

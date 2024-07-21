@@ -72,7 +72,6 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
@@ -113,7 +112,7 @@ fun ListScreenList(
     isSubtaskDragAndDropEnabled: Boolean,
     isSubnoteDragAndDropEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
     onSyncRequested: () -> Unit,
@@ -278,12 +277,7 @@ fun ListScreenList(
                                             )
                                         },
                                         onLongClick = {
-                                            if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                                onLongClick(
-                                                    iCal4ListRelObject.iCal4List.id,
-                                                    groupedList
-                                                        .flatMap { it.value }
-                                                        .map { it.iCal4List })
+                                            onLongClick(iCal4ListRelObject.iCal4List.id, iCal4ListRelObject.iCal4List.isReadOnly)
                                         }
                                     )
                                     .testTag("benchmark:ListCard")
@@ -391,7 +385,7 @@ fun ListScreenList_TODO() {
             isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
+            onLongClick = { _, _ ->  },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
             onSyncRequested = { },
@@ -475,7 +469,7 @@ fun ListScreenList_JOURNAL() {
             isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
+            onLongClick = { _, _ ->  },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
             onSyncRequested = { },

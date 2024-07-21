@@ -66,6 +66,7 @@ import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
 import at.techbee.jtx.database.properties.Unknown
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.relations.ICalEntity
+import at.techbee.jtx.database.relations.ICalEntity4List
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.database.views.VIEW_NAME_COLLECTIONS_VIEW
@@ -83,6 +84,7 @@ interface ICalDatabaseDao {
     /*
     SELECTs (global selects without parameter)
      */
+
 
     /**
      * Retrieve an list of all DISTINCT Category names ([Category.text]) as a LiveData-List
@@ -126,17 +128,16 @@ interface ICalDatabaseDao {
      *
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_READONLY = 0 AND ($COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1 OR $COLUMN_COLLECTION_SUPPORTSVTODO = 1) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllWriteableCollections(): LiveData<List<ICalCollection>>
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_READONLY = 0 AND ($COLUMN_COLLECTION_SUPPORTSVJOURNAL = :supportsVJOURNAL OR $COLUMN_COLLECTION_SUPPORTSVTODO = :supportsVTODO) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getAllWriteableCollections(supportsVTODO: Boolean, supportsVJOURNAL: Boolean): LiveData<List<ICalCollection>>
 
     /**
      * Retrieve an list of all Collections ([Collection]) that have entries for a given module as a LiveData-List
-     * @param module (Module.name) for which there are existing entries for a collection
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
     @Transaction
-    @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllCollections(module: String): LiveData<List<ICalCollection>>
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVTODO = :supportsVTODO OR $COLUMN_COLLECTION_SUPPORTSVJOURNAL = :supportsVJOURNAL ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getAllCollections(supportsVTODO: Boolean, supportsVJOURNAL: Boolean): LiveData<List<ICalCollection>>
 
 
     /**
@@ -233,12 +234,15 @@ interface ICalDatabaseDao {
     fun getCount(): Int
 
     /**
-     * Retrieve the number of items in the table of [ICal4List] for a specific module as Int.
-     * @param
+     * Retrieve the number of iCalObjects that are not deleted,
+     * that don't have an RRULE
+     * and that are not present in related to (meaning they are not sub-entries)
+     * for a specific module
+     * @param [module]
      * @return Int with the total number of [ICal4List] in the table for the given module.
      */
-    @Query("SELECT count(*) FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_MODULE = :module AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 ")
-    fun getICal4ListCount(module: String): LiveData<Int?>
+    @Query("SELECT count(*) FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module AND $COLUMN_RRULE IS NULL AND $COLUMN_DELETED = 0 AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID NOT IN (SELECT $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO)")
+    fun getCount4List(module: String): LiveData<Int?>
 
     /**
      * Retrieve an [ICalObject] by Id as LiveData
@@ -1554,6 +1558,34 @@ iCalObject.percent != 100
         }
     }
 
+
+    @Transaction
+    suspend fun updateCategories(iCalObjectId: Long, uid: String, categories: List<Category>) {
+
+        deleteCategories(iCalObjectId)
+        categories.forEach { it.icalObjectId = iCalObjectId }
+        upsertCategories(categories)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertCategories(categories: List<Category>)
+
+
+    @Transaction
+    suspend fun updateResources(iCalObjectId: Long, uid: String, resources: List<Resource>) {
+
+        deleteResources(iCalObjectId)
+        resources.forEach { it.icalObjectId = iCalObjectId }
+        upsertResources(resources)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertResources(resources: List<Resource>)
+
     @Transaction
     suspend fun saveAll(
         icalObject: ICalObject,
@@ -1772,5 +1804,10 @@ iCalObject.percent != 100
      */
     @Query("SELECT $COLUMN_UID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :iCalObjectId")
     fun getUid(iCalObjectId: Long): String?
+
+
+    @Transaction
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT")
+    fun getICalEntity4List(): List<ICalEntity4List>
 
 }

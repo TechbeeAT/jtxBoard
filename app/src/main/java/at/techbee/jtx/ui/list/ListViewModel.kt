@@ -13,6 +13,7 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -109,7 +110,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
     var toastMessage = mutableStateOf<String?>(null)
 
     val selectedEntries = mutableStateListOf<Long>()
-    val multiselectEnabled = mutableStateOf(false)
 
     init {
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08
@@ -121,6 +121,12 @@ open class ListViewModel(application: Application, val module: Module) : Android
             if (firstInstall > 1641596400000L)
                 addWelcomeEntries(application)
             settings.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseDao.getICalEntity4List().forEach {
+                Log.d("ICalEntity4List", it.toString())
+            }
         }
     }
 

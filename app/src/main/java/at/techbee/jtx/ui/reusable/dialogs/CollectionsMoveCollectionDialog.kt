@@ -14,7 +14,11 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
@@ -48,7 +52,11 @@ fun CollectionsMoveCollectionDialog(
                         includeReadOnly = false,
                         includeVJOURNAL = if((current.numJournals?:0) + (current.numNotes?: 0) > 0) true else null,
                         includeVTODO = if((current.numTodos?:0) > 0) true else null,
-                        onSelectionChanged = { selected -> newCollection = selected }
+                        onSelectionChanged = { selected -> newCollection = selected },
+                        showSyncButton = false,
+                        showColorPicker = false,
+                        enableSelector = true,
+                        onColorPicked = { }
                     )
 
                     Text(stringResource(id = R.string.collection_dialog_move_info))
