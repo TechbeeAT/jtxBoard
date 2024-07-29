@@ -36,7 +36,6 @@ class SettingsStateHolder(val context: Context) {
     var settingAutoExpandSubtasks = mutableStateOf(SwitchSetting.SETTING_AUTO_EXPAND_SUBTASKS.getSetting(prefs))
     var settingAutoExpandSubnotes = mutableStateOf(SwitchSetting.SETTING_AUTO_EXPAND_SUBNOTES.getSetting(prefs))
     var settingAutoExpandAttachments = mutableStateOf(SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS.getSetting(prefs))
-    var settingAutoExpandParents = mutableStateOf(SwitchSetting.SETTING_AUTO_EXPAND_PARENTS.getSetting(prefs))
 
     var settingShowProgressForMainTasks = mutableStateOf(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_MAINTASKS.getSetting(prefs))
     var settingShowProgressForSubTasks = mutableStateOf(SwitchSetting.SETTING_SHOW_PROGRESS_FOR_SUBTASKS.getSetting(prefs))
