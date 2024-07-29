@@ -71,6 +71,7 @@ import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROTECT_BIOMETRIC
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_THEME
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_ACCESSIBILITY_MODE
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS
+import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_PARENTS
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_SUBNOTES
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_SUBTASKS
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_DISABLE_ALARMS_FOR_READONLY
@@ -392,6 +393,13 @@ fun SettingsScreen(
                             onCheckedChanged = {
                                 settingsStateHolder.settingAutoExpandAttachments.value = it
                                 SETTING_AUTO_EXPAND_ATTACHMENTS.saveSetting(it, settingsStateHolder.prefs)
+                            })
+                        SwitchSettingElement(
+                            setting = SETTING_AUTO_EXPAND_PARENTS,
+                            checked = settingsStateHolder.settingAutoExpandParents,
+                            onCheckedChanged = {
+                                settingsStateHolder.settingAutoExpandParents.value = it
+                                SETTING_AUTO_EXPAND_PARENTS.saveSetting(it, settingsStateHolder.prefs)
                             })
                     }
 
