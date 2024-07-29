@@ -91,6 +91,7 @@ fun ListScreen(
                     isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks.value,
                     isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes.value,
                     isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments.value,
+                    isParentsExpandedDefault = settingsStateHolder.settingAutoExpandParents.value,
                     settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks.value,
                     settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks.value,
                     settingProgressIncrement = settingsStateHolder.settingStepForProgress.value,
