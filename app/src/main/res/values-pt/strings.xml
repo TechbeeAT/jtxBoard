@@ -19,7 +19,6 @@
     <string name="longitude">"Longitude"</string>
     <string name="unlink">"Desfazer ligação"</string>
     <string name="off">"Desligado"</string>
-    <string name="location_permission_denied">"Permissão de localização negada"</string>
     <string name="permissions">"Permissões"</string>
     <string name="current_location">"Localização actual"</string>
     <string name="toolbar_text_add_journal">"Adicionar Diário"</string>
@@ -39,7 +38,6 @@
     <string name="classification_public">"Público"</string>
     <string name="classification_private">"Privado"</string>
     <string name="classification_confidential">"Confidencial"</string>
-    <string name="attendee_role_chair">"Organizador"</string>
     <string name="attendee_role_required_participant">"Participante necessário"</string>
     <string name="attendee_role_optional_participant">"Participante opcional"</string>
     <string name="attendee_role_non_participant">"Não participante / Info"</string>
@@ -108,7 +106,6 @@
     <string name="edit_recur_on_weekday">"em"</string>
     <string name="edit_recur_on_the_x_day_of_month">"no"</string>
     <string name="edit_recur_x_day_of_the_month">"dia do mês"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"último"</string>
     <string name="edit_recur_x_times">"vezes"</string>
     <string name="edit_recur_toast_requires_start_date">"A recorrência requer uma data inicial para ser definida!"</string>
     <string name="edit_datepicker_dialog_select_date">"Selecionar data"</string>
@@ -118,52 +115,17 @@
     <string name="edit_datepicker_dialog_add_timezone">"Adicionar fuso horário"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"Editar fuso horário"</string>
     <string name="edit_dialog_sure_to_delete_title">"Excluir \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_title">"Excluir este registro?"</string>
-    <string name="dialog_delete_done_title">"Eliminar todas as tarefas completas?"</string>
-    <string name="dialog_delete_done_message">"Atenção: Subtarefas são excluídas independentemente seu status se a tarefa principal for marcada como completa. Esta operação não pode ser desfeita!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Você tem certeza de que quer deletar \"%1$s\"?"</string>
-    <string name="edit_dialog_sure_to_discard_message">"Tem certeza de que quer excluir este registro? Este registro não vai ser salvo."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"A data de término não pode ser anterior à data de início."</string>
     <string name="edit_fragment_app_permission">"Permissão da aplicação"</string>
-    <string name="edit_fragment_app_permission_message">"jtx Board pode sugerir dados de participantes com base em seus contatos como valores de entrada para seus registros. Permissão para ler seus contatos é necessário para ativar esse recurso."</string>
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"Traduções"</string>
     <string name="about_tabitem_libraries">"Bibliotecas"</string>
     <string name="about_tabitem_contributors">"Contribuidores"</string>
     <string name="about_special_thanks">"Agradecimentos especiais"</string>
-    <string name="about_app_version">"Versão: %1$s (%2$d)"</string>
-    <string name="about_app_codename">"Codinome: %1$s"</string>
-    <string name="about_app_build_date">"Compilado em %s"</string>
-    <string name="about_app_terms">"Termos &amp; Condições"</string>
-    <string name="about_thanks_ffg">"Um agradecimento especial a FFG pela sua confiança e apoio financeiro para realizar este projeto."</string>
     <!-- menus -->
-    <string name="menu_list_gotodate">"Ir para a data"</string>
-    <string name="menu_list_quick_journal">"Diário rápido"</string>
-    <string name="menu_list_quick_note">"Nota rápida"</string>
-    <string name="menu_list_quick_todo">"Tarefa rápida"</string>
-    <string name="menu_view_share_ics">"Compartilhar como .ics"</string>
-    <string name="menu_view_copy_as_journal">"Copiar como diário"</string>
-    <string name="menu_view_copy_as_todo">"Copiar como tarefa"</string>
-    <string name="menu_view_copy_as_note">"Copiar como nota"</string>
-    <string name="menu_view_copy_item">"Criar uma cópia"</string>
-    <string name="notification_channel_alarms_name">"Alarmes"</string>
     <!-- Shortcuts -->
-    <string name="shortcut_addJournal_longLabel">"Adicionar diário"</string>
-    <string name="shortcut_addNote_longLabel">"Adicionar nota"</string>
-    <string name="shortcut_addTodo_longLabel">"Adicionar tarefa"</string>
     <!-- Settings fragment -->
-    <string name="settings_list">"Configurações para a lista de itens"</string>
-    <string name="settings_show_progress_for_subtasks">Mostrar progresso das subtarefas</string>
-    <string name="settings_show_progress_for_maintasks">Mostrar progresso das tarefas principais</string>
-    <string name="settings_app">"Configurações do aplicativo"</string>
-    <string name="settings_select_mimetype_for_audio">"Selecionar tipo de arquivo para notas de áudio"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_sync_app_heading">"Sincronizar com %1$s"</string>
-    <string name="sync_basic_info">"jtx Board não fornece sincronização com servidor por si mesmo, mas suporta a sincronização pelo DAVx⁵. Esse método permite que você use qualquer servidor CalDAV de sua escolha para armazenar, fazer backup e sincronizar seus dados."</string>
-    <string name="sync_ksync_basic_info">"kSync é um aplicativo baseado no DAVx⁵ desenvolvido por Infomaniak especialmente para seus serviços. Enquanto o DAVx⁵ está aberto a qualquer servidor CalDAV compatível, kSync só permite sincronização com contas Infomaniak."</string>
-    <string name="sync_sync_app_not_found">"Não detectamos %1$s no seu telefone."</string>
-    <string name="sync_more_about_sync_app">"Saiba mais sobre %1$s"</string>
-    <string name="sync_download_sync_app">"Baixar %1$s"</string>
     <!-- Donate fragment -->
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nenhum aplicativo foi encontrado para abrir este arquivo/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Item recorrente agora é uma exceção."</string>
@@ -177,7 +139,6 @@
     <string name="list_welcome_entry_journal_description">"Os diários podem ser usados para guardar as suas notas para uma data específica. Utilizar esta funcionalidade por exemplo para protocolos, atas de reunião, entradas do diário e assim por diante. Se você editar esta postagem, você verá as opções para adicionar categorias, participantes, anexos, … Sinta-se à vontade para apagar esta entrada quando quiser!"</string>
     <string name="list_welcome_entry_note_summary">"Parabéns, esta é a sua primeira nota :-)"</string>
     <!-- Permissions -->
-    <string name="link_to_parent">"Vincular a um nível superior"</string>
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
