@@ -19,7 +19,7 @@ class SettingsStateHolder(val context: Context) {
 
     companion object {
         private const val SETTINGS_PRO_INFO_SHOWN = "settingsProInfoShown"
-        private const val PREFS_LAST_MODULE = "lastUsedModule"
+        const val PREFS_LAST_MODULE = "lastUsedModule"
         private const val PREFS_DETAIL_TOP_APP_BAR_MODE = "detailTopAppBarMode"
     }
 
