@@ -42,18 +42,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.database.views.CollectionsView
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
 import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
+import at.techbee.jtx.ui.reusable.destinations.FilteredListDestination
 import at.techbee.jtx.ui.reusable.dialogs.CollectionsAddOrEditDialog
 import at.techbee.jtx.ui.reusable.dialogs.SelectModuleForTxtImportDialog
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.ui.settings.SettingsStateHolder.Companion.PREFS_LAST_MODULE
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 
@@ -305,8 +309,25 @@ fun CollectionsScreen(
                             }
                         },
                         onCollectionClicked = { collection ->
-                            if (globalStateHolder.icalString2Import.value?.isNotEmpty() == true && !collection.readonly)
+                            if (globalStateHolder.icalString2Import.value?.isNotEmpty() == true && !collection.readonly) {
                                 importCollection = collection
+                            } else {
+                                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                                val lastUsedModule = try { Module.valueOf(prefs.getString(PREFS_LAST_MODULE, null)?: Module.JOURNAL.name) } catch (e: java.lang.IllegalArgumentException) { Module.JOURNAL }
+
+                                navController.navigate(
+                                    FilteredListDestination.FilteredList.getRoute(
+                                        module = when {
+                                            lastUsedModule == Module.JOURNAL && collection.supportsVJOURNAL -> lastUsedModule
+                                            lastUsedModule == Module.NOTE && collection.supportsVJOURNAL -> lastUsedModule
+                                            lastUsedModule == Module.TODO && collection.supportsVTODO -> lastUsedModule
+                                            collection.supportsVTODO -> Module.TODO
+                                            else -> Module.JOURNAL
+                                        },
+                                        storedListSettingData = StoredListSettingData(searchCollection = listOf(collection.displayName?:""))
+                                    )
+                                )
+                            }
                         },
                         onDeleteAccount = { account -> collectionsViewModel.removeAccount(account) }
                     )
