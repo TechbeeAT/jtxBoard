@@ -384,6 +384,7 @@ Danke!"</string>
     <string name="settings_default_expand_subtasks">"Unteraufgaben standardmäßig erweitern"</string>
     <string name="settings_default_expand_subnotes">"Unternotizen standardmäßig erweitern"</string>
     <string name="settings_default_expand_attachments">"Anhänge standardmäßig erweitern"</string>
+    <string name="settings_default_expand_parents">"Übergeordnete Einträge in der Liste standardmäßig erweitern"</string>
     <string name="sorry">"Sorry"</string>
     <string name="back">"Zurück"</string>
     <string name="details">"Details"</string>
