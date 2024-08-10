@@ -383,6 +383,7 @@ Děkujeme vám!"</string>
     <string name="settings_default_expand_subtasks">"Rozbalovat dílčí úkoly v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_subnotes">"Rozbalovat dílčí poznámky v seznamu ve výchozím nastavení"</string>
     <string name="settings_default_expand_attachments">"Rozbalovat přílohy v seznamu ve výchozím nastavení"</string>
+    <string name="settings_default_expand_parents">"Ve výchozím nastavení rozbalovat nadřezené položky"</string>
     <string name="sorry">"Omlouváme se"</string>
     <string name="back">"Zpět"</string>
     <string name="details">"Podrobnosti"</string>
