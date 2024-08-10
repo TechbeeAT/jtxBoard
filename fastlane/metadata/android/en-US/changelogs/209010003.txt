@@ -1,0 +1,2 @@
+- Show a notification immediately when an alarm is set in the past
+- Allow linking entries to parents that can be sub-entries
