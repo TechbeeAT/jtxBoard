@@ -384,6 +384,7 @@ Gràcies!"</string>
     <string name="settings_default_expand_subtasks">"Expandeix les tasques en llista per defecte"</string>
     <string name="settings_default_expand_subnotes">"Expandeix les sub-notes en llista per defecte"</string>
     <string name="settings_default_expand_attachments">"Expandeix els adjunts en llista per defecte"</string>
+    <string name="settings_default_expand_parents">"Expandeix els elements superiors en llistes per defecte"</string>
     <string name="sorry">"Disculpa"</string>
     <string name="back">"Enrere"</string>
     <string name="details">"Detalls"</string>
