@@ -27,7 +27,7 @@ glance = "1.1.0"
 godaddy-colorpicker = "0.7.0"
 #huawei = "1.8.1.300"
 #huawei-iap = "6.10.0.300"
-kotlin = "2.0.10"
+kotlin = "2.0.20"
 kotlinx-coroutines = "1.8.1"
 kotlinxSerializationJson = "1.7.1"
 # see https://github.com/google/ksp/releases for version numbers
