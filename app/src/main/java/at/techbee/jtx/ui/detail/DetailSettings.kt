@@ -35,6 +35,15 @@ enum class DetailSettingsOption(
     val possibleFor: List<Module>
     )
 {
+    ENABLE_COLLECTION(
+        key = "enableCollection",
+        stringResource = R.string.collection,
+        group = DetailSettingsOptionGroup.ELEMENT,
+        defaultForJournals = true,
+        defaultForNotes = false,
+        defaultForTasks = true,
+        possibleFor = listOf(Module.JOURNAL, Module.NOTE, Module.TODO)
+    ),
     ENABLE_SUMMARY(
         key = "enableSummary",
         stringResource = R.string.summary,

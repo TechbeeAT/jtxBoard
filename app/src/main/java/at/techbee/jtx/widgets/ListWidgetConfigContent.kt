@@ -189,7 +189,7 @@ fun ListWidgetConfigContent(
                             ListOptionsFilter(
                                 module = selectedModule.value,
                                 listSettings = listSettings,
-                                allCollections = database.getAllCollections(module = selectedModule.value.name).observeAsState(emptyList()).value,
+                                allCollections = database.getAllCollections(supportsVJOURNAL = (selectedModule.value == Module.JOURNAL || selectedModule.value == Module.NOTE), supportsVTODO = selectedModule.value == Module.TODO).observeAsState(emptyList()).value,
                                 allCategories = database.getAllCategoriesAsText().observeAsState(emptyList()).value,
                                 allResources = database.getAllResourcesAsText().observeAsState(emptyList()).value,
                                 extendedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,

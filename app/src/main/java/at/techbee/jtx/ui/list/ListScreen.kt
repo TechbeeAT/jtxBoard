@@ -21,7 +21,6 @@ import androidx.navigation.NavController
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
@@ -52,17 +51,17 @@ fun ListScreen(
     )
 
     fun processOnClick(itemId: Long, ical4list: List<ICal4List>, isReadOnly: Boolean) {
-        if (listViewModel.multiselectEnabled.value && isReadOnly)
+        if(isReadOnly && listViewModel.selectedEntries.isNotEmpty())
             return
-        else if (listViewModel.multiselectEnabled.value)
+        else if (listViewModel.selectedEntries.isNotEmpty())
             if (listViewModel.selectedEntries.contains(itemId)) listViewModel.selectedEntries.remove(itemId) else listViewModel.selectedEntries.add(itemId)
         else
             navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, false))
     }
 
-    fun processOnLongClick(itemId: Long, ical4list: List<ICal4List>) {
-        if (!listViewModel.multiselectEnabled.value && BillingManager.getInstance().isProPurchased.value == true)
-            navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, true))
+    fun processOnLongClick(itemId: Long, isReadOnly: Boolean) {
+        if(!isReadOnly)
+            listViewModel.selectedEntries.add(itemId)
     }
 
     fun processOnProgressChanged(itemId: Long, newPercent: Int, scrollOnce: Boolean = false) {
@@ -72,6 +71,7 @@ fun ListScreen(
             scrollOnce
         )
     }
+
 
     Column(modifier = Modifier.fillMaxSize()) {
         when (listViewModel.listSettings.viewMode.value) {
@@ -105,7 +105,7 @@ fun ListScreen(
                     isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
                     isSubnoteDragAndDropEnabled = listViewModel.listSettings.subnotesOrderBy.value == OrderBy.DRAG_AND_DROP,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                    onLongClick = { itemId, isReadOnly -> processOnLongClick(itemId, isReadOnly) },
                     onProgressChanged = { itemId, newPercent ->
                         processOnProgressChanged(itemId, newPercent)
                     },
@@ -136,7 +136,7 @@ fun ListScreen(
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                    onLongClick = { itemId, isReadOnly -> processOnLongClick(itemId, isReadOnly) },
                     onProgressChanged = { itemId, newPercent ->
                         processOnProgressChanged(itemId, newPercent)
                     },
@@ -159,7 +159,7 @@ fun ListScreen(
                     isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP,
                     isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                    onLongClick = { itemId, isReadOnly -> processOnLongClick(itemId, isReadOnly) },
                     onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
                     onSyncRequested = { listViewModel.syncAccounts() },
                     onSaveListSettings = { listViewModel.saveListSettings() },
@@ -183,7 +183,7 @@ fun ListScreen(
                     markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
                     player = listViewModel.mediaPlayer,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                    onLongClick = { itemId, isReadOnly -> processOnLongClick(itemId, isReadOnly) },
                     onStatusChanged = { itemId, newStatus, scrollOnce -> listViewModel.updateStatus(itemId, newStatus, scrollOnce) },
                     onXStatusChanged = { itemId, newXStatus, scrollOnce -> listViewModel.updateXStatus(itemId, newXStatus, scrollOnce) },
                     onSwapCategories = { itemId, oldCategory, newCategory -> listViewModel.swapCategories(itemId, oldCategory, newCategory) },
@@ -196,7 +196,7 @@ fun ListScreen(
                     selectedEntries = listViewModel.selectedEntries,
                     scrollOnceId = listViewModel.scrollOnceId,
                     onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                    onLongClick = { itemId, isReadOnly -> processOnLongClick(itemId, isReadOnly) },
                 )
             }
         }

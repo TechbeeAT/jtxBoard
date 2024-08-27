@@ -42,6 +42,7 @@ import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_ICALOBJECT_ID
 import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_ID
 import at.techbee.jtx.database.properties.COLUMN_ATTACHMENT_URI
 import at.techbee.jtx.database.properties.COLUMN_ATTENDEE_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ATTENDEE_ID
 import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ICALOBJECT_ID
 import at.techbee.jtx.database.properties.COLUMN_CATEGORY_TEXT
 import at.techbee.jtx.database.properties.COLUMN_COMMENT_ICALOBJECT_ID
@@ -99,6 +100,14 @@ interface ICalDatabaseDao {
     fun getAllResourcesAsText(): LiveData<List<String>>
 
     /**
+     * Retrieve an list of all Attendees as a LiveData-List
+     * @return a list of [Attendee]
+     */
+    @Query("SELECT * FROM $TABLE_NAME_ATTENDEE WHERE $COLUMN_ATTENDEE_ICALOBJECT_ID IN (SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_DELETED = 0) ORDER BY $COLUMN_ATTENDEE_ID DESC")
+    fun getAllAttendees(): LiveData<List<Attendee>>
+
+
+    /**
      * Retrieve an list of all DISTINCT Colors for ICalObjects as Int in a LiveData object
      */
     @Query("SELECT DISTINCT $COLUMN_COLOR FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_COLOR IS NOT NULL")
@@ -126,17 +135,16 @@ interface ICalDatabaseDao {
      *
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
-    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_READONLY = 0 AND ($COLUMN_COLLECTION_SUPPORTSVJOURNAL = 1 OR $COLUMN_COLLECTION_SUPPORTSVTODO = 1) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllWriteableCollections(): LiveData<List<ICalCollection>>
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_READONLY = 0 AND ($COLUMN_COLLECTION_SUPPORTSVJOURNAL = :supportsVJOURNAL OR $COLUMN_COLLECTION_SUPPORTSVTODO = :supportsVTODO) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getAllWriteableCollections(supportsVTODO: Boolean, supportsVJOURNAL: Boolean): LiveData<List<ICalCollection>>
 
     /**
      * Retrieve an list of all Collections ([Collection]) that have entries for a given module as a LiveData-List
-     * @param module (Module.name) for which there are existing entries for a collection
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
     @Transaction
-    @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
-    fun getAllCollections(module: String): LiveData<List<ICalCollection>>
+    @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_SUPPORTSVTODO = :supportsVTODO OR $COLUMN_COLLECTION_SUPPORTSVJOURNAL = :supportsVJOURNAL ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    fun getAllCollections(supportsVTODO: Boolean, supportsVJOURNAL: Boolean): LiveData<List<ICalCollection>>
 
 
     /**
@@ -233,12 +241,15 @@ interface ICalDatabaseDao {
     fun getCount(): Int
 
     /**
-     * Retrieve the number of items in the table of [ICal4List] for a specific module as Int.
-     * @param
+     * Retrieve the number of iCalObjects that are not deleted,
+     * that don't have an RRULE
+     * and that are not present in related to (meaning they are not sub-entries)
+     * for a specific module
+     * @param [module]
      * @return Int with the total number of [ICal4List] in the table for the given module.
      */
-    @Query("SELECT count(*) FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_MODULE = :module AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 ")
-    fun getICal4ListCount(module: String): LiveData<Int?>
+    @Query("SELECT count(*) FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module AND $COLUMN_RRULE IS NULL AND $COLUMN_DELETED = 0 AND $TABLE_NAME_ICALOBJECT.$COLUMN_ID NOT IN (SELECT $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO)")
+    fun getCount4List(module: String): LiveData<Int?>
 
     /**
      * Retrieve an [ICalObject] by Id as LiveData
@@ -1553,6 +1564,57 @@ iCalObject.percent != 100
                 update(it)
         }
     }
+
+
+    @Transaction
+    suspend fun updateCategories(iCalObjectId: Long, uid: String, categories: List<Category>) {
+
+        deleteCategories(iCalObjectId)
+        categories.forEach { it.icalObjectId = iCalObjectId }
+        upsertCategories(categories)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertCategories(categories: List<Category>)
+
+
+    @Transaction
+    suspend fun updateResources(iCalObjectId: Long, uid: String, resources: List<Resource>) {
+        deleteResources(iCalObjectId)
+        resources.forEach { it.icalObjectId = iCalObjectId }
+        upsertResources(resources)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertResources(resources: List<Resource>)
+
+    @Transaction
+    suspend fun updateAttendees(iCalObjectId: Long, uid: String, attendees: List<Attendee>) {
+        deleteAttendees(iCalObjectId)
+        attendees.forEach { it.icalObjectId = iCalObjectId }
+        upsertAttendees(attendees)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAttendees(attendees: List<Attendee>)
+
+    /*
+    @Transaction
+    suspend fun updateDates(iCalObjectId: Long, uid: String, dtstart: Long?, dtstartTimezone: String?, due: Long?, dueTimezone: String?, completed: Long?, completedTimezone: String?) {
+        setDates(iCalObjectId, dtstart, dtstartTimezone, due, dueTimezone, completed, completedTimezone)
+        updateSetDirty(iCalObjectId)
+        makeSeriesDirty(uid)
+    }
+
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_DTSTART = :dtstart, $COLUMN_DTSTART_TIMEZONE = :dtstartTimezone, $COLUMN_DUE = :due, $COLUMN_DUE_TIMEZONE = :dueTimezone, $COLUMN_COMPLETED = :completed, $COLUMN_COMPLETED_TIMEZONE = :completedTimezone WHERE $COLUMN_ID = :iCalObjectId")
+    suspend fun setDates(iCalObjectId: Long, dtstart: Long?, dtstartTimezone: String?, due: Long?, dueTimezone: String?, completed: Long?, completedTimezone: String?)
+     */
 
     @Transaction
     suspend fun saveAll(

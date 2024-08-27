@@ -175,10 +175,16 @@ fun DetailOptionsBottomSheet(
                                     onClick = { },
                                     enabled = when (setting) {
                                         DetailsScreenSection.COLLECTION -> true
-                                        DetailsScreenSection.DATES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
-                                        DetailsScreenSection.SUMMARYDESCRIPTION -> true
+                                        DetailsScreenSection.DATE -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false
+                                        DetailsScreenSection.STARTED -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false
+                                        DetailsScreenSection.DUE -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false
+                                        DetailsScreenSection.COMPLETED -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
+                                        DetailsScreenSection.SUMMARY -> true    //TODO
+                                        DetailsScreenSection.DESCRIPTION -> true //TODO
                                         DetailsScreenSection.PROGRESS -> module == Module.TODO
-                                        DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false
+                                        DetailsScreenSection.STATUS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false
+                                        DetailsScreenSection.CLASSIFICATION -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false
+                                        DetailsScreenSection.PRIORITY -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false
                                         DetailsScreenSection.CATEGORIES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false
                                         DetailsScreenSection.PARENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false
                                         DetailsScreenSection.SUBTASKS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false

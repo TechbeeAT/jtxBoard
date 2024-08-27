@@ -13,9 +13,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -25,10 +23,7 @@ import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.ImageNotSupported
-import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -54,11 +50,10 @@ import at.techbee.jtx.util.UiUtil
 import java.io.IOException
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttachmentCard(
     attachment: Attachment,
-    isEditMode: Boolean,
+    isReadOnly: Boolean,
     isRemoteCollection: Boolean,
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
@@ -66,8 +61,8 @@ fun AttachmentCard(
 ) {
 
     val context = LocalContext.current
-    val preview = attachment.getPreview(context)
-    val filesize = attachment.getFilesize(context)
+    val preview = if(LocalInspectionMode.current) null else attachment.getPreview(context)
+    val filesize = if(LocalInspectionMode.current) 10000000L else attachment.getFilesize(context)
 
     val resultExportFilepath = remember { mutableStateOf<Uri?>(null) }
     val launcherExportSingle = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument(attachment.fmttype?:"*/*")) {
@@ -95,52 +90,48 @@ fun AttachmentCard(
         }
     }
 
-    Card(
-        modifier = modifier,
-        colors = if(isEditMode) CardDefaults.outlinedCardColors() else CardDefaults.elevatedCardColors(),
-        elevation = if(isEditMode) CardDefaults.outlinedCardElevation() else CardDefaults.elevatedCardElevation(),
-        border = if(isEditMode) CardDefaults.outlinedCardBorder() else null,
-        onClick = { if(!isEditMode) attachment.openFile(context) },
+    ElevatedCard(
+        onClick = { attachment.openFile(context) },
+        modifier = modifier
     ) {
 
-            if (attachment.fmttype?.startsWith("image/") == true) {
-                //preview
-                if (preview == null)
-                    Icon(
-                        Icons.Outlined.ImageNotSupported,
-                        attachment.fmttype,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 100.dp, max = 140.dp)
-                            .padding(4.dp)
-                    )
-                else
-                    Image(
-                        bitmap = preview.asImageBitmap(),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(min = 100.dp, max = 140.dp)
-                            .padding(4.dp)
-                    )
-            } else if((attachment.fmttype?.startsWith("audio/") == true || attachment.fmttype?.startsWith("video/") == true) && attachment.uri != null) {
-                Uri.parse(attachment.uri)?.let {
-                    AudioPlaybackElement(
-                        uri = it,
-                        player = player,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    )
-                }
-            }
-
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth(),
+                //horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
+                if (attachment.fmttype?.startsWith("image/") == true) {
+                    //preview
+                    if (preview == null)
+                        Icon(
+                            Icons.Outlined.ImageNotSupported,
+                            attachment.fmttype,
+                            modifier = Modifier
+                                //.fillMaxWidth()
+                                .heightIn(min = 50.dp, max = 100.dp)
+                                .padding(4.dp)
+                        )
+                    else
+                        Image(
+                            bitmap = preview.asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                //.fillMaxWidth()
+                                .heightIn(min = 50.dp, max = 100.dp)
+                                .padding(4.dp)
+                        )
+                } else if((attachment.fmttype?.startsWith("audio/") == true || attachment.fmttype?.startsWith("video/") == true) && attachment.uri != null) {
+                    Uri.parse(attachment.uri)?.let {
+                        AudioPlaybackElement(
+                            uri = it,
+                            player = player,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                        )
+                    }
+                }
 
                 Text(
                     attachment.getFilenameOrLink() ?: "",
@@ -152,35 +143,33 @@ fun AttachmentCard(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                AnimatedVisibility(isEditMode && LocalInspectionMode.current || ((filesize?: 0) > 100000 && isRemoteCollection)) {
-                    Icon(Icons.Outlined.Warning, null, tint = MaterialTheme.colorScheme.error)
-                }
-
-                AnimatedVisibility(isEditMode) {
-                    IconButton(onClick = { onAttachmentDeleted() }) {
-                        Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
-                    }
-                }
-
-                AnimatedVisibility(!isEditMode && filesize != null) {
+                if(filesize != null) {
                     Text(
-                        text = UiUtil.getAttachmentSizeString(filesize!!),
+                        text = UiUtil.getAttachmentSizeString(filesize),
                         maxLines = 1,
-                        fontStyle = FontStyle.Italic
+                        fontStyle = FontStyle.Italic,
+                        color = if(!isReadOnly && filesize > 100000 && isRemoteCollection) MaterialTheme.colorScheme.error else Color.Unspecified
                     )
                 }
-                AnimatedVisibility(!isEditMode && attachment.uri?.startsWith("content://") == true) {
+
+                if(attachment.uri?.startsWith("content://") == true) {
                     IconButton(onClick = {
                         attachment.filename?.let { launcherExportSingle.launch(it) }
                     }) {
                         Icon(Icons.Outlined.Download, stringResource(id = R.string.save))
                     }
                 }
-                AnimatedVisibility(!isEditMode && attachment.uri?.startsWith("http") == true) {
+                if(attachment.uri?.startsWith("http") == true) {
                     IconButton(onClick = {
                         attachment.openFile(context)
                     }) {
                         Icon(Icons.AutoMirrored.Outlined.OpenInNew, stringResource(id = R.string.open_in_browser))
+                    }
+                }
+
+                if(!isReadOnly) {
+                    IconButton(onClick = { onAttachmentDeleted() }) {
+                        Icon(Icons.Outlined.Delete, stringResource(id = R.string.delete))
                     }
                 }
             }
@@ -193,7 +182,7 @@ fun AttachmentCardPreview_view() {
     MaterialTheme {
         AttachmentCard(
             attachment = Attachment.getSample(),
-            isEditMode = false,
+            isReadOnly = false,
             isRemoteCollection = true,
             player = null,
             onAttachmentDeleted = { }
@@ -207,7 +196,7 @@ fun AttachmentCardPreview_edit() {
     MaterialTheme {
         AttachmentCard(
             attachment = Attachment.getSample(),
-            isEditMode = true,
+            isReadOnly = true,
             isRemoteCollection = true,
             player = null,
             onAttachmentDeleted = { }
@@ -222,7 +211,7 @@ fun AttachmentCardPreview_view_with_preview() {
     MaterialTheme {
         AttachmentCard(
             attachment = Attachment.getSample(),
-            isEditMode = false,
+            isReadOnly = false,
             isRemoteCollection = true,
             player = null,
             onAttachmentDeleted = { }
@@ -233,11 +222,11 @@ fun AttachmentCardPreview_view_with_preview() {
 
 @Preview(showBackground = true)
 @Composable
-fun AttachmentCardPreview_edit_with_preview() {
+fun AttachmentCardPreview_readOnly() {
     MaterialTheme {
         AttachmentCard(
             attachment = Attachment.getSample(),
-            isEditMode = true,
+            isReadOnly = true,
             isRemoteCollection = true,
             player = null,
             onAttachmentDeleted = { }

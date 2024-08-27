@@ -69,7 +69,7 @@ fun ListCardCompact(
     modifier: Modifier = Modifier,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit,
     dragHandle:@Composable () -> Unit = { }
 ) {
@@ -171,8 +171,7 @@ fun ListCardCompact(
                             .combinedClickable(
                                 onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
                                 onLongClick = {
-                                    if (!subtask.isReadOnly)
-                                        onLongClick(subtask.id, subtasks)
+                                    onLongClick(subtask.id, subtask.isReadOnly)
                                 }
                             )
                     )

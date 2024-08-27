@@ -10,17 +10,30 @@ package at.techbee.jtx.ui.detail
 
 import android.content.ActivityNotFoundException
 import android.util.Log
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Link
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,65 +43,71 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.UiUtil
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsCardUrl(
     initialUrl: String,
-    isEditMode: Boolean,
+    isReadOnly: Boolean,
     onUrlUpdated: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val headline = stringResource(id = R.string.url)
     var url by rememberSaveable { mutableStateOf(initialUrl) }
+    val isValidURL = UiUtil.isValidURL(url)
     val uriHandler = LocalUriHandler.current
+    val focusRequester = remember { FocusRequester() }
 
-    ElevatedCard(modifier = modifier, onClick = {
-        try {
-            if (url.isNotBlank() && !isEditMode)
-                uriHandler.openUri(url)
-        } catch (e: ActivityNotFoundException) {
-            Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")
-        }
-    }) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),) {
+    ElevatedCard(
+        modifier = modifier,
+        onClick = { focusRequester.requestFocus() }
+    ) {
 
-            Crossfade(isEditMode) {
-                if(!it) {
+        Row {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .weight(1f)
+            ) {
+                HeadlineWithIcon(icon = Icons.Outlined.Link, iconDesc = headline, text = headline)
 
-                    Column {
-                        HeadlineWithIcon(icon = Icons.Outlined.Link, iconDesc = headline, text = headline)
-                        Text(url)
-                    }
-                } else {
+                BasicTextField(
+                    value = url,
+                    textStyle = LocalTextStyle.current,
+                    onValueChange = { newUrl ->
+                        url = newUrl
+                        onUrlUpdated(url)
+                    },
+                    enabled = !isReadOnly,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)
+                        .focusRequester(focusRequester)
+                )
 
-                    OutlinedTextField(
-                        value = url,
-                        leadingIcon = { Icon(Icons.Outlined.Link, headline) },
-                        trailingIcon = {
-                            IconButton(onClick = {
-                                url = ""
-                                onUrlUpdated(url)
-                            }) {
-                                if (url.isNotEmpty())
-                                    Icon(Icons.Outlined.Clear, stringResource(id = R.string.delete))
-                            }
-                        },
-                        singleLine = true,
-                        isError = url.isNotEmpty() && !UiUtil.isValidURL(url),
-                        label = { Text(headline) },
-                        onValueChange = { newUrl ->
-                            url = newUrl
-                            onUrlUpdated(url)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
+                AnimatedVisibility(!isReadOnly && url.isNotBlank() && !isValidURL) {
+                    Text(
+                        text = stringResource(id = R.string.invalid_url_message),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
+            }
 
+
+            AnimatedVisibility(isValidURL) {
+                IconButton(onClick = {
+                    try {
+                        uriHandler.openUri(url)
+                    } catch (e: ActivityNotFoundException) {
+                        Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")
+                    }
+                }) {
+                    Icon(
+                        Icons.AutoMirrored.Outlined.OpenInNew,
+                        stringResource(id = R.string.open_in_browser)
+                    )
+                }
             }
         }
     }
@@ -100,7 +119,7 @@ fun DetailsCardUrl_Preview() {
     MaterialTheme {
         DetailsCardUrl(
             initialUrl = "www.orf.at",
-            isEditMode = false,
+            isReadOnly = false,
             onUrlUpdated = { }
         )
     }
@@ -109,11 +128,24 @@ fun DetailsCardUrl_Preview() {
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardUrl_Preview_edit() {
+fun DetailsCardUrl_Preview_emptyUrl() {
     MaterialTheme {
         DetailsCardUrl(
-            initialUrl = "www.bitfire.at",
-            isEditMode = true,
+            initialUrl = "",
+            isReadOnly = false,
+            onUrlUpdated = {  }
+        )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardUrl_Preview_invalid_URL() {
+    MaterialTheme {
+        DetailsCardUrl(
+            initialUrl = "invalid url",
+            isReadOnly = false,
             onUrlUpdated = {  }
         )
     }

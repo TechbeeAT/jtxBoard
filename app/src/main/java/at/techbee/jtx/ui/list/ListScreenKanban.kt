@@ -95,7 +95,7 @@ fun ListScreenKanban(
     onXStatusChanged: (itemid: Long, status: ExtendedStatus, scrollOnce: Boolean) -> Unit,
     onSwapCategories: (itemid: Long, old: String, new: String) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
     onSyncRequested: () -> Unit
 ) {
 
@@ -210,8 +210,7 @@ fun ListScreenKanban(
                                 .combinedClickable(
                                     onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
                                     onLongClick = {
-                                        if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                            onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
+                                        onLongClick(iCal4ListRelObject.iCal4List.id, iCal4ListRelObject.iCal4List.isReadOnly)
                                     }
                                 )
                                 .fillMaxWidth()

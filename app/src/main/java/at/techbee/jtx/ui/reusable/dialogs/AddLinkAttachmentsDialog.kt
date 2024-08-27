@@ -82,7 +82,7 @@ fun AddAttachmentLinkDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    if (currentText.isNotBlank() && UiUtil.isValidURL(currentText)) {
+                    if (UiUtil.isValidURL(currentText)) {
                         onConfirm(currentText)
                         onDismiss()
                     } else {
