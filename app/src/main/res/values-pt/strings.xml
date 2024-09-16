@@ -161,10 +161,17 @@
     <string name="sync_with_sync_app_heading">"Sincronizar com %1$s"</string>
     <string name="sync_basic_info">"jtx Board não fornece sincronização com servidor por si mesmo, mas suporta a sincronização pelo DAVx⁵. Esse método permite que você use qualquer servidor CalDAV de sua escolha para armazenar, fazer backup e sincronizar seus dados."</string>
     <string name="sync_ksync_basic_info">"kSync é um aplicativo baseado no DAVx⁵ desenvolvido por Infomaniak especialmente para seus serviços. Enquanto o DAVx⁵ está aberto a qualquer servidor CalDAV compatível, kSync só permite sincronização com contas Infomaniak."</string>
+    <string name="sync_congratulations">"Parabéns! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Nós detectamos %1$s no seu telefone."</string>
+    <string name="sync_setup_instructions">"Instruções de instalação"</string>
+    <string name="sync_check_out_sync_app">"Confira %1$s!"</string>
     <string name="sync_sync_app_not_found">"Não detectamos %1$s no seu telefone."</string>
     <string name="sync_more_about_sync_app">"Saiba mais sobre %1$s"</string>
     <string name="sync_download_sync_app">"Baixar %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Adicione uma conta em %1$s"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Falhou em abrir %1$s, por favor, abra o app manualmente."</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"Olá, eu sou Patrick, o desenvolvedor do jtx Board. Eu estou dedicando muito tempo e esforço neste app que eu estou oferecendo para você de graça. Se você gosta do meu app, por favor mande algum carinho e faça uma pequena doação!"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nenhum aplicativo foi encontrado para abrir este arquivo/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Item recorrente agora é uma exceção."</string>
     <string name="toast_done_tasks_deleted">"Tarefas concluídas excluídas (%d)."</string>
