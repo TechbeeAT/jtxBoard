@@ -319,6 +319,7 @@
     <string name="filter_no_resource">Senza risorse</string>
     <string name="filter_subtasks_order_by">Ordina sottoattività per</string>
     <string name="filter_subnotes_order_by">Ordina note collegate per</string>
+    <string name="order_by_drag_and_drop">"Trascina &amp; Rilascia"</string>
     <string name="filter_no_filter">"Nessun filtro"</string>
     <string name="filter_options_more_entries">"Altro (%1$d)"</string>
     <string name="filter_options_less_entries">"Meno"</string>
@@ -536,6 +537,9 @@ Grazie!"</string>
     <string name="filter_any">"Qualsiasi"</string>
     <string name="filter_all">"Tutti/e"</string>
     <string name="filter_none">"Nessuno/a"</string>
+    <string name="filter_started_from_to">"Inizi(at)o: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Scadenza: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completato: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data nel passato"</string>
     <string name="list_date_today">"Oggi"</string>
