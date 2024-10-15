@@ -393,9 +393,12 @@ Grazie!"</string>
     <string name="group_by_started_day">"Inizio (giorno)"</string>
     <string name="group_by_started_week">"Inizio (settimana)"</string>
     <string name="group_by_started_month">"Inizio (mese)"</string>
+    <string name="group_by_due_day">"Scadenza (giorno)"</string>
     <string name="group_by_due_week">"Scadenza (settimana)"</string>
     <string name="group_by_due_month">"Scadenza (mese)"</string>
     <string name="week_number_year">"Settimana %1$d/%2$d"</string>
+    <string name="summary_description">"Riassunto/Descrizione"</string>
+    <string name="status_classification_priority">"Stato/Classificazione/Priorità"</string>
     <string name="timezone">"Fuso orario"</string>
     <string name="not_set2">"Non impostato"</string>
     <string name="invert_selection">"Inverti selezione"</string>
@@ -482,6 +485,7 @@ Grazie!"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
     <string name="menu_list_viewmode_week">"Vista per settimana"</string>
     <string name="settings_tasks">"Impostazioni delle attività"</string>
+    <string name="settings_alarms">"Impostazioni Allarmi"</string>
     <string name="settings_tasks_status_progress">"Impostazioni Attività (stato/progresso)"</string>
     <string name="settings_sync">"Impostazioni Di Sincronizzazione"</string>
     <string name="settings_default_start_date">"Impostare una data di inizio predefinita per le attività"</string>
@@ -604,6 +608,7 @@ Grazie!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Aggiornamento del widget"</string>
     <string name="widget_list_opacity_warning">"Nota: Questa è una funzione sperimentale! Con cambiamenti di opacità ridotti nel tema di colore potrebbe non essere riflessa immediatamente!"</string>
     <string name="widget_list_color_warning">"Nota: Questa è una funzione sperimentale! Le modifiche al tema dei colori non saranno riflesse! Scegli nessun colore per tornare al valore predefinito di sistema."</string>
+    <string name="widget_list_default_categories">"Imposta categorie predefinite per le nuove voci dal widget"</string>
     <string name="opacity">"Opacità"</string>
     <string name="general">"Generale"</string>
     <string name="list_collapse">"Ripiega"</string>
@@ -662,6 +667,9 @@ Grazie!"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board ha bisogno del permesso di pianificare gli avvisi esatti, altrimenti le notifiche di allarme potrebbero essere ritardate. Si prega di concedere questa autorizzazione per utilizzare questa funzione."</string>
     <string name="call_contact">"Chiama %1$s"</string>
     <string name="email_contact">"E-mail a %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Crea sottoattività in massa</string>
+    <string name="dialog_create_multiple_subnotes">Crea note collegate in massa</string>
     <string name="dialog_detected_multiple_subtasks">Il testo sembra contenere più sottoattività. Vuoi creare %d sottoattività?</string>
     <string name="dialog_detected_multiple_subnotes">Il testo sembra contenere più note collegate. Vuoi creare %d note collegate?</string>
+    <string name="dialog_confirm_create_multiple">Crea multipli</string>
 </resources>
