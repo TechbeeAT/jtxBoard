@@ -161,10 +161,20 @@
     <string name="sync_with_sync_app_heading">"Sincronizar com %1$s"</string>
     <string name="sync_basic_info">"jtx Board não fornece sincronização com servidor por si mesmo, mas suporta a sincronização pelo DAVx⁵. Esse método permite que você use qualquer servidor CalDAV de sua escolha para armazenar, fazer backup e sincronizar seus dados."</string>
     <string name="sync_ksync_basic_info">"kSync é um aplicativo baseado no DAVx⁵ desenvolvido por Infomaniak especialmente para seus serviços. Enquanto o DAVx⁵ está aberto a qualquer servidor CalDAV compatível, kSync só permite sincronização com contas Infomaniak."</string>
+    <string name="sync_congratulations">"Parabéns! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Nós detectamos %1$s no seu telefone."</string>
+    <string name="sync_setup_instructions">"Instruções de instalação"</string>
+    <string name="sync_check_out_sync_app">"Confira %1$s!"</string>
     <string name="sync_sync_app_not_found">"Não detectamos %1$s no seu telefone."</string>
     <string name="sync_more_about_sync_app">"Saiba mais sobre %1$s"</string>
     <string name="sync_download_sync_app">"Baixar %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Adicione uma conta em %1$s"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Falhou em abrir %1$s, por favor, abra o app manualmente."</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"Olá, eu sou Patrick, o desenvolvedor do jtx Board. Eu estou dedicando muito tempo e esforço neste app que eu estou oferecendo para você de graça. Se você gosta do meu app, por favor mande algum carinho e faça uma pequena doação!"</string>
+    <string name="donate_thank_you">"Obrigado!"</string>
+    <string name="donate_donate_with">"Doar com"</string>
+    <string name="donate_other_donation_methods">"Se você gostaria de considerar outro método de doação, por favor, visite nosso site:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nenhum aplicativo foi encontrado para abrir este arquivo/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Item recorrente agora é uma exceção."</string>
     <string name="toast_done_tasks_deleted">"Tarefas concluídas excluídas (%d)."</string>
@@ -176,6 +186,8 @@
     <string name="list_welcome_entry_journal_summary">"Parabéns, esta é a sua primeira entrada no diário :-)"</string>
     <string name="list_welcome_entry_journal_description">"Os diários podem ser usados para guardar as suas notas para uma data específica. Utilizar esta funcionalidade por exemplo para protocolos, atas de reunião, entradas do diário e assim por diante. Se você editar esta postagem, você verá as opções para adicionar categorias, participantes, anexos, … Sinta-se à vontade para apagar esta entrada quando quiser!"</string>
     <string name="list_welcome_entry_note_summary">"Parabéns, esta é a sua primeira nota :-)"</string>
+    <string name="list_welcome_entry_note_description">"Notas são notas tradicionais e não estão ligadas a uma data específica. Como entradas de diário, você pode adicionar anexos, participantes e mais quando edita ou adiciona uma entrada. Aliás, você pode também adicionar subtarefas a qualquer entrada, não importa se é uma entrada de diário, nota ou tarefa!"</string>
+    <string name="list_welcome_entry_todo_summary">"Parabéns, esta é a sua primeira tarefa :-)"</string>
     <!-- Permissions -->
     <string name="link_to_parent">"Vincular a um nível superior"</string>
     <!-- alarms -->
