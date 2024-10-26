@@ -382,6 +382,7 @@
     <string name="settings_default_expand_subtasks">"デフォルトでサブ ToDo を一覧に展開"</string>
     <string name="settings_default_expand_subnotes">"デフォルトでサブメモを一覧に展開"</string>
     <string name="settings_default_expand_attachments">"デフォルトで添付ファイルを一覧に展開"</string>
+    <string name="settings_default_expand_parents">"デフォルトでリストに親を展開する"</string>
     <string name="sorry">"申し訳ありません"</string>
     <string name="back">"戻る"</string>
     <string name="details">"詳細"</string>
