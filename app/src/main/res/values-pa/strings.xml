@@ -19,7 +19,8 @@
     <string name="longitude">"ਲੰਬਕਾਰ"</string>
     <string name="unlink">"ਅਨਲਿੰਕ ਕਰੋ"</string>
     <string name="off">"ਬੰਦ"</string>
-    <string name="permissions">"ਮਨਜ਼ੂਰੀਆਂ"</string>
+    <string name="location_permission_denied">"ਟਿਕਾਣੇ ਦੀ ਮਨਜ਼ੂਰੀ ਰੋਕੀ ਗਈ"</string>
+    <string name="permissions">"ਮਨਜੂਰੀਆਂ"</string>
     <string name="current_location">"ਮੌਜੂਦਾ ਟਿਕਾਣਾ"</string>
     <string name="toolbar_text_add_journal">"ਜਰਨਲ ਸ਼ਾਮਲ ਕਰੋ"</string>
     <string name="toolbar_text_add_note">"ਨੋਟ ਸ਼ਾਮਲ ਕਰੋ"</string>
