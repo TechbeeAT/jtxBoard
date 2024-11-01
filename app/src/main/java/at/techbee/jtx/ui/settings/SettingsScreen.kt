@@ -9,10 +9,14 @@
 package at.techbee.jtx.ui.settings
 
 import android.Manifest
+import android.app.backup.BackupDataOutput
+import android.app.backup.SharedPreferencesBackupHelper
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -28,6 +32,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.FileDownload
+import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
@@ -38,6 +44,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,11 +61,13 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.LocaleListCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
+import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_AUDIO_FORMAT
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_AUTO_ALARM
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_DUE_DATE
@@ -89,12 +98,16 @@ import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_STICKY_ALARMS
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SYNC_ON_START
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION
+import at.techbee.jtx.util.DateTimeUtils
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.util.Locale
 
 
@@ -112,6 +125,7 @@ fun SettingsScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    var toastMessage by remember { mutableStateOf<String?>(null) }
     var expandedSection by remember { mutableStateOf<SettingsScreenSection?>(SettingsScreenSection.APP_SETTINGS) }
     fun expandOrCollapse(selectedSection: SettingsScreenSection) {
         expandedSection = if (expandedSection == selectedSection) null else selectedSection
@@ -141,12 +155,110 @@ fun SettingsScreen(
     ) else null
 
 
+    val launcherExportSettings = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/*")
+    ) { exportSettingsFilepath ->
+        if(exportSettingsFilepath == null)
+            return@rememberLauncherForActivityResult
+
+        try {
+            scope.launch(Dispatchers.IO) {
+                context.contentResolver?.openOutputStream(exportSettingsFilepath)?.use { outputStream ->
+                    val objectOutputStream = ObjectOutputStream(outputStream)
+                    objectOutputStream.writeObject(settingsStateHolder.prefs.all)
+                    objectOutputStream.close()
+                }
+            }
+            toastMessage = context.getString(R.string.settings_exported)
+        } catch (e: IOException) {
+            toastMessage= context.getString(R.string.settings_export_error)
+        }
+    }
+
+    val launcherImportSettings = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { filepath ->
+        if(filepath == null)
+            return@rememberLauncherForActivityResult
+
+        context.contentResolver?.openInputStream(filepath)?.use { inputStream ->
+
+            try {
+                ObjectInputStream(inputStream).use { objectInputStream ->
+                    val map = objectInputStream.readObject() as Map<String, *>
+
+                    settingsStateHolder.prefs.edit().let { preferences ->
+                        map.forEach { (key, value) ->
+                            if(key == SETTING_PROTECT_BIOMETRIC.key)
+                                return@forEach
+
+                            when (value) {
+                                is Boolean -> preferences.putBoolean(key, value)
+                                is String -> preferences.putString(key, value)
+                                is Int -> preferences.putInt(key, value)
+                                is Float -> preferences.putFloat(key, value)
+                                is Long -> preferences.putLong(key, value)
+                                is Set<*> -> preferences.putStringSet(key, value as Set<String?>)
+                                else -> throw IllegalArgumentException("Type " + value?.javaClass?.name + " is unknown")
+                            }
+                        }
+                        preferences.commit()
+                    }
+                }
+                toastMessage = context.getString(R.string.settings_imported)
+
+                //settingsStateHolder.reloadFromPrefs()
+                /*
+                when (settingsStateHolder.settingTheme.value) {
+                    DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    DropdownSettingOption.THEME_TRUE_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+                 */
+                val intent = Intent(context, MainActivity2::class.java)
+                intent.flags =Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                toastMessage = context.getString(R.string.presets_import_invalid_file)
+            }
+        }
+    }
+
+    LaunchedEffect(toastMessage) {
+        if(toastMessage != null) {
+            Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
+            toastMessage = null
+        }
+    }
+
+
 
     Scaffold(
         topBar = {
             JtxTopAppBar(
                 drawerState = drawerState,
-                title = stringResource(id = R.string.navigation_drawer_settings)
+                title = stringResource(id = R.string.navigation_drawer_settings),
+                actions = {
+                    val menuExpanded = remember { mutableStateOf(false) }
+
+                    OverflowMenu(menuExpanded = menuExpanded) {
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.settings_import_settings)) },
+                            onClick = {
+                                menuExpanded.value = false
+                                launcherImportSettings.launch(arrayOf("application/*"))
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.FileUpload, null) }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.settings_export_settings)) },
+                            onClick = {
+                                menuExpanded.value = false
+                                launcherExportSettings.launch("jtxBoard_settings_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(),null)}")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.FileDownload, null) }
+                        )
+                    }
+                }
             )
         },
 
