@@ -29,7 +29,7 @@ godaddy-colorpicker = "0.7.0"
 #huawei-iap = "6.10.0.300"
 kotlin = "2.0.21"
 kotlinx-coroutines = "1.8.1"
-kotlinxSerializationJson = "1.7.1"
+kotlinxSerializationJson = "1.7.3"
 # see https://github.com/google/ksp/releases for version numbers
 ksp = "2.0.21-1.0.26"
 libphonenumber = "8.13.49"
