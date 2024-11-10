@@ -97,7 +97,12 @@ data class ICal4ListRel(
                                 this[context.getString(R.string.filter_no_category)] = mutableListOf(sortedEntry)
                         }
                     }
-                }
+                }.toSortedMap(
+                    if(sortOrder == SortOrder.DESC)
+                        compareByDescending { it.uppercase() }
+                    else
+                        compareBy { it.uppercase() }
+                )
                 GroupBy.RESOURCE -> mutableMapOf<String, MutableList<ICal4ListRel>>().apply {
                     sortedList.forEach { sortedEntry ->
                         if (sortedEntry.resources.isNotEmpty()) {
@@ -114,7 +119,12 @@ data class ICal4ListRel(
                                 this[context.getString(R.string.filter_no_resource)] = mutableListOf(sortedEntry)
                         }
                     }
-                }
+                }.toSortedMap(
+                    if(sortOrder == SortOrder.DESC)
+                        compareByDescending { it.uppercase() }
+                    else
+                        compareBy { it.uppercase() }
+                )
                 //GroupBy.CATEGORY -> sortedList.groupBy { if(it.categories.isEmpty()) context.getString(R.string.filter_no_category) else it.categories.joinToString(separator = ", ") { category -> category.text } }.toSortedMap()
                 //GroupBy.RESOURCE -> sortedList.groupBy { if(it.resources.isEmpty()) context.getString(R.string.filter_no_resource) else it.resources.joinToString(separator = ", ") { resource -> resource.text?:"" } }.toSortedMap()
                 GroupBy.STATUS -> sortedList.groupBy {
