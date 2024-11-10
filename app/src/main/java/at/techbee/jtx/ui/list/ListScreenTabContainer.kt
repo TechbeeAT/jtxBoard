@@ -17,9 +17,8 @@ import android.location.LocationManager
 import android.widget.Toast
 import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -45,6 +44,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -102,8 +103,7 @@ import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class
+    ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class
 )
 @Composable
 fun ListScreenTabContainer(
@@ -190,6 +190,10 @@ fun ListScreenTabContainer(
     var showUpdateEntriesDialog by rememberSaveable { mutableStateOf(false) }
     var showCollectionSelectorDialog by rememberSaveable { mutableStateOf(false) }
 
+    var isRefreshing by remember { mutableStateOf(false) }
+    val isPullRefreshEnabled = remember {
+        SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) } && settingsStateHolder.settingSyncOnPullRefresh.value
+    }
 
     fun getActiveViewModel() = when (pagerState.currentPage) {
             enabledTabs.indexOf(ListTabDestination.Journals) -> icalListViewModelJournals
@@ -677,11 +681,11 @@ fun ListScreenTabContainer(
                 JtxNavigationDrawer(
                     drawerState,
                     mainContent = {
-                        Column {
+                        Column(modifier = Modifier.fillMaxSize()) {
 
                             if(enabledTabs.size > 1) {
                                 PrimaryTabRow(
-                                    selectedTabIndex = pagerState.currentPage    // adding the indicator might make a smooth movement of the tabIndicator, but Accompanist does not support all components (TODO: Check again in future) https://www.geeksforgeeks.org/tab-layout-in-android-using-jetpack-compose/
+                                    selectedTabIndex = pagerState.currentPage
                                 ) {
                                     enabledTabs.forEach { enabledTab ->
                                         Tab(
@@ -776,13 +780,40 @@ fun ListScreenTabContainer(
                                 )
                             }
 
-                            Box {
-                                HorizontalPager(
-                                    state = pagerState,
-                                    userScrollEnabled = !filterSheetState.isVisible,
-                                    verticalAlignment = Alignment.Top
-                                ) { page ->
+                            HorizontalPager(
+                                state = pagerState,
+                                userScrollEnabled = !filterSheetState.isVisible,
+                                verticalAlignment = Alignment.Top,
+                                modifier = Modifier.fillMaxSize()
+                            ) { page ->
 
+                                // TODO: Remove this stupid condition once PullToRefreshBox allows a disabled state!
+                                if (isPullRefreshEnabled) {
+                                    PullToRefreshBox(
+                                        state = rememberPullToRefreshState(),
+                                        onRefresh = {
+                                            //TODO: Get rid of this stupid workaround with isRefreshing and delay once the new version properly makes the animation disappear!!!
+                                            isRefreshing = true
+                                            listViewModel.syncAccounts()
+                                            scope.launch {
+                                                delay(100)
+                                                isRefreshing = false
+                                            }
+                                        },
+                                        isRefreshing = isRefreshing,
+                                        contentAlignment = Alignment.TopCenter,
+                                        modifier = Modifier.fillMaxSize()
+                                    ) {
+                                        ListScreen(
+                                            listViewModel = when (enabledTabs[page].module) {
+                                                Module.JOURNAL -> icalListViewModelJournals
+                                                Module.NOTE -> icalListViewModelNotes
+                                                Module.TODO -> icalListViewModelTodos
+                                            },
+                                            navController = navController
+                                        )
+                                    }
+                                } else {
                                     ListScreen(
                                         listViewModel = when (enabledTabs[page].module) {
                                             Module.JOURNAL -> icalListViewModelJournals

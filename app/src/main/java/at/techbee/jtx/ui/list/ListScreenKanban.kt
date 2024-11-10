@@ -22,20 +22,15 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -73,8 +67,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
-)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreenKanban(
     module: Module,
@@ -88,15 +81,13 @@ fun ListScreenKanban(
     kanbanColumnsCategory: SnapshotStateList<String>,
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
-    isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
     onStatusChanged: (itemid: Long, status: Status, scrollOnce: Boolean) -> Unit,
     onXStatusChanged: (itemid: Long, status: ExtendedStatus, scrollOnce: Boolean) -> Unit,
     onSwapCategories: (itemid: Long, old: String, new: String) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
-    onSyncRequested: () -> Unit
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -134,152 +125,132 @@ fun ListScreenKanban(
         }
     }
 
-    val pullToRefreshState = rememberPullToRefreshState(
-        enabled = { isPullRefreshEnabled }
-    )
-    LaunchedEffect(pullToRefreshState.isRefreshing) {
-        if(pullToRefreshState.isRefreshing) {
-            onSyncRequested()
-            pullToRefreshState.endRefresh()
-        }
-    }
 
-    Box(
-        modifier = Modifier.fillMaxSize().nestedScroll(pullToRefreshState.nestedScrollConnection),
-        contentAlignment = Alignment.TopCenter
-    ) {
+    Row(modifier = Modifier.fillMaxWidth()) {
 
-        Row(modifier = Modifier.fillMaxWidth()) {
+        columns.forEachIndexed { index, column ->
 
-            columns.forEachIndexed { index, column ->
+            val listState = rememberLazyListState()
 
-                val listState = rememberLazyListState()
-
-                if (scrollId != null) {
-                    LaunchedEffect(list) {
-                        val itemIndex = groupedList[column]?.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId } ?: -1
-                        if (itemIndex > -1) {
-                            listState.scrollToItem(itemIndex)
-                            scrollOnceId.postValue(null)
-                        }
-                    }
-                }
-
-                LazyColumn(
-                    state = listState,
-                    contentPadding = PaddingValues(4.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth().weight(1F)
-                ) {
-
-                    stickyHeader {
-                        Text(
-                            text = column,
-                            modifier = Modifier
-                                .align(Alignment.CenterVertically)
-                                .background(MaterialTheme.colorScheme.background)
-                                .fillMaxWidth(),
-                            style = MaterialTheme.typography.titleSmall,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-
-                    items(
-                        items = groupedList[column]?: emptyList(),
-                        key = { item -> item.iCal4List.id }
-                    )
-                    { iCal4ListRelObject ->
-
-                        val currentSubtasks =
-                            subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRel.iCal4List.uid } }
-                                .map { it.iCal4List }
-
-                        var offsetX by remember { mutableFloatStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
-                        val maxOffset = 50f
-
-                        ListCardKanban(
-                            iCal4ListRelObject.iCal4List,
-                            storedCategories = storedCategories,
-                            storedStatuses = storedStatuses,
-                            selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
-                            markdownEnabled = markdownEnabled,
-                            player = player,
-                            modifier = Modifier
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
-                                    onLongClick = {
-                                        if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                            onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
-                                    }
-                                )
-                                .fillMaxWidth()
-                                .offset { IntOffset(offsetX.roundToInt(), 0) }
-                                .draggable(
-                                    orientation = Orientation.Horizontal,
-                                    state = rememberDraggableState { delta ->
-                                        if (iCal4ListRelObject.iCal4List.isReadOnly)   // no drag state for read only objects!
-                                            return@rememberDraggableState
-                                        if (settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty())
-                                            return@rememberDraggableState  // no drag is status depends on subtasks
-                                        if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
-                                            offsetX += delta
-                                    },
-                                    onDragStopped = {
-                                        if (abs(offsetX) > maxOffset / 2 && !iCal4ListRelObject.iCal4List.isReadOnly) {
-
-                                            val draggedToColumn = when {
-                                                offsetX < 0f && index > 0 -> index - 1
-                                                offsetX > 0F && index < columns.lastIndex -> index + 1
-                                                else -> {
-                                                    offsetX = 0f
-                                                    return@draggable
-                                                }
-                                            }
-
-                                            when {
-                                                kanbanColumnsXStatus.isNotEmpty() -> storedStatuses
-                                                    .find { xstatus -> xstatus.module == module && xstatus.xstatus == columns[draggedToColumn] }
-                                                    ?.let { xstatus ->
-                                                        onXStatusChanged(iCal4ListRelObject.iCal4List.id, xstatus, true)
-                                                    }
-
-                                                kanbanColumnsCategory.isNotEmpty() -> onSwapCategories(iCal4ListRelObject.iCal4List.id, column, columns[draggedToColumn])
-
-                                                else -> Status.entries
-                                                    .find { status -> context.getString(status.stringResource) == columns[draggedToColumn] }
-                                                    ?.let { status ->
-                                                        onStatusChanged(iCal4ListRelObject.iCal4List.id, status, true)
-                                                    }
-                                            }
-
-                                            // make a short vibration
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                                val vibratorManager = context.getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                                                val vibrator = vibratorManager.defaultVibrator
-                                                val vibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
-                                                vibrator.vibrate(vibrationEffect)
-                                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                                @Suppress("DEPRECATION")
-                                                val vibrator = context.getSystemService(VIBRATOR_SERVICE) as Vibrator
-                                                val vibrationEffect = VibrationEffect.createOneShot(150, 10)
-                                                vibrator.vibrate(vibrationEffect)
-                                            }
-                                        }
-                                        offsetX = 0f
-                                    }
-                                ),
-                        )
+            if (scrollId != null) {
+                LaunchedEffect(list) {
+                    val itemIndex = groupedList[column]?.indexOfFirst { iCal4ListRelObject -> iCal4ListRelObject.iCal4List.id == scrollId } ?: -1
+                    if (itemIndex > -1) {
+                        listState.scrollToItem(itemIndex)
+                        scrollOnceId.postValue(null)
                     }
                 }
             }
-        }
 
-        PullToRefreshContainer(
-            modifier = Modifier.align(Alignment.TopCenter).offset(y = (-30).dp),
-            state = pullToRefreshState,
-        )
+            LazyColumn(
+                state = listState,
+                contentPadding = PaddingValues(4.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth().weight(1F)
+            ) {
+
+                stickyHeader {
+                    Text(
+                        text = column,
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .background(MaterialTheme.colorScheme.background)
+                            .fillMaxWidth(),
+                        style = MaterialTheme.typography.titleSmall,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                items(
+                    items = groupedList[column]?: emptyList(),
+                    key = { item -> item.iCal4List.id }
+                )
+                { iCal4ListRelObject ->
+
+                    val currentSubtasks =
+                        subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRel.iCal4List.uid } }
+                            .map { it.iCal4List }
+
+                    var offsetX by remember { mutableFloatStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
+                    val maxOffset = 50f
+
+                    ListCardKanban(
+                        iCal4ListRelObject.iCal4List,
+                        storedCategories = storedCategories,
+                        storedStatuses = storedStatuses,
+                        selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
+                        markdownEnabled = markdownEnabled,
+                        player = player,
+                        modifier = Modifier
+                            .clip(jtxCardCornerShape)
+                            .combinedClickable(
+                                onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
+                                onLongClick = {
+                                    if (!iCal4ListRelObject.iCal4List.isReadOnly)
+                                        onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
+                                }
+                            )
+                            .fillMaxWidth()
+                            .offset { IntOffset(offsetX.roundToInt(), 0) }
+                            .draggable(
+                                orientation = Orientation.Horizontal,
+                                state = rememberDraggableState { delta ->
+                                    if (iCal4ListRelObject.iCal4List.isReadOnly)   // no drag state for read only objects!
+                                        return@rememberDraggableState
+                                    if (settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty())
+                                        return@rememberDraggableState  // no drag is status depends on subtasks
+                                    if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
+                                        offsetX += delta
+                                },
+                                onDragStopped = {
+                                    if (abs(offsetX) > maxOffset / 2 && !iCal4ListRelObject.iCal4List.isReadOnly) {
+
+                                        val draggedToColumn = when {
+                                            offsetX < 0f && index > 0 -> index - 1
+                                            offsetX > 0F && index < columns.lastIndex -> index + 1
+                                            else -> {
+                                                offsetX = 0f
+                                                return@draggable
+                                            }
+                                        }
+
+                                        when {
+                                            kanbanColumnsXStatus.isNotEmpty() -> storedStatuses
+                                                .find { xstatus -> xstatus.module == module && xstatus.xstatus == columns[draggedToColumn] }
+                                                ?.let { xstatus ->
+                                                    onXStatusChanged(iCal4ListRelObject.iCal4List.id, xstatus, true)
+                                                }
+
+                                            kanbanColumnsCategory.isNotEmpty() -> onSwapCategories(iCal4ListRelObject.iCal4List.id, column, columns[draggedToColumn])
+
+                                            else -> Status.entries
+                                                .find { status -> context.getString(status.stringResource) == columns[draggedToColumn] }
+                                                ?.let { status ->
+                                                    onStatusChanged(iCal4ListRelObject.iCal4List.id, status, true)
+                                                }
+                                        }
+
+                                        // make a short vibration
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                            val vibratorManager = context.getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                                            val vibrator = vibratorManager.defaultVibrator
+                                            val vibrationEffect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
+                                            vibrator.vibrate(vibrationEffect)
+                                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                            @Suppress("DEPRECATION")
+                                            val vibrator = context.getSystemService(VIBRATOR_SERVICE) as Vibrator
+                                            val vibrationEffect = VibrationEffect.createOneShot(150, 10)
+                                            vibrator.vibrate(vibrationEffect)
+                                        }
+                                    }
+                                    offsetX = 0f
+                                }
+                            ),
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -332,15 +303,13 @@ fun ListScreenKanban_TODO() {
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
             onStatusChanged = { _, _, _ -> },
             onXStatusChanged = { _, _, _ -> },
             onSwapCategories = { _, _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            onLongClick = { _, _ -> }
         )
     }
 }
@@ -394,15 +363,13 @@ fun ListScreenKanban_JOURNAL() {
             kanbanColumnsCategory = remember { mutableStateListOf() },
             scrollOnceId = MutableLiveData(null),
             settingLinkProgressToSubtasks = false,
-            isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
             onStatusChanged = { _, _, _ -> },
             onXStatusChanged = { _, _, _ -> },
             onSwapCategories = { _, _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
-            onSyncRequested = { }
+            onLongClick = { _, _ -> }
         )
     }
 }
