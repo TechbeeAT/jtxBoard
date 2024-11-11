@@ -184,6 +184,19 @@ class ListWidget : GlanceAppWidget() {
                     )
             }
 
+            val defaultOnSurfaceVariantColor = GlanceTheme.colors.onSurfaceVariant
+            val entryHeaderTextColor = remember(listWidgetConfig) {
+                if (listWidgetConfig.widgetColorEntries == null)
+                    defaultOnSurfaceVariantColor
+                else
+                    FixedColorProvider(
+                        if(UiUtil.isDarkColor(entryColor.getColor(context)))
+                            Color.White.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
+                        else
+                            Color.Black.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
+                    )
+            }
+
             GlanceTheme {
                 ListWidgetContent(
                     listWidgetConfig,
@@ -194,6 +207,7 @@ class ListWidget : GlanceAppWidget() {
                     textColor = textColor,
                     entryColor = entryColor,
                     entryTextColor = entryTextColor,
+                    entryHeaderTextColor = entryHeaderTextColor,
                     onCheckedChange = { iCalObjectId, checked ->
                         scope.launch(Dispatchers.IO) {
                             val settingsStateHolder = SettingsStateHolder(context)
