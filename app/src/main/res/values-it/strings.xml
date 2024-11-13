@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board sync Diari, Note e Attività"</string>
+    <string name="app_permission_label">"jtx Board sincronizza Diari, Note &amp; Attività"</string>
     <string name="app_permission_desc">"sincronizza il contenuto della jtx Board con altre applicazioni come DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
@@ -49,7 +49,7 @@
     <string name="navigation_drawer_board">"Tavola"</string>
     <string name="navigation_drawer_synchronization">"Sincronizzazione"</string>
     <string name="navigation_drawer_about">"Informazioni / Licenza"</string>
-    <string name="navigation_drawer_subtitle">"Diari, Note ed Attività"</string>
+    <string name="navigation_drawer_subtitle">"diari, note &amp; attività"</string>
     <string name="navigation_drawer_settings">"Impostazioni"</string>
     <string name="navigation_drawer_news_updates">"Notizie e aggiornamenti"</string>
     <string name="navigation_drawer_external_links">"Link esterni"</string>
@@ -102,7 +102,7 @@
     <string name="edit_add_link_button_text">"Aggiungi link allegato"</string>
     <string name="edit_subtasks_add_helper">"Aggiungi una sottoattività"</string>
     <string name="detail_top_app_bar_quick_add_subtask">"Aggiunta rapida sottoattività"</string>
-    <string name="detail_top_app_bar_quick_add_subnote">"Aggiunta rapida subnota"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Aggiunta rapida sottonota"</string>
     <string name="edit_attachment_add_link_dialog">"Aggiungi link allegato"</string>
     <string name="edit_recur_repeat_every_x">"Ripeti ogni"</string>
     <string name="edit_recur_on_weekday">"in poi"</string>
@@ -157,7 +157,7 @@
     <string name="settings_show_progress_for_subtasks">Mostra l\'avanzamento delle sottoattività nell\'elenco</string>
     <string name="settings_show_progress_for_maintasks">Mostra i progressi per le attività principali</string>
     <string name="settings_app">"Impostazioni dell'app"</string>
-    <string name="settings_select_mimetype_for_audio">"Seleziona Tipo MI per le note audio"</string>
+    <string name="settings_select_mimetype_for_audio">"Seleziona formato per le note audio"</string>
     <!-- Sync fragment -->
     <string name="sync_with_sync_app_heading">"Sincronizza con %1$s"</string>
     <string name="sync_basic_info">"jtx Board non fornisce la sincronizzazione del server, ma supporta la sincronizzazione tramite DAVx5. Questo metodo ti permetterà di utilizzare un server CalDAV-compatibile di tua scelta per memorizzare, eseguire il backup e sincronizzare i tuoi dati."</string>
@@ -184,7 +184,7 @@
     <string name="about_translations_thanks_to">"Grazie a"</string>
     <string name="about_translations_basic_info">"jtx Board è un'app open source che apprezza la partecipazione e il contributo della comunità open source. In questa pagina vorremmo attribuire gli sforzi dei membri della comunità per le traduzioni."</string>
     <string name="about_translations_contribution_info">"Se desideri modificare/aggiungere traduzioni o aggiungere nuove lingue a questa app, sentiti libero di unirti al progetto jtx Board sulla piattaforma di traduzione Crowdin:"</string>
-    <string name="about_translations_contribution_button">"Partecipa a Crowdin.com"</string>
+    <string name="about_translations_contribution_button">"Partecipa su Crowdin.com"</string>
     <string name="list_welcome_entry_journal_summary">"Congratulazioni, questa è la tua prima annotazione nel diario :-)"</string>
     <string name="list_welcome_entry_journal_description">"I Diari possono essere utilizzati per conservare i tuoi appunti per una data specifica. Utilizzare questa funzionalità ad esempio per i protocolli, i verbali delle riunioni, le voci del diario e così via. Se modifichi questa voce, vedrai le opzioni per aggiungere categorie, partecipanti, allegati, … Sentiti libero di eliminare questa voce quando vuoi!"</string>
     <string name="list_welcome_entry_note_summary">"Congratulazioni, questa è la tua prima nota :-)"</string>
@@ -192,7 +192,7 @@
     <string name="list_welcome_entry_todo_summary">"Congratulazioni, questa è la tua prima voce di Attività :-)"</string>
     <string name="list_welcome_entry_todo_description">"Oltre ai Diari e alle Note, le Attività possono avere un inizio pianificato, una data di scadenza e una data di completamento. Possono essere verificati al termine o è possibile impostare un avanzamento. Modifica questa voce per controllare tutte le opzioni :-)"</string>
     <string name="list_welcome_category">"#PrimiPassi"</string>
-    <string name="save_and_edit">"Salva e modifica"</string>
+    <string name="save_and_edit">"Salva &amp; modifica"</string>
     <string name="save_and_new">"Salva &amp; nuovo"</string>
     <string name="save_and_close">"Salva &amp; chiudi"</string>
     <string name="list_quickadd_add_audio_attachment">"Registra allegato audio"</string>
@@ -200,7 +200,7 @@
     <string name="intent_dialog_title">"Aggiungere contenuto a un Diario, una Nota o un'Attività?"</string>
     <string name="add">"Aggiungi"</string>
     <string name="edit">"Modifica"</string>
-    <string name="reset">"Resettare"</string>
+    <string name="reset">"Reimposta"</string>
     <string name="apply">"Applica"</string>
     <string name="not_available_abbreviation">"n/d"</string>
     <string name="collection">"Collezione"</string>
@@ -217,7 +217,7 @@
     <string name="alarms_onstart">"All'inizio"</string>
     <string name="alarms_ondue">"Alla scadenza"</string>
     <string name="alarms_before_start">"prima dell'inizio"</string>
-    <string name="alarms_after_start">"Dopo l'inizio"</string>
+    <string name="alarms_after_start">"dopo l'inizio"</string>
     <string name="alarms_before_due">"prima della scadenza"</string>
     <string name="alarms_after_due">"dopo la scadenza"</string>
     <string name="alarms_minutes">"minuti"</string>
@@ -235,7 +235,7 @@
     <string name="collections_dialog_delete_local_title">"Eliminare \"%1$s\"?"</string>
     <string name="collections_dialog_delete_local_message">"La cancellazione di una collezione cancellerà anche tutti i diari, le note e le attività all'interno di questa collezione. Questo non può essere annullato. Sei sicuro di voler continuare?"</string>
     <string name="menu_collections_add_local">"Aggiungi collezione locale"</string>
-    <string name="navigation_drawer_website_news">"Notizie e aggiornamenti"</string>
+    <string name="navigation_drawer_website_news">"Notizie &amp; Note di Rilascio"</string>
     <string name="color">"Colore"</string>
     <string name="priority_0_no_priority">"Nessuna priorità"</string>
     <string name="priority_1_highest">"1 - Più alto"</string>
@@ -273,7 +273,7 @@
     <string name="relatedto">"Relativo a"</string>
     <string name="comments">"Commenti"</string>
     <string name="attachments">"Allegati"</string>
-    <string name="alarms">"Notificazioni"</string>
+    <string name="alarms">"Notifiche"</string>
     <string name="recurrence">"Ricorrenza"</string>
     <string name="recurrence_exceptions">"Eccezioni"</string>
     <string name="recurrence_additions">"Aggiunte"</string>
@@ -319,6 +319,7 @@
     <string name="filter_no_resource">Senza risorse</string>
     <string name="filter_subtasks_order_by">Ordina sottoattività per</string>
     <string name="filter_subnotes_order_by">Ordina note collegate per</string>
+    <string name="order_by_drag_and_drop">"Trascina &amp; Rilascia"</string>
     <string name="filter_no_filter">"Nessun filtro"</string>
     <string name="filter_options_more_entries">"Altro (%1$d)"</string>
     <string name="filter_options_less_entries">"Meno"</string>
@@ -382,6 +383,7 @@ Grazie!"</string>
     <string name="settings_default_expand_subtasks">"Espansione predefinita delle sottoattività nell'elenco"</string>
     <string name="settings_default_expand_subnotes">"Espansione predefinita delle note secondarie nell'elenco"</string>
     <string name="settings_default_expand_attachments">"Espansione predefinita degli allegati nell'elenco"</string>
+    <string name="settings_default_expand_parents">"Espansione predefinita dei genitori nell'elenco"</string>
     <string name="sorry">"Spiacente"</string>
     <string name="back">"Indietro"</string>
     <string name="details">"Dettagli"</string>
@@ -392,9 +394,12 @@ Grazie!"</string>
     <string name="group_by_started_day">"Inizio (giorno)"</string>
     <string name="group_by_started_week">"Inizio (settimana)"</string>
     <string name="group_by_started_month">"Inizio (mese)"</string>
+    <string name="group_by_due_day">"Scadenza (giorno)"</string>
     <string name="group_by_due_week">"Scadenza (settimana)"</string>
     <string name="group_by_due_month">"Scadenza (mese)"</string>
     <string name="week_number_year">"Settimana %1$d/%2$d"</string>
+    <string name="summary_description">"Riassunto/Descrizione"</string>
+    <string name="status_classification_priority">"Stato/Classificazione/Priorità"</string>
     <string name="timezone">"Fuso orario"</string>
     <string name="not_set2">"Non impostato"</string>
     <string name="invert_selection">"Inverti selezione"</string>
@@ -442,8 +447,8 @@ Grazie!"</string>
     <string name="dialog_unlink_from_parent_title">"Scollega dal genitore"</string>
     <string name="dialog_unlink_from_parent_message">"Rimuovere la relazione come sotto-voce? La voce rimarrà come voce autonoma."</string>
     <string name="edit_comment">"Modifica commento"</string>
-    <string name="edit_subnote_add_helper">"Aggiungere nota secondaria"</string>
-    <string name="edit_subtask">"Modifica sottoattività"</string>
+    <string name="edit_subnote_add_helper">"Aggiungere sotto-nota"</string>
+    <string name="edit_subtask">"Modifica sotto-attività"</string>
     <string name="edit_subnote">"Modifica nota secondaria"</string>
     <string name="edit_fragment_app_notification_permission_message">"jtx Board visualizza le notifiche quando gli allarmi sono in scadenza. Per utilizzare questa funzione, concedere l'autorizzazione alle notifiche."</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board può usare la vostra posizione per zoomare automaticamente verso la vostra posizione quando si usano le mappe. Se si desidera utilizzare questa funzione, concedere l'autorizzazione alla localizzazione grossolana."</string>
@@ -470,16 +475,19 @@ Grazie!"</string>
     <string name="dialog_detach_from_series_text_single">"Staccare questo elemento dalla serie ti permetterà di avere sotto-attività indipendenti o note collegate, ma non ci sarà più link alla serie originale. Vorresti continuare?"</string>
     <string name="dialog_detach_from_series_text_attention">"Attenzione: Questa operazione non può essere annullata!"</string>
     <string name="dialog_detach_from_series_button">"Scollega dalla serie"</string>
+    <string name="dialog_sync_app_outdated_title">"Applicazione di sincronizzazione obsoleta"</string>
     <string name="dialog_sync_app_outdated_message">"La tua versione attuale di %1$s non è compatibile con questa versione di jtx Board. Si prega di aggiornare a %1$s %2$s o successivamente! La sincronizzazione attraverso %1$s è attualmente sospesa."</string>
     <string name="dialog_save_current_filter_config">"Salva la configurazione del filtro corrente"</string>
-    <string name="dialog_save_current_filter_my_filter">"Mio filtro"</string>
+    <string name="dialog_save_current_filter_my_filter">"Il mio filtro"</string>
     <string name="dialog_edit_stored_category_title">"Aggiungi/modifica preimpostazione categoria"</string>
     <string name="dialog_edit_stored_resource_title">"Aggiungi/modifica preimpostazione risorsa"</string>
     <string name="dialog_edit_stored_status_title">"Aggiungi/modifica preimpostato di stato"</string>
     <string name="dialog_add_audio_entry_title">"Aggiungi voce audio"</string>
     <string name="menu_list_viewmode_compact">"Vista compatta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
+    <string name="menu_list_viewmode_week">"Vista per settimana"</string>
     <string name="settings_tasks">"Impostazioni delle attività"</string>
+    <string name="settings_alarms">"Impostazioni Allarmi"</string>
     <string name="settings_tasks_status_progress">"Impostazioni Attività (stato/progresso)"</string>
     <string name="settings_sync">"Impostazioni Di Sincronizzazione"</string>
     <string name="settings_default_start_date">"Impostare una data di inizio predefinita per le attività"</string>
@@ -509,6 +517,8 @@ Grazie!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Mantieni lo stato, avanzamento &amp; completato in sincronizzazione"</string>
     <string name="settings_attention_experimental_feature">"Attenzione: Questa è una funzione sperimentale"</string>
     <string name="settings_create_with_current_location">"Crea nuove voci con la posizione corrente"</string>
+    <string name="settings_create_with_current_location_sub">"Concedi l'accesso alla tua posizione durante l'utilizzo di questa app per utilizzare questa funzionalità."</string>
+    <string name="settings_sticky_alarms">"Allarmi persistenti"</string>
     <string name="settings_sticky_alarms_sub">"Mantieni le notifiche fino al termine o al rinvio"</string>
     <string name="settings_fullscreen_alarms">"Allarmi a schermo intero"</string>
     <string name="settings_fullscreen_alarms_sub">"Mostra gli allarmi a schermo intero quando il dispositivo è bloccato"</string>
@@ -531,11 +541,15 @@ Grazie!"</string>
     <string name="settings_select_language">"Seleziona lingua"</string>
     <string name="settings_select_language_system">"Sistema predefinito"</string>
     <string name="filter_special">"Filtri speciali"</string>
-    <string name="filter_presets">"Filtro preimpostati"</string>
+    <string name="filter_presets">"Filtri preimpostati"</string>
     <string name="filter_presets_edit_info">"Si prega di aggiungere/aggiornare/eliminare le preimpostazioni del filtro dal menu filtro nella vista elenco."</string>
     <string name="filter_any">"Qualsiasi"</string>
     <string name="filter_all">"Tutti/e"</string>
     <string name="filter_none">"Nessuno/a"</string>
+    <string name="filter_date_from_to">"Data: %1$s - %2$s"</string>
+    <string name="filter_started_from_to">"Inizi(at)o: %1$s - %2$s"</string>
+    <string name="filter_due_from_to">"Scadenza: %1$s - %2$s"</string>
+    <string name="filter_completed_from_to">"Completato: %1$s - %2$s"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data nel passato"</string>
     <string name="list_date_today">"Oggi"</string>
@@ -555,6 +569,7 @@ Grazie!"</string>
     <string name="list_biometric_protected_entries_unlocked">Voci biometriche protette sbloccate</string>
     <string name="settings_auto_alarm">"Allarme automatico"</string>
     <string name="alarms_always_ondue">"Sempre in scadenza"</string>
+    <string name="alarms_always_on_save">"Sempre al salvataggio (sperimentale)"</string>
     <string name="settings_auto_alarm_sub">"Attivare per creare automaticamente gli allarmi. Scegliere ´\"Sempre attivo\" per non creare un allarme, ma per essere avvisati in ogni caso quando un'attività è in scadenza."</string>
     <string name="settings_protect_biometric">"Proteggi le voci con la biometria"</string>
     <string name="settings_protect_biometric_sub">"Questa funzione nasconde le voci selezionate fino a quando non vengono sbloccate con dati biometrici, ma non crittografa/decifrano i dati in background."</string>
@@ -568,7 +583,7 @@ Grazie!"</string>
     <string name="list_due_without">"Senza data di scadenza"</string>
     <string name="list_snackbar_no_collection">"Aggiungere una raccolta locale o sincronizzare una raccolta remota che supporti questo modulo."</string>
     <string name="filter_second_order_by">"Quindi ordinare per"</string>
-    <string name="filter_group_by">"Gruppo per"</string>
+    <string name="filter_group_by">"Raggruppa per"</string>
     <string name="filter_group_by_info">"Il raggruppamento è disponibile per l'elenco e la vista compatta"</string>
     <string name="filter_save_as_preset">"Salva come preimpostato"</string>
     <string name="menu_list_flat_view">"Vista piana"</string>
@@ -597,6 +612,7 @@ Grazie!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Aggiornamento del widget"</string>
     <string name="widget_list_opacity_warning">"Nota: Questa è una funzione sperimentale! Con cambiamenti di opacità ridotti nel tema di colore potrebbe non essere riflessa immediatamente!"</string>
     <string name="widget_list_color_warning">"Nota: Questa è una funzione sperimentale! Le modifiche al tema dei colori non saranno riflesse! Scegli nessun colore per tornare al valore predefinito di sistema."</string>
+    <string name="widget_list_default_categories">"Imposta categorie predefinite per le nuove voci dal widget"</string>
     <string name="opacity">"Opacità"</string>
     <string name="general">"Generale"</string>
     <string name="list_collapse">"Ripiega"</string>
@@ -607,8 +623,8 @@ Grazie!"</string>
     <string name="widget_list_configuration_widget_background">"Sfondo del widget"</string>
     <string name="widget_list_configuration_entries_background">"Sfondo delle voci"</string>
     <string name="widget_list_show_description">"Mostra descrizione"</string>
-    <string name="settings_select_theme_true_dark">"Vero Scuro (AMOLED)"</string>
-    <string name="settings_select_theme_contrast">"Contrasto (e-Inchiostro)"</string>
+    <string name="settings_select_theme_true_dark">"Nero Puro (AMOLED)"</string>
+    <string name="settings_select_theme_contrast">"Contrasto (e-Ink)"</string>
     <string name="settings_journals">"Impostazioni diari"</string>
     <string name="settings_notes">"Impostazioni Delle Note"</string>
     <string name="settings_default_journals_date">"Impostare una data/ora predefinita per i diari"</string>
@@ -640,6 +656,7 @@ Grazie!"</string>
     <string name="extended_status">\"Stato esteso</string>
     <string name="active_filters">Filtri attivi:</string>
     <string name="kanban_settings">"Kanban"</string>
+    <string name="kanban_columns">"Colonne Kanban"</string>
     <string name="kanban_columns_based_on_standard_status">basato su stati standard</string>
     <string name="kanban_columns_based_on_extended_status">basato su stati estesi</string>
     <string name="kanban_columns_based_on_first_category">basato sulla prima categoria</string>
@@ -652,4 +669,12 @@ Grazie!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board può avvisarti quando sei vicino alle coordinate date. Si prega di impostare l'autorizzazione di posizione per 'Consenti tutto il tempo' e concedere l'autorizzazione di notifica per utilizzare questa funzione."</string>
     <string name="geofence_notification_summary">"Geofence attivato"</string>
     <string name="exact_alarm_permission_dialog_message">"jtx Board ha bisogno del permesso di pianificare gli avvisi esatti, altrimenti le notifiche di allarme potrebbero essere ritardate. Si prega di concedere questa autorizzazione per utilizzare questa funzione."</string>
+    <string name="call_contact">"Chiama %1$s"</string>
+    <string name="email_contact">"E-mail a %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Crea sottoattività in massa</string>
+    <string name="dialog_create_multiple_subnotes">Crea note collegate in massa</string>
+    <string name="dialog_detected_multiple_subtasks">Il testo sembra contenere più sottoattività. Vuoi creare %d sottoattività?</string>
+    <string name="dialog_detected_multiple_subnotes">Il testo sembra contenere più note collegate. Vuoi creare %d note collegate?</string>
+    <string name="dialog_confirm_create_multiple">Crea multipli</string>
+    <string name="dialog_confirm_create_single">Crea singolo</string>
 </resources>

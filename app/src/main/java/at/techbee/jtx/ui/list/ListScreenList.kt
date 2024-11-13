@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,13 +29,10 @@ import androidx.compose.material.icons.outlined.ArrowDropUp
 import androidx.compose.material.icons.outlined.VerticalAlignTop
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,7 +47,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -81,8 +76,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 import java.util.UUID
 
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class
-)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreenList(
     groupedList: Map<String, List<ICal4ListRel>>,
@@ -99,13 +93,13 @@ fun ListScreenList(
     isSubtasksExpandedDefault: Boolean,
     isSubnotesExpandedDefault: Boolean,
     isAttachmentsExpandedDefault: Boolean,
+    isParentsExpandedDefault: Boolean,
     settingShowProgressMaintasks: Boolean,
     settingShowProgressSubtasks: Boolean,
     settingProgressIncrement: DropdownSettingOption,
     settingDisplayTimezone: DropdownSettingOption,
     settingLinkProgressToSubtasks: Boolean,
     settingIsAccessibilityMode: Boolean,
-    isPullRefreshEnabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
     isListDragAndDropEnabled: Boolean,
@@ -115,7 +109,6 @@ fun ListScreenList(
     onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
-    onSyncRequested: () -> Unit,
     onSaveListSettings: () -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit
     ) {
@@ -137,95 +130,81 @@ fun ListScreenList(
         }
         ICalDatabase.getInstance(context).iCalDatabaseDao().updateSortOrder(reordered.map { it.id })
     }
-    val pullToRefreshState = rememberPullToRefreshState(
-        enabled = { isPullRefreshEnabled }
-    )
-    LaunchedEffect(pullToRefreshState.isRefreshing) {
-        if(pullToRefreshState.isRefreshing) {
-            onSyncRequested()
-            pullToRefreshState.endRefresh()
-        }
-    }
 
 
-    Box(
-        contentAlignment = Alignment.TopCenter,
-        modifier = Modifier.fillMaxSize().nestedScroll(pullToRefreshState.nestedScrollConnection)
+    LazyColumn(
+        modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
+        state = listState,
     ) {
+        groupedList.forEach { (groupName, group) ->
 
-        LazyColumn(
-            modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 4.dp),
-            state = listState,
-        ) {
-            groupedList.forEach { (groupName, group) ->
+            if (groupedList.keys.size > 1) {
+                stickyHeader {
 
-                if (groupedList.keys.size > 1) {
-                    stickyHeader {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.background)
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.background)
+                    ) {
+                        TextButton(onClick = {
+                            if (listSettings.collapsedGroups.contains(groupName))
+                                listSettings.collapsedGroups.remove(groupName)
+                            else
+                                listSettings.collapsedGroups.add(groupName)
+                            onSaveListSettings()
+                        }) {
+                            Text(
+                                text = groupName,
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(horizontal = 4.dp)
+                            )
 
-                        ) {
-                            TextButton(onClick = {
-                                if (listSettings.collapsedGroups.contains(groupName))
-                                    listSettings.collapsedGroups.remove(groupName)
-                                else
-                                    listSettings.collapsedGroups.add(groupName)
-                                onSaveListSettings()
-                            }) {
-                                Text(
-                                    text = groupName,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    modifier = Modifier.padding(horizontal = 4.dp)
-                                )
-
-                                if (listSettings.collapsedGroups.contains(groupName))
-                                    Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
-                                else
-                                    Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
-                            }
+                            if (listSettings.collapsedGroups.contains(groupName))
+                                Icon(Icons.Outlined.ArrowDropUp, stringResource(R.string.list_collapse))
+                            else
+                                Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_expand))
                         }
                     }
                 }
+            }
 
-                if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !listSettings.collapsedGroups.contains(groupName))) {
-                    items(
-                        items = group,
-                        key = { item ->
-                            if(listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE)
-                                item.iCal4List.id.toString() + UUID.randomUUID()
-                            else
-                                item.iCal4List.id
-                        }
-                    ) { iCal4ListRelObject ->
+            if (groupedList.keys.size <= 1 || (groupedList.keys.size > 1 && !listSettings.collapsedGroups.contains(groupName))) {
+                items(
+                    items = group,
+                    key = { item ->
+                        if(listSettings.groupBy.value == GroupBy.CATEGORY || listSettings.groupBy.value == GroupBy.RESOURCE)
+                            item.iCal4List.id.toString() + UUID.randomUUID()
+                        else
+                            item.iCal4List.id
+                    }
+                ) { iCal4ListRelObject ->
 
-                        var currentSubtasks =
-                            subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
-                                .map { it.iCal4List }
-                        if (listSettings.isExcludeDone.value)   // exclude done if applicable
-                            currentSubtasks =
-                                currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
+                    var currentSubtasks =
+                        subtasks.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
+                            .map { it.iCal4List }
+                    if (listSettings.isExcludeDone.value)   // exclude done if applicable
+                        currentSubtasks =
+                            currentSubtasks.filter { subtask -> subtask.percent != 100 && subtask.status != Status.COMPLETED.status }
 
-                        val currentSubnotes =
-                            subnotes.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
-                                .map { it.iCal4List }
-                        val currentParents = parents.filter { iCal4ListRel -> iCal4ListRelObject.relatedto.any { related -> related.text == iCal4ListRel.iCal4List.uid } }.map { it.iCal4List }
-                        val currentAttachments = attachments[iCal4ListRelObject.iCal4List.id]
+                    val currentSubnotes =
+                        subnotes.filter { iCal4ListRel -> iCal4ListRel.relatedto.any { relatedto -> relatedto.reltype == Reltype.PARENT.name && relatedto.text == iCal4ListRelObject.iCal4List.uid } }
+                            .map { it.iCal4List }
+                    val currentParents = parents.filter { iCal4ListRel -> iCal4ListRelObject.relatedto.any { related -> related.text == iCal4ListRel.iCal4List.uid } }.map { it.iCal4List }
+                    val currentAttachments = attachments[iCal4ListRelObject.iCal4List.id]
 
-                        if (scrollId != null) {
-                            LaunchedEffect(group) {
-                                val index =
-                                    group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
-                                if (index > -1) {
-                                    listState.scrollToItem(index)
-                                    scrollOnceId.postValue(null)
-                                }
+                    if (scrollId != null) {
+                        LaunchedEffect(group) {
+                            val index =
+                                group.indexOfFirst { iCalObject -> iCalObject.iCal4List.id == scrollId }
+                            if (index > -1) {
+                                listState.scrollToItem(index)
+                                scrollOnceId.postValue(null)
                             }
                         }
+                    }
 
                         ReorderableItem(reorderableLazyListState, key = iCal4ListRelObject.iCal4List.id) {
                             ListCard(
@@ -243,6 +222,7 @@ fun ListScreenList(
                                 isSubtasksExpandedDefault = isSubtasksExpandedDefault,
                                 isSubnotesExpandedDefault = isSubnotesExpandedDefault,
                                 isAttachmentsExpandedDefault = isAttachmentsExpandedDefault,
+                                isParentsExpandedDefault = isParentsExpandedDefault,
                                 settingShowProgressMaintasks = settingShowProgressMaintasks,
                                 settingShowProgressSubtasks = settingShowProgressSubtasks,
                                 settingDisplayTimezone = settingDisplayTimezone,
@@ -288,26 +268,20 @@ fun ListScreenList(
             }
         }
 
-        PullToRefreshContainer(
-            modifier = Modifier.align(Alignment.TopCenter).offset(y = (-30).dp),
-            state = pullToRefreshState,
-        )
-
-        Crossfade(listState.canScrollBackward, label = "showScrollUp") {
-            if (it) {
-                Box(
-                    contentAlignment = Alignment.BottomCenter,
-                    modifier = Modifier.fillMaxSize()
+    Crossfade(listState.canScrollBackward, label = "showScrollUp") {
+        if (it) {
+            Box(
+                contentAlignment = Alignment.BottomCenter,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Button(
+                    onClick = {
+                        scope.launch { listState.scrollToItem(0) }
+                    },
+                    colors = ButtonDefaults.filledTonalButtonColors(),
+                    modifier = Modifier.padding(8.dp).alpha(0.33f)
                 ) {
-                    Button(
-                        onClick = {
-                            scope.launch { listState.scrollToItem(0) }
-                        },
-                        colors = ButtonDefaults.filledTonalButtonColors(),
-                        modifier = Modifier.padding(8.dp).alpha(0.33f)
-                    ) {
-                        Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
-                    }
+                    Icon(Icons.Outlined.VerticalAlignTop, stringResource(R.string.list_scroll_to_top))
                 }
             }
         }
@@ -371,13 +345,13 @@ fun ListScreenList_TODO() {
             isSubtasksExpandedDefault = true,
             isSubnotesExpandedDefault = true,
             isAttachmentsExpandedDefault = true,
+            isParentsExpandedDefault = true,
             settingShowProgressMaintasks = true,
             settingShowProgressSubtasks = true,
             settingProgressIncrement = DropdownSettingOption.PROGRESS_STEP_1,
             settingLinkProgressToSubtasks = false,
             settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
             settingIsAccessibilityMode = false,
-            isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
             isListDragAndDropEnabled = true,
@@ -388,7 +362,6 @@ fun ListScreenList_TODO() {
             onLongClick = { _, _ ->  },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
-            onSyncRequested = { },
             onSaveListSettings = { },
             onUpdateSortOrder = { }
         )
@@ -455,13 +428,13 @@ fun ListScreenList_JOURNAL() {
             isSubtasksExpandedDefault = false,
             isSubnotesExpandedDefault = false,
             isAttachmentsExpandedDefault = false,
+            isParentsExpandedDefault = false,
             settingShowProgressMaintasks = false,
             settingShowProgressSubtasks = false,
             settingProgressIncrement = DropdownSettingOption.PROGRESS_STEP_1,
             settingDisplayTimezone = DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL,
             settingLinkProgressToSubtasks = false,
             settingIsAccessibilityMode = false,
-            isPullRefreshEnabled = true,
             markdownEnabled = false,
             player = null,
             isListDragAndDropEnabled = true,
@@ -472,7 +445,6 @@ fun ListScreenList_JOURNAL() {
             onLongClick = { _, _ ->  },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
-            onSyncRequested = { },
             onSaveListSettings = { },
             onUpdateSortOrder = { }
         )

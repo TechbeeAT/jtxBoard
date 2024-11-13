@@ -382,6 +382,7 @@
     <string name="settings_default_expand_subtasks">"Ανάπτυξη των δευτερευουσών εργασιών στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_subnotes">"Ανάπτυξη των δευτερευουσών σημειώσεων στη λίστα από προεπιλογή"</string>
     <string name="settings_default_expand_attachments">"Ανάπτυξη των επισυναπτωμένων στην λίστα από προεπιλογή"</string>
+    <string name="settings_default_expand_parents">"Ανάπτυξη των κύριων επισυναπτωμένων στην λίστα από προεπιλογή"</string>
     <string name="sorry">"Συγνώμη"</string>
     <string name="back">"Πίσω"</string>
     <string name="details">"Λεπτομέριες"</string>

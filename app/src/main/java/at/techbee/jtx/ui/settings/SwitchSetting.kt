@@ -25,6 +25,7 @@ import androidx.compose.material.icons.outlined.Fullscreen
 import androidx.compose.material.icons.outlined.MyLocation
 import androidx.compose.material.icons.outlined.PublishedWithChanges
 import androidx.compose.material.icons.outlined.RestartAlt
+import androidx.compose.material.icons.outlined.SubdirectoryArrowRight
 import androidx.compose.material.icons.outlined.SwipeDown
 import androidx.compose.material.icons.outlined.TaskAlt
 import androidx.compose.material3.Icon
@@ -78,6 +79,15 @@ enum class SwitchSetting(
             16.dp
         ))  },
         title = R.string.settings_default_expand_attachments,
+        default = false
+    ),
+    SETTING_AUTO_EXPAND_PARENTS(
+        key = "settings_auto_expand_parents",
+        icon = { Icon(
+            Icons.Outlined.SubdirectoryArrowRight, null, modifier = Modifier.padding(
+                16.dp
+            ))  },
+        title = R.string.settings_default_expand_parents,
         default = false
     ),
     SETTING_SHOW_PROGRESS_FOR_MAINTASKS(

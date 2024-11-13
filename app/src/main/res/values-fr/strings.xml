@@ -358,6 +358,7 @@
     <string name="settings_timezone_display_local">"Afficher l'heure dans le fuseau horaire local"</string>
     <string name="settings_timezone_display_original">"Afficher l'heure dans le fuseau horaire d'origine"</string>
     <string name="settings_timezone_display_local_and_original">"Afficher l'heure en local et dans le fuseau horaire d'origine (vue détaillée seulement)"</string>
+    <string name="settings_font">"Police"</string>
     <string name="donate_dialog_title">"Vous aimez jtx Board?"</string>
     <string name="donate_dialog_message">"Le développement d'une application est complexe et la maintenance et le support sont des tâches difficiles. Si vous aimez cette application et si vous souhaitez en assurer le développement continu, pensez à faire un don :-)
 Merci !"</string>
@@ -382,6 +383,7 @@ Merci !"</string>
     <string name="settings_default_expand_subtasks">"Développer les sous-tâches dans la liste par défaut"</string>
     <string name="settings_default_expand_subnotes">"Développer les sous-notes dans la liste par défaut"</string>
     <string name="settings_default_expand_attachments">"Développer les pièces jointes dans la liste par défaut"</string>
+    <string name="settings_default_expand_parents">"Développer les parents en liste par défaut"</string>
     <string name="sorry">"Désolé"</string>
     <string name="back">"Retour"</string>
     <string name="details">"Détails"</string>
@@ -521,6 +523,7 @@ Merci !"</string>
     <string name="settings_fullscreen_alarms">"Alarmes en plein écran"</string>
     <string name="settings_fullscreen_alarms_sub">"Affiche les alarmes en plein écran lorsque l'appareil est verrouillé"</string>
     <string name="settings_accessibility_mode">"Mode d'accessibilité"</string>
+    <string name="settings_accessibility_mode_sub">"Assurer une taille de police minimale pour les petits élements"</string>
     <string name="settings_fullscreen_alarms_toast">"Veuillez autoriser les notifications en plein écran dans les paramètres du système."</string>
     <string name="settings_sync_on_start">"Synchroniser au démarrage de l'appli"</string>
     <string name="settings_sync_on_pull_refresh">"Synchroniser lors du tirage au sort"</string>
@@ -609,6 +612,7 @@ Merci !"</string>
     <string name="widget_list_compat_updating_widget_notification">"Mettre à jour le widget"</string>
     <string name="widget_list_opacity_warning">"Note : Ceci est une fonctionnalité expérimentale! Des changements d'opacité réduits dans le thème de couleur peuvent ne pas être reflétés immédiatement!"</string>
     <string name="widget_list_color_warning">"Note : Ceci est une fonctionnalité expérimentale ! Les changements dans le thème de couleur ne seront pas reflétés ! Ne choisissez aucune couleur pour revenir à la valeur par défaut du système."</string>
+    <string name="widget_list_default_categories">"Définir des catégories par défaut pour les nouvelles entrées depuis le widget"</string>
     <string name="opacity">"Opacité"</string>
     <string name="general">"Général"</string>
     <string name="list_collapse">"Fermer"</string>

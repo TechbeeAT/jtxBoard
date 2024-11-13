@@ -383,6 +383,7 @@ Dank u!"</string>
     <string name="settings_default_expand_subtasks">"Subtaken standaard uitvouwen in lijst"</string>
     <string name="settings_default_expand_subnotes">"Subtaken standaard uitvouwen in lijst"</string>
     <string name="settings_default_expand_attachments">"Subtaken standaard uitvouwen in lijst"</string>
+    <string name="settings_default_expand_parents">"Bovenliggende elementen automatisch uitklappen in lijst"</string>
     <string name="sorry">"Sorry"</string>
     <string name="back">"Terug"</string>
     <string name="details">"Details"</string>
