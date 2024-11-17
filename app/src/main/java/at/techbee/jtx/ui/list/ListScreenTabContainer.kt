@@ -15,16 +15,20 @@ import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
@@ -65,6 +69,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -80,6 +86,7 @@ import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
@@ -92,12 +99,15 @@ import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.IOException
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -182,6 +192,28 @@ fun ListScreenTabContainer(
         if (!timeout) {
             delay((1).seconds)
             timeout = true
+        }
+    }
+
+    val launcherExportToCSV = rememberLauncherForActivityResult(CreateDocument("text/csv")) {
+        it?.let { uri ->
+            //isProcessing.postValue(true)
+            scope.launch(Dispatchers.IO) {
+                try {
+                    context.contentResolver?.openOutputStream(uri)?.use { outputStream ->
+                        val csvData = mutableListOf<String>()
+                        csvData.add(ICal4ListRel.getCSVHeader(listViewModel.module, context))
+                        listViewModel.iCal4ListRel.value?.forEach { ical4list ->
+                            csvData.add(ical4list.getCSVRow(context))
+                        }
+                        //Log.d("CSV", csvData.joinToString(separator = System.lineSeparator()))
+                        outputStream.write(csvData.joinToString(separator = System.lineSeparator()).toByteArray())
+                    }
+                    listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_success)
+                } catch (e: IOException) {
+                    listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_error)
+                }
+            }
         }
     }
 
@@ -576,6 +608,35 @@ fun ListScreenTabContainer(
                             onCheckedChange = {
                                 getActiveViewModel().listSettings.markdownEnabled.value = it
                                 getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
+                            }
+                        )
+                        HorizontalDivider()
+                        DropdownMenuItem(
+                            text = {
+                                    Column(modifier = Modifier.fillMaxWidth()) {
+                                        Text(
+                                            text = stringResource(id = R.string.export_as_csv),
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            fontWeight = FontWeight.Bold,
+                                            modifier = Modifier.padding(end = 16.dp)
+                                        )
+                                        Text(
+                                            text = stringResource(id = R.string.settings_attention_experimental_feature),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            modifier = Modifier.widthIn(max = 150.dp),
+                                            fontStyle = FontStyle.Italic
+                                        )
+                                    }
+                                },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Download,
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                launcherExportToCSV.launch("jtx_csvExport_${DateTimeUtils.timestampAsFilenameAppendix()}.csv")
+                                topBarMenuExpanded = false
                             }
                         )
                     }

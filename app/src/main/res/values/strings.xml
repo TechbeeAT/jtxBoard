@@ -265,6 +265,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Show in %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Export as .ics"</string>
+    <string name="export_as_csv">"Export as .csv"</string>
     <string name="journal">"Journal"</string>
     <string name="note">"Note"</string>
     <string name="task">"Task"</string>
@@ -346,6 +347,8 @@
     <string name="edit_recur_ends_never">"ends never"</string>
     <string name="edit_recur_ends_on">"ends on"</string>
     <string name="edit_recur_ends_after">"ends after"</string>
+    <string name="list_toast_export_success">"List successfully exported"</string>
+    <string name="list_toast_export_error">"Error on exporting list"</string>
     <string name="collections_toast_export_success">"Collections successfully exported"</string>
     <string name="collections_toast_export_error">"Error on exporting collections"</string>
     <string name="menu_collections_export_all">"Export all"</string>
