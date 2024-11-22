@@ -103,6 +103,12 @@ const val COLUMN_COLLECTION_READONLY = "readonly"
  * Type: [Long]
  */
 const val COLUMN_COLLECTION_LAST_SYNC = "lastsync"
+/**
+ * Purpose:  This column/property stores a sync_id for the given collection
+ * See https://github.com/TechbeeAT/jtxBoard/issues/1635
+ * Type: [Long]
+ */
+const val COLUMN_COLLECTION_SYNC_ID = "sync_id"
 
 
 @Parcelize
@@ -143,9 +149,13 @@ data class ICalCollection(
         @ColumnInfo(name = COLUMN_COLLECTION_READONLY)            var readonly: Boolean = false,
 
         /** Stores the date/time of the last sync for this collection */
-        @ColumnInfo(name = COLUMN_COLLECTION_LAST_SYNC)         var lastSync: Long? = null
+        @ColumnInfo(name = COLUMN_COLLECTION_LAST_SYNC)         var lastSync: Long? = null,
 
-): Parcelable {
+        /** Stores the a dedicated sync id for the collection of the sync app */
+        @ColumnInfo(index = true, name = COLUMN_COLLECTION_SYNC_ID)   var syncId: Long? = null,
+
+
+        ): Parcelable {
         companion object Factory {
 
                 const val LOCAL_COLLECTION_URL = "https://localhost/"
@@ -197,6 +207,7 @@ data class ICalCollection(
                 values.getAsString(COLUMN_COLLECTION_SYNC_VERSION)?.let { syncversion -> this.syncversion = syncversion }
                 values.getAsString(COLUMN_COLLECTION_READONLY)?.let { readonly -> this.readonly = readonly == "1"  || readonly == "true"}
                 values.getAsLong(COLUMN_COLLECTION_LAST_SYNC)?.let { lastSync -> this.lastSync = lastSync }
+                values.getAsLong(COLUMN_COLLECTION_SYNC_ID)?.let { syncId -> this.syncId = syncId }
                 return this
         }
 
