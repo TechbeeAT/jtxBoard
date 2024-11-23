@@ -88,7 +88,7 @@
     <string name="view_reccurrence_note_is_exception">"このアイテムはエントリーの繰り返しの例外です。"</string>
     <string name="view_feedback_linked_notes">"フィードバック / リンクされたメモ"</string>
     <string name="view_subtask_of">"このエントリーのサブ ToDo"</string>
-    <string name="view_linked_note_of">"メモのリンク先:"</string>
+    <string name="view_linked_note_of">"メモのリンク元:"</string>
     <string name="view_add_audio_note">"音声メモを追加"</string>
     <string name="view_created_text">"作成日時: %1$s"</string>
     <string name="view_last_modified_text">"最終更新日時: %1$s"</string>
@@ -253,6 +253,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"リモートのコレクションを追加 (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"%1$s で表示"</string>
     <string name="menu_collection_popup_export_as_ics">".ics ファイルでエクスポート"</string>
+    <string name="export_as_csv">".csv ファイルでエクスポート"</string>
     <string name="journal">"ジャーナル"</string>
     <string name="note">"メモ"</string>
     <string name="task">"ToDo"</string>
@@ -333,7 +334,9 @@
     <string name="edit_recur_ends_never">"永久に繰り返し"</string>
     <string name="edit_recur_ends_on">"終了する日時"</string>
     <string name="edit_recur_ends_after">"終了までの回数"</string>
-    <string name="collections_toast_export_success">"コレクションは正常に削除されました"</string>
+    <string name="list_toast_export_success">"リストをエクスポートしました"</string>
+    <string name="list_toast_export_error">"リストのエクスポート中にエラーが発生しました"</string>
+    <string name="collections_toast_export_success">"コレクションをエクスポートしました"</string>
     <string name="collections_toast_export_error">"コレクションのエクスポート中にエラーが発生しました"</string>
     <string name="menu_collections_export_all">"すべてをエクスポート"</string>
     <string name="menu_presets_export_presets">"プリセットをエクスポート"</string>
@@ -672,4 +675,5 @@
     <string name="email_contact">"%1$sにメールを送信"</string>
     <string name="dialog_create_multiple_subtasks">サブ ToDo を一括作成</string>
     <string name="dialog_create_multiple_subnotes">リンクされたメモを一括作成</string>
+    <string name="dialog_detected_multiple_subtasks">テキストに複数のサブ ToDo が含まれています。サブ ToDo %d 件を作成しますか？</string>
 </resources>
