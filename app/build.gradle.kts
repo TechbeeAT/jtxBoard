@@ -23,12 +23,12 @@ plugins {
 
 android {
     namespace = "at.techbee.jtx"
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "at.techbee.jtx"
         buildConfigField("long", "buildTime", "${System.currentTimeMillis()}L")
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 209040001
         versionName = "2.09.03-alpha01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField("String", "versionCodename", "\"Pride is a protest \uD83C\uDF08\"")
