@@ -203,5 +203,5 @@ data class ICalCollection(
         /**
          * @return The account of the given collection as [Account]
          */
-        fun getAccount(): Account = Account(accountName, accountType)
+        fun getAccount(): Account = Account(accountName?:"", accountType?: LOCAL_ACCOUNT_TYPE)
 }
