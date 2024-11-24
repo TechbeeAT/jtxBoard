@@ -253,6 +253,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Přidat vzdálenou Sbírku (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Zobrazit v %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Exportovat jako .ics"</string>
+    <string name="export_as_csv">"Exportovat jako .csv"</string>
     <string name="journal">"Deník"</string>
     <string name="note">"Poznámka"</string>
     <string name="task">"Úkol"</string>
@@ -334,6 +335,8 @@
     <string name="edit_recur_ends_never">"nikdy nekončí"</string>
     <string name="edit_recur_ends_on">"končí"</string>
     <string name="edit_recur_ends_after">"končí po"</string>
+    <string name="list_toast_export_success">"Seznam úspěšně exportován"</string>
+    <string name="list_toast_export_error">"Chyba při exportu seznamu"</string>
     <string name="collections_toast_export_success">"Sbírky úspěšně exportovány"</string>
     <string name="collections_toast_export_error">"Chyba při exportu sbírek"</string>
     <string name="menu_collections_export_all">"Exportovat vše"</string>
