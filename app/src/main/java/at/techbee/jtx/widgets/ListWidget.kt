@@ -78,6 +78,7 @@ class ListWidget : GlanceAppWidget() {
                     searchResources = listWidgetConfig.searchResources,
                     searchStatus = listWidgetConfig.searchStatus,
                     searchClassification = listWidgetConfig.searchClassification,
+                    searchPriority = listWidgetConfig.searchPriority,
                     searchCollection = listWidgetConfig.searchCollection,
                     searchAccount = listWidgetConfig.searchAccount,
                     orderBy = listWidgetConfig.orderBy,
