@@ -8,8 +8,8 @@
     <string name="save">"Salva"</string>
     <string name="update">"Aggiorna"</string>
     <string name="cancel">"Annulla"</string>
-    <string name="ok">"Ok"</string>
-    <string name="delete">"Elimina"</string>
+    <string name="ok">"OK"</string>
+    <string name="delete">"Cancella"</string>
     <string name="discard">"Scarta"</string>
     <string name="dismiss">"Ignora"</string>
     <string name="open">"Apri"</string>
@@ -44,9 +44,9 @@
     <string name="attendee_role_optional_participant">"Partecipante opzionale"</string>
     <string name="attendee_role_non_participant">"Non partecipante / Informativo"</string>
     <!-- Navigation Drawer -->
-    <string name="navigation_drawer_open">"Apri il cassetto di navigazione"</string>
+    <string name="navigation_drawer_open">"Apri il riquadro di navigazione"</string>
     <string name="navigation_drawer_close">"Chiudi il riquadro di navigazione"</string>
-    <string name="navigation_drawer_board">"Tavola"</string>
+    <string name="navigation_drawer_board">"Lavagna"</string>
     <string name="navigation_drawer_synchronization">"Sincronizzazione"</string>
     <string name="navigation_drawer_about">"Informazioni / Licenza"</string>
     <string name="navigation_drawer_subtitle">"diari, note &amp; attività"</string>
@@ -65,27 +65,27 @@
     <string name="list_due_within_7_days">"Scadenza entro 7 giorni"</string>
     <string name="list_due_inXhours">"In scadenza tra %d ore"</string>
     <string name="list_due_on_weekday">"Scade il %s"</string>
-    <string name="list_start_past">"Iniziati nel passato"</string>
+    <string name="list_start_past">"Iniziata in passato"</string>
     <string name="list_start_shortly">"Inizia a breve"</string>
     <string name="list_start_today">"Pianificati per oggi"</string>
     <string name="list_start_tomorrow">"Pianificati per domani"</string>
     <string name="list_start_inXhours">"Pianificato tra %d ore"</string>
     <string name="list_start_on_weekday">"Inizio pianificato il %s"</string>
-    <string name="list_tabitem_journals">"Diario"</string>
-    <string name="list_tabitem_notes">"Nota"</string>
+    <string name="list_tabitem_journals">"Diari"</string>
+    <string name="list_tabitem_notes">"Note"</string>
     <string name="list_tabitem_todos">"Attività"</string>
     <string name="list_expand">"Espandi"</string>
     <string name="list_dialog_delete_selected_title">Eliminare le voci selezionate?</string>
     <string name="list_dialog_delete_selected_message">Questa azione elimina tutte le voci selezionate (%1$d). Sei sicuro di voler procedere? Questa operazione non può essere annullata!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Riassunto/Descrizione"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"La prima riga è interpretata come riassunto, il resto come descrizione. Gli hashtag sono interpretati come categorie (es. #categoria)."</string>
-    <string name="list_item_recurring">"Voce ricorrente"</string>
+    <string name="list_item_recurring">"Evento ricorrente"</string>
     <string name="list_item_edited_recurring">"Evento ricorrente modificato"</string>
     <string name="list_scroll_to_top">"Scorri verso l'alto"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Autorizzazione app"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board ha bisogno dell'autorizzazione per usare il microfono del dispositivo. Si prega di concedere l'autorizzazione per utilizzare questa funzione."</string>
-    <string name="view_reccurrence_note_is_exception">"Questo elemento è un'eccezione a una voce ricorrente."</string>
+    <string name="view_reccurrence_note_is_exception">"Questo elemento è un'eccezione a un evento ricorrente."</string>
     <string name="view_feedback_linked_notes">"Feedback/Note collegate"</string>
     <string name="view_subtask_of">"Sottoattività di"</string>
     <string name="view_linked_note_of">"Nota collegata di"</string>
@@ -253,6 +253,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Aggiungi una collezione remota (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Mostra in %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Esportare come .ics"</string>
+    <string name="export_as_csv">"Esporta come .csv"</string>
     <string name="journal">"Diario"</string>
     <string name="note">"Nota"</string>
     <string name="task">"Attività"</string>
@@ -334,6 +335,8 @@
     <string name="edit_recur_ends_never">"finisce mai"</string>
     <string name="edit_recur_ends_on">"termina il"</string>
     <string name="edit_recur_ends_after">"termina dopo"</string>
+    <string name="list_toast_export_success">"Lista esportata con successo"</string>
+    <string name="list_toast_export_error">"Errore nella esportazione della lista"</string>
     <string name="collections_toast_export_success">"Collezioni esportate correttamente"</string>
     <string name="collections_toast_export_error">"Errore nell'esportazione delle collezioni"</string>
     <string name="menu_collections_export_all">"Esporta tutto"</string>
