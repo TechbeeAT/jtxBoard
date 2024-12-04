@@ -46,7 +46,7 @@
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">"Apri il riquadro di navigazione"</string>
     <string name="navigation_drawer_close">"Chiudi il riquadro di navigazione"</string>
-    <string name="navigation_drawer_board">"Lavagna"</string>
+    <string name="navigation_drawer_board">"Bacheca"</string>
     <string name="navigation_drawer_synchronization">"Sincronizzazione"</string>
     <string name="navigation_drawer_about">"Informazioni / Licenza"</string>
     <string name="navigation_drawer_subtitle">"diari, note &amp; attività"</string>
@@ -338,7 +338,7 @@
     <string name="list_toast_export_success">"Lista esportata con successo"</string>
     <string name="list_toast_export_error">"Errore nella esportazione della lista"</string>
     <string name="collections_toast_export_success">"Collezioni esportate correttamente"</string>
-    <string name="collections_toast_export_error">"Errore nell'esportazione delle collezioni"</string>
+    <string name="collections_toast_export_error">"Errore nell'esportazione delle raccolte"</string>
     <string name="menu_collections_export_all">"Esporta tutto"</string>
     <string name="menu_presets_export_presets">"Esporta preimpostazioni"</string>
     <string name="menu_presets_import_presets">"Importa preimpostazioni"</string>
@@ -419,9 +419,9 @@ Grazie!"</string>
     <string name="invalid_url_message">"Inserire un URL valido!"</string>
     <string name="list_quickadd_dialog_sr_start">"Avvia riconoscimento vocale"</string>
     <string name="list_quickadd_dialog_sr_listening">"Ascoltando …"</string>
-    <string name="collections_dialog_buypro_info">"Per favore acquista jtx Board Pro per abilitare le funzionalità di editing per le collezioni remote."</string>
+    <string name="collections_dialog_buypro_info">"Per favore acquista jtx Board Pro per abilitare le funzionalità di editing per le raccolte remote."</string>
     <string name="list_update_entries_dialog_title">"Aggiorna voci"</string>
-    <string name="list_update_entries_dialog_attention_collection_update">"Attenzione: Le istanze ricorrenti devono essere scollegate dalla sua serie prima di essere spostate in un'altra collezione e saranno ignorate in questo processo."</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"Attenzione: Le voci ricorrenti devono essere scollegate dalla sua serie prima di essere spostate in un'altra raccolta e saranno ignorate in questo processo."</string>
     <string name="list_update_entries_dialog_new_parent_info">"Scegli il principale a cui le voci selezionate devono essere collegate come sotto-attività / note collegate."</string>
     <string name="link_entry">"Inserimento collegamento"</string>
     <string name="link_entry_search_within">"Cerca dentro …"</string>
@@ -462,7 +462,7 @@ Grazie!"</string>
     <string name="alarms_start">"inizio"</string>
     <string name="alarms_due">"previsto"</string>
     <string name="about_tabitem_releasenotes">"Note Rilascio"</string>
-    <string name="collections_account_not_found_info">"Non è stato possibile trovare questo account nella gestione degli account. Eliminare se obsoleto."</string>
+    <string name="collections_account_not_found_info">"Non è stato possibile trovare questo account nella gestione degli account. Eliminalo se è obsoleto."</string>
     <string name="collections_account_delete_dialog_title">"Cancellare \"%1$s\"?"</string>
     <string name="collections_account_delete_dialog_message">"Sei sicuro di voler eliminare questo account da jtx Board? Tutte le collezioni di questo account saranno rimosse. Questa operazione non può essere annullata."</string>
     <string name="dialog_unsaved_changes_title">"Salvare le modifiche?"</string>
