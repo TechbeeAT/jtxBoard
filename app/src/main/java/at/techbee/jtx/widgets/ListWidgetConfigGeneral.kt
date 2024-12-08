@@ -332,7 +332,10 @@ fun ListWidgetConfigGeneral(
             )
 
             Spacer(modifier = Modifier.weight(1f))
-            Text("System colors")
+            Text(
+                text = stringResource(R.string.system_colors),
+                style = MaterialTheme.typography.labelMedium
+            )
             Switch(
                 checked = listSettings.widgetColor.value == null,
                 onCheckedChange = {

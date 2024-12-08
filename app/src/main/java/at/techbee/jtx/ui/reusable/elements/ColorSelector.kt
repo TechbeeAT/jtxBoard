@@ -22,13 +22,16 @@ import androidx.compose.material.icons.outlined.FormatColorReset
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.techbee.jtx.R
 import com.github.skydoves.colorpicker.compose.AlphaSlider
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
 import com.github.skydoves.colorpicker.compose.ColorPickerController
@@ -64,6 +67,35 @@ fun ColorSelector(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
+
+        Column (
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        ) {
+            SmallFloatingActionButton(
+                modifier = Modifier
+                    .padding(2.dp)
+                    .border(
+                        2.dp,
+                        MaterialTheme.colorScheme.primary,
+                        RoundedCornerShape(16.dp)
+                    ),
+                containerColor = colorPickerController.selectedColor.value,
+                onClick = { /* do nothing */ },
+                content = {
+                    if (colorPickerController.selectedColor.value == Color.Unspecified)
+                        Icon(Icons.Outlined.FormatColorReset, null)
+                }
+            )
+
+            Text(
+                text = stringResource(R.string.selected_color),
+                style = MaterialTheme.typography.labelMedium
+
+            )
+        }
+
         LazyRow {
             items(defaultColors) { color ->
                 SmallFloatingActionButton(
