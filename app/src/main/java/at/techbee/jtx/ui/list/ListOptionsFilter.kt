@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.AssignmentLate
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.DashboardCustomize
@@ -44,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
@@ -873,6 +875,43 @@ fun ListOptionsFilter(
                     },
                     label = { Text(stringResource(id = classification.stringResource)) }
                 )
+            }
+        }
+
+
+        ////// Priority
+        val priorities = stringArrayResource(id = R.array.priority)
+        if(module == Module.TODO) {
+            FilterSection(
+                icon = Icons.Outlined.AssignmentLate,
+                headline = stringResource(id = R.string.priority),
+                onResetSelection = {
+                    listSettings.searchPriority.clear()
+                    onListSettingsChanged()
+                },
+                onInvertSelection = {
+                    priorities.forEachIndexed { index, _ ->
+                        if (listSettings.searchPriority.contains(index))
+                            listSettings.searchPriority.remove(index)
+                        else
+                            listSettings.searchPriority.add(index)
+                    }
+                    onListSettingsChanged()
+                })
+            {
+                priorities.forEachIndexed { index, prio ->
+                    FilterChip(
+                        selected = listSettings.searchPriority.contains(index),
+                        onClick = {
+                            if (listSettings.searchPriority.contains(index))
+                                listSettings.searchPriority.remove(index)
+                            else
+                                listSettings.searchPriority.add(index)
+                            onListSettingsChanged()
+                        },
+                        label = { Text(prio) }
+                    )
+                }
             }
         }
 

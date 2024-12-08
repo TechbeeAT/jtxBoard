@@ -148,6 +148,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             searchStatus = listSettings.searchStatus,
             searchXStatus = listSettings.searchXStatus,
             searchClassification = listSettings.searchClassification,
+            searchPriority = listSettings.searchPriority,
             searchCollection = listSettings.searchCollection,
             searchAccount = listSettings.searchAccount,
             orderBy = listSettings.orderBy.value,

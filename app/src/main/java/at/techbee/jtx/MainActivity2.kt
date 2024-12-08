@@ -80,6 +80,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import java.io.FileNotFoundException
 import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.minutes
 
@@ -277,9 +278,14 @@ class MainActivity2 : AppCompatActivity() {
                 Intent.ACTION_VIEW -> {
                     if (intent.type == "text/calendar") {
                         val ics = intent.data ?: return
-                        this.contentResolver.openInputStream(ics)?.use { stream ->
-                            globalStateHolder.icalString2Import.value =
-                                stream.readBytes().decodeToString()
+                        try {
+                            this.contentResolver.openInputStream(ics)?.use { stream ->
+                                globalStateHolder.icalString2Import.value =
+                                    stream.readBytes().decodeToString()
+                            }
+                        } catch (e: FileNotFoundException) {
+                            Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
+                            //Log.e("MainActivity2", e.stackTraceToString())
                         }
                     }
                 }
@@ -304,7 +310,7 @@ class MainActivity2 : AppCompatActivity() {
             }
             intent.removeExtra(Intent.EXTRA_TEXT)
             intent.removeExtra(Intent.EXTRA_STREAM)
-            setResult(Activity.RESULT_OK)
+            setResult(RESULT_OK)
         }
         lastProcessedIntentHash = intent.hashCode()
 
@@ -412,8 +418,8 @@ fun MainNavHost(
 
             val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId) ?: return@composable
             val icalObjectIdList = backStackEntry.arguments?.getString(DetailDestination.argICalObjectIdList)?.let { Json.decodeFromString<List<Long>>(it)} ?: listOf(icalObjectId)
-            val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
-            val returnToLauncher = backStackEntry.arguments?.getBoolean(DetailDestination.argReturnToLauncher) ?: false
+            val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) == true
+            val returnToLauncher = backStackEntry.arguments?.getBoolean(DetailDestination.argReturnToLauncher) == true
 
             /*
             backStackEntry.savedStateHandle[DetailDestination.argICalObjectId] = icalObjectId

@@ -9,7 +9,6 @@
 package at.techbee.jtx.widgets
 
 import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -64,7 +63,7 @@ import at.techbee.jtx.ui.list.ViewMode
 import kotlinx.coroutines.launch
 
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListWidgetConfigContent(
     initialConfig: ListWidgetConfig,
@@ -233,6 +232,7 @@ fun ListWidgetConfigContent(
                                     searchStatus = listSettings.searchStatus
                                     searchXStatus = listSettings.searchXStatus
                                     searchClassification = listSettings.searchClassification
+                                    searchPriority = listSettings.searchPriority
                                     searchCollection = listSettings.searchCollection
                                     searchAccount = listSettings.searchAccount
                                     orderBy = listSettings.orderBy.value
@@ -332,6 +332,7 @@ data class ListWidgetConfig(
     var searchStatus: List<Status> = emptyList(),
     var searchXStatus: List<String> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
+    var searchPriority: List<Int?> = emptyList(),
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),
     var orderBy: OrderBy = OrderBy.CREATED,

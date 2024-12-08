@@ -36,6 +36,7 @@ class ListSettings {
     var searchStatus = mutableStateListOf<Status>()
     var searchXStatus = mutableStateListOf<String>()
     var searchClassification = mutableStateListOf<Classification>()
+    var searchPriority = mutableStateListOf<Int?>()
     var searchCollection = mutableStateListOf<String>()
     var searchAccount = mutableStateListOf<String>()
     var orderBy: MutableState<OrderBy> = mutableStateOf(OrderBy.DRAG_AND_DROP)
@@ -107,6 +108,7 @@ class ListSettings {
         private const val PREFS_RESOURCES = "prefsResources"
         private const val PREFS_RESOURCES_ANYALLNONE = "prefsResourcesAnyAllNone"
         private const val PREFS_CLASSIFICATION = "prefsClassification"
+        private const val PREFS_PRIORITY = "prefsPriority"
         private const val PREFS_STATUS = "prefsStatus"
         private const val PREFS_EXTENDED_STATUS = "prefsXStatus"
         private const val PREFS_EXCLUDE_DONE = "prefsExcludeDone"
@@ -208,6 +210,7 @@ class ListSettings {
             searchStatus.addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
             searchXStatus.addAll(prefs.getStringSet(PREFS_EXTENDED_STATUS, emptySet())?.toList() ?: emptyList())
             searchClassification.addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
+            searchPriority.addAll(prefs.getStringSet(PREFS_PRIORITY, null)?.map { it.toIntOrNull() } ?: emptyList())
             searchCollection.addAll(prefs.getStringSet(PREFS_COLLECTION, emptySet())?.toList() ?: emptyList())
             searchAccount.addAll(prefs.getStringSet(PREFS_ACCOUNT, emptySet())?.toList() ?: emptyList())
 
@@ -277,6 +280,7 @@ class ListSettings {
             searchStatus.addAll(listWidgetConfig.searchStatus)
             searchXStatus.addAll(listWidgetConfig.searchXStatus)
             searchClassification.addAll(listWidgetConfig.searchClassification)
+            searchPriority.addAll(listWidgetConfig.searchPriority)
             searchCollection.addAll(listWidgetConfig.searchCollection)
             searchAccount.addAll(listWidgetConfig.searchAccount)
 
@@ -367,6 +371,7 @@ class ListSettings {
             putStringSet(PREFS_STATUS, Status.getStringSetFromList(searchStatus))
             putStringSet(PREFS_EXTENDED_STATUS, searchXStatus.toSet())
             putStringSet(PREFS_CLASSIFICATION, Classification.getStringSetFromList(searchClassification))
+            putStringSet(PREFS_PRIORITY, searchPriority.map { it.toString() }.toSet())
             putStringSet(PREFS_COLLECTION, searchCollection.toSet())
             putStringSet(PREFS_ACCOUNT, searchAccount.toSet())
 
@@ -397,6 +402,7 @@ class ListSettings {
         searchStatus.clear()
         searchXStatus.clear()
         searchClassification.clear()
+        searchPriority.clear()
         searchCollection.clear()
         searchAccount.clear()
         isExcludeDone.value = false
@@ -435,6 +441,7 @@ class ListSettings {
                 || searchStatus.isNotEmpty()
                 || searchXStatus.isNotEmpty()
                 || searchClassification.isNotEmpty()
+                || searchPriority.isNotEmpty()
                 || searchCollection.isNotEmpty()
                 || searchAccount.isNotEmpty()
                 || isExcludeDone.value

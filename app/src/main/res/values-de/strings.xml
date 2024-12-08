@@ -253,6 +253,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Remote Collection hinzufügen (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"In %1$s anzeigen"</string>
     <string name="menu_collection_popup_export_as_ics">"Als .ics exportieren"</string>
+    <string name="export_as_csv">"Als .csv exportieren"</string>
     <string name="journal">"Journal"</string>
     <string name="note">"Notiz"</string>
     <string name="task">"Aufgabe"</string>
@@ -334,6 +335,8 @@
     <string name="edit_recur_ends_never">"endet nie"</string>
     <string name="edit_recur_ends_on">"endet am"</string>
     <string name="edit_recur_ends_after">"endet nach"</string>
+    <string name="list_toast_export_success">"Liste erfolgreich exportiert"</string>
+    <string name="list_toast_export_error">"Fehler beim Export der Liste"</string>
     <string name="collections_toast_export_success">"Collections erfolgreich exportiert"</string>
     <string name="collections_toast_export_error">"Fehler beim Exportieren der Collections"</string>
     <string name="menu_collections_export_all">"Alle exportieren"</string>
