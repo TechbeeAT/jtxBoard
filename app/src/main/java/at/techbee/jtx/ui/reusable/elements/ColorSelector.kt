@@ -11,6 +11,8 @@ package at.techbee.jtx.ui.reusable.elements
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -27,18 +29,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.colorpicker.compose.AlphaSlider
+import com.github.skydoves.colorpicker.compose.BrightnessSlider
+import com.github.skydoves.colorpicker.compose.ColorPickerController
+import com.github.skydoves.colorpicker.compose.HsvColorPicker
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
 @Composable
-fun ColorSelectorRow(
-    selectedColor: Color?,
+fun ColorSelector(
+    initialColorInt: Int?,
+    colorPickerController: ColorPickerController,
     modifier: Modifier = Modifier,
     additionalColorsInt: List<Int> = emptyList(),
-    onColorChanged: (Color?) -> Unit
 ) {
 
     val defaultColors = arrayListOf(
-        Color.Transparent,
+        Color.Unspecified,
         Color.Red,
         Color.Green,
         Color.Blue,
@@ -49,6 +56,7 @@ fun ColorSelectorRow(
     )
 
     val additionalColors = additionalColorsInt.map { Color(it) }
+    val initialColor = initialColorInt?.let { Color(it) }
 
 
     Column(
@@ -63,15 +71,15 @@ fun ColorSelectorRow(
                         .padding(2.dp)
                         .border(
                             2.dp,
-                            if (selectedColor == color) MaterialTheme.colorScheme.primary else Color.Transparent,
+                            if (colorPickerController.selectedColor.value == color) MaterialTheme.colorScheme.primary else Color.Transparent,
                             RoundedCornerShape(16.dp)
                         ),
-                    containerColor = if (color == Color.Transparent) Color.White else color,
+                    containerColor = if (color == Color.Unspecified) Color.White else color,
                     onClick = {
-                        onColorChanged(if (color == Color.Transparent) null else color)
+                        colorPickerController.selectByColor(color, true)
                     },
                     content = {
-                        if (color == Color.Transparent)
+                        if (color == Color.Unspecified)
                             Icon(Icons.Outlined.FormatColorReset, null)
                     }
                 )
@@ -87,12 +95,12 @@ fun ColorSelectorRow(
                             .padding(2.dp)
                             .border(
                                 2.dp,
-                                if (selectedColor == color) MaterialTheme.colorScheme.primary else Color.Transparent,
+                                if (colorPickerController.selectedColor.value == color) MaterialTheme.colorScheme.primary else Color.Transparent,
                                 RoundedCornerShape(16.dp)
                             ),
                         containerColor = if (color == Color.Transparent) Color.White else color,
                         onClick = {
-                            onColorChanged(if (color == Color.Transparent) null else color)
+                            colorPickerController.selectByColor(color, true)
                         },
                         content = {
                             if (color == Color.Transparent)
@@ -102,6 +110,33 @@ fun ColorSelectorRow(
                 }
             }
         }
+
+
+        HsvColorPicker(
+            controller = colorPickerController,
+            onColorChanged = { },
+            initialColor = initialColor,
+            modifier = Modifier.padding(14.dp).height(250.dp)
+        )
+
+        BrightnessSlider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .height(35.dp),
+            controller = colorPickerController,
+            initialColor = initialColor
+        )
+
+        AlphaSlider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .height(35.dp),
+            controller = colorPickerController,
+            initialColor = initialColor
+        )
+
     }
 }
 
@@ -109,9 +144,9 @@ fun ColorSelectorRow(
 @Composable
 fun ColorSelectorRow_Preview() {
     MaterialTheme {
-        ColorSelectorRow(
-            selectedColor = Color.Cyan,
-            onColorChanged = { },
+        ColorSelector(
+            initialColorInt = Color.Cyan.toArgb(),
+            colorPickerController = rememberColorPickerController(),
             additionalColorsInt = listOf(Color.DarkGray.toArgb(), Color.Black.toArgb())
         )
     }

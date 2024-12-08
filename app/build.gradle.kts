@@ -210,7 +210,7 @@ dependencies {
 
     // third-party libs
     implementation(libs.mikepenz.aboutLibraries)
-    implementation(libs.godaddy.colorpicker) // Compose Color Picker
+    implementation(libs.colorpicker.compose)  // Compose Color Picker
     implementation(libs.markdowntext) // Markdown support
     implementation(libs.osmdroid.android) //Open Street Maps
     implementation (libs.calendar.compose)

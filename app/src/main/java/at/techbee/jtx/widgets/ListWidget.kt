@@ -46,7 +46,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 const val MAX_WIDGET_ENTRIES = 50
-const val MIN_ALPHA_FOR_TEXT = 0.8f
 
 class ListWidget : GlanceAppWidget() {
 
@@ -147,12 +146,9 @@ class ListWidget : GlanceAppWidget() {
                     colorProviders(
                         primary = GlanceTheme.colors.primary,
                         onPrimary = GlanceTheme.colors.onPrimary,
-                        primaryContainer = ColorProvider(Color(listWidgetConfig.widgetColor?:Color.White.toArgb()).copy(alpha = listWidgetConfig.widgetAlpha)),
+                        primaryContainer = ColorProvider(Color(listWidgetConfig.widgetColor?:Color.White.toArgb())),
                         onPrimaryContainer = ColorProvider(
-                            if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColor?:Color.Black.toArgb()).copy(alpha = listWidgetConfig.widgetAlpha)))
-                                Color.White
-                            else
-                                Color.Black
+                            if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColor?:Color.Black.toArgb()))) Color.White else Color.Black
                         ),
                         secondary = GlanceTheme.colors.secondary,
                         onSecondary = GlanceTheme.colors.onSecondary,
@@ -168,19 +164,13 @@ class ListWidget : GlanceAppWidget() {
                         onErrorContainer = GlanceTheme.colors.onErrorContainer,
                         background = GlanceTheme.colors.background,
                         onBackground = GlanceTheme.colors.onBackground,
-                        surface = ColorProvider(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()).copy(alpha = listWidgetConfig.widgetAlphaEntries)),
+                        surface = ColorProvider(Color(listWidgetConfig.widgetColorEntries?:Color.Unspecified.toArgb())),
                         onSurface = ColorProvider(
-                            if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()).copy(alpha = listWidgetConfig.widgetAlphaEntries)))
-                                Color.White.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
-                            else
-                                Color.Black.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
+                            if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()))) Color.White else Color.Black
                         ),
                         surfaceVariant = GlanceTheme.colors.surfaceVariant,
                         onSurfaceVariant = ColorProvider(
-                            if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()).copy(alpha = listWidgetConfig.widgetAlphaEntries)))
-                                Color.White.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
-                            else
-                                Color.Black.copy(alpha = if(listWidgetConfig.widgetAlphaEntries < MIN_ALPHA_FOR_TEXT) MIN_ALPHA_FOR_TEXT else listWidgetConfig.widgetAlphaEntries)
+                            if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()))) Color.White else Color.Black
                         ),
                         outline = GlanceTheme.colors.outline,
                         inverseOnSurface = GlanceTheme.colors.inverseOnSurface,

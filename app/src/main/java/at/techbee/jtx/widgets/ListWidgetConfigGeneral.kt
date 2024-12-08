@@ -9,7 +9,6 @@
 package at.techbee.jtx.widgets
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -20,13 +19,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Colorize
-import androidx.compose.material.icons.outlined.Opacity
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -37,8 +34,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -54,7 +49,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
@@ -88,15 +82,15 @@ fun ListWidgetConfigGeneral(
     var showColorPickerEntryBackground by rememberSaveable { mutableStateOf(false) }
     val allCategories by allCategoriesLive.observeAsState(emptyList())
 
-    val widgetColorCalculated = listSettings.widgetColor.value?.let { Color(it).copy(alpha = listSettings.widgetAlpha.value) } ?: MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value)
-    val widgetColorEntriesCalculated = listSettings.widgetColorEntries.value?.let { Color(it).copy(alpha = listSettings.widgetAlphaEntries.value) } ?: MaterialTheme.colorScheme.surface.copy(alpha = listSettings.widgetAlphaEntries.value)
+    val widgetColorCalculated = listSettings.widgetColor.value?.let { Color(it) } ?: MaterialTheme.colorScheme.primaryContainer
+    val widgetColorEntriesCalculated = listSettings.widgetColorEntries.value?.let { Color(it) } ?: MaterialTheme.colorScheme.surface
     val currentSurfaceColor = MaterialTheme.colorScheme.surface.toArgb()
     val currentPrimaryContainerColor = MaterialTheme.colorScheme.primaryContainer.toArgb()
 
 
     if(showColorPickerBackground) {
         ColorPickerDialog(
-            initialColor = listSettings.widgetColor.value,
+            initialColorInt = listSettings.widgetColor.value,
             onColorChanged = { listSettings.widgetColor.value = it },
             onDismiss = { showColorPickerBackground = false }
         )
@@ -104,7 +98,7 @@ fun ListWidgetConfigGeneral(
 
     if(showColorPickerEntryBackground) {
         ColorPickerDialog(
-            initialColor = listSettings.widgetColorEntries.value,
+            initialColorInt = listSettings.widgetColorEntries.value,
             onColorChanged = { listSettings.widgetColorEntries.value = it },
             onDismiss = { showColorPickerEntryBackground = false }
         )
@@ -345,8 +339,6 @@ fun ListWidgetConfigGeneral(
                     if(it) {
                         listSettings.widgetColor.value = null
                         listSettings.widgetColorEntries.value = null
-                        listSettings.widgetAlpha.value = 1f
-                        listSettings.widgetAlphaEntries.value = 1f
                     } else {
                         listSettings.widgetColor.value = currentSurfaceColor
                         listSettings.widgetColorEntries.value = currentPrimaryContainerColor
@@ -383,56 +375,6 @@ fun ListWidgetConfigGeneral(
                         label = { Text(stringResource(R.string.widget_list_configuration_entries_background), modifier = Modifier.padding(horizontal = 8.dp)) }
                     )
                 }
-
-
-                HeadlineWithIcon(
-                    icon = Icons.Outlined.Opacity,
-                    iconDesc = stringResource(id = R.string.opacity),
-                    text = stringResource(id = R.string.opacity)
-                )
-
-                Text(
-                    text = stringResource(R.string.widget_list_configuration_widget_background),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(8.dp)
-                )
-                Slider(
-                    value = listSettings.widgetAlpha.value,
-                    valueRange = 0f..1f,
-                    onValueChange = {
-                        listSettings.widgetAlpha.value = it
-                    },
-                    colors = SliderDefaults.colors(
-                        thumbColor = widgetColorCalculated,
-                        activeTrackColor = widgetColorCalculated
-                    ),
-                    steps = 20,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Text(
-                    text = stringResource(R.string.widget_list_configuration_entries_background),
-                    style = MaterialTheme.typography.labelMedium,
-                    modifier = Modifier.padding(8.dp)
-                )
-                Slider(
-                    value = listSettings.widgetAlphaEntries.value,
-                    valueRange = 0f..1f,
-                    onValueChange = {
-                        listSettings.widgetAlphaEntries.value = it
-                    },
-                    colors = SliderDefaults.colors(
-                        thumbColor = widgetColorEntriesCalculated,
-                        activeTrackColor = widgetColorEntriesCalculated
-                    ),
-                    steps = 20,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(listSettings.widgetColor.value?.let { Color(it).copy(alpha = listSettings.widgetAlpha.value) }
-                            ?: MaterialTheme.colorScheme.primary.copy(alpha = listSettings.widgetAlpha.value))
-                        .padding(horizontal = 8.dp)
-                )
             }
         }
 

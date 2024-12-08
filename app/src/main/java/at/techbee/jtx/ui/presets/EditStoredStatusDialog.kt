@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,10 +44,8 @@ import at.techbee.jtx.R
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
-import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
-import com.godaddy.android.colorpicker.HsvColor
-import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
-import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
+import at.techbee.jtx.ui.reusable.elements.ColorSelector
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -63,7 +60,7 @@ fun EditStoredStatusDialog(
     val keyboardController = LocalSoftwareKeyboardController.current
     var storedStatusName by remember { mutableStateOf(storedStatus.xstatus) }
     var storedStatusRfcStatus by remember { mutableStateOf(storedStatus.rfcStatus) }
-    var storedStatusColor by remember { mutableStateOf(storedStatus.color?.let { Color(it) }) }
+    val colorPickerController = rememberColorPickerController()
 
 
     AlertDialog(
@@ -122,15 +119,10 @@ fun EditStoredStatusDialog(
                 )
 
 
-                ColorSelectorRow(
-                    selectedColor = storedStatusColor,
-                    onColorChanged = { storedStatusColor = it })
-
-                HarmonyColorPicker(
-                    color = if(storedStatusColor == null || storedStatusColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(storedStatusColor!!),
-                    harmonyMode = ColorHarmonyMode.NONE,
-                    modifier = Modifier.size(300.dp),
-                    onColorChanged = { hsvColor -> storedStatusColor = hsvColor.toColor() })
+                ColorSelector(
+                    initialColorInt = storedStatus.color,
+                    colorPickerController = colorPickerController
+                )
             }
         },
         confirmButton = {
@@ -157,7 +149,17 @@ fun EditStoredStatusDialog(
 
                 TextButton(
                     onClick = {
-                        onStoredStatusChanged(ExtendedStatus(storedStatusName, storedStatus.module, storedStatusRfcStatus, storedStatusColor?.toArgb()))
+                        onStoredStatusChanged(
+                            ExtendedStatus(
+                                storedStatusName,
+                                storedStatus.module,
+                                storedStatusRfcStatus,
+                                if(colorPickerController.selectedColor.value == Color.Unspecified)
+                                    null
+                                else
+                                    colorPickerController.selectedColor.value.toArgb()
+                            )
+                        )
                         onDismiss()
                     },
                     enabled = storedStatusName.isNotEmpty()
