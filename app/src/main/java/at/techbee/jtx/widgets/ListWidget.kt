@@ -25,7 +25,6 @@ import androidx.glance.GlanceTheme
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.provideContent
-import androidx.glance.color.colorProviders
 import androidx.glance.currentState
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.ListWidgetConfigActivity
@@ -139,57 +138,33 @@ class ListWidget : GlanceAppWidget() {
 
             val scope = rememberCoroutineScope()
 
-            GlanceTheme(
-                colors = if (listWidgetConfig.widgetColor == null)
-                    GlanceTheme.colors
-                else
-                    colorProviders(
-                        primary = GlanceTheme.colors.primary,
-                        onPrimary = GlanceTheme.colors.onPrimary,
-                        primaryContainer = ColorProvider(Color(listWidgetConfig.widgetColor?:Color.White.toArgb())),
-                        onPrimaryContainer = ColorProvider(
-                            if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColor?:Color.Black.toArgb()))) Color.White else Color.Black
-                        ),
-                        secondary = GlanceTheme.colors.secondary,
-                        onSecondary = GlanceTheme.colors.onSecondary,
-                        secondaryContainer = GlanceTheme.colors.secondaryContainer,
-                        onSecondaryContainer = GlanceTheme.colors.onSecondaryContainer,
-                        tertiary = GlanceTheme.colors.tertiary,
-                        onTertiary = GlanceTheme.colors.onTertiary,
-                        tertiaryContainer = GlanceTheme.colors.tertiaryContainer,
-                        onTertiaryContainer = GlanceTheme.colors.onTertiaryContainer,
-                        error = GlanceTheme.colors.error,
-                        errorContainer = GlanceTheme.colors.errorContainer,
-                        onError = GlanceTheme.colors.onError,
-                        onErrorContainer = GlanceTheme.colors.onErrorContainer,
-                        background = GlanceTheme.colors.background,
-                        onBackground = GlanceTheme.colors.onBackground,
-                        surface = ColorProvider(Color(listWidgetConfig.widgetColorEntries?:Color.Unspecified.toArgb())),
-                        onSurface = ColorProvider(
-                            if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()))) Color.White else Color.Black
-                        ),
-                        surfaceVariant = GlanceTheme.colors.surfaceVariant,
-                        onSurfaceVariant = ColorProvider(
-                            if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()))) Color.White else Color.Black
-                        ),
-                        outline = GlanceTheme.colors.outline,
-                        inverseOnSurface = GlanceTheme.colors.inverseOnSurface,
-                        inverseSurface = GlanceTheme.colors.inverseSurface,
-                        inversePrimary = GlanceTheme.colors.inversePrimary,
-                        widgetBackground = ColorProvider(Color.Unspecified),
-                    )
-            ) {
+            GlanceTheme {
 
                 ListWidgetContent(
                     listWidgetConfig,
                     list = list,
                     subtasks = subtasks,
                     subnotes = subnotes,
-                    backgroundColor = GlanceTheme.colors.primaryContainer,
-                    textColor = GlanceTheme.colors.onPrimaryContainer,
-                    entryColor = GlanceTheme.colors.surface,
-                    entryTextColor = GlanceTheme.colors.onSurface,
-                    entryHeaderTextColor = GlanceTheme.colors.onSurfaceVariant,
+                    backgroundColor = if (listWidgetConfig.widgetColor == null)
+                            GlanceTheme.colors.primaryContainer
+                        else
+                            ColorProvider(Color(listWidgetConfig.widgetColor?:Color.White.toArgb())),
+                    textColor = if (listWidgetConfig.widgetColor == null)
+                            GlanceTheme.colors.onPrimaryContainer
+                        else
+                        ColorProvider(if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColor?:Color.Black.toArgb()))) Color.White else Color.Black),
+                    entryColor = if (listWidgetConfig.widgetColor == null)
+                            GlanceTheme.colors.surface
+                        else
+                            ColorProvider(Color(listWidgetConfig.widgetColorEntries?:Color.Unspecified.toArgb())),
+                    entryTextColor = if (listWidgetConfig.widgetColor == null)
+                            GlanceTheme.colors.onSurface
+                        else
+                            ColorProvider(if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()))) Color.White else Color.Black),
+                    entryHeaderTextColor = if (listWidgetConfig.widgetColor == null)
+                            GlanceTheme.colors.onSurface
+                        else
+                            ColorProvider(if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()))) Color.White else Color.Black),
                     onCheckedChange = { iCalObjectId, checked ->
                         scope.launch(Dispatchers.IO) {
                             val settingsStateHolder = SettingsStateHolder(context)
