@@ -613,8 +613,6 @@ Grazie!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attenzione: Attualmente il widget supporta solo un livello di gerarchia. Per visualizzare le voci dei livelli inferiori, utilizzare invece la vista piatta."</string>
     <string name="widget_list_maximum_entries_reached">"Numero massimo di voci nel widget raggiunto (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aggiornamento del widget"</string>
-    <string name="widget_list_opacity_warning">"Nota: Questa è una funzione sperimentale! Con cambiamenti di opacità ridotti nel tema di colore potrebbe non essere riflessa immediatamente!"</string>
-    <string name="widget_list_color_warning">"Nota: Questa è una funzione sperimentale! Le modifiche al tema dei colori non saranno riflesse! Scegli nessun colore per tornare al valore predefinito di sistema."</string>
     <string name="widget_list_default_categories">"Imposta categorie predefinite per le nuove voci dal widget"</string>
     <string name="opacity">"Opacità"</string>
     <string name="general">"Generale"</string>
