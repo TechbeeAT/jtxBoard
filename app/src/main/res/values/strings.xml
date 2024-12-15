@@ -249,6 +249,8 @@
     <string name="menu_collections_add_local">"Add local Collection"</string>
     <string name="navigation_drawer_website_news">"News &amp; Release Notes"</string>
     <string name="color">"Color"</string>
+    <string name="selected_color">"Selected color"</string>
+    <string name="system_colors">"System colors"</string>
     <string name="priority_0_no_priority">"No priority"</string>
     <string name="priority_1_highest">"1 - Highest"</string>
     <string name="priority_2_higher">"2 - Higher"</string>
@@ -631,8 +633,6 @@ Thank you!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention: Currently only one level of hierarchy is supported in the widget. In order to see the entries of lower levels, please use the flat view instead."</string>
     <string name="widget_list_maximum_entries_reached">"Maximum number of entries in widget reached (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Updating widget"</string>
-    <string name="widget_list_opacity_warning">"Note: This is an experimental feature! With reduced opacity changes in the color theme might not be reflected immediately!"</string>
-    <string name="widget_list_color_warning">"Note: This is an experimental feature! Changes in the color theme will not be reflected! Choose no color to return to system default."</string>
     <string name="widget_list_default_categories">"Set default categories for new entries from widget"</string>
     <string name="opacity">"Opacity"</string>
     <string name="link_jtx_mastodon" translatable="false">"https://fosstodon.org/@jtx"</string>
