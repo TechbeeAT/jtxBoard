@@ -609,8 +609,6 @@
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Προσοχή: Προς το παρόν μόνο ένα επίπεδο ιεραρχίας υποστηρίζεται στο γραφικό στοιχείο. Για να δείτε τις καταχωρήσεις των χαμηλότερων επιπέδων, χρησιμοποιήστε την επίπεδη προβολή."</string>
     <string name="widget_list_maximum_entries_reached">"Επιτεύχθηκε μέγιστος αριθμός καταχωρήσεων στο widget (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Ενημέρωση widget"</string>
-    <string name="widget_list_opacity_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Με μειωμένες αλλαγές αδιαφάνειας στο χρωματικό θέμα μπορεί να μην αντικατοπτρίζονται αμέσως!"</string>
-    <string name="widget_list_color_warning">"Σημείωση: Αυτό είναι ένα πειραματικό χαρακτηριστικό! Οι αλλαγές στο χρώμα θέμα δε θα αντικατοπτρίζονται! Επιλέξτε κανένα χρώμα για να επιστρέψετε στην προεπιλογή συστήματος."</string>
     <string name="widget_list_default_categories">"Ορίστε προεπιλεγμένες κατηγορίες για νέες καταχωρήσεις από το widget"</string>
     <string name="opacity">"Αδιαφάνεια"</string>
     <string name="general">"Γενικά"</string>
