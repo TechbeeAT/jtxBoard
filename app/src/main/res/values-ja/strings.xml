@@ -612,8 +612,6 @@
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"注意: 現在、ウィジェットでサポートされている階層は 1 つだけです。下位のエントリーを見るには、フラット表示を使用してください。"</string>
     <string name="widget_list_maximum_entries_reached">"ウィジェットのエントリーの最大数に到達しました (%1$d)。"</string>
     <string name="widget_list_compat_updating_widget_notification">"ウィジェットの更新中"</string>
-    <string name="widget_list_opacity_warning">"注意: これは試験運用中の機能です！ テーマカラーの不透明度の変更が、すぐに反映されない場合があります！"</string>
-    <string name="widget_list_color_warning">"注意: これは試験運用中の機能です！ テーマカラーの変更がすぐに反映されない場合があります！ 色なしを選択すると、システムのデフォルトに戻ります。"</string>
     <string name="widget_list_default_categories">"ウィジェットで新規作成するエントリーのデフォルトのカテゴリーを設定する"</string>
     <string name="opacity">"不透明度"</string>
     <string name="general">"一般"</string>
