@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Lokale Collection hinzufügen"</string>
     <string name="navigation_drawer_website_news">"Neuigkeiten &amp; Update-Infos"</string>
     <string name="color">"Farbe"</string>
+    <string name="selected_color">"Ausgewählte Farbe"</string>
+    <string name="system_colors">"Systemfarben"</string>
     <string name="priority_0_no_priority">"Keine Priorität"</string>
     <string name="priority_1_highest">"1 - Höchste"</string>
     <string name="priority_2_higher">"2 - Höher"</string>
@@ -614,8 +616,6 @@ Danke!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Achtung: Aktuell wird nur eine Hierarchieebene im Widget unterstützt. Um Einträge weiterer Ebenen zu sehen, benutzen Sie bitte die flache Ansicht."</string>
     <string name="widget_list_maximum_entries_reached">"Maximale Anzahl an Einträgen im Widget erreicht (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualisiere Widget"</string>
-    <string name="widget_list_opacity_warning">"Hinweis: Dies ist eine experimentelle Funktion. Mit reduzierter Deckkraft werden Änderungen im System-Farbschema möglicherweise nicht sofort übernommen!"</string>
-    <string name="widget_list_color_warning">"Hinweis: Dies ist eine experimentelle Funktion. Änderungen im System-Farbschema werden nicht übernommen! Wählen Sie keine Farbe, um zum Systemstandard zurückzukehren."</string>
     <string name="widget_list_default_categories">"Standardkategorien für neue Einträge aus dem Widget festlegen"</string>
     <string name="opacity">"Transparenz"</string>
     <string name="general">"Allgemein"</string>
