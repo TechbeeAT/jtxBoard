@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.detail
 
-import android.accounts.Account
 import android.content.ContentResolver
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
@@ -68,11 +67,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -126,7 +125,7 @@ fun DetailBottomAppBar(
             null
         else {
             ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-                isSyncInProgress = SyncUtil.isJtxSyncRunningFor(setOf(Account(collection.accountName, collection.accountType)))
+                isSyncInProgress = SyncUtil.isJtxSyncRunningFor(setOf(collection.getAccount()))
             }
         }
         onDispose {

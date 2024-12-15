@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -39,10 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.locals.StoredResource
-import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
-import com.godaddy.android.colorpicker.HsvColor
-import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
-import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
+import at.techbee.jtx.ui.reusable.elements.ColorSelector
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
 @Composable
@@ -55,7 +52,7 @@ fun EditStoredResourceDialog(
 
     val keyboardController = LocalSoftwareKeyboardController.current
     var storedResourceName by remember { mutableStateOf(storedResource.resource) }
-    var storedResourceColor by remember { mutableStateOf(storedResource.color?.let { Color(it) }) }
+    val colorPickerController = rememberColorPickerController()
 
 
     AlertDialog(
@@ -91,19 +88,10 @@ fun EditStoredResourceDialog(
                     )
                 }
 
-                ColorSelectorRow(
-                    selectedColor = storedResourceColor,
-                    onColorChanged = { storedResourceColor = it })
-
-                HarmonyColorPicker(
-                    color = if(storedResourceColor == null || storedResourceColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(storedResourceColor!!),
-                    harmonyMode = ColorHarmonyMode.NONE,
-                    modifier = Modifier.size(300.dp),
-                    onColorChanged = { hsvColor -> storedResourceColor = hsvColor.toColor() })
-
-
-
-
+                ColorSelector(
+                    initialColorInt = storedResource.color,
+                    colorPickerController = colorPickerController
+                )
             }
         },
         confirmButton = {
@@ -130,7 +118,15 @@ fun EditStoredResourceDialog(
 
                 TextButton(
                     onClick = {
-                        onStoredResourceChanged(StoredResource(storedResourceName, storedResourceColor?.toArgb()))
+                        onStoredResourceChanged(
+                            StoredResource(
+                                storedResourceName,
+                                if(colorPickerController.selectedColor.value == Color.Unspecified)
+                                    null
+                                else
+                                    colorPickerController.selectedColor.value.toArgb()
+                            )
+                        )
                         onDismiss()
                     },
                     enabled = storedResourceName.isNotEmpty()

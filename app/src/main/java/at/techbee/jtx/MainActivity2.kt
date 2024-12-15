@@ -1,6 +1,5 @@
 package at.techbee.jtx
 
-import android.accounts.Account
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -173,7 +172,7 @@ class MainActivity2 : AppCompatActivity() {
         if(settingsStateHolder.settingSyncOnStart.value) {
             lifecycleScope.launch(Dispatchers.IO) {
                 val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao().getAllRemoteCollections()
-                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+                SyncUtil.syncAccounts(remoteCollections.map { it.getAccount() }.toSet())
             }
         }
 

@@ -1,0 +1,3 @@
+- filter by priority
+- export the list as a CSV file
+- subtasks now inherit the classification from the parent

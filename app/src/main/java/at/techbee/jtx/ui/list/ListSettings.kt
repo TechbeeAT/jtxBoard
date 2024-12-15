@@ -91,8 +91,8 @@ class ListSettings {
 
     var widgetHeader: MutableState<String> = mutableStateOf("") //widgetOnly
     var checkboxPosition: MutableState<CheckboxPosition> = mutableStateOf(CheckboxPosition.START)  // widget only
-    var widgetAlpha: MutableState<Float> = mutableFloatStateOf(1F)  // widget only
-    var widgetAlphaEntries: MutableState<Float> = mutableFloatStateOf(1F)  // widget only
+    @Deprecated("alpha is now in widgetColor") var widgetAlpha: MutableState<Float> = mutableFloatStateOf(1F)  // widget only
+    @Deprecated("alpha is now in widgetColorEntries") var widgetAlphaEntries: MutableState<Float> = mutableFloatStateOf(1F)  // widget only
     var widgetColor: MutableState<Int?> = mutableStateOf(null)  // widget only
     var widgetColorEntries: MutableState<Int?> = mutableStateOf(null)  // widget only
     var showDescription: MutableState<Boolean> = mutableStateOf(true)  // widget only

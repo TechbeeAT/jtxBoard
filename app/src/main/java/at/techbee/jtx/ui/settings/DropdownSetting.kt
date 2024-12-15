@@ -97,8 +97,6 @@ enum class DropdownSetting(
             DropdownSettingOption.DEFAULT_DATE_NONE,
             DropdownSettingOption.DEFAULT_DATE_SAME_DAY,
             DropdownSettingOption.DEFAULT_DATE_NEXT_DAY,
-
-            DropdownSettingOption.DEFAULT_DATE_NEXT_DAY,
             DropdownSettingOption.DEFAULT_DATE_TWO_DAYS,
             DropdownSettingOption.DEFAULT_DATE_THREE_DAYS,
             DropdownSettingOption.DEFAULT_DATE_ONE_WEEK,

@@ -98,7 +98,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
                     when(collectionsExportMimetype) {
                         CollectionsExportMimetype.ICS -> {
                             val collection = collectionsToExport.value?.first() ?: throw IOException("Collections to export are empty")
-                            Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)?.let { ics ->
+                            Ical4androidUtil.getICSFormatForCollectionFromProvider(collection.toICalCollection().getAccount(), getApplication(), collection.collectionId)?.let { ics ->
                                 outputStream.write(ics.toByteArray())
                             }
                         }
@@ -106,7 +106,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
                             val bos = BufferedOutputStream(outputStream)
                             ZipOutputStream(bos).use { zos ->
                                 collectionsToExport.value?.forEach { collection ->
-                                    Ical4androidUtil.getICSFormatForCollectionFromProvider(Account(collection.accountName, collection.accountType), getApplication(), collection.collectionId)
+                                    Ical4androidUtil.getICSFormatForCollectionFromProvider(collection.toICalCollection().getAccount(), getApplication(), collection.collectionId)
                                         ?.let { ics ->
                                             zos.putNextEntry(ZipEntry("${collection.displayName ?: collection.collectionId.toString()}.ics"))
                                             zos.write(ics.toByteArray())

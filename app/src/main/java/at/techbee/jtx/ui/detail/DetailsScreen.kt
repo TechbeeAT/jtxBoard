@@ -267,6 +267,8 @@ fun DetailsScreen(
                 iCalObject.value?.let {
                     itemList.forEach { subentry ->
                         subentry.classification = it.classification
+                        subentry.due = it.due
+                        subentry.dueTimezone = it.dueTimezone
                     }
                     detailViewModel.addSubEntries(itemList, it.uid, it.collectionId)
                     scrollToSection.value = DetailsScreenSection.SUBTASKS

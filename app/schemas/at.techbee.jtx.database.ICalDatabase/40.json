@@ -1,0 +1,1559 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 40,
+    "identityHash": "5f3893408ea6752bf6d5c1dd04645f12",
+    "entities": [
+      {
+        "tableName": "attendee",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `icalObjectId` INTEGER NOT NULL, `caladdress` TEXT NOT NULL, `cutype` TEXT, `member` TEXT, `role` TEXT, `partstat` TEXT, `rsvp` INTEGER, `delegatedto` TEXT, `delegatedfrom` TEXT, `sentby` TEXT, `cn` TEXT, `dir` TEXT, `language` TEXT, `other` TEXT, FOREIGN KEY(`icalObjectId`) REFERENCES `icalobject`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "attendeeId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icalObjectId",
+            "columnName": "icalObjectId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "caladdress",
+            "columnName": "caladdress",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cutype",
+            "columnName": "cutype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "member",
+            "columnName": "member",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "role",
+            "columnName": "role",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "partstat",
+            "columnName": "partstat",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rsvp",
+            "columnName": "rsvp",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "delegatedto",
+            "columnName": "delegatedto",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "delegatedfrom",
+            "columnName": "delegatedfrom",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentby",
+            "columnName": "sentby",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cn",
+            "columnName": "cn",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dir",
+            "columnName": "dir",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "language",
+            "columnName": "language",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "other",
+            "columnName": "other",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_attendee__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attendee__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_attendee_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attendee_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "icalobject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "icalObjectId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `icalObjectId` INTEGER NOT NULL, `text` TEXT NOT NULL, `language` TEXT, `other` TEXT, FOREIGN KEY(`icalObjectId`) REFERENCES `icalobject`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "categoryId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icalObjectId",
+            "columnName": "icalObjectId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "language",
+            "columnName": "language",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "other",
+            "columnName": "other",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_category__id_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "_id",
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_category__id_icalObjectId` ON `${TABLE_NAME}` (`_id`, `icalObjectId`)"
+          },
+          {
+            "name": "index_category_text",
+            "unique": false,
+            "columnNames": [
+              "text"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_category_text` ON `${TABLE_NAME}` (`text`)"
+          },
+          {
+            "name": "index_category__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_category__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_category_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_category_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "icalobject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "icalObjectId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "comment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `icalObjectId` INTEGER NOT NULL, `text` TEXT NOT NULL, `altrep` TEXT, `language` TEXT, `other` TEXT, FOREIGN KEY(`icalObjectId`) REFERENCES `icalobject`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "commentId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icalObjectId",
+            "columnName": "icalObjectId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "altrep",
+            "columnName": "altrep",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "language",
+            "columnName": "language",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "other",
+            "columnName": "other",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_comment__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_comment__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_comment_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_comment_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "icalobject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "icalObjectId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "collection",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `url` TEXT NOT NULL, `displayname` TEXT, `description` TEXT, `owner` TEXT, `ownerdisplayname` TEXT, `color` INTEGER, `supportsVEVENT` INTEGER NOT NULL, `supportsVTODO` INTEGER NOT NULL, `supportsVJOURNAL` INTEGER NOT NULL, `accountname` TEXT, `accounttype` TEXT, `syncversion` TEXT, `readonly` INTEGER NOT NULL, `lastsync` INTEGER, `sync_id` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "collectionId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayName",
+            "columnName": "displayname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "owner",
+            "columnName": "owner",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ownerDisplayName",
+            "columnName": "ownerdisplayname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "supportsVEVENT",
+            "columnName": "supportsVEVENT",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "supportsVTODO",
+            "columnName": "supportsVTODO",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "supportsVJOURNAL",
+            "columnName": "supportsVJOURNAL",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accountName",
+            "columnName": "accountname",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "accountType",
+            "columnName": "accounttype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "syncversion",
+            "columnName": "syncversion",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "readonly",
+            "columnName": "readonly",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastSync",
+            "columnName": "lastsync",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "syncId",
+            "columnName": "sync_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_collection__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_collection__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_collection_sync_id",
+            "unique": false,
+            "columnNames": [
+              "sync_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_collection_sync_id` ON `${TABLE_NAME}` (`sync_id`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "icalobject",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `module` TEXT NOT NULL, `component` TEXT NOT NULL, `summary` TEXT, `description` TEXT, `dtstart` INTEGER, `dtstarttimezone` TEXT, `dtend` INTEGER, `dtendtimezone` TEXT, `status` TEXT, `xstatus` TEXT, `classification` TEXT, `url` TEXT, `contact` TEXT, `geolat` REAL, `geolong` REAL, `location` TEXT, `locationaltrep` TEXT, `geofenceRadius` INTEGER, `percent` INTEGER, `priority` INTEGER, `due` INTEGER, `duetimezone` TEXT, `completed` INTEGER, `completedtimezone` TEXT, `duration` TEXT, `uid` TEXT NOT NULL, `created` INTEGER NOT NULL, `dtstamp` INTEGER NOT NULL, `lastmodified` INTEGER NOT NULL, `sequence` INTEGER NOT NULL, `rrule` TEXT, `exdate` TEXT, `rdate` TEXT, `recurid` TEXT, `recuridtimezone` TEXT, `rstatus` TEXT, `color` INTEGER, `collectionId` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `filename` TEXT, `etag` TEXT, `scheduletag` TEXT, `flags` INTEGER, `subtasksExpanded` INTEGER, `subnotesExpanded` INTEGER, `parentsExpanded` INTEGER, `attachmentsExpanded` INTEGER, `sortIndex` INTEGER, `isAlarmNotificationActive` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`collectionId`) REFERENCES `collection`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "module",
+            "columnName": "module",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "component",
+            "columnName": "component",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "summary",
+            "columnName": "summary",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dtstart",
+            "columnName": "dtstart",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dtstartTimezone",
+            "columnName": "dtstarttimezone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dtend",
+            "columnName": "dtend",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dtendTimezone",
+            "columnName": "dtendtimezone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "xstatus",
+            "columnName": "xstatus",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "classification",
+            "columnName": "classification",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contact",
+            "columnName": "contact",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "geoLat",
+            "columnName": "geolat",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "geoLong",
+            "columnName": "geolong",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location",
+            "columnName": "location",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "locationAltrep",
+            "columnName": "locationaltrep",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "geofenceRadius",
+            "columnName": "geofenceRadius",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "percent",
+            "columnName": "percent",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "priority",
+            "columnName": "priority",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "due",
+            "columnName": "due",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dueTimezone",
+            "columnName": "duetimezone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "completed",
+            "columnName": "completed",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "completedTimezone",
+            "columnName": "completedtimezone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "created",
+            "columnName": "created",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dtstamp",
+            "columnName": "dtstamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastModified",
+            "columnName": "lastmodified",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sequence",
+            "columnName": "sequence",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rrule",
+            "columnName": "rrule",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "exdate",
+            "columnName": "exdate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rdate",
+            "columnName": "rdate",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recurid",
+            "columnName": "recurid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recuridTimezone",
+            "columnName": "recuridtimezone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rstatus",
+            "columnName": "rstatus",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "collectionId",
+            "columnName": "collectionId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dirty",
+            "columnName": "dirty",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deleted",
+            "columnName": "deleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileName",
+            "columnName": "filename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "eTag",
+            "columnName": "etag",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "scheduleTag",
+            "columnName": "scheduletag",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "flags",
+            "columnName": "flags",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isSubtasksExpanded",
+            "columnName": "subtasksExpanded",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isSubnotesExpanded",
+            "columnName": "subnotesExpanded",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isParentsExpanded",
+            "columnName": "parentsExpanded",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isAttachmentsExpanded",
+            "columnName": "attachmentsExpanded",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sortIndex",
+            "columnName": "sortIndex",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isAlarmNotificationActive",
+            "columnName": "isAlarmNotificationActive",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_icalobject__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_icalobject__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_icalobject_collectionId",
+            "unique": false,
+            "columnNames": [
+              "collectionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_icalobject_collectionId` ON `${TABLE_NAME}` (`collectionId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "collection",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "collectionId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "organizer",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `icalObjectId` INTEGER NOT NULL, `caladdress` TEXT NOT NULL, `cnparam` TEXT, `dirparam` TEXT, `sentbyparam` TEXT, `language` TEXT, `other` TEXT, FOREIGN KEY(`icalObjectId`) REFERENCES `icalobject`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "organizerId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icalObjectId",
+            "columnName": "icalObjectId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "caladdress",
+            "columnName": "caladdress",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cn",
+            "columnName": "cnparam",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dir",
+            "columnName": "dirparam",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "sentby",
+            "columnName": "sentbyparam",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "language",
+            "columnName": "language",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "other",
+            "columnName": "other",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_organizer__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_organizer__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_organizer_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_organizer_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "icalobject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "icalObjectId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "relatedto",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `icalObjectId` INTEGER NOT NULL, `linkedICalObjectId` INTEGER, `text` TEXT, `reltype` TEXT, `other` TEXT, FOREIGN KEY(`icalObjectId`) REFERENCES `icalobject`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "relatedtoId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icalObjectId",
+            "columnName": "icalObjectId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "linkedICalObjectId",
+            "columnName": "linkedICalObjectId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reltype",
+            "columnName": "reltype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "other",
+            "columnName": "other",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_relatedto_icalObjectId_linkedICalObjectId_reltype_text",
+            "unique": true,
+            "columnNames": [
+              "icalObjectId",
+              "linkedICalObjectId",
+              "reltype",
+              "text"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_relatedto_icalObjectId_linkedICalObjectId_reltype_text` ON `${TABLE_NAME}` (`icalObjectId`, `linkedICalObjectId`, `reltype`, `text`)"
+          },
+          {
+            "name": "index_relatedto_text",
+            "unique": false,
+            "columnNames": [
+              "text"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_relatedto_text` ON `${TABLE_NAME}` (`text`)"
+          },
+          {
+            "name": "index_relatedto__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_relatedto__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_relatedto_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_relatedto_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          },
+          {
+            "name": "index_relatedto_linkedICalObjectId",
+            "unique": false,
+            "columnNames": [
+              "linkedICalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_relatedto_linkedICalObjectId` ON `${TABLE_NAME}` (`linkedICalObjectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "icalobject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "icalObjectId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "resource",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `icalObjectId` INTEGER NOT NULL, `text` TEXT, `altrep` TEXT, `language` TEXT, `other` TEXT, FOREIGN KEY(`icalObjectId`) REFERENCES `icalobject`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "resourceId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icalObjectId",
+            "columnName": "icalObjectId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "altrep",
+            "columnName": "altrep",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "language",
+            "columnName": "language",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "other",
+            "columnName": "other",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_resource__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_resource__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_resource_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_resource_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "icalobject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "icalObjectId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "alarm",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `icalObjectId` INTEGER NOT NULL, `action` TEXT, `description` TEXT, `summary` TEXT, `attendee` TEXT, `duration` TEXT, `repeat` TEXT, `attach` TEXT, `other` TEXT, `triggerTime` INTEGER, `triggerTimezone` TEXT, `triggerRelativeTo` TEXT, `triggerRelativeDuration` TEXT, FOREIGN KEY(`icalObjectId`) REFERENCES `icalobject`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "alarmId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icalObjectId",
+            "columnName": "icalObjectId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "action",
+            "columnName": "action",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "summary",
+            "columnName": "summary",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "attendee",
+            "columnName": "attendee",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "duration",
+            "columnName": "duration",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "repeat",
+            "columnName": "repeat",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "attach",
+            "columnName": "attach",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "other",
+            "columnName": "other",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "triggerTime",
+            "columnName": "triggerTime",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "triggerTimezone",
+            "columnName": "triggerTimezone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "triggerRelativeTo",
+            "columnName": "triggerRelativeTo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "triggerRelativeDuration",
+            "columnName": "triggerRelativeDuration",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_alarm__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_alarm__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_alarm_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_alarm_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "icalobject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "icalObjectId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "unknown",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `icalObjectId` INTEGER NOT NULL, `value` TEXT, FOREIGN KEY(`icalObjectId`) REFERENCES `icalobject`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "unknownId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icalObjectId",
+            "columnName": "icalObjectId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_unknown__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_unknown__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_unknown_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_unknown_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "icalobject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "icalObjectId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "attachment",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `icalObjectId` INTEGER NOT NULL, `uri` TEXT, `binary` TEXT, `fmttype` TEXT, `other` TEXT, `filename` TEXT, `extension` TEXT, `filesize` INTEGER, FOREIGN KEY(`icalObjectId`) REFERENCES `icalobject`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "attachmentId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "icalObjectId",
+            "columnName": "icalObjectId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uri",
+            "columnName": "uri",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "binary",
+            "columnName": "binary",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fmttype",
+            "columnName": "fmttype",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "other",
+            "columnName": "other",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "filename",
+            "columnName": "filename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "extension",
+            "columnName": "extension",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "filesize",
+            "columnName": "filesize",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_attachment__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attachment__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_attachment_icalObjectId",
+            "unique": false,
+            "columnNames": [
+              "icalObjectId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_attachment_icalObjectId` ON `${TABLE_NAME}` (`icalObjectId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "icalobject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "icalObjectId"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "stored_list_settings",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `module` TEXT NOT NULL, `name` TEXT NOT NULL, `list_settings` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "module",
+            "columnName": "module",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "storedListSettingData",
+            "columnName": "list_settings",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_stored_list_settings__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stored_list_settings__id` ON `${TABLE_NAME}` (`_id`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "stored_categories",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`category` TEXT NOT NULL, `color` INTEGER, PRIMARY KEY(`category`))",
+        "fields": [
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "category"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_stored_categories_category",
+            "unique": false,
+            "columnNames": [
+              "category"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stored_categories_category` ON `${TABLE_NAME}` (`category`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "stored_resources",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`resource` TEXT NOT NULL, `color` INTEGER, PRIMARY KEY(`resource`))",
+        "fields": [
+          {
+            "fieldPath": "resource",
+            "columnName": "resource",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "resource"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_stored_resources_resource",
+            "unique": false,
+            "columnNames": [
+              "resource"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stored_resources_resource` ON `${TABLE_NAME}` (`resource`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "extended_status",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`xstatus` TEXT NOT NULL, `module` TEXT NOT NULL, `rfcstatus` TEXT NOT NULL, `color` INTEGER, PRIMARY KEY(`xstatus`, `module`))",
+        "fields": [
+          {
+            "fieldPath": "xstatus",
+            "columnName": "xstatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "module",
+            "columnName": "module",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rfcStatus",
+            "columnName": "rfcstatus",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "xstatus",
+            "module"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_extended_status_xstatus",
+            "unique": false,
+            "columnNames": [
+              "xstatus"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_extended_status_xstatus` ON `${TABLE_NAME}` (`xstatus`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [
+      {
+        "viewName": "ical4list",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT DISTINCT main_icalobject._id, main_icalobject.module, main_icalobject.component, main_icalobject.summary, main_icalobject.description, main_icalobject.location, main_icalobject.geolat, main_icalobject.geolong, main_icalobject.url, main_icalobject.contact, main_icalobject.dtstart, main_icalobject.dtstarttimezone, main_icalobject.dtend, main_icalobject.dtendtimezone, main_icalobject.status, main_icalobject.xstatus, main_icalobject.classification, main_icalobject.percent, main_icalobject.priority, main_icalobject.due, main_icalobject.duetimezone, main_icalobject.completed, main_icalobject.completedtimezone, main_icalobject.duration, main_icalobject.created, main_icalobject.dtstamp, main_icalobject.lastmodified, main_icalobject.sequence, main_icalobject.uid, main_icalobject.rrule, main_icalobject.recurid, collection.color as colorCollection, main_icalobject.color as colorItem, main_icalobject.collectionId, collection.accountname, collection.displayname, main_icalobject.deleted, CASE WHEN collection.accounttype = 'LOCAL' THEN 0 WHEN main_icalobject.recurid IS NOT NULL THEN (SELECT series.dirty FROM icalobject series WHERE series.recurid IS NULL AND series.uid = main_icalobject.uid) ELSE main_icalobject.dirty END as uploadPending, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'JOURNAL' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'NOTE' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'TODO' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, (SELECT group_concat(sub.text, '|||') FROM (SELECT * FROM category ORDER BY text) as sub WHERE main_icalobject._id = sub.icalObjectId) as categories, (SELECT group_concat(sub.text, '|||') FROM (SELECT * FROM resource ORDER BY text) as sub WHERE main_icalobject._id = sub.icalObjectId) as resources, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.icalObjectId AND sub_icalobject.component = 'VTODO' AND sub_relatedto.text = main_icalobject.uid AND sub_relatedto.reltype = 'PARENT' AND sub_icalobject.deleted = 0 AND sub_icalobject.rrule IS NULL) as numSubtasks, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.icalObjectId AND sub_icalobject.component = 'VJOURNAL' AND sub_relatedto.text = main_icalobject.uid AND sub_relatedto.reltype = 'PARENT' AND sub_icalobject.deleted = 0 AND sub_icalobject.rrule IS NULL) as numSubnotes, (SELECT count(*) FROM attachment WHERE icalObjectId = main_icalobject._id  ) as numAttachments, (SELECT count(*) FROM attendee WHERE icalObjectId = main_icalobject._id  ) as numAttendees, (SELECT count(*) FROM comment WHERE icalObjectId = main_icalobject._id  ) as numComments, (SELECT count(*) FROM relatedto WHERE icalObjectId = main_icalobject._id  ) as numRelatedTodos, (SELECT count(*) FROM resource WHERE icalObjectId = main_icalobject._id  ) as numResources, (SELECT count(*) FROM alarm WHERE icalObjectId = main_icalobject._id  ) as numAlarms, (SELECT uri FROM attachment WHERE icalObjectId = main_icalobject._id AND (fmttype LIKE 'audio/%' OR fmttype LIKE 'video/%') LIMIT 1 ) as audioAttachment, collection.readonly as isReadOnly, main_icalobject.subtasksExpanded, main_icalobject.subnotesExpanded, main_icalobject.parentsExpanded, main_icalobject.attachmentsExpanded, main_icalobject.sortIndex FROM icalobject main_icalobject INNER JOIN collection collection ON main_icalobject.collectionId = collection._id WHERE main_icalobject.deleted = 0 AND (main_icalobject.rrule IS NULL OR (main_icalobject.dtstart IS NULL AND main_icalobject.rrule IS NOT NULL))"
+      },
+      {
+        "viewName": "collectionsView",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS SELECT _id, url, displayname, description, owner, ownerdisplayname, color, supportsVEVENT, supportsVTODO, supportsVJOURNAL, accountname, accounttype, syncversion, readonly, lastsync, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'JOURNAL' AND deleted = 0) as numJournals, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'NOTE' AND deleted = 0) as numNotes, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'TODO' AND deleted = 0) as numTodos FROM collection"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5f3893408ea6752bf6d5c1dd04645f12')"
+    ]
+  }
+}
