@@ -8,18 +8,14 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,21 +25,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import at.techbee.jtx.R
-import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
-import com.godaddy.android.colorpicker.HsvColor
-import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
-import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
+import at.techbee.jtx.ui.reusable.elements.ColorSelector
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
 @Composable
 fun ColorPickerDialog(
-    initialColor: Int?,
+    initialColorInt: Int?,
     onColorChanged: (Int?) -> Unit,
     onDismiss: () -> Unit,
     additionalColorsInt: List<Int> = emptyList()
     ) {
 
-    var selectedColor by remember { mutableStateOf(initialColor?.let {Color(it)}) }
+    val colorPickerController = rememberColorPickerController()
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -51,28 +45,27 @@ fun ColorPickerDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1
         text = {
 
-            Column(modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top) {
 
-
-                ColorSelectorRow(
-                    selectedColor = selectedColor,
-                    onColorChanged = { selectedColor = it },
+                ColorSelector(
+                    initialColorInt = initialColorInt,
+                    colorPickerController = colorPickerController,
                     additionalColorsInt = additionalColorsInt
                 )
-
-                HarmonyColorPicker(
-                    color = if(selectedColor == null || selectedColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(selectedColor!!),
-                    harmonyMode = ColorHarmonyMode.NONE,
-                    modifier = Modifier.size(300.dp),
-                    onColorChanged = { hsvColor -> selectedColor = hsvColor.toColor()
-                    })
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onColorChanged(selectedColor?.toArgb())
-                        onDismiss()
+                    onColorChanged(
+                        if(colorPickerController.selectedColor.value == Color.Unspecified)
+                            null
+                        else
+                            colorPickerController.selectedColor.value.toArgb())
+                    onDismiss()
                 }
             ) {
                 Text(stringResource(id = R.string.save))
@@ -97,7 +90,7 @@ fun ColorPickerDialog_Preview_ColorFABs() {
     MaterialTheme {
 
         ColorPickerDialog(
-            initialColor = Color.Cyan.toArgb(),
+            initialColorInt = Color.Cyan.toArgb(),
             onColorChanged = { },
             onDismiss = { }
         )
@@ -111,7 +104,7 @@ fun ColorPickerDialog_Preview_ColorWheel() {
     MaterialTheme {
 
         ColorPickerDialog(
-            initialColor = Color.Red.toArgb()+1,
+            initialColorInt = Color.Red.toArgb()+1,
             onColorChanged = { },
             onDismiss = { }
         )
@@ -124,7 +117,7 @@ fun ColorPickerDialog_Preview_initially_null() {
     MaterialTheme {
 
         ColorPickerDialog(
-            initialColor = null,
+            initialColorInt = null,
             onColorChanged = { },
             onDismiss = { }
         )
@@ -137,7 +130,7 @@ fun ColorPickerDialog_Preview_additional_colors() {
     MaterialTheme {
 
         ColorPickerDialog(
-            initialColor = null,
+            initialColorInt = null,
             onColorChanged = { },
             onDismiss = { },
             additionalColorsInt = listOf(Color.DarkGray.toArgb(), Color.Black.toArgb())

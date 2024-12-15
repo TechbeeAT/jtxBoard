@@ -23,14 +23,14 @@ plugins {
 
 android {
     namespace = "at.techbee.jtx"
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "at.techbee.jtx"
         buildConfigField("long", "buildTime", "${System.currentTimeMillis()}L")
         minSdk = 23
-        targetSdk = 34
-        versionCode = 209030007
-        versionName = "2.09.03-beta05"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        targetSdk = 35
+        versionCode = 209040003
+        versionName = "2.09.04"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField("String", "versionCodename", "\"Pride is a protest \uD83C\uDF08\"")
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
@@ -210,7 +210,7 @@ dependencies {
 
     // third-party libs
     implementation(libs.mikepenz.aboutLibraries)
-    implementation(libs.godaddy.colorpicker) // Compose Color Picker
+    implementation(libs.colorpicker.compose)  // Compose Color Picker
     implementation(libs.markdowntext) // Markdown support
     implementation(libs.osmdroid.android) //Open Street Maps
     implementation (libs.calendar.compose)

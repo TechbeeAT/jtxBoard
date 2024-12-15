@@ -60,7 +60,7 @@ fun DetailsCardCollections(
 
     if (showColorPicker) {
         ColorPickerDialog(
-            initialColor = color.value,
+            initialColorInt = color.value,
             onColorChanged = { newColor ->
                 color.value = newColor
                 iCalObject?.color = newColor

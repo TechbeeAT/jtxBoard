@@ -19,6 +19,7 @@
     <string name="longitude">"Hosszúság"</string>
     <string name="unlink">"Leválasztás"</string>
     <string name="off">"Nincs"</string>
+    <string name="location_permission_denied">"Helymeghatározási engedély megtagadva"</string>
     <string name="permissions">"Engedélyek"</string>
     <string name="current_location">"Aktuális hely"</string>
     <string name="toolbar_text_add_journal">"Napló hozzáadása"</string>
@@ -252,6 +253,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Távoli gyűjtemény hozzáadása (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Megjelenítés a %1$s alkalmazásban"</string>
     <string name="menu_collection_popup_export_as_ics">"Mentés .ics formátumban"</string>
+    <string name="export_as_csv">"Exportálás .csv formátumban"</string>
     <string name="journal">"Napló"</string>
     <string name="note">"Jegyzet"</string>
     <string name="task">"Feladat"</string>
@@ -318,6 +320,7 @@
     <string name="filter_no_resource">Erőforrás nélkül</string>
     <string name="filter_subtasks_order_by">Alfeladatok rendezése</string>
     <string name="filter_subnotes_order_by">Csatolt jegyzetek rendezési szempontja</string>
+    <string name="order_by_drag_and_drop">"Fogd és vidd"</string>
     <string name="filter_no_filter">"Nincs szűrés"</string>
     <string name="filter_options_more_entries">"Több (%1$d)"</string>
     <string name="filter_options_less_entries">"Kevesebb"</string>
@@ -332,6 +335,8 @@
     <string name="edit_recur_ends_never">"vég nélkül"</string>
     <string name="edit_recur_ends_on">"befejezés"</string>
     <string name="edit_recur_ends_after">"ismétlés"</string>
+    <string name="list_toast_export_success">"Lista sikeresen exportálva"</string>
+    <string name="list_toast_export_error">"Hiba a lista exportálása során"</string>
     <string name="collections_toast_export_success">"Gyűjtemények exportálása sikeres"</string>
     <string name="collections_toast_export_error">"Gyűjtemények exportálása sikertelen"</string>
     <string name="menu_collections_export_all">"Az összes exportálása"</string>
@@ -382,6 +387,7 @@ Köszönjük!"</string>
     <string name="settings_default_expand_subtasks">"Az alfeladatok alapértelmezett kibontása a listában"</string>
     <string name="settings_default_expand_subnotes">"Az aljegyzetek alapértelmezett kibontása a listában"</string>
     <string name="settings_default_expand_attachments">"Csatolmányok alapértelmezett kibontása a listában"</string>
+    <string name="settings_default_expand_parents">"Szülőelemek alapértelmezett kibontása a listában"</string>
     <string name="sorry">"Elnézést"</string>
     <string name="back">"Vissza"</string>
     <string name="details">"Részletek"</string>
@@ -441,6 +447,7 @@ Köszönjük!"</string>
     <string name="details_go_to_series">"Ugrás a sorozathoz"</string>
     <string name="details_detach_from_series">"Leválasztás a sorozatról"</string>
     <string name="details_detach_all_instances">"Az összes leválasztása"</string>
+    <string name="details_show_all_instances">"Összes példány megjelenítése (%1$d)"</string>
     <string name="dialog_unlink_from_parent_title">"Leválasztás a szülőről"</string>
     <string name="dialog_unlink_from_parent_message">"Eltávolítsuk a szülőbejegyzésre való hivatkozást? A bejegyzés önálló bejegyzésként marad meg."</string>
     <string name="edit_comment">"Megjegyzés szerkesztése"</string>
@@ -514,6 +521,7 @@ Köszönjük!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"A státusz, a készültség és a befejezettség összhangban tartása"</string>
     <string name="settings_attention_experimental_feature">"Figyelem! Ez egy fejlesztés alatt álló funkció"</string>
     <string name="settings_create_with_current_location">"Az új bejegyzéseknél az aktuális hely rögzítése"</string>
+    <string name="settings_create_with_current_location_sub">"A funkció használatához adjon hozzáférést a tartózkodási helyéhez az alkalmazás futtatása során."</string>
     <string name="settings_sticky_alarms">"Perzisztens riasztások"</string>
     <string name="settings_sticky_alarms_sub">"Az emlékeztetők megőrzése az elkészülésig vagy elhalasztásig"</string>
     <string name="settings_fullscreen_alarms">"Teljes képernyős riasztások"</string>
@@ -608,6 +616,7 @@ Köszönjük!"</string>
     <string name="widget_list_compat_updating_widget_notification">"Modul frissítése"</string>
     <string name="widget_list_opacity_warning">"Megjegyzés: Ez egy kísérleti funkció. Csökkentett áttetszőség esetén a színtéma változásai nem feltétlenül érvényesülnek azonnal."</string>
     <string name="widget_list_color_warning">"Megjegyzés: Ez egy kísérleti funkció. A színtéma változásai nem fognak érvényesülni. Válassza a „Nincs szín” lehetőséget a rendszer alapértelmezéséhez való visszatéréséhez."</string>
+    <string name="widget_list_default_categories">"Alapértelmezett kategóriák beállítása a modulból származó új elemeknél"</string>
     <string name="opacity">"Áttetszőség"</string>
     <string name="general">"Általános"</string>
     <string name="list_collapse">"Összecsukás"</string>
@@ -667,4 +676,10 @@ Köszönjük!"</string>
 Kérjük, adja meg az engedélyt, ha szeretné használni ezt a funkciót."</string>
     <string name="call_contact">"Hívás: %1$s"</string>
     <string name="email_contact">"Levélküldés: %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Alfeladatok tömeges létrehozása</string>
+    <string name="dialog_create_multiple_subnotes">Összekapcsolt jegyzetek tömeges létrehozása</string>
+    <string name="dialog_detected_multiple_subtasks">A szöveg lehet, hogy több alfeladatot tartalmaz. %d alfeladatot hoz létre?</string>
+    <string name="dialog_detected_multiple_subnotes">A szöveg lehet, hogy több összekapcsolt jegyzetet tartalmaz. %d összekapcsolt jegyzetet hoz létre?</string>
+    <string name="dialog_confirm_create_multiple">Több létrehozása</string>
+    <string name="dialog_confirm_create_single">Egy létrehozása</string>
 </resources>

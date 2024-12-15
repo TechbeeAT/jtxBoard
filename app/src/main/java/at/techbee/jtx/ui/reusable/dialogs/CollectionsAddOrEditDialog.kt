@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
@@ -24,7 +23,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -38,10 +36,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
-import at.techbee.jtx.ui.reusable.elements.ColorSelectorRow
-import com.godaddy.android.colorpicker.HsvColor
-import com.godaddy.android.colorpicker.harmony.ColorHarmonyMode
-import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
+import at.techbee.jtx.ui.reusable.elements.ColorSelector
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
 @Composable
@@ -53,8 +49,7 @@ fun CollectionsAddOrEditDialog(
 
     val keyboardController = LocalSoftwareKeyboardController.current
     var collectionName by rememberSaveable { mutableStateOf(current.displayName ?: "") }
-    var collectionColor by remember { mutableStateOf(current.color?.let { Color(it) }) }
-    var noCollectionNameError by rememberSaveable { mutableStateOf(false) }
+    val colorPickerController = rememberColorPickerController()
 
 
     AlertDialog(
@@ -89,36 +84,28 @@ fun CollectionsAddOrEditDialog(
                             }
                         ),
                         modifier = Modifier.weight(1f),
-                        isError = noCollectionNameError
+                        isError = collectionName.isBlank()
                     )
                 }
 
-                ColorSelectorRow(
-                    selectedColor = collectionColor,
-                    onColorChanged = { collectionColor = it })
-
-                HarmonyColorPicker(
-                    color = if(collectionColor == null || collectionColor == Color.Transparent) HsvColor.from(Color.White) else HsvColor.from(collectionColor!!),
-                    harmonyMode = ColorHarmonyMode.NONE,
-                    modifier = Modifier.size(300.dp),
-                    onColorChanged = { hsvColor ->
-                        collectionColor = hsvColor.toColor()
-                    })
-
+                ColorSelector(
+                    initialColorInt = current.color,
+                    colorPickerController = colorPickerController
+                )
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    if (collectionName.isBlank())
-                        noCollectionNameError = true
-                    else {
-                        current.displayName = collectionName
-                        current.color = collectionColor?.toArgb()
-                        onCollectionChanged(current)
-                        onDismiss()
-                    }
-                }
+                    current.displayName = collectionName
+                    current.color = if(colorPickerController.selectedColor.value == Color.Unspecified)
+                            null
+                        else
+                            colorPickerController.selectedColor.value.toArgb()
+                    onCollectionChanged(current)
+                    onDismiss()
+                },
+                enabled = collectionName.isNotBlank()
             ) {
                 Text(stringResource(id = R.string.save))
             }

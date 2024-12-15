@@ -22,13 +22,16 @@ import at.techbee.jtx.contract.JtxContract
 import at.techbee.jtx.contract.JtxContract.asSyncAdapter
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.TABLE_NAME_ICALOBJECT
-import at.techbee.jtx.database.properties.*
+import at.techbee.jtx.database.properties.Alarm
+import at.techbee.jtx.database.properties.Reltype
 import org.junit.After
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
+import java.util.UUID
 
 
 @RunWith(AndroidJUnit4::class)
@@ -722,7 +725,7 @@ class SyncContentProviderTest {
 
     @Test(expected = java.lang.IllegalArgumentException::class)
     fun getAccountFromUri_empty() {
-        val account = Account(null, null)
+        val account = Account("", "")
         val uri = JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(account)
         SyncContentProvider().getAccountFromUri(uri)
     }
