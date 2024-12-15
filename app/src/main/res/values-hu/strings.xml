@@ -614,8 +614,6 @@ Köszönjük!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Figyelem! A widget jelenleg csak egy hierarchiaszintet támogat. Az mélyebb szinteken lévő bejegyzések megtekintéséhez kérjük, használja az egyszintű nézetet."</string>
     <string name="widget_list_maximum_entries_reached">"A bejegyzések száma a widgetben elérte maximumot (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Modul frissítése"</string>
-    <string name="widget_list_opacity_warning">"Megjegyzés: Ez egy kísérleti funkció. Csökkentett áttetszőség esetén a színtéma változásai nem feltétlenül érvényesülnek azonnal."</string>
-    <string name="widget_list_color_warning">"Megjegyzés: Ez egy kísérleti funkció. A színtéma változásai nem fognak érvényesülni. Válassza a „Nincs szín” lehetőséget a rendszer alapértelmezéséhez való visszatéréséhez."</string>
     <string name="widget_list_default_categories">"Alapértelmezett kategóriák beállítása a modulból származó új elemeknél"</string>
     <string name="opacity">"Áttetszőség"</string>
     <string name="general">"Általános"</string>
