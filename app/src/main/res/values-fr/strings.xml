@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Ajouter une collection locale"</string>
     <string name="navigation_drawer_website_news">"Nouvelles et notes de publication"</string>
     <string name="color">"Couleur"</string>
+    <string name="selected_color">"Couleur sélectionnée"</string>
+    <string name="system_colors">"Couleurs du système"</string>
     <string name="priority_0_no_priority">"Pas de priorité"</string>
     <string name="priority_1_highest">"1 - Le plus élevé"</string>
     <string name="priority_2_higher">"2 - Plus haut"</string>
@@ -613,8 +615,6 @@ Merci !"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention : Actuellement, un seul niveau de hiérarchie est pris en charge dans le widget. Afin de voir les entrées de niveaux inférieurs, veuillez utiliser la vue à plat à la place."</string>
     <string name="widget_list_maximum_entries_reached">"Nombre maximum d'entrées dans le widget atteint(%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Mettre à jour le widget"</string>
-    <string name="widget_list_opacity_warning">"Note : Ceci est une fonctionnalité expérimentale! Des changements d'opacité réduits dans le thème de couleur peuvent ne pas être reflétés immédiatement!"</string>
-    <string name="widget_list_color_warning">"Note : Ceci est une fonctionnalité expérimentale ! Les changements dans le thème de couleur ne seront pas reflétés ! Ne choisissez aucune couleur pour revenir à la valeur par défaut du système."</string>
     <string name="widget_list_default_categories">"Définir des catégories par défaut pour les nouvelles entrées depuis le widget"</string>
     <string name="opacity">"Opacité"</string>
     <string name="general">"Général"</string>
