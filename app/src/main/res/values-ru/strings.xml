@@ -609,8 +609,6 @@
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Внимание: В настоящее время в виджете поддерживается только первый уровень иерархии. Чтобы увидеть записи более низких уровней, выберите настройку Без иерархии."</string>
     <string name="widget_list_maximum_entries_reached">"Достигнуто максимальное число записей в виджете (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Обновление виджета"</string>
-    <string name="widget_list_opacity_warning">"Примечание: Это экспериментальная функция! Изменения параметров непрозрачности могут отобразиться не сразу!"</string>
-    <string name="widget_list_color_warning">"Примечание: Это экспериментальная функция! Системные настройки цветового оформления будут переопределены! Удалите выбор цвета для возврата к системному цветовому оформлению."</string>
     <string name="opacity">"Непрозрачность"</string>
     <string name="general">"Общее"</string>
     <string name="list_collapse">"Свернуть"</string>
