@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Προσθήκη προσωπικής συλλογης"</string>
     <string name="navigation_drawer_website_news">"Νέα &amp; ενημερώσεις"</string>
     <string name="color">"Χρώμα"</string>
+    <string name="selected_color">"Επιλεγμένο χρώμα"</string>
+    <string name="system_colors">"Χρώματα συστήματος"</string>
     <string name="priority_0_no_priority">"Χωρίς προτεραιότητα"</string>
     <string name="priority_1_highest">"1 - Πάρα πολύ υψηλή"</string>
     <string name="priority_2_higher">"2 - Πολύ υψηλή"</string>
