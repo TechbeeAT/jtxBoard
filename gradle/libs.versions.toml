@@ -1,7 +1,7 @@
 # Comments apply to next line
 
 [versions]
-amazonAppstoreSdk = "3.0.5"
+amazonAppstoreSdk = "3.0.6"
 android-agp = "8.8.0-rc01"
 android-desugaring = "2.1.3"
 androidx-activityCompose = "1.9.3"
