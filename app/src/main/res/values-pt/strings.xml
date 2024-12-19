@@ -188,7 +188,15 @@
     <string name="list_welcome_entry_note_summary">"Parabéns, esta é a sua primeira nota :-)"</string>
     <string name="list_welcome_entry_note_description">"Notas são notas tradicionais e não estão ligadas a uma data específica. Como entradas de diário, você pode adicionar anexos, participantes e mais quando edita ou adiciona uma entrada. Aliás, você pode também adicionar subtarefas a qualquer entrada, não importa se é uma entrada de diário, nota ou tarefa!"</string>
     <string name="list_welcome_entry_todo_summary">"Parabéns, esta é a sua primeira tarefa :-)"</string>
+    <string name="list_welcome_entry_todo_description">"Além dos diários e notas, as tarefas podem ter um início planejado, um prazo e uma data de término. Elas podem ser verificadas quando são prontas ou um progresso pode ser definido. Edite esta entrada para verificar todas as opções :-)"</string>
+    <string name="list_welcome_category">"#Primeiros Passos"</string>
+    <string name="save_and_edit">"Salvar &amp; editar"</string>
+    <string name="save_and_new">"Salvar &amp; novo"</string>
+    <string name="save_and_close">"Salvar &amp; fechar"</string>
+    <string name="list_quickadd_add_audio_attachment">"Gravar anexo de áudio"</string>
     <!-- Permissions -->
+    <string name="intent_dialog_title">"Adicionar conteúdo a um diário, nota ou tarefa?"</string>
+    <string name="add">"Adicionar"</string>
     <string name="link_to_parent">"Vincular a um nível superior"</string>
     <!-- alarms -->
     <!-- fragment_collections -->
