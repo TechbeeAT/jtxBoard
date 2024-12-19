@@ -197,10 +197,34 @@
     <!-- Permissions -->
     <string name="intent_dialog_title">"Adicionar conteúdo a um diário, nota ou tarefa?"</string>
     <string name="add">"Adicionar"</string>
+    <string name="edit">"Editar"</string>
+    <string name="reset">"Redefinir"</string>
+    <string name="apply">"Confirmar"</string>
+    <string name="not_available_abbreviation">"n/d"</string>
+    <string name="collection_owner_displayname">"Proprietário: %1$s"</string>
     <string name="link_to_parent">"Vincular a um nível superior"</string>
+    <string name="link_selected_as_parent">"Superior"</string>
+    <string name="link_selected_as_subtask_note">"Subtarefa/-nota"</string>
+    <string name="link_selected_as">"Vincular selecionado como…"</string>
+    <string name="navigation_drawer_collections">"Coleções"</string>
+    <string name="navigation_drawer_presets">"Predefinições"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Data/Hora"</string>
+    <string name="alarms_duration">"Duração"</string>
+    <string name="alarms_onstart">"Ao iniciar"</string>
+    <string name="alarms_ondue">"A vencer"</string>
+    <string name="alarms_before_start">"antes do início"</string>
+    <string name="alarms_after_start">"depois do início"</string>
+    <string name="alarms_before_due">"antes do vencimento"</string>
+    <string name="alarms_after_due">"depois do vencimento"</string>
+    <string name="alarms_minutes">"Minuto(s)"</string>
+    <string name="alarms_hours">"Hora(s)"</string>
+    <string name="alarms_days">"Dia(s)"</string>
     <!-- fragment_collections -->
+    <string name="collections_journals_num">"Diários: %1$s"</string>
     <!-- Fuzzy -->
+    <string name="collections_notes_num">"Notas: %1$s"</string>
+    <string name="collections_tasks_num">"Tarefas: %1$s"</string>
     <!-- Buy Pro fragment -->
     <!-- alarms -->
     <!-- fragment_ical_list -->
