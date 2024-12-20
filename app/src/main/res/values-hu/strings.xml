@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Helyi Gyűjtemény hozzáadása"</string>
     <string name="navigation_drawer_website_news">"Újdonságok és verzióismertetők"</string>
     <string name="color">"Szín"</string>
+    <string name="selected_color">"Kiválasztott szín"</string>
+    <string name="system_colors">"Rendszerszínek"</string>
     <string name="priority_0_no_priority">"Nincs Prioritás"</string>
     <string name="priority_1_highest">"1 - Legmagasabb"</string>
     <string name="priority_2_higher">"2 - Magasabb"</string>
