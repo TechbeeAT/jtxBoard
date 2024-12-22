@@ -4,16 +4,19 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Kaydet"</string>
+    <string name="update">"Güncelle"</string>
     <string name="cancel">"İptal et"</string>
     <string name="ok">"Tamam"</string>
     <string name="delete">"Sil"</string>
     <string name="discard">"Yoksay"</string>
+    <string name="open">"Aç"</string>
     <string name="cont">"Devam et"</string>
     <string name="website">"Web sitesi"</string>
     <string name="latitude">"Enlem"</string>
     <string name="longitude">"Boylam"</string>
     <string name="unlink">"Bağlantıyı kes"</string>
     <string name="off">"Kapalı"</string>
+    <string name="location_permission_denied">"Konum izni reddedildi"</string>
     <string name="permissions">"İzinler"</string>
     <string name="current_location">"Güncel konum"</string>
     <string name="toolbar_text_add_journal">"Günlük Ekle"</string>
@@ -41,6 +44,7 @@
     <string name="navigation_drawer_close">"Gezinti çubuğunu kapat"</string>
     <string name="navigation_drawer_synchronization">"Senkronizasyon"</string>
     <string name="navigation_drawer_about">"Hakkında / Lisans"</string>
+    <string name="navigation_drawer_subtitle">"günlük, notlar &amp; görevler"</string>
     <string name="navigation_drawer_settings">"Ayarlar"</string>
     <string name="navigation_drawer_external_links">"Harici bağlantılar"</string>
     <string name="navigation_drawer_website">"Web sitesi"</string>
@@ -48,8 +52,27 @@
     <string name="navigation_drawer_donate">"Bağış yap"</string>
     <string name="navigation_drawer_privacy_policy">"Gizlilik Politikası"</string>
     <!-- fragment_ical_list -->
+    <string name="list_tabitem_journals">"Günlük"</string>
+    <string name="list_tabitem_notes">"Notlar"</string>
+    <string name="list_tabitem_todos">"Görevler"</string>
+    <string name="list_expand">"Genişlet"</string>
+    <string name="list_dialog_delete_selected_title">Seçilen kayıtlar silinsin mi?</string>
+    <string name="list_dialog_delete_selected_message">Bu eylem seçilen tüm girişleri (%1$d) siler. Devam etmek istediğinizden emin misiniz? Bu işlem geri alınamaz!</string>
+    <string name="list_quickadd_dialog_summary_description_hint">"Özet/Açıklama"</string>
+    <string name="list_quickadd_dialog_summary_description_helper">"İlk satır özet, geri kalanı açıklama olarak yorumlanır. Hashtag'ler kategori (örn. #kategori) olarak yorumlanır."</string>
     <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission_message">"jtx Board'un ses kaydetmek veya konuşmayı metne dönüştürme işlevlerini kullanmak için izne ihtiyacı var. Lütfen bu özelliği kullanma iznini verin."</string>
+    <string name="view_add_audio_note">"Ses ekle"</string>
+    <string name="view_created_text">"Oluşturuldu: %1$s"</string>
+    <string name="view_last_modified_text">"Son değişiklik: %1$s"</string>
+    <string name="view_completed">"Tamamlandı"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_take_picture_button_text">"Fotoğraf çek"</string>
+    <string name="edit_add_link_button_text">"Ek ilişimi ekle"</string>
+    <string name="dialog_delete_done_title">"Tamamlanan tüm görevler silinsin mi?"</string>
+    <string name="edit_dialog_sure_to_delete_message">"\"%1$s\" dosyasını silmek istediğinizden emin misiniz?"</string>
+    <string name="edit_dialog_sure_to_discard_message">"Bu girişi silmek istediğinizden emin misiniz? Bu giriş kaydedilmeyecek."</string>
+    <string name="edit_fragment_app_permission">"Uygulama izni"</string>
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Shortcuts -->
