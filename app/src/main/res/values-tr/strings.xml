@@ -10,7 +10,7 @@
     <string name="cancel">"İptal et"</string>
     <string name="ok">"Tamam"</string>
     <string name="delete">"Sil"</string>
-    <string name="discard">"Yoksay"</string>
+    <string name="discard">"Yok say"</string>
     <string name="open">"Aç"</string>
     <string name="cont">"Devam et"</string>
     <string name="website">"Web sitesi"</string>
@@ -24,17 +24,17 @@
     <string name="toolbar_text_add_journal">"Günlük Ekle"</string>
     <string name="toolbar_text_add_note">"Not Ekle"</string>
     <string name="toolbar_text_add_task">"Görev Ekle"</string>
-    <string name="toast_sync_requested">"Senkronizasyon talep edildi"</string>
+    <string name="toast_sync_requested">"Eşitleme istendi"</string>
     <string name="default_local_collection_name">"Yerel"</string>
     <string name="default_local_account_name">"Yerel"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Taslak"</string>
-    <string name="journal_status_final">"Son"</string>
-    <string name="journal_status_cancelled">"İptal edildi"</string>
+    <string name="journal_status_final">"Nihai"</string>
+    <string name="journal_status_cancelled">"İptal"</string>
     <string name="todo_status_needsaction">"Eylem gerekiyor"</string>
     <string name="todo_status_completed">"Tamamlandı"</string>
     <string name="todo_status_inprocess">"Devam ediyor"</string>
-    <string name="todo_status_cancelled">"İptal edildi"</string>
+    <string name="todo_status_cancelled">"İptal"</string>
     <string name="classification_public">"Genel"</string>
     <string name="classification_private">"Kişisel"</string>
     <string name="classification_confidential">"Gizli"</string>
@@ -72,9 +72,10 @@
     <!-- fragment_ical_edit -->
     <string name="edit_take_picture_button_text">"Fotoğraf çek"</string>
     <string name="edit_add_link_button_text">"Ek ilişimi ekle"</string>
+    <string name="edit_dialog_sure_to_discard_title">"Bu giriş yok sayılsın mı?"</string>
     <string name="dialog_delete_done_title">"Tamamlanan tüm görevler silinsin mi?"</string>
     <string name="edit_dialog_sure_to_delete_message">"\"%1$s\" dosyasını silmek istediğinizden emin misiniz?"</string>
-    <string name="edit_dialog_sure_to_discard_message">"Bu girişi silmek istediğinizden emin misiniz? Bu giriş kaydedilmeyecek."</string>
+    <string name="edit_dialog_sure_to_discard_message">"Bu girişi yok saymak istediğinizden emin misiniz? Bu giriş kaydedilmeyecek."</string>
     <string name="edit_fragment_app_permission">"Uygulama izni"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board, girişleriniz için giriş değerleri olarak kişilerinize dayalı Katılımcı verilerini önerebilir. Bu özelliğin etkinleştirilmesi için kişilerinizi okuma izini vermeniz gereklidir."</string>
     <!-- fragment_about -->
@@ -118,7 +119,12 @@
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Merhaba, ben Patrick, jtx Board'un geliştiricisiyim. Sizlere ücretsiz olarak sunduğum bu uygulamaya çok zaman ve emek harcıyorum. Uygulamamı beğendiyseniz lütfen biraz sevgi gönderin ve küçük bir bağış yapın!"</string>
     <string name="donate_thank_you">"Teşekkür ederim!"</string>
+    <string name="attachment_error_no_app_found_to_open_file_or_uri">"Bu dosyayı/URL'yi açacak uygulama bulunamadı."</string>
     <!-- sync content provider -->
+    <string name="about_translations_basic_info">"jtx Board, açık kaynak topluluğunun katılımını ve katkısını takdir eden açık kaynaklı bir uygulamadır. Bu sayfada topluluk üyelerinin çeviri konusundaki çabalarına değinmek istiyoruz."</string>
+    <string name="save_and_edit">"Kaydet &amp; düzenle"</string>
+    <string name="save_and_new">"Kaydet &amp; yeni"</string>
+    <string name="save_and_close">"Kaydet &amp; kapat"</string>
     <!-- Permissions -->
     <string name="add">"Ekle"</string>
     <string name="edit">"Düzenle"</string>
@@ -166,7 +172,7 @@
     <string name="task">"Görev"</string>
     <string name="account">"Hesap"</string>
     <string name="status">"Durum"</string>
-    <string name="classification">"Derecelendirme"</string>
+    <string name="classification">"Sınıflandırma"</string>
     <string name="category">"Kategori"</string>
     <string name="resource">"Kaynak"</string>
     <string name="priority">"Öncelik"</string>
@@ -180,6 +186,9 @@
     <string name="categories">"Kategoriler"</string>
     <string name="subtasks">"Alt görevler"</string>
     <string name="linked_parents">"Ebeveyn bağla"</string>
+    <string name="priority_7_low">"7 - Düşük"</string>
+    <string name="priority_8_lower">"8 - Daha düşük"</string>
+    <string name="priority_9_lowest">"9 - En düşük"</string>
     <string name="filter_asc">"Artan"</string>
     <string name="filter_desc">"Azalan"</string>
     <string name="filter_created">"Oluşturuldu"</string>
@@ -187,6 +196,7 @@
     <string name="notification_done">"Tamam"</string>
     <string name="notification_add_1h">"+ 1 saat"</string>
     <string name="notification_add_1d">"+ 1 gün"</string>
+    <string name="presets_saved">"Ön ayarlar kaydedildi"</string>
     <string name="settings_select_theme_dark">"Karanlık"</string>
     <string name="settings_select_theme_light">"Aydınlık"</string>
     <string name="settings_select_theme_system">"Sistem varsayılanı"</string>
@@ -202,6 +212,7 @@
     <string name="settings_modules_enable_notes">"Notlar"</string>
     <string name="settings_modules_enable_tasks">"Görevler"</string>
     <string name="summary_description">"Özet/Açıklama"</string>
+    <string name="status_classification_priority">"Durum/Sınıflandırma/Öncelik"</string>
     <string name="timezone">"Saat dilimi"</string>
     <string name="preferences">"Tercihler"</string>
     <string name="audio_play">"Oynat"</string>
@@ -216,9 +227,13 @@
     <string name="list_quickadd_dialog_sr_listening">"Dinleniyor…"</string>
     <string name="collections_dialog_buypro_info">"Uzak koleksiyonlara yönelik düzenleme özelliklerini etkinleştirmek için lütfen jtx Board Pro'yu satın alın."</string>
     <string name="details_show_all_options">"Tüm seçenekleri göster"</string>
+    <string name="details_toast_entry_deleted">"Giriş yok sayıldı/silindi"</string>
     <!-- alarms -->
     <string name="collections_account_delete_dialog_message">"Bu hesabı jtx Board'dan silmek istediğinizden emin misiniz? Bu hesaptaki tüm koleksiyonlar kaldırılacak. Bu işlem geri alınamaz."</string>
     <string name="dialog_unsaved_changes_title">"Değişiklikler kaydedilsin mi?"</string>
+    <string name="dialog_unsaved_changes_text">"Kaydedilmemiş değişiklikler algılandı. Değişikliklerinizi kaydetmek mi, yok saymak mı istiyorsunuz?"</string>
+    <string name="dialog_revert_changes_message">"Değişikliklerinizi yok saymak ve içerikleri düzenlemeye başlamadan önceki durumuna geri döndürmek istediğinizden emin misiniz?"</string>
+    <string name="dialog_save_current_filter_config">"Geçerli süzgeç yapılandırmasını kaydet"</string>
     <string name="menu_list_viewmode_compact">"Kompakt görünüm"</string>
     <string name="menu_list_viewmode_kanban">"Kanban görünümü"</string>
     <string name="menu_list_viewmode_week">"Hafta görünümü"</string>
@@ -244,6 +259,7 @@
     <string name="settings_create_with_current_location">"Geçerli konumla yeni girişler oluşturun"</string>
     <string name="settings_create_with_current_location_sub">"Bu özelliği kullanmak için lütfen bu uygulamayı kullanırken konumunuza erişim izni verin."</string>
     <string name="settings_fullscreen_alarms_toast">"Lütfen sistem ayarlarından tam ekran bildirim izni verin."</string>
+    <string name="error_no_app_found_to_open_entry">"Bu girişi göndermek için uygulama bulunamadı."</string>
     <string name="close">"Kapat"</string>
     <string name="menu_view_copy_to_clipboard">"Panoya kopyala"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Kopyalandı"</string>
@@ -256,9 +272,12 @@
     <string name="filter_presets_edit_info">"Lütfen liste görünümündeki süzgeç menüsünden süzgeç ön ayarlarını ekleyin/güncelleyin/silin."</string>
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="classification_no_classification">"Sınıflandırma yok (genel)"</string>
     <string name="map">"Harita"</string>
     <string name="open_in_browser">"Tarayıcıda aç"</string>
     <string name="list_snackbar_no_collection">"Lütfen yerel bir koleksiyon ekleyin veya bu modülü destekleyen uzak bir koleksiyona eşitleyin."</string>
+    <string name="filter_save_as_preset">"Ön ayar olarak kaydet"</string>
+    <string name="menu_view_autosave">"Otomatik kaydet"</string>
     <string name="next">"Sonraki"</string>
     <string name="previous">"Önceki"</string>
     <string name="preview">"Ön izleme"</string>
