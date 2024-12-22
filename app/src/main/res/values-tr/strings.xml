@@ -64,14 +64,28 @@
     <string name="list_quickadd_dialog_summary_description_hint">"Özet/Açıklama"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"İlk satır özet, geri kalanı açıklama olarak yorumlanır. Hashtag'ler kategori (örn. #kategori) olarak yorumlanır."</string>
     <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission">"Uygulama izni"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board'un ses kaydetmek veya konuşmayı metne dönüştürme işlevlerini kullanmak için izne ihtiyacı var. Lütfen bu özelliği kullanma iznini verin."</string>
     <string name="view_add_audio_note">"Ses ekle"</string>
     <string name="view_created_text">"Oluşturuldu: %1$s"</string>
     <string name="view_last_modified_text">"Son değişiklik: %1$s"</string>
     <string name="view_completed">"Tamamlandı"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_comment_helper">"Yorum ekle"</string>
+    <string name="edit_attachment_button_text">"Ek ekle"</string>
     <string name="edit_take_picture_button_text">"Fotoğraf çek"</string>
     <string name="edit_add_link_button_text">"Ek ilişimi ekle"</string>
+    <string name="edit_subtasks_add_helper">"Alt görev ekle"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"Hızlı alt görev ekle"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"Hızlı alt not ekle"</string>
+    <string name="edit_attachment_add_link_dialog">"Hızlı ek ilişimi ekle"</string>
+    <string name="edit_datepicker_dialog_select_date">"Tarih seç"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"Tarih aralığı seç"</string>
+    <string name="edit_datepicker_dialog_add_time">"Saat ekle"</string>
+    <string name="edit_datepicker_dialog_edit_time">"Saati düzenle"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"Saat dilimi ekle"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"Saat dilimini düzenle"</string>
+    <string name="edit_dialog_sure_to_delete_title">"\"%1$s\" silinsin mi?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Bu giriş yok sayılsın mı?"</string>
     <string name="dialog_delete_done_title">"Tamamlanan tüm görevler silinsin mi?"</string>
     <string name="edit_dialog_sure_to_delete_message">"\"%1$s\" dosyasını silmek istediğinizden emin misiniz?"</string>
@@ -89,10 +103,15 @@
     <string name="about_app_terms">"Şartlar &amp; Koşullar"</string>
     <string name="about_thanks_ffg">"Bu projenin gerçekleştirilmesindeki güveni ve finansal desteği için FFG'ye özellikle teşekkür ederiz."</string>
     <!-- menus -->
+    <string name="menu_list_gotodate">"Tarihe git"</string>
     <string name="menu_list_quick_journal">"Hızlı Günlük"</string>
     <string name="menu_list_quick_note">"Hızlı Not"</string>
     <string name="menu_list_quick_todo">"Hızlı Görev"</string>
     <string name="menu_view_share_ics">"\".ics\" olarak paylaş"</string>
+    <string name="menu_view_copy_as_journal">"Günlük olarak kopyala"</string>
+    <string name="menu_view_copy_as_todo">"Görev olarak kopyala"</string>
+    <string name="menu_view_copy_as_note">"Not olarak kopyala"</string>
+    <string name="menu_view_copy_item">"Kopya oluştur"</string>
     <string name="notification_channel_alarms_name">"Alarmlar"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"Günlük ekle"</string>
@@ -104,6 +123,7 @@
     <string name="settings_app">"Uygulama ayarları"</string>
     <string name="settings_select_mimetype_for_audio">"Sesli notlar için uzantıyı seçin"</string>
     <!-- Sync fragment -->
+    <string name="sync_with_sync_app_heading">"%1$s ile eşitle"</string>
     <string name="sync_basic_info">"jtx Board, sunucu eşitlemesini kendisi sağlamaz ancak DAVx⁵ aracılığıyla eşitlemeyi destekler. Bu yöntem, verilerinizi depolamak, yedeklemek ve eşitlemek için seçtiğiniz herhangi bir uyumlu CalDAV sunucusunu kullanmanıza olanak tanır."</string>
     <string name="sync_ksync_basic_info">"kSync, Infomaniak tarafından DAVx⁵ temel alınarak geliştirilmiş bir uygulamadır. DAVx⁵ herhangi bir uyumlu CalDAV sunucusuna açık olsa da, kSync yalnızca Infomaniak hesaplarının eşitlemesine izin verir."</string>
     <string name="sync_manageddavx5_basic_info">"Managed DAVx⁵, DAVx⁵'in işlevselliğini kuruluşlar için kullanılabilir hale getirir ve toplu dağıtım, önceden yapılandırılabilir ayarlar gibi fazladan kurumsal özellikler sunar."</string>
@@ -122,6 +142,7 @@
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Bu dosyayı/URL'yi açacak uygulama bulunamadı."</string>
     <!-- sync content provider -->
     <string name="about_translations_basic_info">"jtx Board, açık kaynak topluluğunun katılımını ve katkısını takdir eden açık kaynaklı bir uygulamadır. Bu sayfada topluluk üyelerinin çeviri konusundaki çabalarına değinmek istiyoruz."</string>
+    <string name="list_welcome_category">"#İlkAdım"</string>
     <string name="save_and_edit">"Kaydet &amp; düzenle"</string>
     <string name="save_and_new">"Kaydet &amp; yeni"</string>
     <string name="save_and_close">"Kaydet &amp; kapat"</string>
@@ -134,6 +155,7 @@
     <string name="link_selected_as_subtask_note">"Alt görev/-not"</string>
     <string name="navigation_drawer_collections">"Koleksiyonlar"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Tarih/Saat"</string>
     <string name="alarms_minutes">"Dakika"</string>
     <string name="alarms_hours">"Saat"</string>
     <string name="alarms_days">"Gün"</string>
@@ -180,8 +202,12 @@
     <string name="url">"URL"</string>
     <string name="location">"Konum"</string>
     <string name="attendees">"Katılımcılar"</string>
+    <string name="resources">"Kaynaklar"</string>
+    <string name="comments">"Yorumlar"</string>
     <string name="attachments">"Ekler"</string>
+    <string name="alarms">"Alarmlar"</string>
     <string name="search">"Ara"</string>
+    <string name="add_time_switch">"Saat ekle"</string>
     <string name="progress">"İlerleme"</string>
     <string name="categories">"Kategoriler"</string>
     <string name="subtasks">"Alt görevler"</string>
@@ -189,10 +215,12 @@
     <string name="priority_7_low">"7 - Düşük"</string>
     <string name="priority_8_lower">"8 - Daha düşük"</string>
     <string name="priority_9_lowest">"9 - En düşük"</string>
+    <string name="setting_no_time">"Saat yok"</string>
     <string name="filter_asc">"Artan"</string>
     <string name="filter_desc">"Azalan"</string>
     <string name="filter_created">"Oluşturuldu"</string>
     <string name="filter_last_modified">"Son değişiklik"</string>
+    <string name="filter_no_resource">Kaynaklar olmadan</string>
     <string name="notification_done">"Tamam"</string>
     <string name="notification_add_1h">"+ 1 saat"</string>
     <string name="notification_add_1d">"+ 1 gün"</string>
@@ -201,6 +229,7 @@
     <string name="settings_select_theme_light">"Aydınlık"</string>
     <string name="settings_select_theme_system">"Sistem varsayılanı"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Bu ayarı değiştirmek için lütfen kimlik doğrulaması yapın!"</string>
+    <string name="settings_timezone_display">"Saat dilimiyle birlikte saat gösterimini seçin"</string>
     <string name="settings_timezone_display_local">"Saati yerel saat diliminde göster"</string>
     <string name="settings_timezone_display_original">"Saati orijinal saat diliminde göster"</string>
     <string name="settings_timezone_display_local_and_original">"Saati yerel ve orijinal saat diliminde göster (yalnızca ayrıntılı görünüm)"</string>
@@ -228,7 +257,14 @@
     <string name="collections_dialog_buypro_info">"Uzak koleksiyonlara yönelik düzenleme özelliklerini etkinleştirmek için lütfen jtx Board Pro'yu satın alın."</string>
     <string name="details_show_all_options">"Tüm seçenekleri göster"</string>
     <string name="details_toast_entry_deleted">"Giriş yok sayıldı/silindi"</string>
+    <string name="details_attachment_beta_info">"* Eklerin eşitlenmesi deneysel bir özelliktir. Daha büyük ekler uzun eşitleme sürelerine ve beklenmeyen davranışlara yol açabileceğinden, yalnızca küçük eklerin (100 KB'ye kadar) kullanılmasını önemle tavsiye ederiz."</string>
+    <string name="edit_fragment_app_notification_permission_message">"jtx Board, alarmların zamanı geldiğinde bildirim gösterir. Bu özelliği kullanabilmek için lütfen bildirimlere izin verin."</string>
+    <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board, haritaları kullanırken otomatik olarak yakınlaştırmak için konumunuzu kullanabilir. Bu özelliği kullanmak istiyorsanız lütfen yaklaşık konum iznini verin."</string>
     <!-- alarms -->
+    <string name="alarms_alarm">"Alarm"</string>
+    <string name="alarms_before">"önce"</string>
+    <string name="alarms_after">"sonra"</string>
+    <string name="alarms_start">"başla"</string>
     <string name="collections_account_delete_dialog_message">"Bu hesabı jtx Board'dan silmek istediğinizden emin misiniz? Bu hesaptaki tüm koleksiyonlar kaldırılacak. Bu işlem geri alınamaz."</string>
     <string name="dialog_unsaved_changes_title">"Değişiklikler kaydedilsin mi?"</string>
     <string name="dialog_unsaved_changes_text">"Kaydedilmemiş değişiklikler algılandı. Değişikliklerinizi kaydetmek mi, yok saymak mı istiyorsunuz?"</string>
@@ -258,6 +294,8 @@
     <string name="settings_attention_experimental_feature">"Dikkat: Bu deneysel bir özelliktir"</string>
     <string name="settings_create_with_current_location">"Geçerli konumla yeni girişler oluşturun"</string>
     <string name="settings_create_with_current_location_sub">"Bu özelliği kullanmak için lütfen bu uygulamayı kullanırken konumunuza erişim izni verin."</string>
+    <string name="settings_sticky_alarms_sub">"Bildirimleri tamamlanana veya ertelenene kadar tut"</string>
+    <string name="settings_fullscreen_alarms">"Tam ekran alarmlar"</string>
     <string name="settings_fullscreen_alarms_toast">"Lütfen sistem ayarlarından tam ekran bildirim izni verin."</string>
     <string name="error_no_app_found_to_open_entry">"Bu girişi göndermek için uygulama bulunamadı."</string>
     <string name="close">"Kapat"</string>
@@ -272,6 +310,7 @@
     <string name="filter_presets_edit_info">"Lütfen liste görünümündeki süzgeç menüsünden süzgeç ön ayarlarını ekleyin/güncelleyin/silin."</string>
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="status_no_status">"Durumsuz"</string>
     <string name="classification_no_classification">"Sınıflandırma yok (genel)"</string>
     <string name="map">"Harita"</string>
     <string name="open_in_browser">"Tarayıcıda aç"</string>
@@ -286,6 +325,7 @@
     <string name="widget_list_configuration_beta_info">"* jtx Board'un, nadir durumlarda beklenmeyen davranışlara neden olabilecek widget'ları işlemek için yeni, deneysel bir yöntem kullandığını lütfen unutmayın."</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Dikkat: Şu anda widget'ta yalnızca tek bir hiyerarşi düzeyi desteklenmektedir. Daha düşük seviyelere ait girişleri görmek için lütfen düz görünümü kullanın."</string>
     <string name="widget_list_maximum_entries_reached">"Widget'taki maksimum giriş sayısına ulaşıldı (%1$d)."</string>
+    <string name="settings_default_journals_date">"Günlükler için varsayılan tarih/saat ayarla"</string>
     <string name="widget_list_show_subtasks">"Alt görevleri göster"</string>
     <string name="widget_list_show_subnotes">"Alt notları göster"</string>
     <string name="markdown_bold">"Koyu"</string>
@@ -295,6 +335,7 @@
     <string name="markdown_heading1">"Başlık 1"</string>
     <string name="markdown_heading2">"Başlık 2"</string>
     <string name="markdown_heading3">"Başlık 3"</string>
+    <string name="preset_resources">"Ön tanımlı kaynaklar"</string>
     <string name="geofence_options">"Geofence seçenekleri"</string>
     <string name="geofence_missing_permission_info">"jtx Board'un arka plan konumunuza erişmesi ve size bildirim göndermesi için izinlere ihtiyacı var. Lütfen konum iznini 'Her zaman izin ver' olarak güncelleyin ve geofence ulaştığınızda bildirim almak için bildirim iznini verin!"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board verilen koordinatlara yaklaştığınızda sizi bilgilendirebilir. Lütfen konum iznini 'Her zaman izin ver' olarak ayarlayın ve bildirimlerin bu özelliği kullanmasına izin verin."</string>
