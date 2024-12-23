@@ -55,6 +55,11 @@
     <string name="navigation_drawer_donate">"Bağış yap"</string>
     <string name="navigation_drawer_privacy_policy">"Gizlilik Politikası"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Bitmiş"</string>
+    <string name="list_due_today">"Bugün bitiyor"</string>
+    <string name="list_due_tomorrow">"Yarın bitiyor"</string>
+    <string name="list_due_within_7_days">"7 gün içinde bitiyor"</string>
+    <string name="list_due_inXhours">"%d saat içinde bitiyor"</string>
     <string name="list_tabitem_journals">"Günlük"</string>
     <string name="list_tabitem_notes">"Notlar"</string>
     <string name="list_tabitem_todos">"Görevler"</string>
@@ -118,6 +123,7 @@
     <string name="shortcut_addNote_longLabel">"Not ekle"</string>
     <string name="shortcut_addTodo_longLabel">"Görev ekle"</string>
     <!-- Settings fragment -->
+    <string name="settings_list">"Öge listesi ayarları"</string>
     <string name="settings_show_progress_for_subtasks">Alt görevler için ilerlemeyi göster</string>
     <string name="settings_show_progress_for_maintasks">Ana görevler için ilerlemeyi göster</string>
     <string name="settings_app">"Uygulama ayarları"</string>
@@ -156,6 +162,9 @@
     <string name="navigation_drawer_collections">"Koleksiyonlar"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Tarih/Saat"</string>
+    <string name="alarms_duration">"Süreç"</string>
+    <string name="alarms_onstart">"Başlangıçta(n)"</string>
+    <string name="alarms_ondue">"Bitişte(n)"</string>
     <string name="alarms_minutes">"Dakika"</string>
     <string name="alarms_hours">"Saat"</string>
     <string name="alarms_days">"Gün"</string>
@@ -206,7 +215,14 @@
     <string name="comments">"Yorumlar"</string>
     <string name="attachments">"Ekler"</string>
     <string name="alarms">"Alarmlar"</string>
+    <string name="recurrence">"Yinele"</string>
     <string name="search">"Ara"</string>
+    <string name="search_journals">Günlük ara</string>
+    <string name="search_notes">Not ara</string>
+    <string name="search_todos">Görev ara</string>
+    <string name="filter">"Süzgeç"</string>
+    <string name="sync_now">"Şimdi eşitle"</string>
+    <string name="completed">"Tamamlandı"</string>
     <string name="add_time_switch">"Saat ekle"</string>
     <string name="progress">"İlerleme"</string>
     <string name="categories">"Kategoriler"</string>
@@ -224,17 +240,31 @@
     <string name="notification_done">"Tamam"</string>
     <string name="notification_add_1h">"+ 1 saat"</string>
     <string name="notification_add_1d">"+ 1 gün"</string>
+    <string name="list_toast_export_success">"Liste başarıyla dışa aktarıldı"</string>
+    <string name="list_toast_export_error">"Liste dışa aktarırken hata oluştu"</string>
+    <string name="collections_toast_export_success">"Koleksiyonlar başarıyla dışa aktarıldı"</string>
+    <string name="collections_toast_export_error">"Koleksiyonlat dışa aktarırken hata oluştu"</string>
+    <string name="menu_collections_export_all">"Tümünü dışa aktar"</string>
     <string name="presets_saved">"Ön ayarlar kaydedildi"</string>
     <string name="settings_select_theme_dark">"Karanlık"</string>
     <string name="settings_select_theme_light">"Aydınlık"</string>
     <string name="settings_select_theme_system">"Sistem varsayılanı"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Bu ayarı değiştirmek için lütfen kimlik doğrulaması yapın!"</string>
+    <string name="settings_protect_biometric_info_on_unlock">"Korumalı girişleri görmek için lütfen kimlik doğrulaması yapın!"</string>
     <string name="settings_timezone_display">"Saat dilimiyle birlikte saat gösterimini seçin"</string>
     <string name="settings_timezone_display_local">"Saati yerel saat diliminde göster"</string>
     <string name="settings_timezone_display_original">"Saati orijinal saat diliminde göster"</string>
     <string name="settings_timezone_display_local_and_original">"Saati yerel ve orijinal saat diliminde göster (yalnızca ayrıntılı görünüm)"</string>
+    <string name="settings_font">"Yazı tipi"</string>
+    <string name="donate_dialog_title">"Jtx Board hoşunuza gitti mi?"</string>
+    <string name="donate_dialog_message">"Bir uygulamanın geliştirilmesi karmaşık bir konudur ve geliştirme, bakım ve destek zorlu bir iştir. Bu uygulamayı beğendiyseniz ve sürekli gelişimi sağlamak istiyorsanız lütfen bağış yapmayı düşünün :-)
+Teşekkür ederim!"</string>
     <!-- Buy Pro fragment -->
+    <string name="buypro_text">"Bir uygulamanın geliştirilmesi karmaşık bir konudur ve geliştirme, bakım ve destek zorlu bir iştir. Pro işlevlerini kullanmak istiyorsanız veya projemizi desteklemek istiyorsanız lütfen aşağıdaki uygulama içi satın alma işlemlerini değerlendirin:"</string>
+    <string name="buypro_success_header">"jtx Board Pro'yu satın aldığınız için teşekkür ederiz!"</string>
+    <string name="buypro_success_description">"Uzak koleksiyonlar, hızlı girişler, uzun tıklamayla hızlı düzenleme ve dinamik renkler (Android 12'den itibaren mevcuttur) için düzenleme özellikleri artık etkinleştirilmiştir."</string>
     <string name="buypro_success_thankyou">"Teşekkür ederim!"</string>
+    <string name="buypro_purchase_init_error_message">"Lütfen internet bağlantınızı kontrol edin veya daha sonra tekrar deneyin!"</string>
     <string name="menu_list_viewmode_list">"Liste görünümü"</string>
     <string name="menu_list_viewmode_grid">"Izgara görünümü"</string>
     <string name="settings_modules_enable_journals">"Günlük"</string>
@@ -258,16 +288,25 @@
     <string name="details_show_all_options">"Tüm seçenekleri göster"</string>
     <string name="details_toast_entry_deleted">"Giriş yok sayıldı/silindi"</string>
     <string name="details_attachment_beta_info">"* Eklerin eşitlenmesi deneysel bir özelliktir. Daha büyük ekler uzun eşitleme sürelerine ve beklenmeyen davranışlara yol açabileceğinden, yalnızca küçük eklerin (100 KB'ye kadar) kullanılmasını önemle tavsiye ederiz."</string>
+    <string name="edit_comment">"Yorumu düzenle"</string>
+    <string name="edit_subnote_add_helper">"Alt not ekle"</string>
+    <string name="edit_subtask">"Alt görevi düzenle"</string>
+    <string name="edit_subnote">"Alt notu düzenle"</string>
     <string name="edit_fragment_app_notification_permission_message">"jtx Board, alarmların zamanı geldiğinde bildirim gösterir. Bu özelliği kullanabilmek için lütfen bildirimlere izin verin."</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board, haritaları kullanırken otomatik olarak yakınlaştırmak için konumunuzu kullanabilir. Bu özelliği kullanmak istiyorsanız lütfen yaklaşık konum iznini verin."</string>
     <!-- alarms -->
     <string name="alarms_alarm">"Alarm"</string>
     <string name="alarms_before">"önce"</string>
     <string name="alarms_after">"sonra"</string>
-    <string name="alarms_start">"başla"</string>
+    <string name="alarms_start">"başlangıçtan"</string>
+    <string name="alarms_due">"bitişten"</string>
+    <string name="about_tabitem_releasenotes">"Sürüm Notları"</string>
+    <string name="collections_account_delete_dialog_title">"\"%1$s\" silinsin mi?"</string>
     <string name="collections_account_delete_dialog_message">"Bu hesabı jtx Board'dan silmek istediğinizden emin misiniz? Bu hesaptaki tüm koleksiyonlar kaldırılacak. Bu işlem geri alınamaz."</string>
     <string name="dialog_unsaved_changes_title">"Değişiklikler kaydedilsin mi?"</string>
     <string name="dialog_unsaved_changes_text">"Kaydedilmemiş değişiklikler algılandı. Değişikliklerinizi kaydetmek mi, yok saymak mı istiyorsunuz?"</string>
+    <string name="dialog_error_on_update_message">"Bu giriş eklenirken/güncellenirken bir hata oluştu. Giriş veya koleksiyon artık mevcut olmayabilir."</string>
+    <string name="dialog_revert_changes_title">"Değişiklikler geri alınsın mı?"</string>
     <string name="dialog_revert_changes_message">"Değişikliklerinizi yok saymak ve içerikleri düzenlemeye başlamadan önceki durumuna geri döndürmek istediğinizden emin misiniz?"</string>
     <string name="dialog_save_current_filter_config">"Geçerli süzgeç yapılandırmasını kaydet"</string>
     <string name="menu_list_viewmode_compact">"Kompakt görünüm"</string>
@@ -291,6 +330,7 @@
     <string name="settings_default_date_one_week">"Bir hafta sonra"</string>
     <string name="settings_default_date_two_weeks">"İki hafta sonra"</string>
     <string name="settings_default_date_four_weeks">"Dört hafta sonra"</string>
+    <string name="settings_disable_alarms_for_readonly">"Salt okunur koleksiyonlar için alarmları devre dışı bırak"</string>
     <string name="settings_attention_experimental_feature">"Dikkat: Bu deneysel bir özelliktir"</string>
     <string name="settings_create_with_current_location">"Geçerli konumla yeni girişler oluşturun"</string>
     <string name="settings_create_with_current_location_sub">"Bu özelliği kullanmak için lütfen bu uygulamayı kullanırken konumunuza erişim izni verin."</string>
