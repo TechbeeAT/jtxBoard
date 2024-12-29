@@ -25,6 +25,7 @@
     <string name="toolbar_text_add_journal">"添加日志"</string>
     <string name="toolbar_text_add_note">"添加笔记"</string>
     <string name="toolbar_text_add_task">"添加任务"</string>
+    <string name="toast_sync_requested">"已请求同步"</string>
     <string name="default_local_collection_name">"本地"</string>
     <string name="default_local_account_name">"本地"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -58,12 +59,14 @@
     <string name="navigation_drawer_privacy_policy">"隐私政策"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"超期"</string>
+    <string name="list_due_shortly">"即将到期"</string>
     <string name="list_due_today">"今天到期"</string>
     <string name="list_due_tomorrow">"明天到期"</string>
     <string name="list_due_within_7_days">"7天内到期"</string>
     <string name="list_due_inXhours">"%d 小时到期"</string>
     <string name="list_due_on_weekday">"到期时间：%s"</string>
     <string name="list_start_past">"已开始"</string>
+    <string name="list_start_shortly">"马上开始"</string>
     <string name="list_start_today">"计划从今天开始"</string>
     <string name="list_start_tomorrow">"明天开始"</string>
     <string name="list_start_inXhours">"计划 %d 小时后开始"</string>
@@ -78,6 +81,7 @@
     <string name="list_quickadd_dialog_summary_description_helper">"第一行提取为摘要，其余是详情。标签解释为类别（例如#category）。"</string>
     <string name="list_item_recurring">"常用条目"</string>
     <string name="list_item_edited_recurring">"编辑重复项目"</string>
+    <string name="list_scroll_to_top">"滚动至顶部"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"应用权限"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board 需要获得权限才能录制音频或使用语音转文本的功能。请授予使用此功能的权限。"</string>
@@ -107,6 +111,7 @@
     <string name="edit_recur_x_times">"次数"</string>
     <string name="edit_recur_toast_requires_start_date">"重复出现需要设置开始日期！"</string>
     <string name="edit_datepicker_dialog_select_date">"选择日期"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"选择日期范围"</string>
     <string name="edit_datepicker_dialog_add_time">"添加时间"</string>
     <string name="edit_datepicker_dialog_edit_time">"修改时间"</string>
     <string name="edit_datepicker_dialog_add_timezone">"添加时区"</string>
@@ -123,8 +128,10 @@
     <!-- fragment_about -->
     <string name="about_tabitem_translations">"翻译"</string>
     <string name="about_tabitem_libraries">"库"</string>
+    <string name="about_tabitem_contributors">"贡献者"</string>
     <string name="about_special_thanks">"特别致谢"</string>
     <string name="about_app_version">"版本：%1$s (%2$d)"</string>
+    <string name="about_app_codename">"代号: %1$s"</string>
     <string name="about_app_build_date">"编译于%s"</string>
     <string name="about_app_terms">"条款与条件"</string>
     <string name="about_thanks_ffg">"特别感谢FFG信任并财务支持实现此项目。"</string>
@@ -154,9 +161,11 @@
     <string name="sync_with_sync_app_heading">"使用 %1$s 同步"</string>
     <string name="sync_basic_info">"jtx Board 本身不提供服务器同步，但支持通过 DAVx⁵ 进行同步。此方法允许选择任何兼容的 CalDAV 服务器来存储、备份和同步数据。"</string>
     <string name="sync_ksync_basic_info">"kSync 是一款基于 DAVx⁵ 、由 Infomaniak 开发并提供服务的应用。虽然 DAVx⁵ 兼容任何 CalDAV 服务器，但是 kSync 只允许 Infomaniak 账户进行同步。"</string>
+    <string name="sync_manageddavx5_basic_info">"托管 DAVx⁵ 使 DAVx⁵ 的功能可供组织使用，并附带其他企业功能，如大规模部署、公司品牌和预配置设置。"</string>
     <string name="sync_congratulations">"恭喜！ :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"已在手机上检测到 %1$s。"</string>
     <string name="sync_setup_instructions">"设置指南"</string>
+    <string name="sync_check_out_sync_app">"查看 %1$s!"</string>
     <string name="sync_sync_app_not_found">"没有在手机上检测到 %1$s。"</string>
     <string name="sync_more_about_sync_app">"更多关于 %1$s 的信息"</string>
     <string name="sync_download_sync_app">"下载 %1$s"</string>
@@ -196,6 +205,7 @@
     <string name="collection">"合集"</string>
     <string name="collection_owner_displayname">"所有者： %1$s"</string>
     <string name="link_to_parent">"关联到父级"</string>
+    <string name="link_selected_as_subtask_note">"子任务/-注释"</string>
     <string name="navigation_drawer_collections">"合集"</string>
     <string name="navigation_drawer_presets">"预设"</string>
     <!-- alarms -->
@@ -224,6 +234,8 @@
     <string name="menu_collections_add_local">"添加本地合集"</string>
     <string name="navigation_drawer_website_news">"新闻和发行说明"</string>
     <string name="color">"颜色"</string>
+    <string name="selected_color">"已选颜色"</string>
+    <string name="system_colors">"系统颜色"</string>
     <string name="priority_0_no_priority">"无优先级"</string>
     <string name="priority_1_highest">"1 - 最高级"</string>
     <string name="priority_2_higher">"2 - 较高级"</string>
@@ -240,6 +252,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"添加远程合集（%1$s）"</string>
     <string name="menu_collection_popup_show_in_sync_app">"在 %1$s 中显示"</string>
     <string name="menu_collection_popup_export_as_ics">"导出为.ics"</string>
+    <string name="export_as_csv">"导出为 .csv"</string>
     <string name="journal">"日记"</string>
     <string name="note">"笔记"</string>
     <string name="task">"任务"</string>
@@ -247,6 +260,7 @@
     <string name="status">"状态"</string>
     <string name="classification">"分类"</string>
     <string name="category">"类别"</string>
+    <string name="resource">"资源"</string>
     <string name="priority">"优先级"</string>
     <string name="readyonly">"只读"</string>
     <string name="upload_pending">"上传挂起"</string>
@@ -294,6 +308,7 @@
     <string name="list_without_start_date">"没有开始日期"</string>
     <string name="list_without_due_date">"没有截止日期"</string>
     <string name="list_without_completed_date">"没有完成日期"</string>
+    <string name="list_show_only_search_matching_subentries">"仅显示搜索匹配的子条目"</string>
     <string name="filter_order_by">"排序方式"</string>
     <string name="filter_asc">"升序"</string>
     <string name="filter_desc">"降序"</string>
@@ -317,7 +332,9 @@
     <string name="edit_recur_ends_never">"从不结束"</string>
     <string name="edit_recur_ends_on">"结束，在"</string>
     <string name="edit_recur_ends_after">"结束，在此后"</string>
+    <string name="list_toast_export_success">"列表已成功导出"</string>
     <string name="collections_toast_export_success">"合集导出成功"</string>
+    <string name="collections_toast_export_error">"导出收藏集时出错"</string>
     <string name="menu_collections_export_all">"全部导出"</string>
     <string name="menu_presets_export_presets">"导出预设"</string>
     <string name="menu_presets_import_presets">"导入预设"</string>
@@ -334,6 +351,9 @@
     <string name="settings_protect_biometric_all">"全部"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"请进行身份验证以更改此设置！"</string>
     <string name="settings_protect_biometric_info_on_unlock">"请进行身份验证以显示受保护的条目！"</string>
+    <string name="settings_timezone_display">"选择显示带时区的时间"</string>
+    <string name="settings_timezone_display_original">"以原始时区显示时间"</string>
+    <string name="settings_timezone_display_local_and_original">"显示当地和原始时区的时间(仅限详细视图)"</string>
     <string name="settings_font">"字体"</string>
     <string name="donate_dialog_title">"喜欢 jtx Board 吗？"</string>
     <string name="donate_dialog_message">"应用程序开发是一项复杂的工作，开发、维护和提供支持是一项艰巨的工作。如您喜欢此应用程序，并且希望其持续发展，请考虑捐赠 :-)
@@ -360,10 +380,13 @@
     <string name="settings_default_expand_subtasks">"默认在列表中展开子任务"</string>
     <string name="settings_default_expand_subnotes">"默认在列表中展开子笔记"</string>
     <string name="settings_default_expand_attachments">"默认在列表中展开附件"</string>
+    <string name="settings_default_expand_parents">"默认展开列表中的父级"</string>
     <string name="sorry">"抱歉"</string>
     <string name="back">"返回"</string>
     <string name="details">"详细信息"</string>
     <string name="date">"日期"</string>
+    <string name="summary_description">"摘要/描述"</string>
+    <string name="status_classification_priority">"状态/分类/优先级"</string>
     <string name="timezone">"时区"</string>
     <string name="not_set2">"未设置"</string>
     <string name="invert_selection">"反选"</string>
@@ -382,6 +405,7 @@
     <string name="collections_dialog_buypro_info">"想要启用远程收藏的编辑功能，请购买Pro软件包。"</string>
     <string name="list_update_entries_dialog_title">"更新条目"</string>
     <string name="list_update_entries_dialog_attention_collection_update">"注意：重复的项目在被移动到另一个集合之前必须从其系列中取消链接，并且在此过程中将被忽略。"</string>
+    <string name="list_update_entries_dialog_new_parent_info">"选择应将选定条目链接为子任务/链接注释的父级。"</string>
     <string name="details_link_existing_subentry_dialog_title">"关联子条目"</string>
     <string name="details_app_bar_behaviour">"应用程序栏行为"</string>
     <string name="details_show_all_options">"显示所有选项"</string>
