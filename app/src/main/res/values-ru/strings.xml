@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board синхронизирует журналы, заметки и задачи"</string>
+    <string name="app_permission_label">"jtx Board синхронизирует журналы, заметки и задачи."</string>
     <string name="app_permission_desc">"синхронизация содержимого jtx Board с другими приложениями, такими как DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
@@ -676,4 +676,8 @@
     <string name="email_contact">"E-Mail %1$s"</string>
     <string name="dialog_create_multiple_subtasks">Массовое создание подзадач</string>
     <string name="dialog_create_multiple_subnotes">Массовое создание связанных заметок</string>
+    <string name="dialog_detected_multiple_subtasks">Текст, возможно, содержит несколько подзадач. Вы хотите создать %d подзадач?</string>
+    <string name="dialog_detected_multiple_subnotes">Текст, возможно, содержит несколько связанных заметок. Вы хотите создать %d связанных заметок?</string>
+    <string name="dialog_confirm_create_multiple">Создать несколько</string>
+    <string name="dialog_confirm_create_single">Создать один</string>
 </resources>
