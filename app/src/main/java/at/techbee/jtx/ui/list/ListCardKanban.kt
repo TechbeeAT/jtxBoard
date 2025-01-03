@@ -37,7 +37,7 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
-import com.arnyminerz.markdowntext.MarkdownText
+import com.colintheshots.twain.MarkdownText
 
 
 @Composable
@@ -95,7 +95,7 @@ fun ListCardKanban(
                     MarkdownText(
                         markdown = iCalObject.description?.trim() ?: "",
                         maxLines = 4,
-                        overflow = TextOverflow.Ellipsis
+                        //overflow = TextOverflow.Ellipsis
                     )
                 else
                     Text(

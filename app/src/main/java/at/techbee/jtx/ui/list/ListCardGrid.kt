@@ -40,7 +40,7 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
-import com.arnyminerz.markdowntext.MarkdownText
+import com.colintheshots.twain.MarkdownText
 
 
 @Composable
@@ -125,7 +125,7 @@ fun ListCardGrid(
                     MarkdownText(
                         markdown = iCalObject.description?.trim() ?: "",
                         maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
+                        //overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)

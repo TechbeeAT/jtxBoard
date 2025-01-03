@@ -42,6 +42,7 @@ playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
 profileinstaller = "1.4.1"
 reorderable = "2.4.0"
+twain = "0.3.2"
 uiTextGoogleFonts = "1.7.6"
 room = "2.6.1"
 volley = "1.2.1"
@@ -107,6 +108,7 @@ room-base = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
+twain = { module = "com.colintheshots:twain", version.ref = "twain" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 
 # gplay and managed build variants

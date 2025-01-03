@@ -77,7 +77,7 @@ import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
-import com.arnyminerz.markdowntext.MarkdownText
+import com.colintheshots.twain.MarkdownText
 import sh.calvin.reorderable.ReorderableColumn
 
 
@@ -145,7 +145,7 @@ fun ListCard(
             MarkdownText(
                 markdown = iCalObject.description?.trim() ?: "",
                 maxLines = 6,
-                overflow = TextOverflow.Ellipsis,
+                //overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth()
             )
         else
