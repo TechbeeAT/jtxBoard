@@ -160,6 +160,8 @@
     <string name="settings_select_mimetype_for_audio">"Selecionar o Mimetype para notas de áudio"</string>
     <!-- Sync fragment -->
     <string name="sync_with_sync_app_heading">"Sincronizar com %1$s"</string>
+    <string name="sync_basic_info">"jtx Board não fornece sincronização com servidor por si mesmo, mas suporta a sincronização pelo DAVx⁵. Esse método permite que use qualquer servidor CalDAV de sua escolha para armazenar, fazer backup e sincronizar os seus dados."</string>
+    <string name="sync_ksync_basic_info">"kSync é um aplicativo baseado no DAVx⁵ desenvolvido pela Infomaniak especialmente pelos seus serviços. Enquanto o DAVx⁵ está aberto a qualquer servidor CalDAV compatível, kSync só permite sincronização com contas Infomaniak."</string>
     <!-- Donate fragment -->
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nenhum aplicativo foi encontrado para abrir este arquivo/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Item recorrente agora é uma exceção."</string>
@@ -180,4 +182,26 @@
     <!-- alarms -->
     <!-- fragment_ical_list -->
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="settings_default_journals_date_current_hour">"Hora atual"</string>
+    <string name="settings_default_journals_date_current_15min">"15 minutos atuais"</string>
+    <string name="settings_default_journals_date_current_5min">"5 minutos atuais"</string>
+    <string name="settings_default_journals_date_current_min">"Minuto atual"</string>
+    <string name="widget_list_show_subtasks">"Mostrar as subtarefas"</string>
+    <string name="widget_list_show_subnotes">"Mostrar subnotas"</string>
+    <string name="markdown_bold">"Negrito"</string>
+    <string name="markdown_italic">"Itálico"</string>
+    <string name="markdown_underlined">"Sublinhado"</string>
+    <string name="markdown_strikethrough">"Rasurado"</string>
+    <string name="markdown_heading1">"Cabeçalho 1"</string>
+    <string name="markdown_heading2">"Cabeçalho 2"</string>
+    <string name="markdown_heading3">"Cabeçalho 3"</string>
+    <string name="markdown_horizontal_ruler">"Régua horizontal"</string>
+    <string name="markdown_unordered_list">"Lista"</string>
+    <string name="markdown_code">"Código"</string>
+    <string name="preset_categories">"Categorias predefinidas"</string>
+    <string name="preset_resources">"Recursos predefinidos"</string>
+    <string name="extended_statuses">"Estados extendidos"</string>
+    <string name="extended_statuses_for_journals">"… para os diários"</string>
+    <string name="extended_statuses_for_notes">"… para as notas"</string>
+    <string name="extended_statuses_for_tasks">"… para as tarefas"</string>
 </resources>
