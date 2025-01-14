@@ -162,7 +162,20 @@
     <string name="sync_with_sync_app_heading">"Sincronizar com %1$s"</string>
     <string name="sync_basic_info">"jtx Board não fornece sincronização com servidor por si mesmo, mas suporta a sincronização pelo DAVx⁵. Esse método permite que use qualquer servidor CalDAV de sua escolha para armazenar, fazer backup e sincronizar os seus dados."</string>
     <string name="sync_ksync_basic_info">"kSync é um aplicativo baseado no DAVx⁵ desenvolvido pela Infomaniak especialmente pelos seus serviços. Enquanto o DAVx⁵ está aberto a qualquer servidor CalDAV compatível, kSync só permite sincronização com contas Infomaniak."</string>
+    <string name="sync_congratulations">"Parabéns! :-)"</string>
+    <string name="sync_sync_app_installed_but_no_collections_found">"Nós detectamos %1$s no seu telefone."</string>
+    <string name="sync_setup_instructions">"Instruções de instalação"</string>
+    <string name="sync_check_out_sync_app">"Confira %1$s!"</string>
+    <string name="sync_sync_app_not_found">"Não detectamos %1$s no seu telefone."</string>
+    <string name="sync_more_about_sync_app">"Saiba mais sobre %1$s"</string>
+    <string name="sync_download_sync_app">"Baixar %1$s"</string>
+    <string name="sync_button_add_account_in_sync_app">"Adicione uma conta em %1$s"</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Falhou em abrir %1$s, por favor, abra o app manualmente."</string>
     <!-- Donate fragment -->
+    <string name="donate_header_developer_note">"Olá, eu sou Patrick, o desenvolvedor do jtx Board. Eu estou dedicando muito tempo e esforço neste app que eu estou oferecendo para você de graça. Se você gosta do meu app, por favor mande algum carinho e faça uma pequena doação!"</string>
+    <string name="donate_thank_you">"Obrigado!"</string>
+    <string name="donate_donate_with">"Doar com"</string>
+    <string name="donate_other_donation_methods">"Se você gostaria de considerar outro método de doação, por favor, visite nosso site:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Nenhum aplicativo foi encontrado para abrir este arquivo/URL."</string>
     <string name="toast_item_is_now_recu_exception">"Item recorrente agora é uma exceção."</string>
     <string name="toast_done_tasks_deleted">"Tarefas concluídas excluídas (%d)."</string>
@@ -174,10 +187,45 @@
     <string name="list_welcome_entry_journal_summary">"Parabéns, esta é a sua primeira entrada no diário :-)"</string>
     <string name="list_welcome_entry_journal_description">"Os diários podem ser usados para guardar as suas notas para uma data específica. Utilizar esta funcionalidade por exemplo para protocolos, atas de reunião, entradas do diário e assim por diante. Se você editar esta postagem, você verá as opções para adicionar categorias, participantes, anexos, … Sinta-se à vontade para apagar esta entrada quando quiser!"</string>
     <string name="list_welcome_entry_note_summary">"Parabéns, esta é a sua primeira nota :-)"</string>
+    <string name="list_welcome_entry_note_description">"Notas são notas tradicionais e não estão ligadas a uma data específica. Como entradas de diário, você pode adicionar anexos, participantes e mais quando edita ou adiciona uma entrada. Aliás, você pode também adicionar subtarefas a qualquer entrada, não importa se é uma entrada de diário, nota ou tarefa!"</string>
+    <string name="list_welcome_entry_todo_summary">"Parabéns, esta é a sua primeira tarefa :-)"</string>
+    <string name="list_welcome_entry_todo_description">"Além dos diários e notas, as tarefas podem ter um início planejado, um prazo e uma data de término. Elas podem ser verificadas quando são prontas ou um progresso pode ser definido. Edite esta entrada para verificar todas as opções :-)"</string>
+    <string name="list_welcome_category">"#Primeiros Passos"</string>
+    <string name="save_and_edit">"Salvar &amp; editar"</string>
+    <string name="save_and_new">"Salvar &amp; novo"</string>
+    <string name="save_and_close">"Salvar &amp; fechar"</string>
+    <string name="list_quickadd_add_audio_attachment">"Gravar anexo de áudio"</string>
     <!-- Permissions -->
+    <string name="intent_dialog_title">"Adicionar conteúdo a um diário, nota ou tarefa?"</string>
+    <string name="add">"Adicionar"</string>
+    <string name="edit">"Editar"</string>
+    <string name="reset">"Redefinir"</string>
+    <string name="apply">"Confirmar"</string>
+    <string name="not_available_abbreviation">"n/d"</string>
+    <string name="collection_owner_displayname">"Proprietário: %1$s"</string>
+    <string name="link_to_parent">"Vincular a um nível superior"</string>
+    <string name="link_selected_as_parent">"Superior"</string>
+    <string name="link_selected_as_subtask_note">"Subtarefa/-nota"</string>
+    <string name="link_selected_as">"Vincular selecionado como…"</string>
+    <string name="navigation_drawer_collections">"Coleções"</string>
+    <string name="navigation_drawer_presets">"Predefinições"</string>
     <!-- alarms -->
+    <string name="alarms_date_time">"Data/Hora"</string>
+    <string name="alarms_duration">"Duração"</string>
+    <string name="alarms_onstart">"Ao iniciar"</string>
+    <string name="alarms_ondue">"A vencer"</string>
+    <string name="alarms_before_start">"antes do início"</string>
+    <string name="alarms_after_start">"depois do início"</string>
+    <string name="alarms_before_due">"antes do vencimento"</string>
+    <string name="alarms_after_due">"depois do vencimento"</string>
+    <string name="alarms_minutes">"Minuto(s)"</string>
+    <string name="alarms_hours">"Hora(s)"</string>
+    <string name="alarms_days">"Dia(s)"</string>
     <!-- fragment_collections -->
+    <string name="collections_journals_num">"Diários: %1$s"</string>
     <!-- Fuzzy -->
+    <string name="collections_notes_num">"Notas: %1$s"</string>
+    <string name="collections_tasks_num">"Tarefas: %1$s"</string>
     <!-- Buy Pro fragment -->
     <!-- alarms -->
     <!-- fragment_ical_list -->
