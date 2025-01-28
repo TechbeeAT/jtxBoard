@@ -16,14 +16,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FormatColorReset
+import androidx.compose.material.icons.outlined.Numbers
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +47,7 @@ import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
+@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun ColorSelector(
     initialColorInt: Int?,
@@ -60,12 +69,24 @@ fun ColorSelector(
 
     val additionalColors = additionalColorsInt.map { Color(it) }
     val initialColor = initialColorInt?.let { Color(it) }
+    var hexTextValue: String? by remember { mutableStateOf(initialColorInt?.toHexString()) }
 
+    fun getColorFromHex(hex: String?): Color? {
+        return try {
+            val hexTextValueWithHashtag = hex?.let { if(it.startsWith("#")) it else "#$it" }
+            val androidColor = android.graphics.Color.parseColor(hexTextValueWithHashtag)
+            Color(androidColor)
+        } catch (e: IllegalArgumentException) {
+            null
+        } catch (e: NullPointerException) {
+            null
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center,
-        modifier = modifier
+        modifier = modifier.verticalScroll(rememberScrollState())
     ) {
 
         Column (
@@ -133,6 +154,7 @@ fun ColorSelector(
                         containerColor = if (color == Color.Transparent) Color.White else color,
                         onClick = {
                             colorPickerController.selectByColor(color, true)
+                            hexTextValue = color.value.toHexString()
                         },
                         content = {
                             if (color == Color.Transparent)
@@ -143,10 +165,11 @@ fun ColorSelector(
             }
         }
 
-
         HsvColorPicker(
             controller = colorPickerController,
-            onColorChanged = { },
+            onColorChanged = { colorEnvelope ->
+                hexTextValue = colorEnvelope.color.toArgb().toHexString()
+            },
             initialColor = initialColor,
             modifier = Modifier.padding(14.dp).height(250.dp)
         )
@@ -169,6 +192,18 @@ fun ColorSelector(
             initialColor = initialColor
         )
 
+        OutlinedTextField(
+            value = hexTextValue?:"",
+            onValueChange = {
+                hexTextValue = it
+                 getColorFromHex(it)?.let { color ->
+                    colorPickerController.selectByColor(color, true)
+                }
+            },
+            isError = getColorFromHex(hexTextValue) == null,
+            leadingIcon = { Icon(Icons.Outlined.Numbers, null) },
+            modifier = Modifier.fillMaxWidth().padding(16.dp)
+        )
     }
 }
 
