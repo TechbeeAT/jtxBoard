@@ -226,6 +226,24 @@
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Notas: %1$s"</string>
     <string name="collections_tasks_num">"Tarefas: %1$s"</string>
+    <string name="attachments">"Anexos"</string>
+    <string name="recurrence">"Recorrência"</string>
+    <string name="recurrence_exceptions">"Exceções"</string>
+    <string name="description">"Descrição"</string>
+    <string name="search">"Pesquisar"</string>
+    <string name="search_journals">Pesquisar diários</string>
+    <string name="search_notes">Pesquisar notas</string>
+    <string name="search_todos">Pesquisar tarefas</string>
+    <string name="filter">"Filtrar"</string>
+    <string name="visibility">"Visibilidade"</string>
+    <string name="sync_now">"Sincronizar agora"</string>
+    <string name="add_time_switch">"Adicionar horário"</string>
+    <string name="progress">"Andamento"</string>
+    <string name="categories">"Categorias"</string>
+    <string name="subtasks">"Subtarefas"</string>
+    <string name="menu_collections_popup_move_entries">"Mover entradas"</string>
+    <string name="order_by_drag_and_drop">"Arrastar &amp; Soltar"</string>
+    <string name="filter_no_filter">"Sem filtro"</string>
     <!-- Buy Pro fragment -->
     <!-- alarms -->
     <!-- fragment_ical_list -->
