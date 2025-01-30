@@ -610,8 +610,6 @@ Dank u!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Opgelet: Momenteel wordt slechts één hiërarchieniveau ondersteund in de widget. Om de items van lagere niveaus te zien, gebruik in plaats daarvan de platte weergave."</string>
     <string name="widget_list_maximum_entries_reached">"Maximum aantal items in widget bereikt (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Widget bijwerken"</string>
-    <string name="widget_list_opacity_warning">"Opmerking: Dit is een experimentele functie! Lagere doorzichtigheid in het kleurthema wordt mogelijk niet onmiddellijk weergegeven!"</string>
-    <string name="widget_list_color_warning">"Opmerking: Dit is een experimentele functie! Wijzigingen in het themakleur worden niet weergegeven! Kies geen kleur voor terugkeer naar systeem standaard."</string>
     <string name="opacity">"Transparantie"</string>
     <string name="general">"Algemeen"</string>
     <string name="list_collapse">"Inklappen"</string>

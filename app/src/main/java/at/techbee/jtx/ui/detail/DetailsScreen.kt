@@ -265,6 +265,11 @@ fun DetailsScreen(
             module = Module.TODO,
             onCreate = { itemList ->
                 iCalObject.value?.let {
+                    itemList.forEach { subentry ->
+                        subentry.classification = it.classification
+                        subentry.due = it.due
+                        subentry.dueTimezone = it.dueTimezone
+                    }
                     detailViewModel.addSubEntries(itemList, it.uid, it.collectionId)
                     scrollToSection.value = DetailsScreenSection.SUBTASKS
                 }
@@ -279,6 +284,9 @@ fun DetailsScreen(
             module = Module.NOTE,
             onCreate = { itemList ->
                 iCalObject.value?.let {
+                    itemList.forEach { subentry ->
+                        subentry.classification = it.classification
+                    }
                     detailViewModel.addSubEntries(itemList, it.uid, it.collectionId)
                     scrollToSection.value = DetailsScreenSection.SUBNOTES
                 }

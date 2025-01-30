@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.sync
 
-import android.accounts.Account
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
@@ -84,7 +83,7 @@ fun SyncScreen(
                 actions = {
                     if (availableSyncApps.isNotEmpty()) {
                         IconButton(onClick = {
-                            SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+                            SyncUtil.syncAccounts(remoteCollections.map { it.getAccount() }.toSet())
                             SyncUtil.showSyncRequestedToast(context)
                         }) {
                             Icon(Icons.Outlined.Sync, stringResource(id = R.string.sync_now))

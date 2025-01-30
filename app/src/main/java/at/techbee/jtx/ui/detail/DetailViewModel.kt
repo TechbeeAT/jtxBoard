@@ -128,20 +128,21 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
+            mutableCategories.clear()
+            mutableResources.clear()
+            mutableAttendees.clear()
+            mutableComments.clear()
+            mutableAttachments.clear()
+            mutableAlarms.clear()
+
             withContext(Dispatchers.IO) {
                 originalEntry = databaseDao.getSync(icalObjectId)
                 mutableICalObject = originalEntry?.property
-                mutableCategories.clear()
                 mutableCategories.addAll(databaseDao.getCategoriesSync(icalObjectId))
-                mutableResources.clear()
                 mutableResources.addAll(databaseDao.getResourcesSync(icalObjectId))
-                mutableAttendees.clear()
                 mutableAttendees.addAll(databaseDao.getAttendeesSync(icalObjectId))
-                mutableComments.clear()
                 mutableComments.addAll(databaseDao.getCommentsSync(icalObjectId))
-                mutableAttachments.clear()
                 mutableAttachments.addAll(databaseDao.getAttachmentsSync(icalObjectId))
-                mutableAlarms.clear()
                 mutableAlarms.addAll(databaseDao.getAlarmsSync(icalObjectId))
             }
 
@@ -554,13 +555,16 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun createCopy(newModule: Module) {
+        val parentUID = relatedParents.value?.firstOrNull()?.uid
+
         viewModelScope.launch(Dispatchers.IO) {
 
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
             val newId = databaseDao.createCopy(
                 iCalObjectIdToCopy = mainICalObjectId!!,
-                newModule = newModule,
+                module = newModule,
+                parentUID = parentUID
             )
             withContext(Dispatchers.Main) {
                 changeState.value = DetailChangeState.CHANGESAVED

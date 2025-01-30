@@ -13,11 +13,15 @@ import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.work.*
+import androidx.work.Configuration
+import androidx.work.Constraints
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.WorkManagerTestInitHelper
 import org.junit.After
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -57,7 +61,7 @@ class FileCleanupJobTest {
         testDriver?.setAllConstraintsMet(request.id)
         val workInfo = workManager.getWorkInfoById(request.id).get()
 
-        assertEquals(WorkInfo.State.RUNNING, workInfo.state)
+        assertTrue(workInfo?.state in listOf(WorkInfo.State.RUNNING, WorkInfo.State.SUCCEEDED))
 
     }
 

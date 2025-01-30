@@ -10,12 +10,9 @@ package at.techbee.jtx.ui.list
 
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import at.techbee.jtx.database.ICalDatabase
@@ -24,7 +21,6 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.settings.SettingsStateHolder
-import at.techbee.jtx.util.SyncUtil
 
 
 @Composable
@@ -35,7 +31,6 @@ fun ListScreen(
     val context = LocalContext.current
     val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
     val settingsStateHolder = SettingsStateHolder(context)
-    val isPullRefreshEnabled = SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) } && settingsStateHolder.settingSyncOnPullRefresh.value
 
     listViewModel.toastMessage.value?.let {
         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -73,132 +68,123 @@ fun ListScreen(
         )
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
-        when (listViewModel.listSettings.viewMode.value) {
-            ViewMode.LIST -> {
-                ListScreenList(
-                    groupedList = groupedList,
-                    subtasksLive = listViewModel.allSubtasks,
-                    subnotesLive = listViewModel.allSubnotes,
-                    parentsLive = listViewModel.allParents,
-                    selectedEntries = listViewModel.selectedEntries,
-                    attachmentsLive = listViewModel.allAttachmentsMap,
-                    scrollOnceId = listViewModel.scrollOnceId,
-                    listSettings = listViewModel.listSettings,
-                    storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
-                    storedResources = database.getStoredResources().observeAsState(emptyList()).value,
-                    storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
-                    isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks.value,
-                    isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes.value,
-                    isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments.value,
-                    isParentsExpandedDefault = settingsStateHolder.settingAutoExpandParents.value,
-                    settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks.value,
-                    settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks.value,
-                    settingProgressIncrement = settingsStateHolder.settingStepForProgress.value,
-                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
-                    settingDisplayTimezone = settingsStateHolder.settingDisplayTimezone.value,
-                    settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
-                    isPullRefreshEnabled = isPullRefreshEnabled,
-                    markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
-                    player = listViewModel.mediaPlayer,
-                    isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP,
-                    isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
-                    isSubnoteDragAndDropEnabled = listViewModel.listSettings.subnotesOrderBy.value == OrderBy.DRAG_AND_DROP,
-                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onProgressChanged = { itemId, newPercent ->
-                        processOnProgressChanged(itemId, newPercent)
-                    },
-                    onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean ->
-                        listViewModel.updateExpanded(
-                            itemId,
-                            isSubtasksExpanded,
-                            isSubnotesExpanded,
-                            isParentsExpanded,
-                            isAttachmentsExpanded
-                        )
-                    },
-                    onSyncRequested = { listViewModel.syncAccounts() },
-                    onSaveListSettings = { listViewModel.saveListSettings() },
-                    onUpdateSortOrder = { listViewModel.updateSortOrder(it) }
-                )
-            }
-            ViewMode.GRID -> {
-                ListScreenGrid(
-                    list = list,
-                    subtasksLive = listViewModel.allSubtasks,
-                    storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
-                    storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
-                    selectedEntries = listViewModel.selectedEntries,
-                    scrollOnceId = listViewModel.scrollOnceId,
-                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
-                    isPullRefreshEnabled = isPullRefreshEnabled,
-                    markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
-                    player = listViewModel.mediaPlayer,
-                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onProgressChanged = { itemId, newPercent ->
-                        processOnProgressChanged(itemId, newPercent)
-                    },
-                    onSyncRequested = { listViewModel.syncAccounts() },
-                    isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP
+
+    when (listViewModel.listSettings.viewMode.value) {
+        ViewMode.LIST -> {
+            ListScreenList(
+                groupedList = groupedList,
+                subtasksLive = listViewModel.allSubtasks,
+                subnotesLive = listViewModel.allSubnotes,
+                parentsLive = listViewModel.allParents,
+                selectedEntries = listViewModel.selectedEntries,
+                attachmentsLive = listViewModel.allAttachmentsMap,
+                scrollOnceId = listViewModel.scrollOnceId,
+                listSettings = listViewModel.listSettings,
+                storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                storedResources = database.getStoredResources().observeAsState(emptyList()).value,
+                storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
+                isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks.value,
+                isSubnotesExpandedDefault = settingsStateHolder.settingAutoExpandSubnotes.value,
+                isAttachmentsExpandedDefault = settingsStateHolder.settingAutoExpandAttachments.value,
+                isParentsExpandedDefault = settingsStateHolder.settingAutoExpandParents.value,
+                settingShowProgressMaintasks = settingsStateHolder.settingShowProgressForMainTasks.value,
+                settingShowProgressSubtasks = settingsStateHolder.settingShowProgressForSubTasks.value,
+                settingProgressIncrement = settingsStateHolder.settingStepForProgress.value,
+                settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                settingDisplayTimezone = settingsStateHolder.settingDisplayTimezone.value,
+                settingIsAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
+                markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
+                player = listViewModel.mediaPlayer,
+                isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP,
+                isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
+                isSubnoteDragAndDropEnabled = listViewModel.listSettings.subnotesOrderBy.value == OrderBy.DRAG_AND_DROP,
+                onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
+                onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                onProgressChanged = { itemId, newPercent ->
+                    processOnProgressChanged(itemId, newPercent)
+                },
+                onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean ->
+                    listViewModel.updateExpanded(
+                        itemId,
+                        isSubtasksExpanded,
+                        isSubnotesExpanded,
+                        isParentsExpanded,
+                        isAttachmentsExpanded
                     )
-            }
-            ViewMode.COMPACT -> {
-                ListScreenCompact(
-                    groupedList = groupedList,
-                    subtasksLive = listViewModel.allSubtasks,
-                    storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
-                    storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
-                    selectedEntries = listViewModel.selectedEntries,
-                    scrollOnceId = listViewModel.scrollOnceId,
-                    listSettings = listViewModel.listSettings,
-                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
-                    isPullRefreshEnabled = isPullRefreshEnabled,
-                    player = listViewModel.mediaPlayer,
-                    isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP,
-                    isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
-                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
-                    onSyncRequested = { listViewModel.syncAccounts() },
-                    onSaveListSettings = { listViewModel.saveListSettings() },
-                    onUpdateSortOrder = { listViewModel.updateSortOrder(it) }
+                },
+                onSaveListSettings = { listViewModel.saveListSettings() },
+                onUpdateSortOrder = { listViewModel.updateSortOrder(it) }
+            )
+        }
+        ViewMode.GRID -> {
+            ListScreenGrid(
+                list = list,
+                subtasksLive = listViewModel.allSubtasks,
+                storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
+                selectedEntries = listViewModel.selectedEntries,
+                scrollOnceId = listViewModel.scrollOnceId,
+                settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
+                player = listViewModel.mediaPlayer,
+                onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
+                onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                onProgressChanged = { itemId, newPercent ->
+                    processOnProgressChanged(itemId, newPercent)
+                },
+                isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP
                 )
-            }
-            ViewMode.KANBAN -> {
-                ListScreenKanban(
-                    module = listViewModel.module,
-                    list = list,
-                    subtasksLive = listViewModel.allSubtasks,
-                    storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
-                    storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
-                    selectedEntries = listViewModel.selectedEntries,
-                    kanbanColumnsStatus = listViewModel.listSettings.kanbanColumnsStatus,
-                    kanbanColumnsXStatus = listViewModel.listSettings.kanbanColumnsXStatus,
-                    kanbanColumnsCategory = listViewModel.listSettings.kanbanColumnsCategory,
-                    scrollOnceId = listViewModel.scrollOnceId,
-                    settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
-                    isPullRefreshEnabled = isPullRefreshEnabled,
-                    markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
-                    player = listViewModel.mediaPlayer,
-                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                    onStatusChanged = { itemId, newStatus, scrollOnce -> listViewModel.updateStatus(itemId, newStatus, scrollOnce) },
-                    onXStatusChanged = { itemId, newXStatus, scrollOnce -> listViewModel.updateXStatus(itemId, newXStatus, scrollOnce) },
-                    onSwapCategories = { itemId, oldCategory, newCategory -> listViewModel.swapCategories(itemId, oldCategory, newCategory) },
-                    onSyncRequested = { listViewModel.syncAccounts() }
-                )
-            }
-            ViewMode.WEEK -> {
-                ListScreenWeek(
-                    list = list,
-                    selectedEntries = listViewModel.selectedEntries,
-                    scrollOnceId = listViewModel.scrollOnceId,
-                    onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                    onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
-                )
-            }
+        }
+        ViewMode.COMPACT -> {
+            ListScreenCompact(
+                groupedList = groupedList,
+                subtasksLive = listViewModel.allSubtasks,
+                storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
+                selectedEntries = listViewModel.selectedEntries,
+                scrollOnceId = listViewModel.scrollOnceId,
+                listSettings = listViewModel.listSettings,
+                settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                player = listViewModel.mediaPlayer,
+                isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP,
+                isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
+                onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
+                onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
+                onSaveListSettings = { listViewModel.saveListSettings() },
+                onUpdateSortOrder = { listViewModel.updateSortOrder(it) }
+            )
+        }
+        ViewMode.KANBAN -> {
+            ListScreenKanban(
+                module = listViewModel.module,
+                list = list,
+                subtasksLive = listViewModel.allSubtasks,
+                storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
+                storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
+                selectedEntries = listViewModel.selectedEntries,
+                kanbanColumnsStatus = listViewModel.listSettings.kanbanColumnsStatus,
+                kanbanColumnsXStatus = listViewModel.listSettings.kanbanColumnsXStatus,
+                kanbanColumnsCategory = listViewModel.listSettings.kanbanColumnsCategory,
+                scrollOnceId = listViewModel.scrollOnceId,
+                settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
+                markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
+                player = listViewModel.mediaPlayer,
+                onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
+                onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                onStatusChanged = { itemId, newStatus, scrollOnce -> listViewModel.updateStatus(itemId, newStatus, scrollOnce) },
+                onXStatusChanged = { itemId, newXStatus, scrollOnce -> listViewModel.updateXStatus(itemId, newXStatus, scrollOnce) },
+                onSwapCategories = { itemId, oldCategory, newCategory -> listViewModel.swapCategories(itemId, oldCategory, newCategory) }
+            )
+        }
+        ViewMode.WEEK -> {
+            ListScreenWeek(
+                list = list,
+                selectedEntries = listViewModel.selectedEntries,
+                scrollOnceId = listViewModel.scrollOnceId,
+                onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
+                onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+            )
         }
     }
 }

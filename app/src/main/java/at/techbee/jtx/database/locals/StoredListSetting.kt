@@ -64,6 +64,7 @@ data class StoredListSettingData(
     var searchResourcesAnyAllNone: AnyAllNone = AnyAllNone.ANY,
     var searchStatus: List<Status> = emptyList(),
     var searchClassification: List<Classification> = emptyList(),
+    var searchPriority: List<Int?> = emptyList(),
     var searchCollection: List<String> = emptyList(),
     var searchAccount: List<String> = emptyList(),
     var orderBy: OrderBy = OrderBy.CREATED,
@@ -115,6 +116,7 @@ data class StoredListSettingData(
                 searchResourcesAnyAllNone = listSettings.searchResourcesAnyAllNone.value,
                 searchStatus = listSettings.searchStatus,
                 searchClassification = listSettings.searchClassification,
+                searchPriority = listSettings.searchPriority,
                 searchCollection = listSettings.searchCollection,
                 searchAccount = listSettings.searchAccount,
                 orderBy = listSettings.orderBy.value,
@@ -161,6 +163,7 @@ data class StoredListSettingData(
         listSettings.searchResourcesAnyAllNone.value = searchResourcesAnyAllNone
         listSettings.searchStatus.addAll(searchStatus)
         listSettings.searchClassification.addAll(searchClassification)
+        listSettings.searchPriority.addAll(searchPriority)
         listSettings.searchCollection.addAll(searchCollection)
         listSettings.searchAccount.addAll(searchAccount)
         listSettings.orderBy.value = orderBy

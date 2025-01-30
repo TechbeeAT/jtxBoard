@@ -19,7 +19,8 @@
     <string name="longitude">"ਲੰਬਕਾਰ"</string>
     <string name="unlink">"ਅਨਲਿੰਕ ਕਰੋ"</string>
     <string name="off">"ਬੰਦ"</string>
-    <string name="permissions">"ਮਨਜ਼ੂਰੀਆਂ"</string>
+    <string name="location_permission_denied">"ਟਿਕਾਣੇ ਦੀ ਮਨਜ਼ੂਰੀ ਰੋਕੀ ਗਈ"</string>
+    <string name="permissions">"ਮਨਜੂਰੀਆਂ"</string>
     <string name="current_location">"ਮੌਜੂਦਾ ਟਿਕਾਣਾ"</string>
     <string name="toolbar_text_add_journal">"ਜਰਨਲ ਸ਼ਾਮਲ ਕਰੋ"</string>
     <string name="toolbar_text_add_note">"ਨੋਟ ਸ਼ਾਮਲ ਕਰੋ"</string>
@@ -105,6 +106,8 @@
     <string name="edit_attachment_add_link_dialog">"ਅਟੈਚਮੈਂਟ ਲਿੰਕ ਜੋੜੋ"</string>
     <string name="edit_recur_repeat_every_x">"ਰੋਜ਼ਾਨਾ ਦੁਹਰਾਓ"</string>
     <string name="edit_recur_on_weekday">"ਚਾਲੂ"</string>
+    <string name="edit_recur_on_the_x_day_of_month">"ਤੇ"</string>
+    <string name="edit_recur_x_day_of_the_month">"ਮਹੀਨੇ ਦਾ ਦਿਨ"</string>
     <string name="edit_recur_LAST_day_of_the_month">"ਅਖੀਰਲਾ"</string>
     <string name="edit_recur_x_times">"ਵਾਰੀ"</string>
     <string name="edit_recur_toast_requires_start_date">"ਦੁਹਰਾਓ ਨੂੰ ਸੈੱਟ ਕਰਨ ਲਈ ਇੱਕ ਸ਼ੁਰੂਆਤੀ ਮਿਤੀ ਦੀ ਲੋੜ ਹੁੰਦੀ ਹੈ!"</string>
@@ -113,6 +116,15 @@
     <string name="edit_datepicker_dialog_add_time">"ਸਮਾਂ ਜੋੜੋ"</string>
     <string name="edit_datepicker_dialog_edit_time">"ਸਮੇਂ ਵਿੱਚ ਤਰਮੀਮ ਕਰੋ"</string>
     <string name="edit_datepicker_dialog_add_timezone">"ਸਮਾਂ ਖੇਤਰ ਸ਼ਾਮਲ ਕਰੋ"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"ਸਮਾਂ ਖੇਤਰ ਸ਼ਾਮਲ ਕਰੋ"</string>
+    <string name="edit_dialog_sure_to_delete_title">"\"%1$s\" ਮਿਟਾਓ?"</string>
+    <string name="edit_dialog_sure_to_discard_title">"ਇਸ ਐਂਟਰੀ ਨੂੰ ਖ਼ਾਰਜ ਕਰਨਾ ਹੈ?"</string>
+    <string name="dialog_delete_done_title">"ਮੁਕੰਮਲ ਹੋਏ ਸਾਰੇ ਕਾਰਜ ਮਿਟਾਉਣੇ ਹਨ?"</string>
+    <string name="dialog_delete_done_message">"ਧਿਆਨ ਦਿਓ: ਉਪ-ਕਾਰਜ ਆਪਣੀ ਸਥਿਤੀ ਤੋਂ ਸੁਤੰਤਰ ਤੌਰ 'ਤੇ ਮਿਟਾ ਦਿੱਤੇ ਜਾਂਦੇ ਹਨ ਜੇਕਰ ਉਹਨਾਂ ਦੇ ਪਿੱਤਰ ਕਾਰਜ ਦੀ ਕੀਤੇ ਵਜੋਂ ਨਿਸ਼ਾਨਦੇਹੀ ਕਰ ਦਿੱਤੀ ਗਈ ਹੋਵੇ। ਇਸ ਕਾਰਵਾਈ ਨੂੰ ਅਣਕੀਤਾ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"</string>
+    <string name="edit_dialog_sure_to_delete_message">"ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ \"%1$s\" ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"</string>
+    <string name="edit_dialog_sure_to_discard_message">"ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ ਇਸ ਐਂਟਰੀ ਨੂੰ ਰੱਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਹ ਐਂਟਰੀ ਸੁਰੱਖਿਅਤ ਨਹੀਂ ਕੀਤੀ ਜਾਵੇਗੀ।"</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"ਨਿਯਤ ਮਿਤੀ ਸ਼ੁਰੂਆਤੀ ਮਿਤੀ ਤੋਂ ਪਹਿਲਾਂ ਨਹੀਂ ਹੋ ਸਕਦੀ।"</string>
+    <string name="edit_fragment_app_permission">"ਐਪ ਦੀ ਇਜਾਜ਼ਤ"</string>
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Shortcuts -->

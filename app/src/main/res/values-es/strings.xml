@@ -611,8 +611,6 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Atención: Actualmente sólo se admite un nivel de jerarquía en el widget. Para ver las entradas de los niveles inferiores, por favor utilice la vista plana en su lugar."</string>
     <string name="widget_list_maximum_entries_reached">"Se ha alcanzado el número máximo de entradas en el widget (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Actualizando widget"</string>
-    <string name="widget_list_opacity_warning">"Nota: ¡Esta es una característica experimental! ¡Con la opacidad reducida los cambios de color en el tema de color pueden no verse reflejados inmediatamente!"</string>
-    <string name="widget_list_color_warning">"Nota: ¡Esta es una característica experimental! ¡Los cambios en el color del tema no se reflejarán! Elija sin color para volver al valor por defecto del sistema."</string>
     <string name="widget_list_default_categories">"Establecer categorías por defecto para nuevas entradas desde el widget"</string>
     <string name="opacity">"Opacidad"</string>
     <string name="general">"General"</string>

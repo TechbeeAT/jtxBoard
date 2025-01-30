@@ -1,6 +1,5 @@
 package at.techbee.jtx.ui
 
-import android.accounts.Account
 import android.content.ContentResolver
 import android.content.Context
 import android.util.Log
@@ -42,7 +41,7 @@ class GlobalStateHolder(context: Context) {
     init {
         try {
             ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-                isSyncInProgress.value = SyncUtil.isJtxSyncRunningFor(remoteCollections.value.map { Account(it.accountName, it.accountType) }.toSet())
+                isSyncInProgress.value = SyncUtil.isJtxSyncRunningFor(remoteCollections.value.map { it.getAccount() }.toSet())
             }
         } catch(e: NullPointerException) {      // especially necessary as ContentResolver is not available in preview (would cause exception)
             Log.d(TAG, e.stackTraceToString())

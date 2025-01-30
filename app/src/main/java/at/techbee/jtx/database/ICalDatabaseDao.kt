@@ -1330,7 +1330,7 @@ iCalObject.percent != 100
             val children = getRelatedChildren(instance.id)
             val updatedEntry = unlinkFromSeries(instance)
             children.forEach forEachChild@{ child ->
-                createCopy(child.id, child.getModuleFromString(), updatedEntry.uid)
+                createCopyWithChildren(child.id, child.getModuleFromString(), updatedEntry.uid)
             }
         }
 
@@ -1363,19 +1363,20 @@ iCalObject.percent != 100
     @Transaction
     suspend fun createCopy(
         iCalObjectIdToCopy: Long,
-        newModule: Module
-    ) = createCopy(iCalObjectIdToCopy, newModule, null)
+        module: Module,
+        parentUID: String?
+    ) = createCopyWithChildren(iCalObjectIdToCopy, module, parentUID)
 
 
-    private suspend fun createCopy(
+    private suspend fun createCopyWithChildren(
         iCalObjectIdToCopy: Long,
-        newModule: Module,
-        newParentUID: String?
+        module: Module,
+        parentUID: String?
     ): Long? {
 
         val icalEntityToCopy = getSync(iCalObjectIdToCopy) ?: return  null
 
-        val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
+        val newEntity = icalEntityToCopy.getIcalEntityCopy(module)
         try {
             val newId = insertICalObject(newEntity.property)
             newEntity.alarms?.forEach { alarm ->
@@ -1444,12 +1445,12 @@ iCalObject.percent != 100
             }
 
             newEntity.relatedto?.forEach { relatedto ->
-                if (relatedto.reltype == Reltype.PARENT.name && newParentUID != null) {
+                if (relatedto.reltype == Reltype.PARENT.name && parentUID != null) {
                     insertRelatedto(
                         relatedto.copy(
                             relatedtoId = 0L,
                             icalObjectId = newId,
-                            text = newParentUID
+                            text = parentUID
                         )
                     )
                 }
@@ -1457,15 +1458,15 @@ iCalObject.percent != 100
 
             val children = getRelatedChildren(icalEntityToCopy.property.id)
             children.forEach { child ->
-                    createCopy(
+                createCopyWithChildren(
                         iCalObjectIdToCopy = child.id,
-                        newModule = child.getModuleFromString(),
-                        newParentUID = newEntity.property.uid
+                        module = child.getModuleFromString(),
+                        parentUID = newEntity.property.uid
                     )
 
             }
 
-            return if (newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
+            return if (parentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                 newId
             else
                 null

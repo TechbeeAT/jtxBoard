@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Afegeix una col·lecció local"</string>
     <string name="navigation_drawer_website_news">"Notícies i Notes de Versió"</string>
     <string name="color">"Color"</string>
+    <string name="selected_color">"Color seleccionat"</string>
+    <string name="system_colors">"Colors del sistema"</string>
     <string name="priority_0_no_priority">"Sense prioritat"</string>
     <string name="priority_1_highest">"1 - La més alta"</string>
     <string name="priority_2_higher">"2 - Més Alta"</string>
@@ -253,6 +255,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Afegeix una col·lecció remota (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Mostra en %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Exporta com a .ics"</string>
+    <string name="export_as_csv">"Exporta com a .csv"</string>
     <string name="journal">"Diari"</string>
     <string name="note">"Nota"</string>
     <string name="task">"Tasca"</string>
@@ -334,6 +337,8 @@
     <string name="edit_recur_ends_never">"no acaba mai"</string>
     <string name="edit_recur_ends_on">"acaba el"</string>
     <string name="edit_recur_ends_after">"acaba després de"</string>
+    <string name="list_toast_export_success">"Llista exportada correctament"</string>
+    <string name="list_toast_export_error">"Error a l'exportar la llista"</string>
     <string name="collections_toast_export_success">"Les col·leccions han sigut exportades"</string>
     <string name="collections_toast_export_error">"No s'han pogut exportar les col·leccions"</string>
     <string name="menu_collections_export_all">"Exporta-ho tot"</string>
@@ -611,8 +616,6 @@ Gràcies!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Atenció: Sols està suportat un nivell d'herència al widget. Per a veure les entrades de nivells inferior, per favor, fes servir la visió plana."</string>
     <string name="widget_list_maximum_entries_reached">"S'ha assolit el nombre màxim d'entrades al widget (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Actualitzant el widget"</string>
-    <string name="widget_list_opacity_warning">"Nota: Aquesta és una funció experimental! Amb canvis d'opacitat subtils en el tema de color pot ser no es mostren els canvis inmediatament!"</string>
-    <string name="widget_list_color_warning">"Nota: Aquesta és una funció experimental! Els canvis al tema de color no es veuran reflectits! No tries cap color per a tornar al predefinit pel sistema."</string>
     <string name="widget_list_default_categories">"Estableix les categories per defecte per a noves entrades des del widget"</string>
     <string name="opacity">"Opacitat"</string>
     <string name="general">"General"</string>

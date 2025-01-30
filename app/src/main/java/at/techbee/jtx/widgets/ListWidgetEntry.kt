@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
+import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
@@ -35,7 +36,6 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import androidx.glance.unit.FixedColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
@@ -50,6 +50,7 @@ fun ListEntry(
     obj: ICal4List,
     entryColor: ColorProvider,
     textColor: ColorProvider,
+    headerTextColor: ColorProvider,
     checkboxPosition: CheckboxPosition,
     showDescription: Boolean,
     onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
@@ -57,13 +58,12 @@ fun ListEntry(
 ) {
 
     val context = LocalContext.current
-    val metaBarColor = ColorProvider(textColor.getColor(context).copy(alpha = 0.7f))
-    val textStyleMetaInfo = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = metaBarColor)
+    val textStyleMetaInfo = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = headerTextColor)
     val textStyleDateOverdue = textStyleMetaInfo.copy(color = ColorProvider(Color.Red), fontWeight = FontWeight.Bold)
     val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
     val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp)
 
-    val textColorFixed = FixedColorProvider(textColor.getColor(context))  // needs to be fixed, otherwise checkbox coloring would crash
+    val colorChanged = textStyleMetaInfo.color != GlanceTheme.colors.onSurface
 
     val intent = Intent(context, MainActivity2::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -90,7 +90,7 @@ fun ListEntry(
                 CheckBox(
                     checked = checked,
                     onCheckedChange = { onCheckedChange(obj.id, checked) },
-                    colors = CheckboxDefaults.colors(checkedColor = textColorFixed, uncheckedColor = textColorFixed)
+                    colors = if(colorChanged) CheckboxDefaults.colors(textColor.getColor(context), textColor.getColor(context)) else CheckboxDefaults.colors()
                 )
             }
 
@@ -108,7 +108,7 @@ fun ListEntry(
                             provider = ImageProvider(if (obj.module == Module.TODO.name) R.drawable.ic_widget_start else R.drawable.ic_start2),
                             contentDescription = context.getString(R.string.started),
                             modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                            colorFilter = ColorFilter.tint(metaBarColor)
+                            colorFilter = ColorFilter.tint(textStyleMetaInfo.color)
                         )
                         Text(
                             text = ICalObject.getDtstartTextInfo(
@@ -128,7 +128,7 @@ fun ListEntry(
                             provider = ImageProvider(R.drawable.ic_widget_due),
                             contentDescription = context.getString(R.string.due),
                             modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                            colorFilter = ColorFilter.tint(metaBarColor)
+                            colorFilter = ColorFilter.tint(textStyleMetaInfo.color)
                         )
                         Text(
                             text = ICalObject.getDueTextInfo(
@@ -149,7 +149,7 @@ fun ListEntry(
                             provider = ImageProvider(R.drawable.ic_priority),
                             contentDescription = context.getString(R.string.priority),
                             modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                            colorFilter = ColorFilter.tint(metaBarColor)
+                            colorFilter = ColorFilter.tint(textStyleMetaInfo.color)
                         )
                         Text(
                             text = obj.priority.toString(),
@@ -164,7 +164,7 @@ fun ListEntry(
                             provider = ImageProvider(R.drawable.ic_status),
                             contentDescription = context.getString(R.string.status),
                             modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                            colorFilter = ColorFilter.tint(metaBarColor)
+                            colorFilter = ColorFilter.tint(textStyleMetaInfo.color)
                         )
                         Text(
                             text = obj.xstatus
@@ -181,7 +181,7 @@ fun ListEntry(
                             provider = ImageProvider(R.drawable.ic_classification),
                             contentDescription = context.getString(R.string.classification),
                             modifier = GlanceModifier.size(imageSize).padding(end = 4.dp),
-                            colorFilter = ColorFilter.tint(metaBarColor)
+                            colorFilter = ColorFilter.tint(textStyleMetaInfo.color)
                         )
                         Text(
                             text = Classification.getClassificationFromString(obj.classification)?.let { context.getString(it.stringResource) } ?: "",
@@ -213,7 +213,7 @@ fun ListEntry(
                 CheckBox(
                     checked = checked,
                     onCheckedChange = { onCheckedChange(obj.id, checked) },
-                    colors = CheckboxDefaults.colors(checkedColor = textColorFixed, uncheckedColor = textColorFixed)
+                    colors = if(colorChanged) CheckboxDefaults.colors(textColor.getColor(context), textColor.getColor(context)) else CheckboxDefaults.colors()
                 )
             }
         }

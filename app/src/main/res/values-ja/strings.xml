@@ -88,7 +88,7 @@
     <string name="view_reccurrence_note_is_exception">"このアイテムはエントリーの繰り返しの例外です。"</string>
     <string name="view_feedback_linked_notes">"フィードバック / リンクされたメモ"</string>
     <string name="view_subtask_of">"このエントリーのサブ ToDo"</string>
-    <string name="view_linked_note_of">"メモのリンク先:"</string>
+    <string name="view_linked_note_of">"メモのリンク元:"</string>
     <string name="view_add_audio_note">"音声メモを追加"</string>
     <string name="view_created_text">"作成日時: %1$s"</string>
     <string name="view_last_modified_text">"最終更新日時: %1$s"</string>
@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"ローカルのコレクションを追加"</string>
     <string name="navigation_drawer_website_news">"ヘルプ &amp; リリースノート"</string>
     <string name="color">"色"</string>
+    <string name="selected_color">"選択中の色"</string>
+    <string name="system_colors">"システムの色"</string>
     <string name="priority_0_no_priority">"優先度なし"</string>
     <string name="priority_1_highest">"1 - 最高"</string>
     <string name="priority_2_higher">"2 - 特に高"</string>
@@ -253,6 +255,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"リモートのコレクションを追加 (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"%1$s で表示"</string>
     <string name="menu_collection_popup_export_as_ics">".ics ファイルでエクスポート"</string>
+    <string name="export_as_csv">".csv ファイルでエクスポート"</string>
     <string name="journal">"ジャーナル"</string>
     <string name="note">"メモ"</string>
     <string name="task">"ToDo"</string>
@@ -333,7 +336,9 @@
     <string name="edit_recur_ends_never">"永久に繰り返し"</string>
     <string name="edit_recur_ends_on">"終了する日時"</string>
     <string name="edit_recur_ends_after">"終了までの回数"</string>
-    <string name="collections_toast_export_success">"コレクションは正常に削除されました"</string>
+    <string name="list_toast_export_success">"リストをエクスポートしました"</string>
+    <string name="list_toast_export_error">"リストのエクスポート中にエラーが発生しました"</string>
+    <string name="collections_toast_export_success">"コレクションをエクスポートしました"</string>
     <string name="collections_toast_export_error">"コレクションのエクスポート中にエラーが発生しました"</string>
     <string name="menu_collections_export_all">"すべてをエクスポート"</string>
     <string name="menu_presets_export_presets">"プリセットをエクスポート"</string>
@@ -382,6 +387,7 @@
     <string name="settings_default_expand_subtasks">"デフォルトでサブ ToDo を一覧に展開"</string>
     <string name="settings_default_expand_subnotes">"デフォルトでサブメモを一覧に展開"</string>
     <string name="settings_default_expand_attachments">"デフォルトで添付ファイルを一覧に展開"</string>
+    <string name="settings_default_expand_parents">"デフォルトでリストに親を展開する"</string>
     <string name="sorry">"申し訳ありません"</string>
     <string name="back">"戻る"</string>
     <string name="details">"詳細"</string>
@@ -608,8 +614,6 @@
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"注意: 現在、ウィジェットでサポートされている階層は 1 つだけです。下位のエントリーを見るには、フラット表示を使用してください。"</string>
     <string name="widget_list_maximum_entries_reached">"ウィジェットのエントリーの最大数に到達しました (%1$d)。"</string>
     <string name="widget_list_compat_updating_widget_notification">"ウィジェットの更新中"</string>
-    <string name="widget_list_opacity_warning">"注意: これは試験運用中の機能です！ テーマカラーの不透明度の変更が、すぐに反映されない場合があります！"</string>
-    <string name="widget_list_color_warning">"注意: これは試験運用中の機能です！ テーマカラーの変更がすぐに反映されない場合があります！ 色なしを選択すると、システムのデフォルトに戻ります。"</string>
     <string name="widget_list_default_categories">"ウィジェットで新規作成するエントリーのデフォルトのカテゴリーを設定する"</string>
     <string name="opacity">"不透明度"</string>
     <string name="general">"一般"</string>
@@ -671,4 +675,6 @@
     <string name="email_contact">"%1$sにメールを送信"</string>
     <string name="dialog_create_multiple_subtasks">サブ ToDo を一括作成</string>
     <string name="dialog_create_multiple_subnotes">リンクされたメモを一括作成</string>
+    <string name="dialog_detected_multiple_subtasks">テキストに複数のサブ ToDo が含まれています。サブ ToDo %d 件を作成しますか？</string>
+    <string name="dialog_detected_multiple_subnotes">テキストに複数のリンクされたメモが含まれています。リンクされたメモ %d 件を作成しますか？</string>
 </resources>

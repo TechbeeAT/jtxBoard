@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Label
 import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.AssignmentLate
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material.icons.outlined.PublishedWithChanges
@@ -29,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -156,6 +158,17 @@ fun ListActiveFiltersRow(
                             modifier = Modifier.padding(vertical = 2.dp),
                             isAccessibilityMode = isAccessibilityMode
                         )
+                    }
+                    listSettings.searchPriority.forEach { priorityInt ->
+                        if(priorityInt in 0..9) {
+                            ListBadge(
+                                icon = Icons.Outlined.AssignmentLate,
+                                iconDesc = stringResource(R.string.priority),
+                                text = stringArrayResource(id = R.array.priority)[priorityInt?:0],
+                                modifier = Modifier.padding(vertical = 2.dp),
+                                isAccessibilityMode = isAccessibilityMode
+                            )
+                        }
                     }
                     AnimatedVisibility(listSettings.isExcludeDone.value) {
                         ListBadge(

@@ -63,6 +63,19 @@ object DateTimeUtils {
         return zonedDateTime.format(formatter)
     }
 
+    /**
+     * Creates a string from the date that can be used for the CSV export
+     */
+    fun convertLongToExcelDateTimeString(date: Long?, timezone: String?): String {
+        if (date == null || date == 0L)
+            return ""
+        val zonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(date), requireTzId(timezone))
+        val formatter =  DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT)
+        return zonedDateTime.format(formatter)
+    }
+
+
+
     fun convertLongToFullDateString(date: Long?, timezone: String?): String {
         if (date == null || date == 0L)
             return ""

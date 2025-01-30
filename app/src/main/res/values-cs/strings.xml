@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Přidat místní Sbírku"</string>
     <string name="navigation_drawer_website_news">"Novinky a poznámky k vydání"</string>
     <string name="color">"Barva"</string>
+    <string name="selected_color">"Vybraná barva"</string>
+    <string name="system_colors">"Systémové barvy"</string>
     <string name="priority_0_no_priority">"Bez priority"</string>
     <string name="priority_1_highest">"1 - Nejvyšší"</string>
     <string name="priority_2_higher">"2 - Vyšší"</string>
@@ -253,6 +255,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Přidat vzdálenou Sbírku (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Zobrazit v %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Exportovat jako .ics"</string>
+    <string name="export_as_csv">"Exportovat jako .csv"</string>
     <string name="journal">"Deník"</string>
     <string name="note">"Poznámka"</string>
     <string name="task">"Úkol"</string>
@@ -334,6 +337,8 @@
     <string name="edit_recur_ends_never">"nikdy nekončí"</string>
     <string name="edit_recur_ends_on">"končí"</string>
     <string name="edit_recur_ends_after">"končí po"</string>
+    <string name="list_toast_export_success">"Seznam úspěšně exportován"</string>
+    <string name="list_toast_export_error">"Chyba při exportu seznamu"</string>
     <string name="collections_toast_export_success">"Sbírky úspěšně exportovány"</string>
     <string name="collections_toast_export_error">"Chyba při exportu sbírek"</string>
     <string name="menu_collections_export_all">"Exportovat vše"</string>
@@ -610,8 +615,6 @@ Děkujeme vám!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Pozor: V současné době je ve widgetu podporována pouze jedna úroveň hierarchie. Pro zobrazení záznamů nižších úrovní použijte místo toho ploché zobrazení."</string>
     <string name="widget_list_maximum_entries_reached">"Dosažen maximální počet záznamů ve widgetu (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualizace widgetu"</string>
-    <string name="widget_list_opacity_warning">"Poznámka: Toto je experimentální funkce! Změny snížení průhlednosti v barevném motivu se nemusí projevit okamžitě!"</string>
-    <string name="widget_list_color_warning">"Poznámka: Toto je experimentální funkce! Změny v barevném motivu se neprojeví! Pro návrat k výchozímu nastavení systému, zvolte možnost bez barvy."</string>
     <string name="widget_list_default_categories">"Nastavit výchozí kategorie pro nové položky z widgetu"</string>
     <string name="opacity">"Neprůhlednost"</string>
     <string name="general">"Obecné"</string>

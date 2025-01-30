@@ -1,0 +1,2 @@
+- Open filtered list from collections overview
+- Added setting to automatically collapse/expand parents in list

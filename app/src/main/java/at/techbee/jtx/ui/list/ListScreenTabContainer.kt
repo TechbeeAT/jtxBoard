@@ -15,17 +15,20 @@ import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Search
@@ -45,6 +48,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -64,6 +69,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -79,6 +86,7 @@ import at.techbee.jtx.database.properties.Alarm
 import at.techbee.jtx.database.properties.AlarmRelativeTo
 import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Category
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
@@ -91,19 +99,21 @@ import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.RadiobuttonWithText
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
+import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.SyncUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.IOException
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 
 @OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class, ExperimentalPermissionsApi::class
+    ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class
 )
 @Composable
 fun ListScreenTabContainer(
@@ -185,11 +195,37 @@ fun ListScreenTabContainer(
         }
     }
 
+    val launcherExportToCSV = rememberLauncherForActivityResult(CreateDocument("text/csv")) {
+        it?.let { uri ->
+            //isProcessing.postValue(true)
+            scope.launch(Dispatchers.IO) {
+                try {
+                    context.contentResolver?.openOutputStream(uri)?.use { outputStream ->
+                        val csvData = mutableListOf<String>()
+                        csvData.add(ICal4ListRel.getCSVHeader(listViewModel.module, context))
+                        listViewModel.iCal4ListRel.value?.forEach { ical4list ->
+                            csvData.add(ical4list.getCSVRow(context))
+                        }
+                        //Log.d("CSV", csvData.joinToString(separator = System.lineSeparator()))
+                        outputStream.write(csvData.joinToString(separator = System.lineSeparator()).toByteArray())
+                    }
+                    listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_success)
+                } catch (e: IOException) {
+                    listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_error)
+                }
+            }
+        }
+    }
+
     var topBarMenuExpanded by remember { mutableStateOf(false) }
     var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
     var showUpdateEntriesDialog by rememberSaveable { mutableStateOf(false) }
     var showCollectionSelectorDialog by rememberSaveable { mutableStateOf(false) }
 
+    var isRefreshing by remember { mutableStateOf(false) }
+    val isPullRefreshEnabled = remember {
+        SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) } && settingsStateHolder.settingSyncOnPullRefresh.value
+    }
 
     fun getActiveViewModel() = when (pagerState.currentPage) {
             enabledTabs.indexOf(ListTabDestination.Journals) -> icalListViewModelJournals
@@ -574,6 +610,35 @@ fun ListScreenTabContainer(
                                 getActiveViewModel().updateSearch(saveListSettings = true, isAuthenticated = globalStateHolder.isAuthenticated.value)
                             }
                         )
+                        HorizontalDivider()
+                        DropdownMenuItem(
+                            text = {
+                                    Column(modifier = Modifier.fillMaxWidth()) {
+                                        Text(
+                                            text = stringResource(id = R.string.export_as_csv),
+                                            style = MaterialTheme.typography.bodyLarge,
+                                            fontWeight = FontWeight.Bold,
+                                            modifier = Modifier.padding(end = 16.dp)
+                                        )
+                                        Text(
+                                            text = stringResource(id = R.string.settings_attention_experimental_feature),
+                                            style = MaterialTheme.typography.bodySmall,
+                                            modifier = Modifier.widthIn(max = 150.dp),
+                                            fontStyle = FontStyle.Italic
+                                        )
+                                    }
+                                },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Download,
+                                    contentDescription = null
+                                )
+                            },
+                            onClick = {
+                                launcherExportToCSV.launch("jtx_csvExport_${DateTimeUtils.timestampAsFilenameAppendix()}.csv")
+                                topBarMenuExpanded = false
+                            }
+                        )
                     }
                 }
             )
@@ -677,11 +742,11 @@ fun ListScreenTabContainer(
                 JtxNavigationDrawer(
                     drawerState,
                     mainContent = {
-                        Column {
+                        Column(modifier = Modifier.fillMaxSize()) {
 
                             if(enabledTabs.size > 1) {
                                 PrimaryTabRow(
-                                    selectedTabIndex = pagerState.currentPage    // adding the indicator might make a smooth movement of the tabIndicator, but Accompanist does not support all components (TODO: Check again in future) https://www.geeksforgeeks.org/tab-layout-in-android-using-jetpack-compose/
+                                    selectedTabIndex = pagerState.currentPage
                                 ) {
                                     enabledTabs.forEach { enabledTab ->
                                         Tab(
@@ -776,13 +841,40 @@ fun ListScreenTabContainer(
                                 )
                             }
 
-                            Box {
-                                HorizontalPager(
-                                    state = pagerState,
-                                    userScrollEnabled = !filterSheetState.isVisible,
-                                    verticalAlignment = Alignment.Top
-                                ) { page ->
+                            HorizontalPager(
+                                state = pagerState,
+                                userScrollEnabled = !filterSheetState.isVisible,
+                                verticalAlignment = Alignment.Top,
+                                modifier = Modifier.fillMaxSize()
+                            ) { page ->
 
+                                // TODO: Remove this stupid condition once PullToRefreshBox allows a disabled state!
+                                if (isPullRefreshEnabled) {
+                                    PullToRefreshBox(
+                                        state = rememberPullToRefreshState(),
+                                        onRefresh = {
+                                            //TODO: Get rid of this stupid workaround with isRefreshing and delay once the new version properly makes the animation disappear!!!
+                                            isRefreshing = true
+                                            listViewModel.syncAccounts()
+                                            scope.launch {
+                                                delay(100)
+                                                isRefreshing = false
+                                            }
+                                        },
+                                        isRefreshing = isRefreshing,
+                                        contentAlignment = Alignment.TopCenter,
+                                        modifier = Modifier.fillMaxSize()
+                                    ) {
+                                        ListScreen(
+                                            listViewModel = when (enabledTabs[page].module) {
+                                                Module.JOURNAL -> icalListViewModelJournals
+                                                Module.NOTE -> icalListViewModelNotes
+                                                Module.TODO -> icalListViewModelTodos
+                                            },
+                                            navController = navController
+                                        )
+                                    }
+                                } else {
                                     ListScreen(
                                         listViewModel = when (enabledTabs[page].module) {
                                             Module.JOURNAL -> icalListViewModelJournals
