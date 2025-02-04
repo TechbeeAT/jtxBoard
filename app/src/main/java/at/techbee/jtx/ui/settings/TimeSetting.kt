@@ -58,4 +58,15 @@ enum class TimeSetting(
         else
             LocalTime.of(hour, minute)
     }
+
+    companion object {
+        fun fromInt(hour: String?, minute: String?): LocalTime? {
+            val hourInt = hour?.toIntOrNull()
+            val minuteInt = minute?.toIntOrNull()
+            if(hourInt == null || minuteInt == null)
+                return null
+
+            return LocalTime.of(hourInt, minuteInt)
+        }
+    }
 }
