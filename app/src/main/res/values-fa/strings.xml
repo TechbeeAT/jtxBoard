@@ -19,6 +19,7 @@
     <string name="longitude">"طول جغرافیایی"</string>
     <string name="unlink">"لغو پیوند"</string>
     <string name="off">"خاموش"</string>
+    <string name="location_permission_denied">"مجوز مکان رد شد"</string>
     <string name="permissions">"دسترسی‌ها"</string>
     <string name="current_location">"مکان کنونی"</string>
     <string name="toolbar_text_add_journal">"افزودن واقعه روزانه"</string>
@@ -95,13 +96,16 @@
     <string name="edit_add_link_button_text">"افزودن پیوست پیوند"</string>
     <string name="edit_subtasks_add_helper">"افزودن یک کار فرعی"</string>
     <string name="detail_top_app_bar_quick_add_subtask">"افزودن سریع کار فرعی"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"افزودن سریع یادداشت فرعی"</string>
     <string name="edit_attachment_add_link_dialog">"افزودن پیوست پیوند"</string>
     <string name="edit_recur_repeat_every_x">"تکرار شود هر"</string>
     <string name="edit_recur_on_weekday">"در"</string>
     <string name="edit_recur_on_the_x_day_of_month">"در"</string>
     <string name="edit_recur_x_day_of_the_month">"روز از ماه"</string>
+    <string name="edit_recur_LAST_day_of_the_month">"آخرین"</string>
     <string name="edit_recur_x_times">"بار"</string>
     <string name="edit_datepicker_dialog_select_date">"انتخاب تاریخ"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"انتخاب محدوده تاریخ"</string>
     <string name="edit_datepicker_dialog_add_time">"افزودن زمان"</string>
     <string name="edit_datepicker_dialog_edit_time">"ویرایش زمان"</string>
     <string name="edit_datepicker_dialog_add_timezone">"افزودن منطقه‌زمانی"</string>
@@ -124,6 +128,7 @@
     <!-- menus -->
     <string name="menu_list_gotodate">"برو به تاریخ"</string>
     <string name="menu_list_quick_note">"یادداشت فوری"</string>
+    <string name="menu_list_quick_todo">"کار فوری"</string>
     <string name="menu_view_share_ics">"اشتراک گذاری با پسوند ics"</string>
     <string name="menu_view_copy_as_note">"رونوشت به عنوان یادداشت"</string>
     <string name="menu_view_copy_item">"ایجاد رونوشت"</string>
@@ -231,6 +236,8 @@
     <string name="search_notes">جستجوی یادداشت‌ها</string>
     <string name="search_todos">جستجوی کارها</string>
     <string name="filter">"صافی"</string>
+    <string name="visibility">"وضعیت نمایش"</string>
+    <string name="order">"چیدمان"</string>
     <string name="sync_now">"اکنون همگام‌سازی شود"</string>
     <string name="due">"سررسید"</string>
     <string name="completed">"تکمیل‌شده"</string>
@@ -307,6 +314,8 @@
     <string name="back">"برگشت"</string>
     <string name="details">"جزئیات"</string>
     <string name="date">"تاریخ"</string>
+    <string name="summary_description">"خلاصه/توضیحات"</string>
+    <string name="status_classification_priority">"وضعیت/طبقه بندی/اولویت"</string>
     <string name="timezone">"منقطه‌زمانی"</string>
     <string name="not_set2">"تنظیم‌نشده"</string>
     <string name="invert_selection">"انتخاب برعکس"</string>
