@@ -11,6 +11,7 @@
     <string name="ok">"Tamam"</string>
     <string name="delete">"Sil"</string>
     <string name="discard">"Yok say"</string>
+    <string name="dismiss">"Vazgeç"</string>
     <string name="open">"Aç"</string>
     <string name="cont">"Devam et"</string>
     <string name="website">"Web sitesi"</string>
@@ -49,7 +50,8 @@
     <string name="navigation_drawer_about">"Hakkında / Lisans"</string>
     <string name="navigation_drawer_subtitle">"günlük, notlar &amp; görevler"</string>
     <string name="navigation_drawer_settings">"Ayarlar"</string>
-    <string name="navigation_drawer_external_links">"Harici bağlantılar"</string>
+    <string name="navigation_drawer_news_updates">"Haberler &amp; güncellemeler"</string>
+    <string name="navigation_drawer_external_links">"Dış bağlantılar"</string>
     <string name="navigation_drawer_website">"Web sitesi"</string>
     <string name="navigation_drawer_support">"Destek"</string>
     <string name="navigation_drawer_donate">"Bağış yap"</string>
@@ -71,6 +73,7 @@
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Uygulama izni"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board'un ses kaydetmek veya konuşmayı metne dönüştürme işlevlerini kullanmak için izne ihtiyacı var. Lütfen bu özelliği kullanma iznini verin."</string>
+    <string name="view_feedback_linked_notes">"Geri besleme / Not bağla"</string>
     <string name="view_add_audio_note">"Ses ekle"</string>
     <string name="view_created_text">"Oluşturuldu: %1$s"</string>
     <string name="view_last_modified_text">"Son değişiklik: %1$s"</string>
@@ -145,9 +148,12 @@
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Merhaba, ben Patrick, jtx Board'un geliştiricisiyim. Sizlere ücretsiz olarak sunduğum bu uygulamaya çok zaman ve emek harcıyorum. Uygulamamı beğendiyseniz lütfen biraz sevgi gönderin ve küçük bir bağış yapın!"</string>
     <string name="donate_thank_you">"Teşekkür ederim!"</string>
+    <string name="donate_other_donation_methods">"Başka bir bağış yöntemini düşünmek isterseniz, lütfen internet sitemizi kontrol edin:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Bu dosyayı/URL'yi açacak uygulama bulunamadı."</string>
+    <string name="toast_done_tasks_deleted">"Tamamlanan görevler silindi (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_basic_info">"jtx Board, açık kaynak topluluğunun katılımını ve katkısını takdir eden açık kaynaklı bir uygulamadır. Bu sayfada topluluk üyelerinin çeviri konusundaki çabalarına değinmek istiyoruz."</string>
+    <string name="list_welcome_entry_journal_summary">"Tebrikler, bu ilk günlük girişiniz :-)"</string>
     <string name="list_welcome_category">"#İlkAdım"</string>
     <string name="save_and_edit">"Kaydet &amp; düzenle"</string>
     <string name="save_and_new">"Kaydet &amp; yeni"</string>
