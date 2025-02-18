@@ -11,6 +11,7 @@
     <string name="ok">"Tamam"</string>
     <string name="delete">"Sil"</string>
     <string name="discard">"Yok say"</string>
+    <string name="dismiss">"Vazgeç"</string>
     <string name="open">"Aç"</string>
     <string name="cont">"Devam et"</string>
     <string name="website">"Web sitesi"</string>
@@ -49,7 +50,8 @@
     <string name="navigation_drawer_about">"Hakkında / Lisans"</string>
     <string name="navigation_drawer_subtitle">"günlük, notlar &amp; görevler"</string>
     <string name="navigation_drawer_settings">"Ayarlar"</string>
-    <string name="navigation_drawer_external_links">"Harici bağlantılar"</string>
+    <string name="navigation_drawer_news_updates">"Haberler &amp; güncellemeler"</string>
+    <string name="navigation_drawer_external_links">"Dış bağlantılar"</string>
     <string name="navigation_drawer_website">"Web sitesi"</string>
     <string name="navigation_drawer_support">"Destek"</string>
     <string name="navigation_drawer_donate">"Bağış yap"</string>
@@ -71,6 +73,7 @@
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Uygulama izni"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board'un ses kaydetmek veya konuşmayı metne dönüştürme işlevlerini kullanmak için izne ihtiyacı var. Lütfen bu özelliği kullanma iznini verin."</string>
+    <string name="view_feedback_linked_notes">"Geri besleme / Not bağla"</string>
     <string name="view_add_audio_note">"Ses ekle"</string>
     <string name="view_created_text">"Oluşturuldu: %1$s"</string>
     <string name="view_last_modified_text">"Son değişiklik: %1$s"</string>
@@ -145,20 +148,32 @@
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Merhaba, ben Patrick, jtx Board'un geliştiricisiyim. Sizlere ücretsiz olarak sunduğum bu uygulamaya çok zaman ve emek harcıyorum. Uygulamamı beğendiyseniz lütfen biraz sevgi gönderin ve küçük bir bağış yapın!"</string>
     <string name="donate_thank_you">"Teşekkür ederim!"</string>
+    <string name="donate_other_donation_methods">"Başka bir bağış yöntemini düşünmek isterseniz, lütfen internet sitemizi kontrol edin:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"Bu dosyayı/URL'yi açacak uygulama bulunamadı."</string>
+    <string name="toast_done_tasks_deleted">"Tamamlanan görevler silindi (%d)."</string>
     <!-- sync content provider -->
     <string name="about_translations_basic_info">"jtx Board, açık kaynak topluluğunun katılımını ve katkısını takdir eden açık kaynaklı bir uygulamadır. Bu sayfada topluluk üyelerinin çeviri konusundaki çabalarına değinmek istiyoruz."</string>
+    <string name="list_welcome_entry_journal_summary">"Tebrikler, bu ilk günlük girişiniz :-)"</string>
+    <string name="list_welcome_entry_journal_description">"Günlük, belirli bir tarihteki notlarınızı saklamak için kullanılabilir. Bu işlevi örneğin protokoller, toplantı tutanakları, günlük girişleri vb. için kullanın. Bu girişi düzenlerseniz, kategoriler, katılımcılar, ekler ekleme… gibi seçenekleri göreceksiniz. İstediğiniz zaman bu girişi silmekten çekinmeyin!"</string>
+    <string name="list_welcome_entry_note_summary">"Tebrikler, bu ilk not girişiniz :-)"</string>
+    <string name="list_welcome_entry_note_description">"Notlar geleneksel notlardır ve özel bir tarihe bağlı değildir. Günlük gibi, bir giriş düzenlerken veya eklerken ek, katılımcılar ve daha fazlasını ekleyebilirsiniz. Bu arada günlük, not veya görev gibi tüm girişlere alt görevler ekleyebilirsiniz!"</string>
+    <string name="list_welcome_entry_todo_summary">"Tebrikler, bu ilk görev girişiniz :-)"</string>
+    <string name="list_welcome_entry_todo_description">"Günlük ve notlara ek olarak, görevler planlanan bir başlangıç, bir bitiş tarihi ve tamamlanmış bir tarihe sahip olabilir. Tamamlanmaları kontrol edilebilirler veya bir ilerleme kaydedilebilir. Tüm seçenekleri kontrol etmek için bu girişi düzenleyin :-)"</string>
     <string name="list_welcome_category">"#İlkAdım"</string>
     <string name="save_and_edit">"Kaydet &amp; düzenle"</string>
     <string name="save_and_new">"Kaydet &amp; yeni"</string>
     <string name="save_and_close">"Kaydet &amp; kapat"</string>
+    <string name="list_quickadd_add_audio_attachment">"Ses eki kaydedin"</string>
     <!-- Permissions -->
+    <string name="intent_dialog_title">"Bir günlüğe, nota veya göreve içerik eklensin mi?"</string>
     <string name="add">"Ekle"</string>
     <string name="edit">"Düzenle"</string>
+    <string name="reset">"Sıfırla"</string>
     <string name="apply">"Uygula"</string>
     <string name="collection">"Koleksiyon"</string>
     <string name="link_selected_as_parent">"Ebeveyn"</string>
     <string name="link_selected_as_subtask_note">"Alt görev/-not"</string>
+    <string name="link_selected_as">"Seçileni bağla …"</string>
     <string name="navigation_drawer_collections">"Koleksiyonlar"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Tarih/Saat"</string>
@@ -182,6 +197,8 @@
     <string name="menu_collections_add_local">"Yerel koleksiyon ekle"</string>
     <string name="navigation_drawer_website_news">"Haberler &amp; Sürüm Notları"</string>
     <string name="color">"Renk"</string>
+    <string name="selected_color">"Seçilen renk"</string>
+    <string name="system_colors">"Sistem renkleri"</string>
     <string name="priority_0_no_priority">"Öncelik yok"</string>
     <string name="priority_1_highest">"1 - En yüksek"</string>
     <string name="priority_2_higher">"2 - Daha yüksek"</string>
@@ -212,15 +229,19 @@
     <string name="location">"Konum"</string>
     <string name="attendees">"Katılımcılar"</string>
     <string name="resources">"Kaynaklar"</string>
+    <string name="contact">"Bağlantı"</string>
     <string name="comments">"Yorumlar"</string>
     <string name="attachments">"Ekler"</string>
     <string name="alarms">"Alarmlar"</string>
     <string name="recurrence">"Yinele"</string>
+    <string name="summary">"Özet"</string>
+    <string name="description">"Açıklama"</string>
     <string name="search">"Ara"</string>
     <string name="search_journals">Günlük ara</string>
     <string name="search_notes">Not ara</string>
     <string name="search_todos">Görev ara</string>
     <string name="filter">"Süzgeç"</string>
+    <string name="visibility">"Görünürlük"</string>
     <string name="sync_now">"Şimdi eşitle"</string>
     <string name="completed">"Tamamlandı"</string>
     <string name="add_time_switch">"Saat ekle"</string>
@@ -246,9 +267,11 @@
     <string name="collections_toast_export_error">"Koleksiyonlat dışa aktarırken hata oluştu"</string>
     <string name="menu_collections_export_all">"Tümünü dışa aktar"</string>
     <string name="presets_saved">"Ön ayarlar kaydedildi"</string>
+    <string name="navigation_drawer_buypro">"Pro sürüm satın al"</string>
     <string name="settings_select_theme_dark">"Karanlık"</string>
     <string name="settings_select_theme_light">"Aydınlık"</string>
     <string name="settings_select_theme_system">"Sistem varsayılanı"</string>
+    <string name="settings_protect_biometric_all">"Tümü"</string>
     <string name="settings_protect_biometric_info_on_settings_unlock">"Bu ayarı değiştirmek için lütfen kimlik doğrulaması yapın!"</string>
     <string name="settings_protect_biometric_info_on_unlock">"Korumalı girişleri görmek için lütfen kimlik doğrulaması yapın!"</string>
     <string name="settings_timezone_display">"Saat dilimiyle birlikte saat gösterimini seçin"</string>
