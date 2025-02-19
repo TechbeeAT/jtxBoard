@@ -153,8 +153,9 @@ fun SettingsScreen(
     ) else null
 
 
+    // Launcher to export settings in a file
     val launcherExportSettings = rememberLauncherForActivityResult(
-        ActivityResultContracts.CreateDocument("application/*")
+        ActivityResultContracts.CreateDocument("application/json")
     ) { exportSettingsFilepath ->
         if(exportSettingsFilepath == null)
             return@rememberLauncherForActivityResult
@@ -179,6 +180,7 @@ fun SettingsScreen(
         }
     }
 
+    // Launcher to import settings from a file
     val launcherImportSettings = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { filepath ->
         if(filepath == null)
             return@rememberLauncherForActivityResult
@@ -292,7 +294,7 @@ fun SettingsScreen(
                         }
                         map[TimeSetting.SETTING_DEFAULT_START_TIME.keyHour].let setting@ { hour ->
                             val minute = map[TimeSetting.SETTING_DEFAULT_START_TIME.keyMinute]
-                            val settingOption = TimeSetting.fromInt(hour, minute)?: return@setting
+                            val settingOption = TimeSetting.fromStrings(hour, minute)?: return@setting
                             settingsStateHolder.settingDefaultStartTime.value = settingOption
                             TimeSetting.SETTING_DEFAULT_START_TIME.saveSetting(settingOption, settingsStateHolder.prefs)
                         }
@@ -309,7 +311,7 @@ fun SettingsScreen(
                         }
                         map[TimeSetting.SETTING_DEFAULT_DUE_TIME.keyHour].let setting@ { hour ->
                             val minute = map[TimeSetting.SETTING_DEFAULT_DUE_TIME.keyMinute]
-                            val settingOption = TimeSetting.fromInt(hour, minute)?: return@setting
+                            val settingOption = TimeSetting.fromStrings(hour, minute)?: return@setting
                             settingsStateHolder.settingDefaultDueTime.value = settingOption
                             TimeSetting.SETTING_DEFAULT_DUE_TIME.saveSetting(settingOption, settingsStateHolder.prefs)
                         }
@@ -420,7 +422,7 @@ fun SettingsScreen(
                             text = { Text(text = stringResource(id = R.string.settings_import_settings)) },
                             onClick = {
                                 menuExpanded.value = false
-                                launcherImportSettings.launch(arrayOf("application/*"))
+                                launcherImportSettings.launch(arrayOf("application/json"))
                             },
                             leadingIcon = { Icon(Icons.Outlined.FileUpload, null) }
                         )
@@ -428,7 +430,7 @@ fun SettingsScreen(
                             text = { Text(text = stringResource(id = R.string.settings_export_settings)) },
                             onClick = {
                                 menuExpanded.value = false
-                                launcherExportSettings.launch("jtxBoard_settings_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(),null)}")
+                                launcherExportSettings.launch("jtxBoard_settings_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(),null)}.json")
                             },
                             leadingIcon = { Icon(Icons.Outlined.FileDownload, null) }
                         )

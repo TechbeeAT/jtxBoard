@@ -81,6 +81,10 @@ enum class DropdownSettingOption(
     }
 
     companion object {
+
+        /**
+         * Returns the DropdownSettingOption for a given key or null.
+         */
         fun fromKey(key: String?): DropdownSettingOption? {
             return entries.find { it.key == key }
         }
