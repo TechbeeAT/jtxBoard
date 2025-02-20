@@ -348,6 +348,12 @@
     <string name="presets_import_invalid_file">"Fichier invalide"</string>
     <string name="presets_saved">"Préréglages sauvegardés"</string>
     <string name="presets_export_error">"Une erreur s'est produite lors de l'enregistrement des préréglages"</string>
+    <string name="settings_export_settings">"Exporter les paramètres"</string>
+    <string name="settings_import_settings">"Importer les paramètres"</string>
+    <string name="settings_imported">"Paramètres importés"</string>
+    <string name="settings_import_invalid_file">"Fichier invalide"</string>
+    <string name="settings_exported">"Paramètres exportés"</string>
+    <string name="settings_export_error">"Une erreur est survenue lors de l'export des paramètres"</string>
     <string name="more">"En savoir plus"</string>
     <string name="navigation_drawer_buypro">"Acheter Pro"</string>
     <string name="settings_select_theme">"Sélectionner le thème"</string>
