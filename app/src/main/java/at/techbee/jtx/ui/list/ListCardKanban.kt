@@ -84,7 +84,7 @@ fun ListCardKanban(
             if (iCalObject.summary?.isNotBlank() == true)
                 Text(
                     text = iCalObject.summary?.trim() ?: "",
-                    textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
+                    textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis,
                     fontWeight = FontWeight.Bold
@@ -95,12 +95,14 @@ fun ListCardKanban(
                     MarkdownText(
                         markdown = iCalObject.description?.trim() ?: "",
                         maxLines = 4,
+                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         overflow = TextOverflow.Ellipsis
                     )
                 else
                     Text(
                         text = iCalObject.description?.trim() ?: "",
                         maxLines = 4,
+                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         overflow = TextOverflow.Ellipsis
                     )
             }

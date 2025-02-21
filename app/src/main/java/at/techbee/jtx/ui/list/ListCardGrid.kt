@@ -126,6 +126,7 @@ fun ListCardGrid(
                         markdown = iCalObject.description?.trim() ?: "",
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
+                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)
@@ -135,6 +136,7 @@ fun ListCardGrid(
                         text = iCalObject.description?.trim() ?: "",
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
+                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)

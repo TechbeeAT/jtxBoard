@@ -34,6 +34,7 @@ import androidx.glance.layout.size
 import androidx.glance.text.FontStyle
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.MainActivity2
@@ -60,8 +61,8 @@ fun ListEntry(
     val context = LocalContext.current
     val textStyleMetaInfo = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = headerTextColor)
     val textStyleDateOverdue = textStyleMetaInfo.copy(color = ColorProvider(Color.Red), fontWeight = FontWeight.Bold)
-    val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
-    val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp)
+    val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor, textDecoration = if (obj.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None)
+    val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp, textDecoration = if (obj.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None)
 
     val colorChanged = textStyleMetaInfo.color != GlanceTheme.colors.onSurface
 

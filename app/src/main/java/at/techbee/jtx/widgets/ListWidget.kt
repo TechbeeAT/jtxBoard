@@ -160,6 +160,10 @@ class ListWidget : GlanceAppWidget() {
                             GlanceTheme.colors.onSurface
                         else
                             ColorProvider(if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()))) Color.White else Color.Black),
+                    entryTextCancelledColor = if (listWidgetConfig.widgetColor == null)
+                        GlanceTheme.colors.onSurfaceVariant
+                    else
+                        ColorProvider(if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()))) Color.White else Color.Black),
                     entryHeaderTextColor = if (listWidgetConfig.widgetColor == null)
                             GlanceTheme.colors.onSurface
                         else

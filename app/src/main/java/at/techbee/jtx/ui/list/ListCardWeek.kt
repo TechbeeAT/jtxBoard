@@ -67,7 +67,7 @@ fun ListCardWeek(
 
             Text(
                 text = text,
-                textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
+                textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
                 color = when {
