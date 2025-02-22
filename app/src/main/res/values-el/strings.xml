@@ -343,6 +343,12 @@
     <string name="presets_import_invalid_file">"Μη έγκυρο αρχείο"</string>
     <string name="presets_saved">"Η προκαθορισμένη αποθήκευση"</string>
     <string name="presets_export_error">"Παρουσιάστηκε σφάλμα κατά την αποθήκευση των προεπιλογών"</string>
+    <string name="settings_export_settings">"Εξαγωγή ρυθμίσεων"</string>
+    <string name="settings_import_settings">"Εισαγωγή ρυθμίσεων"</string>
+    <string name="settings_imported">"Οι ρυθμίσεις εισήχθησαν"</string>
+    <string name="settings_import_invalid_file">"Μη έγκυρο αρχείο"</string>
+    <string name="settings_exported">"Οι ρυθμίσεις εξήχθησαν"</string>
+    <string name="settings_export_error">"Εντοπίστηκε ένα πρόβλημα κατά την διαδικασία της εξαγωγής ρυθμίσεων"</string>
     <string name="more">"Περισσοτερα"</string>
     <string name="navigation_drawer_buypro">"Αγορά Pro"</string>
     <string name="settings_select_theme">"Επιλογή θέματος"</string>
