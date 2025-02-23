@@ -348,6 +348,12 @@
     <string name="presets_import_invalid_file">"Nem megfelelő a fájl tartalma"</string>
     <string name="presets_saved">"Egyéni jellemzők elmentve"</string>
     <string name="presets_export_error">"Hiba történt az előbeállítások mentése során"</string>
+    <string name="settings_export_settings">"A beállítások exportálása"</string>
+    <string name="settings_import_settings">"Beállítások importálása"</string>
+    <string name="settings_imported">"Beállítások sikeresen importálva"</string>
+    <string name="settings_import_invalid_file">"A fájl nem megfelelő"</string>
+    <string name="settings_exported">"A beállítások sikeresen exportálva"</string>
+    <string name="settings_export_error">"A beállítások exportálása közben hiba történt"</string>
     <string name="more">"Továbbiak"</string>
     <string name="navigation_drawer_buypro">"Pro verzió megvásárlása"</string>
     <string name="settings_select_theme">"Téma kiválasztása"</string>
