@@ -25,7 +25,7 @@
     <string name="toolbar_text_add_journal">"Günlük Ekle"</string>
     <string name="toolbar_text_add_note">"Not Ekle"</string>
     <string name="toolbar_text_add_task">"Görev Ekle"</string>
-    <string name="toast_sync_requested">"Eşitleme istendi"</string>
+    <string name="toast_sync_requested">"Eşleme istendi"</string>
     <string name="default_local_collection_name">"Yerel"</string>
     <string name="default_local_account_name">"Yerel"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -46,7 +46,7 @@
     <string name="navigation_drawer_open">"Gezinti çubuğunu aç"</string>
     <string name="navigation_drawer_close">"Gezinti çubuğunu kapat"</string>
     <string name="navigation_drawer_board">"Tahta"</string>
-    <string name="navigation_drawer_synchronization">"Senkronizasyon"</string>
+    <string name="navigation_drawer_synchronization">"Eşleme"</string>
     <string name="navigation_drawer_about">"Hakkında / Lisans"</string>
     <string name="navigation_drawer_subtitle">"günlük, notlar &amp; görevler"</string>
     <string name="navigation_drawer_settings">"Ayarlar"</string>
@@ -170,11 +170,11 @@
     <string name="edit">"Düzenle"</string>
     <string name="reset">"Sıfırla"</string>
     <string name="apply">"Uygula"</string>
-    <string name="collection">"Koleksiyon"</string>
+    <string name="collection">"Derleme"</string>
     <string name="link_selected_as_parent">"Ebeveyn"</string>
     <string name="link_selected_as_subtask_note">"Alt görev/-not"</string>
     <string name="link_selected_as">"Seçileni bağla …"</string>
-    <string name="navigation_drawer_collections">"Koleksiyonlar"</string>
+    <string name="navigation_drawer_collections">"Derlemeler"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"Tarih/Saat"</string>
     <string name="alarms_duration">"Süreç"</string>
@@ -188,13 +188,13 @@
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Not: %1$s"</string>
     <string name="collections_tasks_num">"Görev: %1$s"</string>
-    <string name="collections_info">"Koleksiyonlar, dosya içeren klasörler gibi girdileri biriktirir. Menü aracılığıyla yeni yerel koleksiyonlar oluşturabilir veya yüklü bir eşitleme uygulamanız varsa (ör. DAVx⁵) eşitlemeyapılacak yeni uzak koleksiyonlar ayarlayabilirsiniz."</string>
-    <string name="collections_collection_menu">"Koleksiyon menüsü"</string>
-    <string name="collections_dialog_add_local_collection_title">"Yerel koleksiyon ekle"</string>
-    <string name="collections_dialog_edit_local_collection_title">"Yerel koleksiyonu düzenle"</string>
+    <string name="collections_info">"Derlemeler, dosya içeren klasörler gibi girdileri biriktirir. Menü aracılığıyla yeni yerel derlemeler oluşturabilir veya yüklü bir eşitleme uygulamanız varsa (ör. DAVx⁵) eşitleme yapılacak yeni uzak derlemeler ayarlayabilirsiniz."</string>
+    <string name="collections_collection_menu">"Derleme menüsü"</string>
+    <string name="collections_dialog_add_local_collection_title">"Yerel derleme ekle"</string>
+    <string name="collections_dialog_edit_local_collection_title">"Yerel derlemeyi düzenle"</string>
     <string name="collections_dialog_delete_local_title">"\"%1$s\" silinsin mi?"</string>
-    <string name="collections_dialog_delete_local_message">"Bir koleksiyonun silinmesi aynı zamanda bu koleksiyondaki tüm günlüklerin, notların ve görevlerin de silinmesine neden olur. Bu geri alınamaz. Devam etmek istediğinizden emin misiniz?"</string>
-    <string name="menu_collections_add_local">"Yerel koleksiyon ekle"</string>
+    <string name="collections_dialog_delete_local_message">"Bir derlemenin silinmesi aynı zamanda bu derlemedeki tüm günlüklerin, notların ve görevlerin de silinmesine neden olur. Bu geri alınamaz. Devam etmek istediğinizden emin misiniz?"</string>
+    <string name="menu_collections_add_local">"Yerel derleme ekle"</string>
     <string name="navigation_drawer_website_news">"Haberler &amp; Sürüm Notları"</string>
     <string name="color">"Renk"</string>
     <string name="selected_color">"Seçilen renk"</string>
@@ -212,7 +212,7 @@
     <string name="edit_recur_year">"yıl"</string>
     <string name="attachment_export_saved_successfully">"Başarıyla kaydedildi"</string>
     <string name="attachment_export_error_error_occurred">"Seçilen dosya kaydedilirken bir hata oluştu!"</string>
-    <string name="menu_collections_add_remote_to_sync_app">"Uzak Koleksiyon ekle (%1$s)"</string>
+    <string name="menu_collections_add_remote_to_sync_app">"Uzak derleme ekle (%1$s)"</string>
     <string name="menu_collection_popup_export_as_ics">"\".ics\" olarak dışa aktar"</string>
     <string name="export_as_csv">"\".csv\" olarak dışa aktar"</string>
     <string name="journal">"Günlük"</string>
@@ -252,19 +252,21 @@
     <string name="priority_7_low">"7 - Düşük"</string>
     <string name="priority_8_lower">"8 - Daha düşük"</string>
     <string name="priority_9_lowest">"9 - En düşük"</string>
+    <string name="collection_dialog_move_info">"Lütfen dikkat: Yalnızca yazılabilir derlemeler ve aynı bileşenlere (günlük, notlar, görevler) dayanak içeren derlemeler seçilebilir."</string>
     <string name="setting_no_time">"Saat yok"</string>
     <string name="filter_asc">"Artan"</string>
     <string name="filter_desc">"Azalan"</string>
     <string name="filter_created">"Oluşturuldu"</string>
     <string name="filter_last_modified">"Son değişiklik"</string>
     <string name="filter_no_resource">Kaynaklar olmadan</string>
+    <string name="collections_snackbar_select_collection_for_ics_import">"Lütfen giriş(ler)in eklenmesi gereken derlemeye tıklayın!"</string>
     <string name="notification_done">"Tamam"</string>
     <string name="notification_add_1h">"+ 1 saat"</string>
     <string name="notification_add_1d">"+ 1 gün"</string>
     <string name="list_toast_export_success">"Liste başarıyla dışa aktarıldı"</string>
     <string name="list_toast_export_error">"Liste dışa aktarırken hata oluştu"</string>
-    <string name="collections_toast_export_success">"Koleksiyonlar başarıyla dışa aktarıldı"</string>
-    <string name="collections_toast_export_error">"Koleksiyonlat dışa aktarırken hata oluştu"</string>
+    <string name="collections_toast_export_success">"Derlemeler başarıyla dışa aktarıldı"</string>
+    <string name="collections_toast_export_error">"Derlemeler dışa aktarılırken hata oluştu"</string>
     <string name="menu_collections_export_all">"Tümünü dışa aktar"</string>
     <string name="presets_saved">"Ön ayarlar kaydedildi"</string>
     <string name="navigation_drawer_buypro">"Pro sürüm satın al"</string>
@@ -285,14 +287,22 @@ Teşekkür ederim!"</string>
     <!-- Buy Pro fragment -->
     <string name="buypro_text">"Bir uygulamanın geliştirilmesi karmaşık bir konudur ve geliştirme, bakım ve destek zorlu bir iştir. Pro işlevlerini kullanmak istiyorsanız veya projemizi desteklemek istiyorsanız lütfen aşağıdaki uygulama içi satın alma işlemlerini değerlendirin:"</string>
     <string name="buypro_success_header">"jtx Board Pro'yu satın aldığınız için teşekkür ederiz!"</string>
-    <string name="buypro_success_description">"Uzak koleksiyonlar, hızlı girişler, uzun tıklamayla hızlı düzenleme ve dinamik renkler (Android 12'den itibaren mevcuttur) için düzenleme özellikleri artık etkinleştirilmiştir."</string>
+    <string name="buypro_success_description">"Uzak derlemeler, hızlı girişler, uzun tıklamayla hızlı düzenleme ve dinamik renkler (Android 12'den itibaren mevcuttur) için düzenleme özellikleri artık etkinleştirilmiştir."</string>
     <string name="buypro_success_thankyou">"Teşekkür ederim!"</string>
+    <string name="buypro_snackbar_remote_entries_blocked">"Uzak derlemelerin düzenleme özelliklerini etkinleştirmek için lütfen Pro paketi satın alın."</string>
     <string name="buypro_purchase_init_error_message">"Lütfen internet bağlantınızı kontrol edin veya daha sonra tekrar deneyin!"</string>
     <string name="menu_list_viewmode_list">"Liste görünümü"</string>
     <string name="menu_list_viewmode_grid">"Izgara görünümü"</string>
     <string name="settings_modules_enable_journals">"Günlük"</string>
     <string name="settings_modules_enable_notes">"Notlar"</string>
     <string name="settings_modules_enable_tasks">"Görevler"</string>
+    <string name="date">"Tarih"</string>
+    <string name="group_by_date_day">"Tarih (gün)"</string>
+    <string name="group_by_date_week">"Tarih (hafta)"</string>
+    <string name="group_by_date_month">"Tarih (ay)"</string>
+    <string name="group_by_started_day">"Başla(dı) (gün)"</string>
+    <string name="group_by_started_week">"Başla(dı) (hafta)"</string>
+    <string name="group_by_started_month">"Başla(dı) (ay)"</string>
     <string name="summary_description">"Özet/Açıklama"</string>
     <string name="status_classification_priority">"Durum/Sınıflandırma/Öncelik"</string>
     <string name="timezone">"Saat dilimi"</string>
@@ -307,10 +317,13 @@ Teşekkür ederim!"</string>
     <string name="invalid_url_message">"Lütfen geçerli bir URL girin!"</string>
     <string name="list_quickadd_dialog_sr_start">"Konuşma tanımayı başlat"</string>
     <string name="list_quickadd_dialog_sr_listening">"Dinleniyor…"</string>
-    <string name="collections_dialog_buypro_info">"Uzak koleksiyonlara yönelik düzenleme özelliklerini etkinleştirmek için lütfen jtx Board Pro'yu satın alın."</string>
+    <string name="collections_dialog_buypro_info">"Uzak derlemelere yönelik düzenleme özelliklerini etkinleştirmek için lütfen jtx Board Pro'yu satın alın."</string>
+    <string name="list_update_entries_dialog_attention_collection_update">"Dikkat: Tekrarlayan örnekler, başka bir derlemeye taşınmadan önce serisinden bağlantısız olmalı ve bu süreçte göz ardı edilecektir."</string>
+    <string name="link_entry_search_within_same_collection">"Aynı derleme"</string>
+    <string name="link_entry_search_within_same_account">"Aynı hesap"</string>
     <string name="details_show_all_options">"Tüm seçenekleri göster"</string>
     <string name="details_toast_entry_deleted">"Giriş yok sayıldı/silindi"</string>
-    <string name="details_attachment_beta_info">"* Eklerin eşitlenmesi deneysel bir özelliktir. Daha büyük ekler uzun eşitleme sürelerine ve beklenmeyen davranışlara yol açabileceğinden, yalnızca küçük eklerin (100 KB'ye kadar) kullanılmasını önemle tavsiye ederiz."</string>
+    <string name="details_attachment_beta_info">"* Eklerin eşlenmesi deneysel bir özelliktir. Daha büyük ekler uzun eşleme sürelerine ve beklenmeyen davranışlara yol açabileceğinden, yalnızca küçük eklerin (100 KB'ye kadar) kullanılmasını önemle tavsiye ederiz."</string>
     <string name="edit_comment">"Yorumu düzenle"</string>
     <string name="edit_subnote_add_helper">"Alt not ekle"</string>
     <string name="edit_subtask">"Alt görevi düzenle"</string>
@@ -325,12 +338,13 @@ Teşekkür ederim!"</string>
     <string name="alarms_due">"bitişten"</string>
     <string name="about_tabitem_releasenotes">"Sürüm Notları"</string>
     <string name="collections_account_delete_dialog_title">"\"%1$s\" silinsin mi?"</string>
-    <string name="collections_account_delete_dialog_message">"Bu hesabı jtx Board'dan silmek istediğinizden emin misiniz? Bu hesaptaki tüm koleksiyonlar kaldırılacak. Bu işlem geri alınamaz."</string>
+    <string name="collections_account_delete_dialog_message">"Bu hesabı jtx Board'dan silmek istediğinizden emin misiniz? Bu hesaptaki tüm derlemeler kaldırılacak. Bu işlem geri alınamaz."</string>
     <string name="dialog_unsaved_changes_title">"Değişiklikler kaydedilsin mi?"</string>
     <string name="dialog_unsaved_changes_text">"Kaydedilmemiş değişiklikler algılandı. Değişikliklerinizi kaydetmek mi, yok saymak mı istiyorsunuz?"</string>
-    <string name="dialog_error_on_update_message">"Bu giriş eklenirken/güncellenirken bir hata oluştu. Giriş veya koleksiyon artık mevcut olmayabilir."</string>
+    <string name="dialog_error_on_update_message">"Bu giriş eklenirken/güncellenirken bir hata oluştu. Giriş veya derleme artık mevcut olmayabilir."</string>
     <string name="dialog_revert_changes_title">"Değişiklikler geri alınsın mı?"</string>
     <string name="dialog_revert_changes_message">"Değişikliklerinizi yok saymak ve içerikleri düzenlemeye başlamadan önceki durumuna geri döndürmek istediğinizden emin misiniz?"</string>
+    <string name="dialog_collection_new_entries_title">"Yeni girişler için derleme"</string>
     <string name="dialog_save_current_filter_config">"Geçerli süzgeç yapılandırmasını kaydet"</string>
     <string name="menu_list_viewmode_compact">"Kompakt görünüm"</string>
     <string name="menu_list_viewmode_kanban">"Kanban görünümü"</string>
@@ -338,7 +352,7 @@ Teşekkür ederim!"</string>
     <string name="settings_tasks">"Görev ayarları"</string>
     <string name="settings_alarms">"Alarm ayarları"</string>
     <string name="settings_tasks_status_progress">"Görev Ayarları (durum/ilerleme)"</string>
-    <string name="settings_sync">"Eşitleme ayarları"</string>
+    <string name="settings_sync">"Eşleme ayarları"</string>
     <string name="settings_default_start_date">"Görevler için varsayılan başlangıç ​​tarihini ayarla"</string>
     <string name="settings_default_start_timezone">"Görevler için varsayılan başlangıç ​​saat dilimini ayarla"</string>
     <string name="settings_default_due_date">"Görevler için varsayılan bitiş tarihini ayarla"</string>
@@ -353,13 +367,14 @@ Teşekkür ederim!"</string>
     <string name="settings_default_date_one_week">"Bir hafta sonra"</string>
     <string name="settings_default_date_two_weeks">"İki hafta sonra"</string>
     <string name="settings_default_date_four_weeks">"Dört hafta sonra"</string>
-    <string name="settings_disable_alarms_for_readonly">"Salt okunur koleksiyonlar için alarmları devre dışı bırak"</string>
+    <string name="settings_disable_alarms_for_readonly">"Salt okunur derlemeler için alarmları devre dışı bırak"</string>
     <string name="settings_attention_experimental_feature">"Dikkat: Bu deneysel bir özelliktir"</string>
     <string name="settings_create_with_current_location">"Geçerli konumla yeni girişler oluşturun"</string>
     <string name="settings_create_with_current_location_sub">"Bu özelliği kullanmak için lütfen bu uygulamayı kullanırken konumunuza erişim izni verin."</string>
     <string name="settings_sticky_alarms_sub">"Bildirimleri tamamlanana veya ertelenene kadar tut"</string>
     <string name="settings_fullscreen_alarms">"Tam ekran alarmlar"</string>
     <string name="settings_fullscreen_alarms_toast">"Lütfen sistem ayarlarından tam ekran bildirim izni verin."</string>
+    <string name="sync_button_go_to_collections">"Derlemelere git"</string>
     <string name="error_no_app_found_to_open_entry">"Bu girişi göndermek için uygulama bulunamadı."</string>
     <string name="close">"Kapat"</string>
     <string name="menu_view_copy_to_clipboard">"Panoya kopyala"</string>
@@ -372,12 +387,13 @@ Teşekkür ederim!"</string>
     <string name="filter_special">"Özel süzgeçler"</string>
     <string name="filter_presets_edit_info">"Lütfen liste görünümündeki süzgeç menüsünden süzgeç ön ayarlarını ekleyin/güncelleyin/silin."</string>
     <!-- fragment_ical_list -->
+    <string name="collections_biometric_protected_entries_locked_subtitle">Lütfen kimliği doğrulayın ve tekrar deneyin</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="status_no_status">"Durumsuz"</string>
     <string name="classification_no_classification">"Sınıflandırma yok (genel)"</string>
     <string name="map">"Harita"</string>
     <string name="open_in_browser">"Tarayıcıda aç"</string>
-    <string name="list_snackbar_no_collection">"Lütfen yerel bir koleksiyon ekleyin veya bu modülü destekleyen uzak bir koleksiyona eşitleyin."</string>
+    <string name="list_snackbar_no_collection">"Lütfen yerel bir derleme ekleyin veya bu modülü destekleyen uzak bir derlemeyle eşleyin."</string>
     <string name="filter_save_as_preset">"Ön ayar olarak kaydet"</string>
     <string name="menu_view_autosave">"Otomatik kaydet"</string>
     <string name="next">"Sonraki"</string>
