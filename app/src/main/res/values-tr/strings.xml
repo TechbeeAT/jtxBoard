@@ -8,7 +8,7 @@
     <string name="save">"Kaydet"</string>
     <string name="update">"Güncelle"</string>
     <string name="cancel">"İptal et"</string>
-    <string name="ok">"Tamam"</string>
+    <string name="ok">"TMM"</string>
     <string name="delete">"Sil"</string>
     <string name="discard">"Yok say"</string>
     <string name="dismiss">"Vazgeç"</string>
@@ -306,6 +306,8 @@ Teşekkür ederim!"</string>
     <string name="summary_description">"Özet/Açıklama"</string>
     <string name="status_classification_priority">"Durum/Sınıflandırma/Öncelik"</string>
     <string name="timezone">"Saat dilimi"</string>
+    <string name="invert_selection">"Seçimi ters çevir"</string>
+    <string name="clear_selection">"Seçimi temizle"</string>
     <string name="preferences">"Tercihler"</string>
     <string name="audio_play">"Oynat"</string>
     <string name="audio_record">"Kayıt"</string>
