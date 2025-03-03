@@ -135,7 +135,7 @@
     <string name="shortcut_addNote_longLabel">"Not ekle"</string>
     <string name="shortcut_addTodo_longLabel">"Görev ekle"</string>
     <!-- Settings fragment -->
-    <string name="settings_list">"Öge listesi ayarları"</string>
+    <string name="settings_list">"Öge dizelgesi için ayarlar"</string>
     <string name="settings_show_progress_for_subtasks">Alt görevler için ilerlemeyi göster</string>
     <string name="settings_show_progress_for_maintasks">Ana görevler için ilerlemeyi göster</string>
     <string name="settings_app">"Uygulama ayarları"</string>
@@ -292,8 +292,8 @@
     <string name="notification_done">"Tamam"</string>
     <string name="notification_add_1h">"+ 1 saat"</string>
     <string name="notification_add_1d">"+ 1 gün"</string>
-    <string name="list_toast_export_success">"Liste başarıyla dışa aktarıldı"</string>
-    <string name="list_toast_export_error">"Liste dışa aktarırken hata oluştu"</string>
+    <string name="list_toast_export_success">"Dizelge başarıyla dışa aktarıldı"</string>
+    <string name="list_toast_export_error">"Dizelge dışa aktarılırken hata oluştu"</string>
     <string name="collections_toast_export_success">"Derlemeler başarıyla dışa aktarıldı"</string>
     <string name="collections_toast_export_error">"Derlemeler dışa aktarılırken hata oluştu"</string>
     <string name="menu_collections_export_all">"Tümünü dışa aktar"</string>
@@ -332,12 +332,16 @@ Teşekkür ederim!"</string>
     <string name="buypro_success_thankyou">"Teşekkür ederim!"</string>
     <string name="buypro_snackbar_remote_entries_blocked">"Uzak derlemelerin düzenleme özelliklerini etkinleştirmek için lütfen Pro paketi satın alın."</string>
     <string name="buypro_purchase_init_error_message">"Lütfen internet bağlantınızı kontrol edin veya daha sonra tekrar deneyin!"</string>
-    <string name="menu_list_viewmode_list">"Liste görünümü"</string>
+    <string name="menu_list_viewmode_list">"Dizelge görünümü"</string>
     <string name="menu_list_viewmode_grid">"Izgara görünümü"</string>
     <string name="settings_modules">"Etkin modüller"</string>
     <string name="settings_modules_enable_journals">"Günlük"</string>
     <string name="settings_modules_enable_notes">"Notlar"</string>
     <string name="settings_modules_enable_tasks">"Görevler"</string>
+    <string name="settings_default_expand_subtasks">"Varsayılan olarak dizelgedeki alt görevleri genişletin"</string>
+    <string name="settings_default_expand_subnotes">"Varsayılan olarak dizelgedeki alt notları genişletin"</string>
+    <string name="settings_default_expand_attachments">"Varsayılan olarak dizelgedeki ekleri genişletin"</string>
+    <string name="settings_default_expand_parents">"Varsayılan olarak dizelgedeki ebeveynleri genişletin"</string>
     <string name="sorry">"Üzgünüm"</string>
     <string name="back">"Geri"</string>
     <string name="details">"Ayrıntılar"</string>
@@ -367,7 +371,7 @@ Teşekkür ederim!"</string>
     <string name="invalid_timezone_message">"Lütfen geçerli bir saat dilimi seçin!"</string>
     <string name="invalid_url_message">"Lütfen geçerli bir URL girin!"</string>
     <string name="list_quickadd_dialog_sr_start">"Konuşma tanımayı başlat"</string>
-    <string name="list_quickadd_dialog_sr_listening">"Dinleniyor…"</string>
+    <string name="list_quickadd_dialog_sr_listening">"Dinleniyor …"</string>
     <string name="collections_dialog_buypro_info">"Uzak derlemelere yönelik düzenleme özelliklerini etkinleştirmek için lütfen jtx Board Pro'yu satın alın."</string>
     <string name="list_update_entries_dialog_attention_collection_update">"Dikkat: Tekrarlayan örnekler, başka bir derlemeye taşınmadan önce serisinden bağlantısız olmalı ve bu süreçte göz ardı edilecektir."</string>
     <string name="link_entry_search_within_same_collection">"Aynı derleme"</string>
@@ -435,6 +439,7 @@ Teşekkür ederim!"</string>
     <string name="settings_accessibility_mode">"Erişilebilirlik kipi"</string>
     <string name="settings_fullscreen_alarms_toast">"Lütfen sistem ayarlarından tam ekran bildirim izni verin."</string>
     <string name="sync_button_go_to_collections">"Derlemelere git"</string>
+    <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="error_no_app_found_to_open_entry">"Bu girişi göndermek için uygulama bulunamadı."</string>
     <string name="close">"Kapat"</string>
     <string name="menu_view_copy_to_clipboard">"Panoya kopyala"</string>
@@ -446,7 +451,7 @@ Teşekkür ederim!"</string>
     <string name="settings_select_language_system">"Sistem varsayılanı"</string>
     <string name="filter_special">"Özel süzgeçler"</string>
     <string name="filter_presets">"Süzgeç ön tanımları"</string>
-    <string name="filter_presets_edit_info">"Lütfen liste görünümündeki süzgeç menüsünden süzgeç ön tanımları ekleyin/güncelleyin/silin."</string>
+    <string name="filter_presets_edit_info">"Lütfen dizelge görünümündeki süzme menüsünden süzgeç ön tanımları ekleyin/güncelleyin/silin."</string>
     <string name="filter_all">"Tümü"</string>
     <string name="filter_none">"Hiçbiri"</string>
     <string name="filter_date_from_to">"Tarih: %1$s - %2$s"</string>
@@ -494,6 +499,11 @@ Teşekkür ederim!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Dikkat: Şu anda widget'ta yalnızca tek bir hiyerarşi düzeyi desteklenmektedir. Daha düşük seviyelere ait girişleri görmek için lütfen düz görünümü kullanın."</string>
     <string name="widget_list_maximum_entries_reached">"Widget'taki maksimum giriş sayısına ulaşıldı (%1$d)."</string>
     <string name="widget_list_default_categories">"Widget'tan yeni girişler için varsayılan kategorileri ayarlayın"</string>
+    <string name="list_collapse">"Daralt"</string>
+    <string name="edit_recur_second">"saniye"</string>
+    <string name="edit_recur_minute">"dakika"</string>
+    <string name="edit_recur_hour">"saat"</string>
+    <string name="widget_list_show_description">"Açıklama göster"</string>
     <string name="settings_select_theme_true_dark">"Gerçek Karanlık (AMOLED)"</string>
     <string name="settings_journals">"Günlük ayarları"</string>
     <string name="settings_notes">"Notlar ayarları"</string>
@@ -511,6 +521,8 @@ Teşekkür ederim!"</string>
     <string name="markdown_heading1">"Başlık 1"</string>
     <string name="markdown_heading2">"Başlık 2"</string>
     <string name="markdown_heading3">"Başlık 3"</string>
+    <string name="markdown_unordered_list">"Dizelge"</string>
+    <string name="markdown_code">"Kod"</string>
     <string name="preset_categories">"Ön tanımlı kategoriler"</string>
     <string name="preset_resources">"Ön tanımlı kaynaklar"</string>
     <string name="extended_statuses">"Genişletilmiş durumlar"</string>
