@@ -610,8 +610,6 @@ Tack!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Observera: För närvarande stöds endast en nivå av hierarki i widgeten. För att se poster av lägre nivåer, vänligen använd den platta vyn istället."</string>
     <string name="widget_list_maximum_entries_reached">"Maximalt antal poster i widgeten har uppnåtts (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Uppdaterar widget"</string>
-    <string name="widget_list_opacity_warning">"Obs: Detta är en experimentell funktion! Minskad opacitet kan leda till att ändringar i färgtemat inte återspeglas omedelbart!"</string>
-    <string name="widget_list_color_warning">"Obs: Detta är en experimentell funktion! Ändringar i färgtemat kommer inte att återspeglas! Välj ingen färg att återgå till systemstandard."</string>
     <string name="widget_list_default_categories">"Ange standardkategorier för nya poster från widgeten"</string>
     <string name="opacity">"Opacitet"</string>
     <string name="general">"Allmänt"</string>

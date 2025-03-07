@@ -50,6 +50,7 @@ fun ListWidgetContent(
     textColor: ColorProvider,
     entryColor: ColorProvider,
     entryTextColor: ColorProvider,
+    entryTextCancelledColor: ColorProvider,
     entryHeaderTextColor: ColorProvider,
     onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
     onOpenWidgetConfig: () -> Unit,
@@ -149,7 +150,7 @@ fun ListWidgetContent(
                                 ListEntry(
                                     obj = entry.iCal4List,
                                     entryColor = entryColor,
-                                    textColor = entryTextColor,
+                                    textColor = if(entry.iCal4List.status == Status.CANCELLED.status) entryTextCancelledColor else entryTextColor,
                                     headerTextColor = entryHeaderTextColor,
                                     checkboxPosition = listWidgetConfig.checkboxPosition,
                                     showDescription = listWidgetConfig.showDescription,
@@ -178,7 +179,7 @@ fun ListWidgetContent(
                                             ListEntry(
                                                 obj = subtask.iCal4List,
                                                 entryColor = entryColor,
-                                                textColor = entryTextColor,
+                                                textColor = if(subtask.iCal4List.status == Status.CANCELLED.status) entryTextCancelledColor else entryTextColor,
                                                 headerTextColor = entryHeaderTextColor,
                                                 checkboxPosition = listWidgetConfig.checkboxPosition,
                                                 showDescription = listWidgetConfig.showDescription,
@@ -206,7 +207,7 @@ fun ListWidgetContent(
                                             ListEntry(
                                                 obj = subnote.iCal4List,
                                                 entryColor = entryColor,
-                                                textColor = entryTextColor,
+                                                textColor = if(subnote.iCal4List.status == Status.CANCELLED.status) entryTextCancelledColor else entryTextColor,
                                                 headerTextColor = entryHeaderTextColor,
                                                 checkboxPosition = listWidgetConfig.checkboxPosition,
                                                 showDescription = listWidgetConfig.showDescription,

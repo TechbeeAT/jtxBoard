@@ -122,7 +122,7 @@ fun ListCardCompact(
 
                     Text(
                         text = iCalObject.summary?.trim() ?: iCalObject.description?.trim() ?: "",
-                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
+                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         fontWeight = FontWeight.Bold,

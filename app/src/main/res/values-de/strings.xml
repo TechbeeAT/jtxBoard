@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Lokale Collection hinzufügen"</string>
     <string name="navigation_drawer_website_news">"Neuigkeiten &amp; Update-Infos"</string>
     <string name="color">"Farbe"</string>
+    <string name="selected_color">"Ausgewählte Farbe"</string>
+    <string name="system_colors">"Systemfarben"</string>
     <string name="priority_0_no_priority">"Keine Priorität"</string>
     <string name="priority_1_highest">"1 - Höchste"</string>
     <string name="priority_2_higher">"2 - Höher"</string>
@@ -253,6 +255,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Remote Collection hinzufügen (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"In %1$s anzeigen"</string>
     <string name="menu_collection_popup_export_as_ics">"Als .ics exportieren"</string>
+    <string name="export_as_csv">"Als .csv exportieren"</string>
     <string name="journal">"Journal"</string>
     <string name="note">"Notiz"</string>
     <string name="task">"Aufgabe"</string>
@@ -334,6 +337,8 @@
     <string name="edit_recur_ends_never">"endet nie"</string>
     <string name="edit_recur_ends_on">"endet am"</string>
     <string name="edit_recur_ends_after">"endet nach"</string>
+    <string name="list_toast_export_success">"Liste erfolgreich exportiert"</string>
+    <string name="list_toast_export_error">"Fehler beim Export der Liste"</string>
     <string name="collections_toast_export_success">"Collections erfolgreich exportiert"</string>
     <string name="collections_toast_export_error">"Fehler beim Exportieren der Collections"</string>
     <string name="menu_collections_export_all">"Alle exportieren"</string>
@@ -343,6 +348,12 @@
     <string name="presets_import_invalid_file">"Ungültige Datei"</string>
     <string name="presets_saved">"Voreinstellungen gespeichert"</string>
     <string name="presets_export_error">"Beim Speichern der Voreinstellungen ist ein Fehler aufgetreten"</string>
+    <string name="settings_export_settings">"Einstellungen exportieren"</string>
+    <string name="settings_import_settings">"Einstellungen importieren"</string>
+    <string name="settings_imported">"Einstellungen importiert"</string>
+    <string name="settings_import_invalid_file">"Ungültige Datei"</string>
+    <string name="settings_exported">"Einstellungen exportiert"</string>
+    <string name="settings_export_error">"Beim Export der Einstellungen ist ein Fehler aufgetreten"</string>
     <string name="more">"Mehr"</string>
     <string name="navigation_drawer_buypro">"Pro kaufen"</string>
     <string name="settings_select_theme">"Theme auswählen"</string>
@@ -611,8 +622,6 @@ Danke!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Achtung: Aktuell wird nur eine Hierarchieebene im Widget unterstützt. Um Einträge weiterer Ebenen zu sehen, benutzen Sie bitte die flache Ansicht."</string>
     <string name="widget_list_maximum_entries_reached">"Maximale Anzahl an Einträgen im Widget erreicht (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Aktualisiere Widget"</string>
-    <string name="widget_list_opacity_warning">"Hinweis: Dies ist eine experimentelle Funktion. Mit reduzierter Deckkraft werden Änderungen im System-Farbschema möglicherweise nicht sofort übernommen!"</string>
-    <string name="widget_list_color_warning">"Hinweis: Dies ist eine experimentelle Funktion. Änderungen im System-Farbschema werden nicht übernommen! Wählen Sie keine Farbe, um zum Systemstandard zurückzukehren."</string>
     <string name="widget_list_default_categories">"Standardkategorien für neue Einträge aus dem Widget festlegen"</string>
     <string name="opacity">"Transparenz"</string>
     <string name="general">"Allgemein"</string>

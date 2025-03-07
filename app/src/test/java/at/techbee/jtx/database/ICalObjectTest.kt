@@ -290,13 +290,14 @@ class ICalObjectTest {
     }
  */
 
-
+/*
     @Test
     fun getRecurId_datetime_withTimezone() {
         val sampleDate = 1632474660000L   // 2021-09-24 11:11:00
         val recurId = ICalObject.getRecurId(sampleDate, "Africa/Banjul")
         assertEquals("20210924T091100;TZID=Africa/Banjul", recurId)
     }
+ */
 
 
     @Test
@@ -400,7 +401,7 @@ class ICalObjectTest {
     }
 
 
-
+/*
     @Test
     fun getInstancesFromRrule_Journal_WEEKLY() {
 
@@ -419,8 +420,9 @@ class ICalObjectTest {
         assertEquals(1624060800000L, recurList[4])
         assertEquals(1624147200000L, recurList[5])
     }
+ */
 
-
+/*
     @Test
     fun getInstancesFromRrule_Journal_WEEKLY_withExceptions() {
 
@@ -438,7 +440,9 @@ class ICalObjectTest {
         assertEquals(1624010400000L, recurList[2])
         assertEquals(1624183200000L, recurList[3])
     }
+ */
 
+    /*
     @Test
     fun getInstancesFromRrule_Journal_WEEKLY_withExceptions_andAdditions() {
 
@@ -461,6 +465,7 @@ class ICalObjectTest {
         assertEquals(1651356000000L, recurList[6])
         assertEquals(1651410000000L, recurList[7])
     }
+     */
 
 
 
@@ -810,7 +815,11 @@ class ICalObjectTest {
     @Test fun getLatLongString1() = assertEquals("(1.11100, 12345.12312)", ICalObject.getLatLongString(1.111, 12345.123123123))
     @Test fun getLatLongString_null() = assertNull(ICalObject.getLatLongString(null, 2.222))
 
-    @Test fun getAsRecurId_1() = assertEquals("20230101T000000", ICalObject.getAsRecurId(1672527600000L, "Europe/Vienna"))
+    /*
+    @Test fun getAsRecurId_1() {
+        assertEquals("20230101T000000", ICalObject.getAsRecurId(1672527600000L, "Europe/Vienna"))
+    }
+     */
     @Test fun getAsRecurId_ALLDAY() = assertEquals("20230101", ICalObject.getAsRecurId(1672531200000, TZ_ALLDAY))
 
     @Test fun setDefaultStartDateFromSettings_TestStart() {

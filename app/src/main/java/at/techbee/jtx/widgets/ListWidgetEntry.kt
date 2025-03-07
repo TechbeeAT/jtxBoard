@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceModifier
+import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
@@ -33,9 +34,9 @@ import androidx.glance.layout.size
 import androidx.glance.text.FontStyle
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextDecoration
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import androidx.glance.unit.FixedColorProvider
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
@@ -60,10 +61,10 @@ fun ListEntry(
     val context = LocalContext.current
     val textStyleMetaInfo = TextStyle(fontStyle = FontStyle.Italic, fontSize = 12.sp, color = headerTextColor)
     val textStyleDateOverdue = textStyleMetaInfo.copy(color = ColorProvider(Color.Red), fontWeight = FontWeight.Bold)
-    val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor)
-    val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp)
+    val textStyleSummary = TextStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = textColor, textDecoration = if (obj.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None)
+    val textStyleDescription = TextStyle(color = textColor, fontSize = 12.sp, textDecoration = if (obj.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None)
 
-    val textColorFixed = FixedColorProvider(textColor.getColor(context))  // needs to be fixed, otherwise checkbox coloring would crash
+    val colorChanged = textStyleMetaInfo.color != GlanceTheme.colors.onSurface
 
     val intent = Intent(context, MainActivity2::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -90,7 +91,7 @@ fun ListEntry(
                 CheckBox(
                     checked = checked,
                     onCheckedChange = { onCheckedChange(obj.id, checked) },
-                    colors = CheckboxDefaults.colors(checkedColor = textColorFixed, uncheckedColor = textColorFixed)
+                    colors = if(colorChanged) CheckboxDefaults.colors(textColor.getColor(context), textColor.getColor(context)) else CheckboxDefaults.colors()
                 )
             }
 
@@ -213,7 +214,7 @@ fun ListEntry(
                 CheckBox(
                     checked = checked,
                     onCheckedChange = { onCheckedChange(obj.id, checked) },
-                    colors = CheckboxDefaults.colors(checkedColor = textColorFixed, uncheckedColor = textColorFixed)
+                    colors = if(colorChanged) CheckboxDefaults.colors(textColor.getColor(context), textColor.getColor(context)) else CheckboxDefaults.colors()
                 )
             }
         }

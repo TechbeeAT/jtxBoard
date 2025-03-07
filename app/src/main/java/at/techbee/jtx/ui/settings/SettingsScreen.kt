@@ -13,6 +13,8 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
@@ -28,6 +30,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.FileDownload
+import androidx.compose.material.icons.outlined.FileUpload
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
@@ -38,6 +42,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +64,7 @@ import at.techbee.jtx.R
 import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.appbars.JtxTopAppBar
+import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_AUDIO_FORMAT
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_AUTO_ALARM
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_DUE_DATE
@@ -89,12 +95,17 @@ import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_STICKY_ALARMS
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_SYNC_ON_START
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION
+import at.techbee.jtx.util.DateTimeUtils
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import java.io.IOException
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.util.Locale
 
 
@@ -112,6 +123,7 @@ fun SettingsScreen(
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    var toastMessage by remember { mutableStateOf<String?>(null) }
     var expandedSection by remember { mutableStateOf<SettingsScreenSection?>(SettingsScreenSection.APP_SETTINGS) }
     fun expandOrCollapse(selectedSection: SettingsScreenSection) {
         expandedSection = if (expandedSection == selectedSection) null else selectedSection
@@ -141,12 +153,289 @@ fun SettingsScreen(
     ) else null
 
 
+    // Launcher to export settings in a file
+    val launcherExportSettings = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json")
+    ) { exportSettingsFilepath ->
+        if(exportSettingsFilepath == null)
+            return@rememberLauncherForActivityResult
+
+        try {
+            scope.launch(Dispatchers.IO) {
+                context.contentResolver?.openOutputStream(exportSettingsFilepath)?.use { outputStream ->
+                    val objectOutputStream = ObjectOutputStream(outputStream)
+
+                    val settingsMap = mutableMapOf<String, String?>()
+                    settingsStateHolder.prefs.all.forEach { (key, value) ->
+                        settingsMap[key] = value.toString()
+                    }
+                    val json = Json.encodeToString(settingsMap)
+                    objectOutputStream.writeObject(json)
+                    objectOutputStream.close()
+                }
+            }
+            toastMessage = context.getString(R.string.settings_exported)
+        } catch (e: IOException) {
+            toastMessage= context.getString(R.string.settings_export_error)
+        }
+    }
+
+    // Launcher to import settings from a file
+    val launcherImportSettings = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { filepath ->
+        if(filepath == null)
+            return@rememberLauncherForActivityResult
+
+        context.contentResolver?.openInputStream(filepath)?.use { inputStream ->
+
+            try {
+                ObjectInputStream(inputStream).use { objectInputStream ->
+                    val jsonString = objectInputStream.readObject() as String
+                    Json.decodeFromString<Map<String, String?>>(jsonString).let { map ->
+                        map[SETTING_THEME.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_THEME.default
+                            settingsStateHolder.settingTheme.value = settingOption
+                            SETTING_THEME.saveSetting(settingOption, settingsStateHolder.prefs)
+                            when (settingsStateHolder.settingTheme.value) {
+                                DropdownSettingOption.THEME_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                                DropdownSettingOption.THEME_TRUE_DARK -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                                DropdownSettingOption.THEME_LIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                                else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                            }
+                        }
+
+                        map[SETTING_FONT.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_FONT.default
+                            settingsStateHolder.settingFont.value = settingOption
+                            SETTING_FONT.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_AUDIO_FORMAT.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_AUDIO_FORMAT.default
+                            settingsStateHolder.settingAudioFormat.value = settingOption
+                            SETTING_AUDIO_FORMAT.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_DISPLAY_TIMEZONE.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_DISPLAY_TIMEZONE.default
+                            settingsStateHolder.settingDisplayTimezone.value = settingOption
+                            SETTING_DISPLAY_TIMEZONE.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_ACCESSIBILITY_MODE.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_ACCESSIBILITY_MODE.default
+                            settingsStateHolder.settingAccessibilityMode.value = settingOption
+                            SETTING_ACCESSIBILITY_MODE.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_ENABLE_JOURNALS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_ENABLE_JOURNALS.default
+                            settingsStateHolder.settingEnableJournals.value = settingOption
+                            SETTING_ENABLE_JOURNALS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_ENABLE_NOTES.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_ENABLE_NOTES.default
+                            settingsStateHolder.settingEnableNotes.value = settingOption
+                            SETTING_ENABLE_NOTES.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_ENABLE_TASKS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_ENABLE_TASKS.default
+                            settingsStateHolder.settingEnableTasks.value = settingOption
+                            SETTING_ENABLE_TASKS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_AUTO_EXPAND_SUBTASKS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_AUTO_EXPAND_SUBTASKS.default
+                            settingsStateHolder.settingAutoExpandSubtasks.value = settingOption
+                            SETTING_AUTO_EXPAND_SUBTASKS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_AUTO_EXPAND_SUBNOTES.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_AUTO_EXPAND_SUBNOTES.default
+                            settingsStateHolder.settingAutoExpandSubnotes.value = settingOption
+                            SETTING_AUTO_EXPAND_SUBNOTES.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_AUTO_EXPAND_ATTACHMENTS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_AUTO_EXPAND_ATTACHMENTS.default
+                            settingsStateHolder.settingAutoExpandAttachments.value = settingOption
+                            SETTING_AUTO_EXPAND_ATTACHMENTS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_AUTO_EXPAND_PARENTS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_AUTO_EXPAND_PARENTS.default
+                            settingsStateHolder.settingAutoExpandParents.value = settingOption
+                            SETTING_AUTO_EXPAND_PARENTS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+
+                        //Journals Settings
+                        map[SETTING_DEFAULT_JOURNALS_DATE.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting) ?: SETTING_DEFAULT_JOURNALS_DATE.default
+                            settingsStateHolder.settingDefaultJournalsDate.value = settingOption
+                            SETTING_DEFAULT_JOURNALS_DATE.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.default
+                            settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = settingOption
+                            SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        //Notes Settings
+                        map[SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.default
+                            settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = settingOption
+                            SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        //Task Settings
+                        map[SETTING_DEFAULT_START_DATE.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_DEFAULT_START_DATE.default
+                            settingsStateHolder.settingDefaultStartDate.value = settingOption
+                            SETTING_DEFAULT_START_DATE.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[TimeSetting.SETTING_DEFAULT_START_TIME.keyHour].let setting@ { hour ->
+                            val minute = map[TimeSetting.SETTING_DEFAULT_START_TIME.keyMinute]
+                            val settingOption = TimeSetting.fromStrings(hour, minute)?: return@setting
+                            settingsStateHolder.settingDefaultStartTime.value = settingOption
+                            TimeSetting.SETTING_DEFAULT_START_TIME.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[DropdownSettingTimezone.SETTING_DEFAULT_START_TIMEZONE.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingTimezone.fromStringValidated(setting)?: return@setting
+                            settingsStateHolder.settingDefaultStartTimezone.value = settingOption
+                            DropdownSettingTimezone.SETTING_DEFAULT_START_TIMEZONE.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_DEFAULT_DUE_DATE.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_DEFAULT_DUE_DATE.default
+                            settingsStateHolder.settingDefaultDueDate.value = settingOption
+                            SETTING_DEFAULT_DUE_DATE.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[TimeSetting.SETTING_DEFAULT_DUE_TIME.keyHour].let setting@ { hour ->
+                            val minute = map[TimeSetting.SETTING_DEFAULT_DUE_TIME.keyMinute]
+                            val settingOption = TimeSetting.fromStrings(hour, minute)?: return@setting
+                            settingsStateHolder.settingDefaultDueTime.value = settingOption
+                            TimeSetting.SETTING_DEFAULT_DUE_TIME.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[DropdownSettingTimezone.SETTING_DEFAULT_DUE_TIMEZONE.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingTimezone.fromStringValidated(setting)?: return@setting
+                            settingsStateHolder.settingDefaultDueTimezone.value = settingOption
+                            DropdownSettingTimezone.SETTING_DEFAULT_DUE_TIMEZONE.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.default
+                            settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = settingOption
+                            SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        //Task Settings (status/progress)
+                        map[SETTING_SHOW_PROGRESS_FOR_MAINTASKS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_SHOW_PROGRESS_FOR_MAINTASKS.default
+                            settingsStateHolder.settingShowProgressForMainTasks.value = settingOption
+                            SETTING_SHOW_PROGRESS_FOR_MAINTASKS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_SHOW_PROGRESS_FOR_SUBTASKS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_SHOW_PROGRESS_FOR_SUBTASKS.default
+                            settingsStateHolder.settingShowProgressForSubTasks.value = settingOption
+                            SETTING_SHOW_PROGRESS_FOR_SUBTASKS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_PROGRESS_STEP.key]?.let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_PROGRESS_STEP.default
+                            settingsStateHolder.settingStepForProgress.value = settingOption
+                            SETTING_PROGRESS_STEP.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+
+                        map[SETTING_LINK_PROGRESS_TO_SUBTASKS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_LINK_PROGRESS_TO_SUBTASKS.default
+                            settingsStateHolder.settingLinkProgressToSubtasks.value = settingOption
+                            SETTING_LINK_PROGRESS_TO_SUBTASKS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.default
+                            settingsStateHolder.settingKeepStatusProgressCompletedInSync.value = settingOption
+                            SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        //Alarm Settings
+                        map[SETTING_DISABLE_ALARMS_FOR_READONLY.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_DISABLE_ALARMS_FOR_READONLY.default
+                            settingsStateHolder.settingDisableAlarmsReadonly.value = settingOption
+                            SETTING_DISABLE_ALARMS_FOR_READONLY.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_AUTO_ALARM.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_AUTO_ALARM.default
+                            settingsStateHolder.settingAutoAlarm.value = settingOption
+                            SETTING_AUTO_ALARM.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_STICKY_ALARMS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_STICKY_ALARMS.default
+                            settingsStateHolder.settingStickyAlarms.value = settingOption
+                            SETTING_STICKY_ALARMS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_FULLSCREEN_ALARMS.key].let setting@ { setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_FULLSCREEN_ALARMS.default
+                            settingsStateHolder.settingFullscreenAlarms.value = settingOption
+                            SETTING_FULLSCREEN_ALARMS.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        //Sync Settings
+                        map[SETTING_SYNC_ON_START.key].let setting@{ setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_SYNC_ON_START.default
+                            settingsStateHolder.settingSyncOnStart.value = settingOption
+                            SETTING_SYNC_ON_START.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[SETTING_SYNC_ON_PULL_REFRESH.key].let setting@{ setting ->
+                            val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_SYNC_ON_PULL_REFRESH.default
+                            settingsStateHolder.settingSyncOnPullRefresh.value = settingOption
+                            SETTING_SYNC_ON_PULL_REFRESH.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                    }
+                    toastMessage = context.getString(R.string.settings_imported)
+                }
+            } catch (e: Exception) {
+                toastMessage = context.getString(R.string.presets_import_invalid_file)
+            }
+        }
+    }
+
+    LaunchedEffect(toastMessage) {
+        if(toastMessage != null) {
+            Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
+            toastMessage = null
+        }
+    }
+
+
 
     Scaffold(
         topBar = {
             JtxTopAppBar(
                 drawerState = drawerState,
-                title = stringResource(id = R.string.navigation_drawer_settings)
+                title = stringResource(id = R.string.navigation_drawer_settings),
+                actions = {
+                    val menuExpanded = remember { mutableStateOf(false) }
+
+                    OverflowMenu(menuExpanded = menuExpanded) {
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.settings_import_settings)) },
+                            onClick = {
+                                menuExpanded.value = false
+                                launcherImportSettings.launch(arrayOf("application/json"))
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.FileUpload, null) }
+                        )
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.settings_export_settings)) },
+                            onClick = {
+                                menuExpanded.value = false
+                                launcherExportSettings.launch("jtxBoard_settings_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(),null)}.json")
+                            },
+                            leadingIcon = { Icon(Icons.Outlined.FileDownload, null) }
+                        )
+                    }
+                }
             )
         },
 

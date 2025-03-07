@@ -1,6 +1,5 @@
 package at.techbee.jtx
 
-import android.accounts.Account
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -81,6 +80,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import java.io.FileNotFoundException
 import java.time.ZonedDateTime
 import kotlin.time.Duration.Companion.minutes
 
@@ -172,7 +172,7 @@ class MainActivity2 : AppCompatActivity() {
         if(settingsStateHolder.settingSyncOnStart.value) {
             lifecycleScope.launch(Dispatchers.IO) {
                 val remoteCollections = ICalDatabase.getInstance(applicationContext).iCalDatabaseDao().getAllRemoteCollections()
-                SyncUtil.syncAccounts(remoteCollections.map { Account(it.accountName, it.accountType) }.toSet())
+                SyncUtil.syncAccounts(remoteCollections.map { it.getAccount() }.toSet())
             }
         }
 
@@ -278,9 +278,14 @@ class MainActivity2 : AppCompatActivity() {
                 Intent.ACTION_VIEW -> {
                     if (intent.type == "text/calendar") {
                         val ics = intent.data ?: return
-                        this.contentResolver.openInputStream(ics)?.use { stream ->
-                            globalStateHolder.icalString2Import.value =
-                                stream.readBytes().decodeToString()
+                        try {
+                            this.contentResolver.openInputStream(ics)?.use { stream ->
+                                globalStateHolder.icalString2Import.value =
+                                    stream.readBytes().decodeToString()
+                            }
+                        } catch (e: FileNotFoundException) {
+                            Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
+                            //Log.e("MainActivity2", e.stackTraceToString())
                         }
                     }
                 }
@@ -305,7 +310,7 @@ class MainActivity2 : AppCompatActivity() {
             }
             intent.removeExtra(Intent.EXTRA_TEXT)
             intent.removeExtra(Intent.EXTRA_STREAM)
-            setResult(Activity.RESULT_OK)
+            setResult(RESULT_OK)
         }
         lastProcessedIntentHash = intent.hashCode()
 
@@ -331,9 +336,11 @@ class MainActivity2 : AppCompatActivity() {
     private fun createNotificationChannels() {
         val alarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_ALARMS, NotificationManagerCompat.IMPORTANCE_MAX)
             .setName(getString(R.string.notification_channel_alarms_name))
+            .setLightsEnabled(true)
             .build()
         val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_MAX)
             .setName(getString(R.string.notification_channel_geofences_name))
+            .setLightsEnabled(true)
             .build()
         if(BuildFlavor.getCurrent().hasGeofence)
             NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel, geofenceChannel))
@@ -413,8 +420,8 @@ fun MainNavHost(
 
             val icalObjectId = backStackEntry.arguments?.getLong(DetailDestination.argICalObjectId) ?: return@composable
             val icalObjectIdList = backStackEntry.arguments?.getString(DetailDestination.argICalObjectIdList)?.let { Json.decodeFromString<List<Long>>(it)} ?: listOf(icalObjectId)
-            val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) ?: false
-            val returnToLauncher = backStackEntry.arguments?.getBoolean(DetailDestination.argReturnToLauncher) ?: false
+            val editImmediately = backStackEntry.arguments?.getBoolean(DetailDestination.argIsEditMode) == true
+            val returnToLauncher = backStackEntry.arguments?.getBoolean(DetailDestination.argReturnToLauncher) == true
 
             /*
             backStackEntry.savedStateHandle[DetailDestination.argICalObjectId] = icalObjectId

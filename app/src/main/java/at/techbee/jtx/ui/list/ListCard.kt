@@ -136,6 +136,12 @@ fun ListCard(
         )
     }
 
+    val summarySize =
+        if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
+    val summaryDescriptionTextDecoration =
+        if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null
+
+
     @Composable
     fun getFormattedDescription() {
         return if(markdownEnabled)
@@ -143,6 +149,7 @@ fun ListCard(
                 markdown = iCalObject.description?.trim() ?: "",
                 maxLines = 6,
                 overflow = TextOverflow.Ellipsis,
+                textDecoration = summaryDescriptionTextDecoration,
                 modifier = Modifier.fillMaxWidth()
             )
         else
@@ -150,14 +157,15 @@ fun ListCard(
                 text = iCalObject.description?.trim() ?: "",
                 maxLines = 6,
                 overflow = TextOverflow.Ellipsis,
+                textDecoration = summaryDescriptionTextDecoration,
                 modifier = Modifier.fillMaxWidth()
             )
     }
 
     Card(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
-            contentColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+            containerColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.primaryContainer else CardDefaults.elevatedCardColors().containerColor,
+            contentColor = if (selected.contains(iCalObject.id)) MaterialTheme.colorScheme.onPrimaryContainer else CardDefaults.elevatedCardColors().contentColor,
         ),
         elevation = CardDefaults.elevatedCardElevation(),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
@@ -217,11 +225,6 @@ fun ListCard(
                         )
                     }
 
-                    val summarySize =
-                        if (iCalObject.module == Module.JOURNAL.name) 18.sp else Typography.bodyMedium.fontSize
-                    val summaryTextDecoration =
-                        if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None
-
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
@@ -234,7 +237,7 @@ fun ListCard(
                                 text = iCalObject.summary?.trim() ?: "",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = summarySize,
-                                textDecoration = summaryTextDecoration,
+                                textDecoration = summaryDescriptionTextDecoration,
                                 modifier = Modifier.weight(1f)
                             )
                         } else if (iCalObject.description?.isNotBlank() == true) {

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.ui.graphics.vector.ImageVector
 import at.techbee.jtx.R
+import java.time.DateTimeException
 import java.time.LocalTime
 
 enum class TimeSetting(
@@ -57,5 +58,23 @@ enum class TimeSetting(
             null
         else
             LocalTime.of(hour, minute)
+    }
+
+    companion object {
+        /**
+         * Returns a LocalTime of a hour and minute as strings.
+         */
+        fun fromStrings(hour: String?, minute: String?): LocalTime? {
+            val hourInt = hour?.toIntOrNull()
+            val minuteInt = minute?.toIntOrNull()
+            if(hourInt == null || minuteInt == null)
+                return null
+
+            return try {
+                LocalTime.of(hourInt, minuteInt)
+            } catch (e: DateTimeException) {
+                null
+            }
+        }
     }
 }

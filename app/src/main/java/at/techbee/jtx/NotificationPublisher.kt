@@ -15,7 +15,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.os.Build
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
@@ -127,10 +126,6 @@ class NotificationPublisher : BroadcastReceiver() {
 
 
         fun scheduleNextNotifications(context: Context) {
-
-            // Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-                return
 
             val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
             val alarms = database.getNextAlarms(MAX_ALARMS_SCHEDULED).toMutableSet()

@@ -12,10 +12,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -36,7 +33,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -51,15 +47,13 @@ import at.techbee.jtx.ui.reusable.appbars.OverflowMenu
 import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.IOException
 
 
 @Composable
 fun PresetsScreen(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController
 ) {
 
     val context = LocalContext.current
@@ -174,26 +168,19 @@ fun PresetsScreen(
             JtxNavigationDrawer(
                 drawerState = drawerState,
                 mainContent = {
-
-                    Column(
-                        modifier = modifier
+                    PresetsScreenContent(
+                        allCategories = allCategories,
+                        storedCategories = storedCategories,
+                        allResources = allResources,
+                        storedResources = storedResources,
+                        allXStatuses = allXStatuses,
+                        extendedStatuses = extendedStatuses,
+                        storedListSettings = storedListSettings,
+                        modifier = Modifier
                             .fillMaxSize()
                             .verticalScroll(rememberScrollState())
-                            .padding(8.dp),
-                        verticalArrangement = Arrangement.Top,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        PresetsScreenContent(
-                            allCategories = allCategories,
-                            storedCategories = storedCategories,
-                            allResources = allResources,
-                            storedResources = storedResources,
-                            allXStatuses = allXStatuses,
-                            extendedStatuses = extendedStatuses,
-                            storedListSettings = storedListSettings,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
+                            .padding(8.dp)
+                    )
                 },
                 navController = navController,
                 paddingValues = paddingValues

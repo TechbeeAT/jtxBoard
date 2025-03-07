@@ -319,6 +319,7 @@ data class ICal4List(
             searchStatus: List<Status> = emptyList(),
             searchXStatus: List<String> = emptyList(),
             searchClassification: List<Classification> = emptyList(),
+            searchPriority: List<Int?> = emptyList(),
             searchCollection: List<String> = emptyList(),
             searchAccount: List<String> = emptyList(),
             orderBy: OrderBy = OrderBy.CREATED,
@@ -513,6 +514,17 @@ data class ICal4List(
 
                 if(searchClassification.contains(Classification.NO_CLASSIFICATION))
                     queryString += "OR $COLUMN_CLASSIFICATION IS NULL"
+                queryString += ") "
+            }
+
+            //PRIORITY
+            if (searchPriority.isNotEmpty()) {
+                queryString += "AND ("
+                queryString += searchPriority.joinToString(separator = "OR ", transform = { "$COLUMN_PRIORITY = ? " })
+                args.addAll(searchPriority.map { it?.toString() ?: "0"})
+
+                if(searchPriority.contains(null) || searchPriority.contains(0))
+                    queryString += "OR $COLUMN_PRIORITY IS NULL"
                 queryString += ") "
             }
 

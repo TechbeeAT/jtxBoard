@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.collections
 
-import android.accounts.Account
 import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -269,7 +268,7 @@ fun CollectionCard(
                                     text = { Text(stringResource(R.string.menu_collection_popup_show_in_sync_app, syncApp.appName)) },
                                     leadingIcon = { Icon(Icons.Outlined.Sync, null) },
                                     onClick = {
-                                        SyncUtil.openSyncAppAccountActivity(syncApp, Account(collection.accountName, collection.accountType), context)
+                                        SyncUtil.openSyncAppAccountActivity(syncApp, collection.toICalCollection().getAccount(), context)
                                         menuExpanded = false
                                     }
                                 )

@@ -46,8 +46,8 @@ fun ListCardWeek(
 ) {
     Card(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
-            contentColor = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+            containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else CardDefaults.elevatedCardColors().containerColor,
+            contentColor = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else CardDefaults.elevatedCardColors().contentColor
         ),
         elevation = CardDefaults.elevatedCardElevation(),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
@@ -67,7 +67,7 @@ fun ListCardWeek(
 
             Text(
                 text = text,
-                textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else TextDecoration.None,
+                textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
                 color = when {

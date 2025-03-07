@@ -19,9 +19,14 @@ import net.fortuna.ical4j.model.parameter.XParameter
 import net.fortuna.ical4j.model.property.XProperty
 import org.json.JSONObject
 import java.util.logging.Level
+import java.util.logging.Logger
+
 
 @Suppress("unused")
 object JtxContract {
+
+    private val logger
+        get() = Logger.getLogger(javaClass.name)
 
     /**
      * URI parameter to signal that the caller is a sync adapter.
@@ -42,7 +47,7 @@ object JtxContract {
     const val AUTHORITY = "at.techbee.jtx.provider"
 
     /** The version of this SyncContentProviderContract */
-    const val VERSION = 7
+    const val VERSION = 8
 
     /** Constructs an Uri for the Jtx Sync Adapter with the given Account
      * @param [account] The account that should be appended to the Base Uri
@@ -100,7 +105,7 @@ object JtxContract {
                 }
             }
         } catch (e: NullPointerException) {
-            Ical4Android.log.log(Level.WARNING, "Error parsing x-property-list $string", e)
+            logger.log(Level.WARNING, "Error parsing x-property-list $string", e)
         }
         return propertyList
     }
@@ -163,7 +168,7 @@ object JtxContract {
             try {
                 longList.add(it.toLong())
             } catch (e: NumberFormatException) {
-                Ical4Android.log.log(Level.WARNING, "String could not be cast to Long ($it)")
+                logger.log(Level.WARNING, "String could not be cast to Long ($it)")
                 return@forEach
             }
         }
@@ -1211,6 +1216,12 @@ object JtxContract {
          */
         const val LAST_SYNC = "lastsync"
 
+        /**
+         * Purpose:  This column/property stores a sync_id for the given collection
+         * See https://github.com/TechbeeAT/jtxBoard/issues/1635
+         * Type: [Long]
+         */
+        const val SYNC_ID = "sync_id"
     }
 
 

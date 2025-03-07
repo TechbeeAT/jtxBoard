@@ -71,7 +71,7 @@ object Ical4androidUtil {
                 .build()
 
             collection.client.query(uri,null, null, null, null)?.use { cursor ->
-                Ical4Android.log.fine("writeICSFormatFromProviderToOS: found ${cursor.count} records in ${account.name}")
+                //Ical4Android.log.fine("writeICSFormatFromProviderToOS: found ${cursor.count} records in ${account.name}")
 
                 while (cursor.moveToNext()) {
                     val jtxIcalObject = JtxICalObject(collection)

@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.detail
 
 import android.content.ActivityNotFoundException
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,6 +58,7 @@ fun DetailsCardUrl(
     val isValidURL = UiUtil.isValidURL(url)
     val uriHandler = LocalUriHandler.current
     val focusRequester = remember { FocusRequester() }
+    val context = LocalContext.current
 
     ElevatedCard(
         modifier = modifier,
@@ -98,9 +101,14 @@ fun DetailsCardUrl(
             AnimatedVisibility(isValidURL) {
                 IconButton(onClick = {
                     try {
-                        uriHandler.openUri(url)
+                        if (url.isNotBlank() && !isEditMode)
+                            uriHandler.openUri(url)
                     } catch (e: ActivityNotFoundException) {
                         Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")
+                        Toast.makeText(context, e.message?:"", Toast.LENGTH_LONG).show()
+                    } catch (e: IllegalArgumentException) {
+                        Log.d("PropertyCardUrl", "Failed opening Uri $url$e")
+                        Toast.makeText(context, e.message?:"", Toast.LENGTH_LONG).show()
                     }
                 }) {
                     Icon(

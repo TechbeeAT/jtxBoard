@@ -1,0 +1,6 @@
+- Sub-entries now inherit the due date (tasks) and classification from its parent
+- New color picker
+- Full Android 15 compatibility
+- Version updates
+
+ATTENTION: Due to changes in the widget handling, the color setting for transparency might get lost in this update. Please update the color in the widget settings again if you wish to make it transparent.

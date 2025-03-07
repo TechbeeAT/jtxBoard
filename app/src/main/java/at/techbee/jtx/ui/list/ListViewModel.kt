@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.list
 
-import android.accounts.Account
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -148,6 +147,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
             searchStatus = listSettings.searchStatus,
             searchXStatus = listSettings.searchXStatus,
             searchClassification = listSettings.searchClassification,
+            searchPriority = listSettings.searchPriority,
             searchCollection = listSettings.searchCollection,
             searchAccount = listSettings.searchAccount,
             orderBy = listSettings.orderBy.value,
@@ -440,7 +440,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     fun syncAccounts() {
         viewModelScope.launch(Dispatchers.IO) {
             val collections = databaseDao.getAllRemoteCollections()
-            SyncUtil.syncAccounts(collections.map { Account(it.accountName, it.accountType) }.toSet())
+            SyncUtil.syncAccounts(collections.map { it.getAccount() }.toSet())
         }
         SyncUtil.showSyncRequestedToast(_application)
     }

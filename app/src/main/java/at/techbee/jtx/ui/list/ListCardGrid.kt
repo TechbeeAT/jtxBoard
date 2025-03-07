@@ -58,8 +58,8 @@ fun ListCardGrid(
 ) {
     Card(
         colors = CardDefaults.elevatedCardColors(
-            containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
-            contentColor = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+            containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else CardDefaults.elevatedCardColors().containerColor,
+            contentColor = if (selected) MaterialTheme.colorScheme.onPrimaryContainer else CardDefaults.elevatedCardColors().contentColor
         ),
         elevation = CardDefaults.elevatedCardElevation(),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
@@ -126,6 +126,7 @@ fun ListCardGrid(
                         markdown = iCalObject.description?.trim() ?: "",
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
+                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)
@@ -135,6 +136,7 @@ fun ListCardGrid(
                         text = iCalObject.description?.trim() ?: "",
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
+                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)

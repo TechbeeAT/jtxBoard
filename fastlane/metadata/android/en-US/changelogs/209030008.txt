@@ -1,0 +1,3 @@
+- Fixed wrong sorting of grouped categories
+- Fixed bad color contrast in widget when switching color modes
+- Version updates

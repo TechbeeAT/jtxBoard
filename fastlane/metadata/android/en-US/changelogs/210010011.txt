@@ -1,0 +1,4 @@
+- Colors can now be selected by Hex-Code
+- Duplicated subtasks now keep the link to the parent
+- Bugfixes
+- Version updates

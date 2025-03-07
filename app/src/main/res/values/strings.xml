@@ -250,6 +250,8 @@
     <string name="menu_collections_add_local">"Add local Collection"</string>
     <string name="navigation_drawer_website_news">"News &amp; Release Notes"</string>
     <string name="color">"Color"</string>
+    <string name="selected_color">"Selected color"</string>
+    <string name="system_colors">"System colors"</string>
     <string name="priority_0_no_priority">"No priority"</string>
     <string name="priority_1_highest">"1 - Highest"</string>
     <string name="priority_2_higher">"2 - Higher"</string>
@@ -266,6 +268,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Show in %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Export as .ics"</string>
+    <string name="export_as_csv">"Export as .csv"</string>
     <string name="journal">"Journal"</string>
     <string name="note">"Note"</string>
     <string name="task">"Task"</string>
@@ -348,6 +351,8 @@
     <string name="edit_recur_ends_never">"ends never"</string>
     <string name="edit_recur_ends_on">"ends on"</string>
     <string name="edit_recur_ends_after">"ends after"</string>
+    <string name="list_toast_export_success">"List successfully exported"</string>
+    <string name="list_toast_export_error">"Error on exporting list"</string>
     <string name="collections_toast_export_success">"Collections successfully exported"</string>
     <string name="collections_toast_export_error">"Error on exporting collections"</string>
     <string name="menu_collections_export_all">"Export all"</string>
@@ -357,6 +362,12 @@
     <string name="presets_import_invalid_file">"Invalid file"</string>
     <string name="presets_saved">"Presets saved"</string>
     <string name="presets_export_error">"An error occurred saving presets"</string>
+    <string name="settings_export_settings">"Export settings"</string>
+    <string name="settings_import_settings">"Import settings"</string>
+    <string name="settings_imported">"Settings imported"</string>
+    <string name="settings_import_invalid_file">"Invalid file"</string>
+    <string name="settings_exported">"Settings exported"</string>
+    <string name="settings_export_error">"An error occurred while exporting settings"</string>
     <string name="more">"More"</string>
     <string name="navigation_drawer_buypro">"Buy Pro"</string>
     <string name="settings_select_theme">"Select theme"</string>
@@ -633,8 +644,6 @@ Thank you!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Attention: Currently only one level of hierarchy is supported in the widget. In order to see the entries of lower levels, please use the flat view instead."</string>
     <string name="widget_list_maximum_entries_reached">"Maximum number of entries in widget reached (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Updating widget"</string>
-    <string name="widget_list_opacity_warning">"Note: This is an experimental feature! With reduced opacity changes in the color theme might not be reflected immediately!"</string>
-    <string name="widget_list_color_warning">"Note: This is an experimental feature! Changes in the color theme will not be reflected! Choose no color to return to system default."</string>
     <string name="widget_list_default_categories">"Set default categories for new entries from widget"</string>
     <string name="opacity">"Opacity"</string>
     <string name="link_jtx_mastodon" translatable="false">"https://fosstodon.org/@jtx"</string>

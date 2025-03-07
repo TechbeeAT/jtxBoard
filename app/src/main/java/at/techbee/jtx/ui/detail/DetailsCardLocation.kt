@@ -73,7 +73,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.room.ColumnInfo
 import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
@@ -188,7 +187,7 @@ fun DetailsCardLocation(
             text = stringResource(id = R.string.geofence_request_permission_dialog_message),
             onConfirm = {
                 if(geofencePermissionState?.shouldShowRationale == true)
-                    startActivity(context, openPermissionsIntent, null)
+                    context.startActivity(openPermissionsIntent)
                 else
                     geofencePermissionState?.launchMultiplePermissionRequest()
                 showRequestGeofencePermissionsDialog = false
@@ -449,7 +448,7 @@ fun DetailsCardLocation(
                             modifier = Modifier.weight(1f)
                         )
                         TextButton(
-                            onClick = { startActivity(context, openPermissionsIntent, null) }
+                            onClick = { context.startActivity(openPermissionsIntent) }
                         ) {
                             Text(stringResource(id = R.string.permissions))
                         }

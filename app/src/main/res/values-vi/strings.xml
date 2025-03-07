@@ -609,8 +609,6 @@ Cảm ơn!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Chú ý: Hiện tại, tiện ích này chỉ hỗ trợ một cấp độ phân cấp. Để xem các mục ở cấp độ thấp hơn, vui lòng sử dụng chế độ xem phẳng."</string>
     <string name="widget_list_maximum_entries_reached">"Đã đạt đến số mục nhập tối đa trong tiện ích (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Đang cập nhật tiện ích"</string>
-    <string name="widget_list_opacity_warning">"Lưu ý: Đây là tính năng thử nghiệm! Với việc giảm độ mờ, những thay đổi trong chủ đề màu sắc có thể không được phản ánh ngay lập tức!"</string>
-    <string name="widget_list_color_warning">"Lưu ý: Đây là tính năng thử nghiệm! Những thay đổi trong chủ đề màu sắc sẽ không được phản ánh! Chọn không màu để trở về mặc định của hệ thống."</string>
     <string name="widget_list_default_categories">"Đặt danh mục mặc định cho các mục mới từ tiện ích"</string>
     <string name="opacity">"Độ mờ"</string>
     <string name="general">"Tổng quan"</string>

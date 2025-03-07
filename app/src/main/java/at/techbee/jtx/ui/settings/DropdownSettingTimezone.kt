@@ -50,4 +50,11 @@ enum class DropdownSettingTimezone(
     fun getSetting(prefs: SharedPreferences) = TimeZone.getAvailableIDs().find { timezone ->
         timezone == prefs.getString(key, null)
     } ?: default
+
+    companion object {
+        /**
+         * Returns the string of the timezone if it's a valid timezone, otherwise null
+         */
+        fun fromStringValidated(string: String?) = if(TimeZone.getAvailableIDs().contains(string)) string else null
+    }
 }

@@ -57,7 +57,7 @@ fun CollectionsScreenContent(
     onDeleteAccount: (Account) -> Unit
 ) {
 
-    val grouped = collections.groupBy { Account(it.accountName, it.accountType) }
+    val grouped = collections.groupBy { it.toICalCollection().getAccount() }
     val showProgressIndicator by isProcessing.observeAsState(false)
 
     val foundAccounts = mutableSetOf<Account>()
