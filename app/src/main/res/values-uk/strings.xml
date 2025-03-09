@@ -22,13 +22,17 @@
     <string name="todo_status_completed">"Виконано"</string>
     <string name="todo_status_cancelled">"Скасовано"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Відкрити навігаційну панель"</string>
+    <string name="navigation_drawer_close">"Закрити навігаційну панель"</string>
     <string name="navigation_drawer_board">"Дошка"</string>
     <string name="navigation_drawer_synchronization">"Синхронізація"</string>
     <string name="navigation_drawer_settings">"Налаштування"</string>
     <string name="navigation_drawer_external_links">"Зовнішні посилання"</string>
     <string name="navigation_drawer_website">"Сайт"</string>
+    <string name="navigation_drawer_donate">"Пожертвувати"</string>
     <string name="navigation_drawer_privacy_policy">"Політика конфіденційності"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Прострочено"</string>
     <string name="list_tabitem_journals">"Журнали"</string>
     <string name="list_tabitem_notes">"Нотатки"</string>
     <string name="list_tabitem_todos">"Завдання"</string>
