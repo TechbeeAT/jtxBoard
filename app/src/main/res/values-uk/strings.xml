@@ -11,6 +11,7 @@
     <string name="delete">"Видалити"</string>
     <string name="discard">"Скинути"</string>
     <string name="open">"Відкрити"</string>
+    <string name="website">"Сайт"</string>
     <string name="permissions">"Дозволи"</string>
     <string name="toolbar_text_add_journal">"Додати Журнал"</string>
     <string name="toolbar_text_add_note">"Додати Нотатку"</string>
@@ -25,11 +26,13 @@
     <string name="navigation_drawer_synchronization">"Синхронізація"</string>
     <string name="navigation_drawer_settings">"Налаштування"</string>
     <string name="navigation_drawer_external_links">"Зовнішні посилання"</string>
+    <string name="navigation_drawer_website">"Сайт"</string>
     <string name="navigation_drawer_privacy_policy">"Політика конфіденційності"</string>
     <!-- fragment_ical_list -->
     <string name="list_tabitem_journals">"Журнали"</string>
     <string name="list_tabitem_notes">"Нотатки"</string>
     <string name="list_tabitem_todos">"Завдання"</string>
+    <string name="list_expand">"Розгорнути"</string>
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
     <string name="edit_attachment_button_text">"Додати вкладення"</string>
