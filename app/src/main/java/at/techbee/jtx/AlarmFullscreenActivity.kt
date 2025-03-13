@@ -72,10 +72,7 @@ class AlarmFullscreenActivity : AppCompatActivity() {
                         or WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             )
         }
-
         super.onCreate(savedInstanceState)
-
-
 
         val alarmId = intent.getLongExtra(NotificationPublisher.ALARM_ID,  0L)
         val icalObjectId = intent.getLongExtra(NotificationPublisher.ICALOBJECT_ID, 0L)
