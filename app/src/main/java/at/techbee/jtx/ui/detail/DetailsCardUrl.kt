@@ -101,7 +101,7 @@ fun DetailsCardUrl(
             AnimatedVisibility(isValidURL) {
                 IconButton(onClick = {
                     try {
-                        if (url.isNotBlank() && !isEditMode)
+                        if (url.isNotBlank())
                             uriHandler.openUri(url)
                     } catch (e: ActivityNotFoundException) {
                         Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")

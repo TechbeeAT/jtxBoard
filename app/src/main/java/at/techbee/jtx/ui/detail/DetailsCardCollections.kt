@@ -1,8 +1,8 @@
 package at.techbee.jtx.ui.detail
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material3.Icon
@@ -22,13 +22,14 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
+import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 
 
 @Composable
@@ -71,25 +72,30 @@ fun DetailsCardCollections(
     }
 
 
-    CollectionsSpinner(
-        collections = allPossibleCollections,
-        preselected = originalCollection,
-        includeReadOnly = false,
-        includeVJOURNAL = includeVJOURNAL,
-        includeVTODO = includeVTODO,
-        onSelectionChanged = { newCollection ->
-            if (iCalObject?.collectionId != newCollection.collectionId) {
-                onMoveToNewCollection(newCollection)
-            }
-        },
-        enabled = iCalObject?.recurid.isNullOrEmpty(),
-        modifier = Modifier
-            .weight(1f)
-            .padding(4.dp)
-    )
+    Row(modifier = modifier) {
 
-    IconButton(onClick = { showColorPicker = true }) {
-        Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
+        CollectionsSpinner(
+            collections = allPossibleCollections,
+            preselected = originalCollection,
+            includeReadOnly = false,
+            includeVJOURNAL = includeVJOURNAL,
+            includeVTODO = includeVTODO,
+            onSelectionChanged = { newCollection ->
+                if (iCalObject?.collectionId != newCollection.collectionId) {
+                    onMoveToNewCollection(newCollection)
+                }
+            },
+            showSyncButton = (originalCollection.accountType != LOCAL_ACCOUNT_TYPE
+                    && seriesElement?.dirty ?: iCalObject?.dirty ?: false),
+            enableSelector = !originalCollection.readonly  && !isChild && iCalObject?.recurid.isNullOrEmpty(),
+            modifier = Modifier.weight(1f),
+            border = color.value?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) }
+        )
+
+        if(!originalCollection.readonly)
+            IconButton(onClick = { showColorPicker = true }) {
+                Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
+            }
     }
 }
 

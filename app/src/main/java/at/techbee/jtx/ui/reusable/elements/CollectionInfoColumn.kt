@@ -1,6 +1,5 @@
 package at.techbee.jtx.ui.reusable.elements
 
-import android.accounts.Account
 import android.content.ContentResolver
 import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.CloudSync
-import androidx.compose.material.icons.outlined.ColorLens
 import androidx.compose.material.icons.outlined.EditOff
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Icon
@@ -28,10 +26,8 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,16 +37,14 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
-import at.techbee.jtx.database.ICalDatabase
-import at.techbee.jtx.ui.reusable.dialogs.ColorPickerDialog
 import at.techbee.jtx.util.SyncUtil
 
 
@@ -58,18 +52,13 @@ import at.techbee.jtx.util.SyncUtil
 fun CollectionInfoColumn(
     collection: ICalCollection,
     showSyncButton: Boolean,
-    showColorPicker: Boolean,
     showDropdownArrow: Boolean,
-    modifier: Modifier = Modifier,
-    initialColor: Int? = null,
-    onColorPicked: (Int?) -> Unit
+    modifier: Modifier = Modifier
 ) {
 
     val context = LocalContext.current
     val isPreview = LocalInspectionMode.current
     val lifecycleOwner = LocalLifecycleOwner.current
-
-    var showColorPickerDialog by rememberSaveable { mutableStateOf(false) }
 
     val syncIconAnimation = rememberInfiniteTransition(label = "syncIconAnimation")
     val angle by syncIconAnimation.animateFloat(
@@ -89,31 +78,13 @@ fun CollectionInfoColumn(
             null
         else {
             ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
-                isSyncInProgress = SyncUtil.isJtxSyncRunningFor(setOf(Account(collection.accountName, collection.accountType)))
+                isSyncInProgress = SyncUtil.isJtxSyncRunningFor(setOf(collection.getAccount()))
             }
         }
         onDispose {
             if (!isPreview)
                 ContentResolver.removeStatusChangeListener(listener)
         }
-    }
-
-    if (showColorPickerDialog) {
-        ColorPickerDialog(
-            initialColor = initialColor,
-            onColorChanged = { newColor ->
-                onColorPicked(newColor)
-            },
-            onDismiss = {
-                showColorPickerDialog = false
-            },
-            additionalColorsInt = ICalDatabase
-                .getInstance(context)
-                .iCalDatabaseDao()
-                .getAllColors()
-                .observeAsState(initial = emptyList())
-                .value
-        )
     }
 
     Row(
@@ -180,7 +151,7 @@ fun CollectionInfoColumn(
             )
         }
 
-        AnimatedVisibility(showSyncButton || showColorPicker) {
+        AnimatedVisibility(showSyncButton) {
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -220,12 +191,6 @@ fun CollectionInfoColumn(
                         }
                     }
                 }
-
-                if(showColorPicker) {
-                    IconButton(onClick = { showColorPickerDialog = true }) {
-                        Icon(Icons.Outlined.ColorLens, stringResource(id = R.string.color))
-                    }
-                }
             }
         }
     }
@@ -247,9 +212,7 @@ fun CollectionInfoColumn_Preview() {
         CollectionInfoColumn(
             collection = collection1,
             showSyncButton = false,
-            showColorPicker = true,
-            showDropdownArrow = false,
-            onColorPicked = { }
+            showDropdownArrow = false
         )
     }
 }
@@ -271,9 +234,7 @@ fun CollectionInfoColumn_Preview_REMOTE() {
         CollectionInfoColumn(
             collection = collection1,
             showSyncButton = true,
-            showColorPicker = true,
-            showDropdownArrow = true,
-            onColorPicked = {}
+            showDropdownArrow = true
         )
     }
 }
@@ -295,9 +256,7 @@ fun CollectionInfoColumn_Preview_READONLY() {
         CollectionInfoColumn(
             collection = collection1,
             showSyncButton = false,
-            showColorPicker = false,
-            showDropdownArrow = false,
-            onColorPicked = {}
+            showDropdownArrow = false
         )
     }
 }

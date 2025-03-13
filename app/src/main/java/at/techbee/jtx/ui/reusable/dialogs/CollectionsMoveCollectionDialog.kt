@@ -54,9 +54,7 @@ fun CollectionsMoveCollectionDialog(
                         includeVTODO = if((current.numTodos?:0) > 0) true else null,
                         onSelectionChanged = { selected -> newCollection = selected },
                         showSyncButton = false,
-                        showColorPicker = false,
-                        enableSelector = true,
-                        onColorPicked = { }
+                        enableSelector = true
                     )
 
                     Text(stringResource(id = R.string.collection_dialog_move_info))

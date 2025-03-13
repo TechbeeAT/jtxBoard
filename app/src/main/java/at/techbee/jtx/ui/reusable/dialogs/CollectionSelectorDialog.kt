@@ -56,9 +56,7 @@ fun CollectionSelectorDialog(
                         includeVTODO = if(module == Module.TODO) true else null,
                         onSelectionChanged = { selected -> selectedCollection = selected },
                         showSyncButton = false,
-                        showColorPicker = false,
-                        enableSelector = true,
-                        onColorPicked = { }
+                        enableSelector = true
                     )
                 }
             }

@@ -41,8 +41,6 @@ fun CollectionsSpinner(
     modifier: Modifier = Modifier,
     includeReadOnly: Boolean,
     showSyncButton: Boolean,
-    showColorPicker: Boolean,
-    onColorPicked: (Int?) -> Unit,
     includeVJOURNAL: Boolean? = null,
     includeVTODO: Boolean? = null,
     border: BorderStroke? = null,
@@ -82,8 +80,6 @@ fun CollectionsSpinner(
             CollectionInfoColumn(
                 collection = selected,
                 showSyncButton = showSyncButton,
-                showColorPicker = showColorPicker,
-                onColorPicked = onColorPicked,
                 showDropdownArrow = !selected.readonly,
                 //modifier = Modifier.alpha(if (!enabled) 0.5f else 1f)
             )
@@ -118,9 +114,7 @@ fun CollectionsSpinner(
                             CollectionInfoColumn(
                                 collection = collection,
                                 showSyncButton = false,
-                                showColorPicker = false,
-                                showDropdownArrow = false,
-                                onColorPicked = { }
+                                showDropdownArrow = false
                             )
                         }
                     )
@@ -168,8 +162,6 @@ fun CollectionsSpinner_Preview() {
             includeVJOURNAL = true,
             includeVTODO = true,
             showSyncButton = true,
-            showColorPicker = true,
-            onColorPicked = { },
             onSelectionChanged = { },
             modifier = Modifier.fillMaxWidth()
         )
@@ -197,8 +189,6 @@ fun CollectionsSpinner_Preview_notenabled() {
             includeVJOURNAL = true,
             includeVTODO = true,
             showSyncButton = false,
-            showColorPicker = false,
-            onColorPicked = { },
             onSelectionChanged = { },
             modifier = Modifier.fillMaxWidth()
         )
@@ -227,8 +217,6 @@ fun CollectionsSpinner_Preview_no_color() {
             includeVJOURNAL = true,
             includeVTODO = true,
             showSyncButton = true,
-            showColorPicker = true,
-            onColorPicked = { },
             onSelectionChanged = { },
             modifier = Modifier.fillMaxWidth()
         )

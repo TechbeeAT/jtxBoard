@@ -267,9 +267,7 @@ fun ListQuickAddElement(
                             currentModule = Module.NOTE
                     },
                     showSyncButton = false,
-                    showColorPicker = false,
-                    enableSelector = true,
-                    onColorPicked = { }
+                    enableSelector = true
                 )
 
                 OutlinedTextField(
