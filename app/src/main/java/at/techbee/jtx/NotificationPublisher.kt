@@ -144,6 +144,12 @@ class NotificationPublisher : BroadcastReceiver() {
             }
 
             alarms.forEach { alarm ->
+                // consider only the closest alarm if two same icalObjectIds exist.
+                if(alarms.any {
+                        it.icalObjectId == alarm.icalObjectId && (it.triggerTime ?: Long.MAX_VALUE) < (alarm.triggerTime ?: Long.MAX_VALUE)
+                    })
+                    return@forEach
+
                 val iCal4List = database.getICal4ListSync(alarm.icalObjectId) ?: return@forEach
                 alarm.scheduleNotification(context = context, requestCode = iCal4List.id.toInt(), isReadOnly = iCal4List.isReadOnly, notificationSummary = iCal4List.summary, notificationDescription = iCal4List.description)
             }
