@@ -214,15 +214,16 @@ class NotificationPublisher : BroadcastReceiver() {
         fun restoreAlarms(context: Context) {
             val notificationManager = NotificationManagerCompat.from(context)
             val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+            val collections = database.getAllCollectionsSync()
 
             database.getICalObjectsWithActiveAlarms().forEach { iCalObject ->
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                     val notification = Alarm.createNotification(
                         iCalObject.id,
-                        0L,
+                        database.getAlarmsSync(iCalObject.id).firstOrNull()?.alarmId?:0L, // if any explicit alarm exists, we take it an pass it on to make the actions available.
                         iCalObject.summary,
                         iCalObject.description,
-                        true,
+                        collections.find { collection -> collection.collectionId == iCalObject.collectionId }?.readonly ?: true,
                         MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
                         context
                     )
