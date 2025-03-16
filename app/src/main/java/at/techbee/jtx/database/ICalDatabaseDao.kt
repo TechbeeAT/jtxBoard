@@ -138,6 +138,14 @@ interface ICalDatabaseDao {
     @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollections(module: String): LiveData<List<ICalCollection>>
 
+    /**
+     * Retrieve an list of all Collections ([Collection])
+     * @return a list of [Collection] as List<ICalCollection>
+     */
+    @Transaction
+    @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION")
+    fun getAllCollectionsSync(): List<ICalCollection>
+
 
     /**
      * Retrieve an list of all Collections ([CollectionsView]) as a LiveData-List
