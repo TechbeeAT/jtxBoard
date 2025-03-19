@@ -16,6 +16,7 @@ class RestoreNotificationsAtBootReceiver : BroadcastReceiver() {
             //Log.d("jtx Board", "Restart completed received")
             CoroutineScope(Dispatchers.IO).launch {
                 NotificationPublisher.restoreAlarms(context)
+                NotificationPublisher.scheduleNextNotifications(context)
                 ListWidget().updateAll(context)
                 GeofenceClient(context).setGeofences()
             }
