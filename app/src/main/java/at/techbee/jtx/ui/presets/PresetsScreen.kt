@@ -156,7 +156,7 @@ fun PresetsScreen(
                             text = { Text(text = stringResource(id = R.string.menu_presets_export_presets)) },
                             onClick = {
                                 menuExpanded.value = false
-                                launcherExportPresets.launch("jtxBoard_presets_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(),null)}.ics")
+                                launcherExportPresets.launch("jtxBoard_presets_${DateTimeUtils.convertLongToYYYYMMDDString(System.currentTimeMillis(),null)}.json")
                             },
                             leadingIcon = { Icon(Icons.Outlined.FileDownload, null) }
                         )
