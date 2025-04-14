@@ -60,9 +60,9 @@
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Késésben"</string>
     <string name="list_due_shortly">"Hamarosan esedékes"</string>
-    <string name="list_due_today">"Mai határidő"</string>
-    <string name="list_due_tomorrow">"Holnapi határidő"</string>
-    <string name="list_due_within_7_days">"Határidő 7 napon belül"</string>
+    <string name="list_due_today">"Ma esedékes"</string>
+    <string name="list_due_tomorrow">"Holnap esedékes"</string>
+    <string name="list_due_within_7_days">"7 napon belül esedékes"</string>
     <string name="list_due_inXhours">"%d órán belül esedékes"</string>
     <string name="list_due_on_weekday">"Határidő: %s"</string>
     <string name="list_start_past">"Múltbéli kezdés"</string>
@@ -103,7 +103,7 @@
     <string name="edit_subtasks_add_helper">"Alfeladat hozzáadása"</string>
     <string name="detail_top_app_bar_quick_add_subtask">"Alfeladat gyors hozzáadása"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Aljegyzet gyors hozzáadása"</string>
-    <string name="edit_attachment_add_link_dialog">"Webes hivatkozás hozzáadása"</string>
+    <string name="edit_attachment_add_link_dialog">"Melléklethivatkozás hozzáadása"</string>
     <string name="edit_recur_repeat_every_x">"Ismétlés"</string>
     <string name="edit_recur_on_weekday">" "</string>
     <string name="edit_recur_on_the_x_day_of_month">" "</string>
