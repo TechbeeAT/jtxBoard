@@ -593,6 +593,8 @@ data class ICal4List(
         fun getQueryForAllSubEntries(component: Component,
                                      hideBiometricProtected: List<Classification>,
                                      searchText: String?,
+                                     searchStatus: List<Status> = emptyList(),
+                                     searchXStatus: List<String> = emptyList(),
                                      orderBy: OrderBy,
                                      sortOrder: SortOrder
         ): SimpleSQLiteQuery {
@@ -615,6 +617,23 @@ data class ICal4List(
                 queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ? )"
                 queryArgs.add("%${searchText!!}%")
                 queryArgs.add("%${searchText}%")
+            }
+
+            if (searchStatus.isNotEmpty()) {
+                queryString += "AND ("
+                queryString += searchStatus.joinToString(separator = "OR ", transform = { "$COLUMN_STATUS = ? " })
+                queryArgs.addAll(searchStatus.map { it.status ?:"" })
+
+                if (searchStatus.contains(Status.NO_STATUS))
+                    queryString += "OR $COLUMN_STATUS IS NULL"
+                queryString += ") "
+            }
+
+            if (searchXStatus.isNotEmpty()) {
+                queryString += "AND ("
+                queryString += searchXStatus.joinToString(separator = "OR ", transform = { "$COLUMN_EXTENDED_STATUS = ? " })
+                queryArgs.addAll(searchXStatus.map { it })
+                queryString += ") "
             }
 
             queryString += "ORDER BY ${orderBy.getQueryAppendix(sortOrder)}"

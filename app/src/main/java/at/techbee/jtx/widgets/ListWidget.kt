@@ -75,6 +75,7 @@ class ListWidget : GlanceAppWidget() {
                     searchCategories = listWidgetConfig.searchCategories,
                     searchResources = listWidgetConfig.searchResources,
                     searchStatus = listWidgetConfig.searchStatus,
+                    searchXStatus = listWidgetConfig.searchXStatus,
                     searchClassification = listWidgetConfig.searchClassification,
                     searchPriority = listWidgetConfig.searchPriority,
                     searchCollection = listWidgetConfig.searchCollection,
@@ -120,7 +121,9 @@ class ListWidget : GlanceAppWidget() {
                     hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
                     orderBy = listWidgetConfig.subtasksOrderBy,
                     sortOrder = listWidgetConfig.subtasksSortOrder,
-                    searchText = null
+                    searchText = null,
+                    searchStatus = listWidgetConfig.searchStatus,
+                    searchXStatus = listWidgetConfig.searchXStatus
                 )
             }
             val subnotesQuery = remember(listWidgetConfig) {
@@ -129,7 +132,9 @@ class ListWidget : GlanceAppWidget() {
                     hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
                     orderBy = listWidgetConfig.subnotesOrderBy,
                     sortOrder = listWidgetConfig.subnotesSortOrder,
-                    searchText = null
+                    searchText = null,
+                    searchStatus = listWidgetConfig.searchStatus,
+                    searchXStatus = listWidgetConfig.searchXStatus
                 )
             }
             val subtasks by remember(subtasksQuery) { database.getSubEntriesFlow(subtasksQuery) }.collectAsState(initial = emptyList())
