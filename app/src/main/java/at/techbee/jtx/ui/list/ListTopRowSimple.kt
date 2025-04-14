@@ -104,7 +104,7 @@ fun ListTopRowSimple(
             }
         }
 
-        if(ical4List.due != null) {
+        if(ical4List.due != null && ical4List.status != Status.CANCELLED.status) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
@@ -445,3 +445,19 @@ fun ListTopRowSimple_with_DragHandle_Preview() {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun ListTopRowSimple_Preview_cancelled() {
+    MaterialTheme {
+        ListTopRowSimple(
+            ical4List = ICal4List.getSample().apply {
+                module = Module.TODO.name
+                status = Status.CANCELLED.status
+                due = System.currentTimeMillis() - (1).days.inWholeMilliseconds
+                priority = 5
+            },
+            storedCategories = emptyList(),
+            extendedStatusesAll = emptyList()
+        )
+    }
+}
