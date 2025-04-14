@@ -125,7 +125,7 @@ fun ListTopRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        if (ical4List.module == Module.TODO.name && ical4List.dtstart != null) {
+        if (ical4List.module == Module.TODO.name && ical4List.dtstart != null && ical4List.status != Status.CANCELLED.status) {
             ListBadge(
                 iconRes = R.drawable.ic_widget_start,
                 iconDesc = stringResource(id = R.string.started),
@@ -140,7 +140,7 @@ fun ListTopRow(
                 modifier = Modifier.padding(vertical = 2.dp)
             )
         }
-        if (ical4List.module == Module.TODO.name && ical4List.due != null) {
+        if (ical4List.module == Module.TODO.name && ical4List.due != null && ical4List.status != Status.CANCELLED.status) {
             ListBadge(
                 iconRes = R.drawable.ic_widget_due,
                 iconDesc = stringResource(id = R.string.due),
@@ -343,3 +343,21 @@ fun ListTopRow_Preview() {
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun ListTopRow_Preview_cancelled() {
+    MaterialTheme {
+        ListTopRow(
+            ical4List = ICal4List.getSample(module = Module.TODO).apply { status = Status.CANCELLED.status },
+            categories = listOf(Category(text = "Category"), Category(text = "Test"), Category(text = "Another")),
+            resources = listOf(Resource(text = "Resource"), Resource(text = "Projector")),
+            storedCategories = listOf(StoredCategory("Test", Color.Cyan.toArgb())),
+            storedResources = listOf(StoredResource("Projector", Color.Green.toArgb())),
+            extendedStatuses = listOf(ExtendedStatus("Individual", Module.JOURNAL, Status.FINAL, Color.Green.toArgb())),
+            isAccessibilityMode = false,
+            includeJournalDate = true,
+        )
+    }
+}
+

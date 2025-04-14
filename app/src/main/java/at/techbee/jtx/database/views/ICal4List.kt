@@ -251,11 +251,11 @@ data class ICal4List(
 ) {
 
     companion object {
-        fun getSample() =
+        fun getSample(module: Module = Module.JOURNAL) =
             ICal4List(
                 id = 1L,
-                module = Module.JOURNAL.name,
-                component = Component.VJOURNAL.name,
+                module = module.name,
+                component = if(module == Module.JOURNAL) Component.VJOURNAL.name else Component.VTODO.name,
                 summary = "My Summary",
                 description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
                         "\n" +
