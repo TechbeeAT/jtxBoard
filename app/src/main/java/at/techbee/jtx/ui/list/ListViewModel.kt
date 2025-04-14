@@ -191,7 +191,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
                 orderBy = listSettings.subtasksOrderBy.value,
                 sortOrder = listSettings.subtasksSortOrder.value,
-                searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null
+                searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null,
+                searchStatus = listSettings.searchStatus,
+                searchXStatus = listSettings.searchXStatus
             )
         )
         allSubnotesQuery.postValue(
@@ -200,7 +202,9 @@ open class ListViewModel(application: Application, val module: Module) : Android
                 hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
                 orderBy = listSettings.subnotesOrderBy.value,
                 sortOrder = listSettings.subnotesSortOrder.value,
-                searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null
+                searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null,
+                searchStatus = listSettings.searchStatus,
+                searchXStatus = listSettings.searchXStatus
             )
         )
         if(saveListSettings)
