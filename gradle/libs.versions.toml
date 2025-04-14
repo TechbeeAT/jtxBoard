@@ -43,7 +43,7 @@ playServicesMaps = "19.1.0"
 profileinstaller = "1.4.1"
 reorderable = "2.4.3"
 uiTextGoogleFonts = "1.7.8"
-room = "2.6.1"
+room = "2.7.0"
 volley = "1.2.1"
 
 # gplay and managed build variants
