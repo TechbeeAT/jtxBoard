@@ -41,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import at.techbee.jtx.R
@@ -86,7 +85,6 @@ fun LinkExistingEntryDialog(
 
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        properties = DialogProperties(usePlatformDefaultWidth = false),
         title = { Text(stringResource(R.string.link_selected_as)) },
         text = {
             Column(
