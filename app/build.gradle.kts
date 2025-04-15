@@ -29,7 +29,7 @@ android {
         buildConfigField("long", "buildTime", "${System.currentTimeMillis()}L")
         minSdk = 23
         targetSdk = 35
-        versionCode = 211020003
+        versionCode = 211020004
         versionName = "2.11.02-beta02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField("String", "versionCodename", "\"Pride is a protest \uD83C\uDF08\"")
         multiDexEnabled = true
