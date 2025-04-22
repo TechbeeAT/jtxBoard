@@ -1,0 +1,6 @@
+- Cancelled tasks are not shown as overdue anymore
+- Cancelled entries are not properly hidden when filtered out
+- Presets are now exported with the right file format (JSON)
+- Link subtask dialog Save button remains clickable now
+- Due date is now hidden for cancelled tasks
+- Minor fixes and version updates
