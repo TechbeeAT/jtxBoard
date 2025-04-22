@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Aggiungi Raccolta locale"</string>
     <string name="navigation_drawer_website_news">"Aggiornamenti &amp; Note di Rilascio"</string>
     <string name="color">"Colore"</string>
+    <string name="selected_color">"Colore selezionato"</string>
+    <string name="system_colors">"Colori di sistema"</string>
     <string name="priority_0_no_priority">"Nessuna priorità"</string>
     <string name="priority_1_highest">"1 - Più alto"</string>
     <string name="priority_2_higher">"2 - Superiore"</string>
@@ -346,6 +348,12 @@
     <string name="presets_import_invalid_file">"File non valido"</string>
     <string name="presets_saved">"Preimpostazioni salvate"</string>
     <string name="presets_export_error">"Errore durante il salvataggio delle preimpostazioni"</string>
+    <string name="settings_export_settings">"Esporta impostazioni"</string>
+    <string name="settings_import_settings">"Importa impostazioni"</string>
+    <string name="settings_imported">"Impostazioni importate"</string>
+    <string name="settings_import_invalid_file">"File non valido"</string>
+    <string name="settings_exported">"Impostazioni esportate"</string>
+    <string name="settings_export_error">"Si è verificato un errore durante l'esportazione delle impostazioni"</string>
     <string name="more">"Di più"</string>
     <string name="navigation_drawer_buypro">"Compra Pro"</string>
     <string name="settings_select_theme">"Seleziona tema"</string>
@@ -573,7 +581,7 @@ Grazie!"</string>
     <string name="settings_auto_alarm">"Promemoria automatico"</string>
     <string name="alarms_always_ondue">"Sempre in scadenza"</string>
     <string name="alarms_always_on_save">"Sempre al salvataggio (sperimentale)"</string>
-    <string name="settings_auto_alarm_sub">"Attiva per creare automaticamente le notifiche. Scegliere ´\"Sempre attivo\" per non creare una notifica, ma per essere avvisati in ogni caso quando un'attività è in scadenza."</string>
+    <string name="settings_auto_alarm_sub">"Attiva per creare automaticamente i promemoria. Scegliere \"Sempre attivo\" per non creare una notifica, ma per essere avvisati in ogni caso quando un'attività è in scadenza."</string>
     <string name="settings_protect_biometric">"Proteggi le voci con la biometria"</string>
     <string name="settings_protect_biometric_sub">"Questa funzione nasconde le voci selezionate fino a quando non vengono sbloccate con dati biometrici, ma non crittografa/decifrano i dati in background."</string>
     <!-- Strings for values in properties of an ICalObject -->
