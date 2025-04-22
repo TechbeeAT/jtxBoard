@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.about
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Arrangement
@@ -45,13 +44,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Library
 import com.mikepenz.aboutlibraries.entity.License
 import com.mikepenz.aboutlibraries.entity.Organization
-import com.mikepenz.aboutlibraries.ui.compose.m3.util.author
+import com.mikepenz.aboutlibraries.ui.compose.util.author
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
 
@@ -204,11 +204,10 @@ fun AboutLibrariesLib(
                     if (library.licenses.isNotEmpty()) {
                         library.licenses.forEach { license ->
 
-                            val uri = try { Uri.parse(license.url) } catch (e: NullPointerException) { null } ?: return@forEach
-
+                            val licenseUri = license.url?.toUri() ?: return@forEach
 
                             IconButton(
-                                onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, uri)) },
+                                onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, licenseUri)) },
                                 content = {
                                     Icon(Icons.Outlined.Balance, stringResource(id = R.string.open_in_browser))
                                 }
@@ -216,14 +215,10 @@ fun AboutLibrariesLib(
                         }
                     }
 
-                    if (library.website?.isNotEmpty() == true) {
-
-                        val uri = try { Uri.parse(library.website) } catch (e: java.lang.NullPointerException) { null }
-
+                    library.website?.toUri()?.let { websiteUri ->
                         IconButton(
                             onClick = {
-                                if(uri != null)
-                                    context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+                                context.startActivity(Intent(Intent.ACTION_VIEW, websiteUri))
                             },
                             content = {
                                 Icon(Icons.Outlined.Public, stringResource(id = R.string.open_in_browser))
