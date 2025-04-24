@@ -9,7 +9,6 @@
 
 
 plugins {
-    alias(libs.plugins.mikepenz.aboutLibraries)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.android)
@@ -17,6 +16,7 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.baselineprofile)
+    alias(libs.plugins.mikepenz.aboutLibraries)
     //alias(libs.plugins.huawei.agconnect)
 }
 
