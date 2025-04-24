@@ -204,6 +204,7 @@ fun AboutLibrariesLib(
                     if (library.licenses.isNotEmpty()) {
                         library.licenses.forEach { license ->
 
+                            if (license.url.isNullOrBlank()) return@forEach
                             val licenseUri = license.url?.toUri() ?: return@forEach
 
                             IconButton(
@@ -215,10 +216,10 @@ fun AboutLibrariesLib(
                         }
                     }
 
-                    library.website?.toUri()?.let { websiteUri ->
+                    if(library.website?.isNotBlank() == true) {
                         IconButton(
                             onClick = {
-                                context.startActivity(Intent(Intent.ACTION_VIEW, websiteUri))
+                                context.startActivity(Intent(Intent.ACTION_VIEW, library.website?.toUri()))
                             },
                             content = {
                                 Icon(Icons.Outlined.Public, stringResource(id = R.string.open_in_browser))
