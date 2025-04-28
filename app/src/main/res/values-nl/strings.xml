@@ -84,7 +84,7 @@
     <string name="list_scroll_to_top">"Naar boven scrollen"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"App-machtigingen"</string>
-    <string name="view_fragment_audio_permission_message">"jtx Board heeft toestemming nodig om audio op te nemen of speech-to-text functies te gebruiken. Geef de toestemming om deze functie te gebruiken."</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board heeft toestemming nodig om audio op te nemen of tekst-naar-spraak functies te gebruiken. Geef de toestemming om deze functie te gebruiken."</string>
     <string name="view_reccurrence_note_is_exception">"Dit item is een uitzondering op een periodieke invoer."</string>
     <string name="view_feedback_linked_notes">"Feedback / Gekoppelde notities"</string>
     <string name="view_subtask_of">"Subtaak van"</string>
@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Verzameling toevoegen"</string>
     <string name="navigation_drawer_website_news">"Nieuws &amp; Release opmerkingen"</string>
     <string name="color">"Kleur"</string>
+    <string name="selected_color">"Geselecteerde kleur"</string>
+    <string name="system_colors">"Systeemkleuren"</string>
     <string name="priority_0_no_priority">"Geen prioriteit"</string>
     <string name="priority_1_highest">"1 - Hoogste"</string>
     <string name="priority_2_higher">"2 - Hoger"</string>
@@ -253,6 +255,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Externe verzameling toevoegen (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Tonen in %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Exporteren als .ics"</string>
+    <string name="export_as_csv">"Exporteren als csv"</string>
     <string name="journal">"Logboek"</string>
     <string name="note">"Notitie"</string>
     <string name="task">"Taak"</string>
@@ -280,7 +283,7 @@
     <string name="summary">"Onderwerp"</string>
     <string name="description">"Beschrijving"</string>
     <string name="search">"Zoeken"</string>
-    <string name="search_journals">Doorzoek lLogboeken</string>
+    <string name="search_journals">Doorzoek logboeken</string>
     <string name="search_notes">Doorzoek notities</string>
     <string name="search_todos">Zoek taken</string>
     <string name="filter">"Filter"</string>
@@ -334,6 +337,8 @@
     <string name="edit_recur_ends_never">"stopt niet"</string>
     <string name="edit_recur_ends_on">"stopt op"</string>
     <string name="edit_recur_ends_after">"stopt na"</string>
+    <string name="list_toast_export_success">"Lijst succesvol geëxporteerd"</string>
+    <string name="list_toast_export_error">"Fout bij het exporteren van lijst"</string>
     <string name="collections_toast_export_success">"Collecties succesvol geëxporteerd"</string>
     <string name="collections_toast_export_error">"Exporteren collecties mislukt"</string>
     <string name="menu_collections_export_all">"Alles exporteren"</string>
@@ -343,6 +348,12 @@
     <string name="presets_import_invalid_file">"Ongeldig bestand"</string>
     <string name="presets_saved">"Voorinstellingen opgeslagen"</string>
     <string name="presets_export_error">"Er is een fout opgetreden bij het opslaan van voorinstellingen"</string>
+    <string name="settings_export_settings">"Instellingen exporteren"</string>
+    <string name="settings_import_settings">"Instellingen importeren"</string>
+    <string name="settings_imported">"Instellingen geïmporteerd"</string>
+    <string name="settings_import_invalid_file">"Ongeldig bestand"</string>
+    <string name="settings_exported">"Instellingen geëxporteerd"</string>
+    <string name="settings_export_error">"Er is een fout opgetreden bij het exporteren van instellingen"</string>
     <string name="more">"Meer"</string>
     <string name="navigation_drawer_buypro">"Koop Pro"</string>
     <string name="settings_select_theme">"Themakleur"</string>
@@ -610,6 +621,7 @@ Dank u!"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Opgelet: Momenteel wordt slechts één hiërarchieniveau ondersteund in de widget. Om de items van lagere niveaus te zien, gebruik in plaats daarvan de platte weergave."</string>
     <string name="widget_list_maximum_entries_reached">"Maximum aantal items in widget bereikt (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Widget bijwerken"</string>
+    <string name="widget_list_default_categories">"Stel standaard categorieën in voor nieuwe items uit widget"</string>
     <string name="opacity">"Transparantie"</string>
     <string name="general">"Algemeen"</string>
     <string name="list_collapse">"Inklappen"</string>
