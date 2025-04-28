@@ -8,9 +8,9 @@
     <string name="save">"Opslaan"</string>
     <string name="update">"Bijwerken"</string>
     <string name="cancel">"Annuleren"</string>
-    <string name="ok">"OK"</string>
+    <string name="ok">"Oké"</string>
     <string name="delete">"Verwijderen"</string>
-    <string name="discard">"Annuleren"</string>
+    <string name="discard">"Verwerpen"</string>
     <string name="dismiss">"Afwijzen"</string>
     <string name="open">"Openen"</string>
     <string name="cont">"Volgende"</string>
