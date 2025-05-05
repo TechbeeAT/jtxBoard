@@ -176,7 +176,7 @@
     <string name="donate_header_developer_note">"سلام، من پاتریک هستم، توسعه‌دهنده‌ی jtx Board. من وقت و تلاش زیادی رو روی این برنامه گذاشتم که اون رو رایگان بهتون پیشنهاد دادم. اگر این برنامه رو دوست دارید، لطفا کمی عشق بفرستید و یه هدیه کوچولو بدید!"</string>
     <string name="donate_thank_you">"ممنون از شما!"</string>
     <string name="donate_donate_with">"هدیه‌دادن با"</string>
-    <string name="donate_other_donation_methods">"اگر می‌خواهید روش دیگه‌ای رو برای هدیه‌دادن درنظر بگیرید، لطفا وب‌سایتمون رو ببینید:"</string>
+    <string name="donate_other_donation_methods">"اگر می‌خواهید روش دیگری را برای هدیه‌دادن درنظر بگیرید، لطفا وبگاه‌مان را ببینید:"</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"هیچ برنامه‌ای برای بازکردن این فایل/نشانی یافت نشد."</string>
     <string name="toast_item_is_now_recu_exception">"مورد تکرارشونده اکنون یک استثناست."</string>
     <string name="toast_done_tasks_deleted">"کارهای انجام‌شده پاک شدند (%d)."</string>
