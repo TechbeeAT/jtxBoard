@@ -104,7 +104,16 @@ data class Category (
                 return emptyList()
 
             val categories = mutableListOf<Category>()
-            val matcher = Pattern.compile("#[a-zA-Z0-9]*").matcher(text)
+            // Explanation of the regex pattern:
+            // #           : Matches the literal '#' character.
+            // \\p{L}      : Matches any kind of letter from any language.
+            // \\p{M}*     : Matches zero or more combining characters (like accents) from any language.
+            // (           : Start of a non-capturing group.
+            //  \\p{L}\\p{M}*  : Matches a letter optionally followed by combining marks (again).
+            //  |           : OR
+            //  [0-9]       : Matches a digit.
+            // )*          : The whole group (letter with combining marks or digit) can occur zero or more times.
+            val matcher = Pattern.compile("#\\p{L}\\p{M}*(\\p{L}\\p{M}*|[0-9])*").matcher(text)
             while (matcher.find()) {
                 if(matcher.group().length >= 2)    // hashtag should have at least one character
                     categories.add(Category(text = matcher.group()))
