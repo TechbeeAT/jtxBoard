@@ -130,7 +130,7 @@ fun SettingsScreen(
     }
 
     val languageOptions =
-        listOf("en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu", "vi", "sv")
+        listOf("en", "de", "cs", "el", "es", "fa", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu", "vi", "sv")
             .map {
                 if(it == "zh-rTW")
                     Locale.TRADITIONAL_CHINESE
