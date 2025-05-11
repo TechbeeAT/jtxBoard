@@ -33,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
+import androidx.core.content.edit
 
 
 class NotificationPublisher : BroadcastReceiver() {
@@ -163,7 +164,7 @@ class NotificationPublisher : BroadcastReceiver() {
                         database.setAlarmNotification(iCalObjectId.toLong(), true)
                     }
                 }
-            prefs.edit().remove(PREFS_SCHEDULED_ALARMS).apply()
+            prefs.edit { remove(PREFS_SCHEDULED_ALARMS) }
             // End Legacy handling
         }
 
