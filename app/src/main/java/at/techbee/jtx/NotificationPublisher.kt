@@ -216,7 +216,7 @@ class NotificationPublisher : BroadcastReceiver() {
             val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
             val collections = database.getAllCollectionsSync()
 
-            database.getICalObjectsWithActiveAlarms().forEach { iCalObject ->
+            database.getICalObjectsWithActiveAlarmsInPast().forEach { iCalObject ->
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                     val notification = Alarm.createNotification(
                         iCalObject.id,
