@@ -206,7 +206,7 @@ fun ListScreenTabContainer(
                         outputStream.write(csvData.joinToString(separator = System.lineSeparator()).toByteArray())
                     }
                     listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_success)
-                } catch (e: IOException) {
+                } catch (_: IOException) {
                     listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_error)
                 }
             }
@@ -763,7 +763,7 @@ fun ListScreenTabContainer(
                                 storedResources = database.getStoredResources().observeAsState(emptyList()).value,
                                 storedListSettings = database.getStoredListSettings(listOf(listViewModel.module.name)).observeAsState(emptyList()).value,
                                 numShownEntries = iCal4ListRel.size,
-                                numAllEntries = database.getCount4List(module = listViewModel.module.name).observeAsState(0).value,
+                                numAllEntries = database.getICal4ListCount(module = listViewModel.module.name).observeAsState(0).value,
                                 isFilterActive = listViewModel.listSettings.isFilterActive(),
                                 isAccessibilityMode = settingsStateHolder.settingAccessibilityMode.value,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
