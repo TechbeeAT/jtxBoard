@@ -12,6 +12,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import at.techbee.jtx.database.ICalDatabase
@@ -36,10 +37,10 @@ class FileCleanupJob (private val appContext: Context, workerParams: WorkerParam
 
             val allAttachmentUris = database.getAllAttachmentUris()
             allAttachmentUris.forEach { attachment2keep ->
-                foundFileContentUris.remove(Uri.parse(attachment2keep))
+                foundFileContentUris.remove(attachment2keep.toUri())
             }
 
-            if(foundFileContentUris.size == 0)
+            if(foundFileContentUris.isEmpty())
                 Log.d("FileCleanupJob", "No files to delete")
             else {
                 foundFileContentUris.forEach {
