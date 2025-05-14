@@ -1,0 +1,2 @@
+- Creation date is now preserved when an entry is moved to another collection
+- Library updates

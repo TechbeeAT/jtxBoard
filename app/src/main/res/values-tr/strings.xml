@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board Günlükleri, Notları &amp; Görevleri eşitleyin"</string>
-    <string name="app_permission_desc">"jtx Board içeriğini DAVx⁵ gibi uygulamalarla eşitleyin"</string>
+    <string name="app_permission_label">"jtx Board Günlükleri, Notları &amp; Görevleri eşleyin"</string>
+    <string name="app_permission_desc">"jtx Board içeriğini DAVx⁵ gibi uygulamalarla eşleyin"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Kaydet"</string>

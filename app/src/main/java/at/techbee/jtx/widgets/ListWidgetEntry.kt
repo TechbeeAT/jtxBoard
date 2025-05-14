@@ -124,7 +124,7 @@ fun ListEntry(
                             modifier = GlanceModifier.padding(end = 8.dp)
                         )
                     }
-                    if (obj.due != null) {
+                    if (obj.due != null && obj.status != Status.CANCELLED.status) {
                         Image(
                             provider = ImageProvider(R.drawable.ic_widget_due),
                             contentDescription = context.getString(R.string.due),

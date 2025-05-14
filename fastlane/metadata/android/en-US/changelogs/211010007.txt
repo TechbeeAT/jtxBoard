@@ -1,0 +1,5 @@
+- Fixes full-screen alarm not being shown full screen when device is locked
+- Fixes bug when multiple alarms are present on the same entry, also the first alarm is now triggered correctly
+- Fixes bug that task notifications lose quick action buttons when swiped away
+- Fixes bug that after restart notifications/alarms might not be triggered
+- Version updates

@@ -14,6 +14,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import at.techbee.jtx.BuildConfig
 import com.android.volley.toolbox.JsonArrayRequest
@@ -88,8 +89,8 @@ class AboutViewModel(application: Application) : AndroidViewModel(application) {
                     for(i in 0 until response.length()) {
                         val contributor = Contributor(
                             login = response.getJSONObject(i).getString("login"),
-                            url = response.getJSONObject(i).getString("url")?.let { Uri.parse(it) },
-                            avatarUrl = response.getJSONObject(i).getString("avatar_url")?.let { Uri.parse(it) }
+                            url = response.getJSONObject(i).getString("url").toUri(),
+                            avatarUrl = response.getJSONObject(i).getString("avatar_url").toUri()
                         )
                         if(!contributors.contains(contributor))
                             contributors.add(contributor)
@@ -173,8 +174,8 @@ data class Contributor(
     companion object {
         fun getSample() = Contributor(
             login = "Sample",
-            url = Uri.parse("https://github.com/patrickunterwegs"),
-            avatarUrl = Uri.parse("")
+            url = "https://github.com/patrickunterwegs".toUri(),
+            avatarUrl = "".toUri()
         )
     }
 }

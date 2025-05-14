@@ -21,6 +21,7 @@ import android.os.ParcelFileDescriptor
 import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.annotation.VisibleForTesting
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.FileProvider
 import androidx.glance.appwidget.updateAll
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -231,6 +232,17 @@ class SyncContentProvider : ContentProvider() {
         val countQuery = SimpleSQLiteQuery(countQueryString, args.toArray())
         count = database.executeRAW(countQuery)
 
+        // remember entries with alarms
+        val activeAlarms = mutableListOf<Long>()
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
+            || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM
+            || sUriMatcher.match(uri) == CODE_COLLECTION_ITEM
+            || sUriMatcher.match(uri) == CODE_COLLECTION_DIR
+        ) {
+            //remove orphaned notifications if the flags are set and marked for deletion
+            activeAlarms.addAll(database.getICalObjectsWithActiveAlarmsInPast().map { it.id })
+        }
+
         val deleteQuery = SimpleSQLiteQuery(queryString, args.toArray())
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query prepared: $queryString")
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
@@ -241,14 +253,27 @@ class SyncContentProvider : ContentProvider() {
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
 
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
+            || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM
+            || sUriMatcher.match(uri) == CODE_COLLECTION_ITEM
+            || sUriMatcher.match(uri) == CODE_COLLECTION_DIR
+        ) {
+            //remove all entries that are still there so we can cancel the ones that are now missing in the DB
+            activeAlarms.removeAll(database.getICalObjectsWithActiveAlarmsInPast().map { it.id })
+            activeAlarms.forEach { deletedICalObjectId ->
+                NotificationManagerCompat.from(context!!).cancel(deletedICalObjectId.toInt())
+            }
+        }
+
         if(sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             NotificationPublisher.scheduleNextNotifications(context!!)
 
         if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM || sUriMatcher.match(
                 uri
             ) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR
-        )
+        ) {
             database.removeOrphans()    // remove orpahns (recurring instances of a deleted original item)
+        }
 
         CoroutineScope(Dispatchers.Default).launch {
             context?.let { ListWidget().updateAll(it) }
@@ -348,7 +373,7 @@ class SyncContentProvider : ContentProvider() {
                         referenceTimezone = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.dueTimezone else iCalObject.dtstartTimezone
                     )
                 } catch (e: java.lang.IllegalArgumentException) {
-                    Log.w("Duration", "Illegal Duration detected")
+                    Log.w("Duration", "Illegal Duration detected\n${e.stackTraceToString()}")
                 }
             }
             database.updateAlarm(alarm)
@@ -576,9 +601,30 @@ class SyncContentProvider : ContentProvider() {
 
         val updateQuery = SimpleSQLiteQuery(queryString, args.toArray())
 
+        // remember entries with alarms
+        val activeAlarms = mutableListOf<Long>()
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
+            || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM
+        ) {
+            //remove orphaned notifications if the flags are set and marked for deletion
+            activeAlarms.addAll(database.getICalObjectsWithActiveAlarmsInPast().map { it.id })
+        }
+
         // TODO: find a solution to efficiently return the actual count of updated rows (the return value of the RAW-query doesn't work)
         //val count = database.updateRAW(updateQuery)
         database.executeRAW(updateQuery)
+
+        //Remove alarms if obsolete
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
+            || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM
+        ) {
+            //remove all entries that are still there so we can cancel the ones that are now missing in the DB
+            activeAlarms.removeAll(database.getICalObjectsWithActiveAlarmsInPast().map { it.id })
+            activeAlarms.forEach { deletedICalObjectId ->
+                NotificationManagerCompat.from(context!!).cancel(deletedICalObjectId.toInt())
+            }
+        }
+
 
         // updates on recurring instances through bulk updates should not occur, only updates on single items will update the recurring instances
         if (sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(
@@ -620,7 +666,7 @@ class SyncContentProvider : ContentProvider() {
                             referenceTimezone = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.dueTimezone else iCalObject.dtstartTimezone
                         )
                     } catch (e: java.lang.IllegalArgumentException) {
-                        Log.w("Duration", "Illegal Duration detected")
+                        Log.w("Duration", "Illegal Duration detected\n${e.stackTraceToString()}")
                     }
                 }
                 database.updateAlarm(alarm)

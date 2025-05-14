@@ -33,6 +33,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
+import androidx.core.content.edit
 
 
 class NotificationPublisher : BroadcastReceiver() {
@@ -144,6 +145,12 @@ class NotificationPublisher : BroadcastReceiver() {
             }
 
             alarms.forEach { alarm ->
+                // consider only the closest alarm if two same icalObjectIds exist.
+                if(alarms.any {
+                        it.icalObjectId == alarm.icalObjectId && (it.triggerTime ?: Long.MAX_VALUE) < (alarm.triggerTime ?: Long.MAX_VALUE)
+                    })
+                    return@forEach
+
                 val iCal4List = database.getICal4ListSync(alarm.icalObjectId) ?: return@forEach
                 alarm.scheduleNotification(context = context, requestCode = iCal4List.id.toInt(), isReadOnly = iCal4List.isReadOnly, notificationSummary = iCal4List.summary, notificationDescription = iCal4List.description)
             }
@@ -157,7 +164,7 @@ class NotificationPublisher : BroadcastReceiver() {
                         database.setAlarmNotification(iCalObjectId.toLong(), true)
                     }
                 }
-            prefs.edit().remove(PREFS_SCHEDULED_ALARMS).apply()
+            prefs.edit { remove(PREFS_SCHEDULED_ALARMS) }
             // End Legacy handling
         }
 
@@ -208,15 +215,16 @@ class NotificationPublisher : BroadcastReceiver() {
         fun restoreAlarms(context: Context) {
             val notificationManager = NotificationManagerCompat.from(context)
             val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+            val collections = database.getAllCollectionsSync()
 
-            database.getICalObjectsWithActiveAlarms().forEach { iCalObject ->
+            database.getICalObjectsWithActiveAlarmsInPast().forEach { iCalObject ->
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                     val notification = Alarm.createNotification(
                         iCalObject.id,
-                        0L,
+                        database.getAlarmsSync(iCalObject.id).firstOrNull()?.alarmId?:0L, // if any explicit alarm exists, we take it an pass it on to make the actions available.
                         iCalObject.summary,
                         iCalObject.description,
-                        true,
+                        collections.find { collection -> collection.collectionId == iCalObject.collectionId }?.readonly ?: true,
                         MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
                         context
                     )
