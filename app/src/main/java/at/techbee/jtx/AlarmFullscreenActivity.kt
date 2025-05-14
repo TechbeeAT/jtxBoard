@@ -1,6 +1,5 @@
 package at.techbee.jtx
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -78,7 +77,7 @@ class AlarmFullscreenActivity : AppCompatActivity() {
         val icalObjectId = intent.getLongExtra(NotificationPublisher.ICALOBJECT_ID, 0L)
 
         if(alarmId == 0L && icalObjectId == 0L) {
-            setResult(Activity.RESULT_CANCELED)
+            setResult(RESULT_CANCELED)
             finish()
         }
 
@@ -119,7 +118,7 @@ class AlarmFullscreenActivity : AppCompatActivity() {
                                         database.setAlarmNotification(icalObjectId, false)
                                     }
                                 }
-                                setResult(Activity.RESULT_CANCELED)
+                                setResult(RESULT_CANCELED)
                                 finish()
                             }
                         )
