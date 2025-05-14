@@ -210,7 +210,7 @@ fun ListScreenTabContainer(
                         outputStream.write(csvData.joinToString(separator = System.lineSeparator()).toByteArray())
                     }
                     listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_success)
-                } catch (e: IOException) {
+                } catch (_: IOException) {
                     listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_error)
                 }
             }
