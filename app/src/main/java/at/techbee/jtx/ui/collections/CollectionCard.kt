@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.collections
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -150,7 +150,9 @@ fun CollectionCard(
                             }
                             if(collection.accountType != LOCAL_ACCOUNT_TYPE) {
                                 Text(
-                                    text = try { Uri.parse(collection.url).host } catch (e: NullPointerException) { null } ?: "",
+                                    text = try {
+                                        collection.url.toUri().host
+                                    } catch (_: NullPointerException) { null } ?: "",
                                     style = MaterialTheme.typography.labelMedium,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,

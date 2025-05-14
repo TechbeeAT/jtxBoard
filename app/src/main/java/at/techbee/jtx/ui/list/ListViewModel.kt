@@ -16,6 +16,7 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.edit
 import androidx.glance.appwidget.updateAll
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -119,7 +120,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
         if(settings.getBoolean(PREFS_ISFIRSTRUN, true)) {    // never add welcome entries in instrumented tests
             if (firstInstall > 1641596400000L)
                 addWelcomeEntries(application)
-            settings.edit().putBoolean(PREFS_ISFIRSTRUN, false).apply()
+            settings.edit { putBoolean(PREFS_ISFIRSTRUN, false) }
         }
     }
 

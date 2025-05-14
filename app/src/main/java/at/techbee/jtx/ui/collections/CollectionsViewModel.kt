@@ -118,7 +118,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
                     }
                 }
                 toastText.postValue(_application.getString(R.string.collections_toast_export_success))
-            } catch (e: IOException) {
+            } catch (_: IOException) {
                 toastText.postValue(_application.getString(R.string.collections_toast_export_error))
             } finally {
                 isProcessing.postValue(false)

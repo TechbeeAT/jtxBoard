@@ -94,7 +94,7 @@ fun PresetsScreen(
                 }
                 context.getString(R.string.presets_saved)
             }
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             toastMessage= context.getString(R.string.presets_export_error)
         }
     }
@@ -107,7 +107,7 @@ fun PresetsScreen(
             val presetDataJson = inputStream.readBytes().decodeToString()
             val presetData = try {
                 Json.decodeFromString<PresetData>(presetDataJson)
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 toastMessage = context.getString(R.string.presets_import_invalid_file)
                 return@rememberLauncherForActivityResult
             }

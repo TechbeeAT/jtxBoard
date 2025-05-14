@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.about
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
 
@@ -75,7 +75,7 @@ fun AboutTranslations(
                 context.startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse("https://crowdin.com/project/jtx-board/invite?h=a8fd45e2dfea25534eda503b441476ea1545967")
+                        "https://crowdin.com/project/jtx-board/invite?h=a8fd45e2dfea25534eda503b441476ea1545967".toUri()
                     )
                 )
             }) {
