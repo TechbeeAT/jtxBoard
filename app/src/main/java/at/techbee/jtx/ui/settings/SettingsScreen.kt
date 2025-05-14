@@ -175,7 +175,7 @@ fun SettingsScreen(
                 }
             }
             toastMessage = context.getString(R.string.settings_exported)
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             toastMessage= context.getString(R.string.settings_export_error)
         }
     }
@@ -394,7 +394,7 @@ fun SettingsScreen(
                     }
                     toastMessage = context.getString(R.string.settings_imported)
                 }
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 toastMessage = context.getString(R.string.presets_import_invalid_file)
             }
         }
