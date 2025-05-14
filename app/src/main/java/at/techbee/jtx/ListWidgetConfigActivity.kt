@@ -8,7 +8,6 @@
 
 package at.techbee.jtx
 
-import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
@@ -40,7 +39,6 @@ import at.techbee.jtx.widgets.ListWidget
 import at.techbee.jtx.widgets.ListWidgetConfig
 import at.techbee.jtx.widgets.ListWidgetConfigContent
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 private const val TAG = "WidgetConfigAct"
@@ -116,12 +114,12 @@ class ListWidgetConfigActivity : ComponentActivity() {
                                         AppWidgetManager.EXTRA_APPWIDGET_ID,
                                         appWidgetId
                                     )
-                                    setResult(Activity.RESULT_OK, resultValue)
+                                    setResult(RESULT_OK, resultValue)
                                     finish()
                                 }
                             },
                             onCancel = {
-                                setResult(Activity.RESULT_CANCELED)
+                                setResult(RESULT_CANCELED)
                                 finish()
                             }
                         )
