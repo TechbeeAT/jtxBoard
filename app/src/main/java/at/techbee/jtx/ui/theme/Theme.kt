@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import at.techbee.jtx.util.UiUtil
 
-private val _darkColorScheme = darkColorScheme(
+private val darkColorScheme = darkColorScheme(
     primary = md_theme_light_primary,
     secondary = md_theme_light_secondary,
     tertiary = md_theme_light_tertiary,
@@ -38,10 +38,18 @@ private val _darkColorScheme = darkColorScheme(
     onSurface = md_theme_dark_onSurface,
     surfaceVariant = md_theme_dark_surfaceVariant,
     onSurfaceVariant = md_theme_dark_onSurfaceVariant,
-    inverseOnSurface = md_theme_dark_inverseOnSurface
+    inverseOnSurface = md_theme_dark_inverseOnSurface,
+
+    inversePrimary = md_theme_dark_inversePrimary,
+    surfaceTint = md_theme_light_primary,
+    inverseSurface = md_theme_dark_inverseSurface,
+    error = md_theme_dark_error,
+    onError = md_theme_dark_onError,
+    onErrorContainer = md_theme_dark_onErrorContainer,
+    outline = md_theme_dark_outline
 )
 
-private val _lightColorScheme = lightColorScheme(
+private val lightColorScheme = lightColorScheme(
     primary = md_theme_dark_primary,
     secondary = md_theme_dark_secondary,
     tertiary = md_theme_dark_tertiary,
@@ -60,10 +68,18 @@ private val _lightColorScheme = lightColorScheme(
     onSurface = md_theme_light_onSurface,
     surfaceVariant = md_theme_light_surfaceVariant,
     onSurfaceVariant = md_theme_light_onSurfaceVariant,
-    inverseOnSurface = md_theme_light_inverseOnSurface
+    inverseOnSurface = md_theme_light_inverseOnSurface,
+
+    inversePrimary = md_theme_light_inversePrimary,
+    surfaceTint = md_theme_light_primary,
+    inverseSurface = md_theme_light_inverseSurface,
+    error = md_theme_light_error,
+    onError = md_theme_light_onError,
+    onErrorContainer = md_theme_light_onErrorContainer,
+    outline = md_theme_light_outline
 )
 
-private val _contrastColorScheme = lightColorScheme(
+private val contrastColorScheme = lightColorScheme(
     primary = Color.Black,
     secondary = Color(0xFF272727),
     tertiary = Color(0xFF505050),
@@ -76,13 +92,31 @@ private val _contrastColorScheme = lightColorScheme(
     primaryContainer = Color.White,
     onPrimaryContainer = Color.Black,
     onSecondary = Color.White,
-    secondaryContainer = Color(0xFFECECEC),
+    secondaryContainer = Color(0xFFFAFAFA),
     onSecondaryContainer = Color.DarkGray,
     onTertiary = Color.White,
     onBackground = Color.Black,
-    surfaceVariant = Color(0xFFD1D1D1),
+    surfaceVariant = Color(0xFFFAFAFA),
     onSurfaceVariant = Color.Black,
-    inverseOnSurface = Color.White
+    inverseOnSurface = Color.White,
+
+    inversePrimary = Color.White,
+    surfaceTint = Color.White,
+    inverseSurface = Color.Black,
+    error = Color.Red,
+    onError = Color.White,
+    onErrorContainer = Color.White,
+    outline = Color.Black,
+
+    outlineVariant = Color.DarkGray,
+    scrim = Color.DarkGray,
+    surfaceBright = Color.White,
+    surfaceContainer = Color.White,
+    surfaceContainerLow = Color.White,
+    surfaceContainerLowest = Color.White,
+    surfaceContainerHigh = Color.White,
+    surfaceContainerHighest = Color.White,
+    surfaceDim = Color.White
 )
 
 /**
@@ -115,13 +149,13 @@ fun JtxBoardTheme(
 
     // dynamic colors are only loaded in pro!
     val colorScheme = when {
-        contrastTheme -> _contrastColorScheme
+        contrastTheme -> contrastColorScheme
         trueDarkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicDarkColorScheme(context).copy(background = Color.Black, surface = Color.Black)
-        trueDarkTheme -> _darkColorScheme.copy(background = Color.Black, surface = Color.Black)
+        trueDarkTheme -> darkColorScheme.copy(background = Color.Black, surface = Color.Black)
         darkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicDarkColorScheme(context)
         !darkTheme && dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> dynamicLightColorScheme(context)
-        darkTheme -> _darkColorScheme
-        else -> _lightColorScheme
+        darkTheme -> darkColorScheme
+        else -> lightColorScheme
     }
 
     SideEffect {
