@@ -313,7 +313,7 @@ data class Alarm(
                     setAutoCancel(true)
                 }
                 //.setStyle(NotificationCompat.BigTextStyle().bigText(text))
-                if (!isReadOnly && alarmId != 0L) {    // no alarm for readonly entries and implicit alarms that come only from the due date
+                if (!isReadOnly && alarmId != 0L) {    // no action for readonly entries and implicit alarms that come only from the due date
                     addAction(
                         R.drawable.ic_snooze,
                         context.getString(R.string.notification_add_1h),

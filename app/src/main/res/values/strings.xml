@@ -360,6 +360,12 @@
     <string name="presets_import_invalid_file">"Invalid file"</string>
     <string name="presets_saved">"Presets saved"</string>
     <string name="presets_export_error">"An error occurred saving presets"</string>
+    <string name="settings_export_settings">"Export settings"</string>
+    <string name="settings_import_settings">"Import settings"</string>
+    <string name="settings_imported">"Settings imported"</string>
+    <string name="settings_import_invalid_file">"Invalid file"</string>
+    <string name="settings_exported">"Settings exported"</string>
+    <string name="settings_export_error">"An error occurred while exporting settings"</string>
     <string name="more">"More"</string>
     <string name="navigation_drawer_buypro">"Buy Pro"</string>
     <string name="settings_select_theme">"Select theme"</string>

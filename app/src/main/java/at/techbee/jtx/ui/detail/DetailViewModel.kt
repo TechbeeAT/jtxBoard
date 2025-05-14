@@ -555,13 +555,16 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun createCopy(newModule: Module) {
+        val parentUID = relatedParents.value?.firstOrNull()?.uid
+
         viewModelScope.launch(Dispatchers.IO) {
 
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
             val newId = databaseDao.createCopy(
                 iCalObjectIdToCopy = mainICalObjectId!!,
-                newModule = newModule,
+                module = newModule,
+                parentUID = parentUID
             )
             withContext(Dispatchers.Main) {
                 changeState.value = DetailChangeState.CHANGESAVED

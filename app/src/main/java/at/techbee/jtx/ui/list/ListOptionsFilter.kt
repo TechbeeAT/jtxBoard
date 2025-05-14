@@ -263,6 +263,9 @@ fun ListOptionsFilter(
             },
             onInvertSelection = {
                 listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
+                if (module == Module.TODO || module == Module.JOURNAL)
+                    listSettings.isFilterNoDatesSet.value =
+                        !listSettings.isFilterNoDatesSet.value
                 onListSettingsChanged()
             })
         {
@@ -270,9 +273,6 @@ fun ListOptionsFilter(
                 selected = listSettings.isExcludeDone.value,
                 onClick = {
                     listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
-                    if (module == Module.TODO || module == Module.JOURNAL)
-                        listSettings.isFilterNoDatesSet.value =
-                            !listSettings.isFilterNoDatesSet.value
                     onListSettingsChanged()
                 },
                 label = { Text(stringResource(id = R.string.list_hide_completed_tasks)) }
@@ -536,7 +536,6 @@ fun ListOptionsFilter(
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
-                    listSettings.isExcludeDone.value = !listSettings.isExcludeDone.value
                     listSettings.isFilterNoCompletedDateSet.value =
                         !listSettings.isFilterNoCompletedDateSet.value
                     listSettings.filterCompletedRangeStart.value = null

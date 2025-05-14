@@ -1,0 +1,4 @@
+- Settings can now be exported and imported
+- Cancelled entries are now also crossed out in the widget
+- Fixed crash when editing presets
+- Version updates

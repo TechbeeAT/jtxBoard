@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.collections
 
-import android.app.Application
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,7 +21,6 @@ import androidx.compose.material.icons.outlined.LocalLibrary
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -39,9 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
@@ -342,21 +338,5 @@ fun CollectionsScreen(
         },
     )
 }
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun CollectionsScreen_Preview() {
-    MaterialTheme {
-        CollectionsScreen(
-            navController = rememberNavController(),
-            globalStateHolder = GlobalStateHolder(LocalContext.current),
-            settingsStateHolder = SettingsStateHolder(LocalContext.current),
-            collectionsViewModel = CollectionsViewModel(LocalContext.current.applicationContext as Application)
-        )
-    }
-}
-
 
 

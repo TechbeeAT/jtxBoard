@@ -213,18 +213,10 @@ data class Attachment (
 
         fun scheduleCleanupJob(context: Context) {
 
-            //TODO: This constraint is currently not used as it didn't work in the test, this should be further investigated!
-            // set constraints for the scheduler
-            val constraints = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Constraints.Builder()
-                    .setRequiresDeviceIdle(true)
-                    .setRequiresBatteryNotLow(true)
-                    .build()
-            } else {
-                Constraints.Builder()
-                    .setRequiresBatteryNotLow(true)
-                    .build()
-            }
+            val constraints = Constraints.Builder()
+                .setRequiresDeviceIdle(true)
+                .setRequiresBatteryNotLow(true)
+                .build()
 
             //create the cleanup job to make sure that the files are getting deleted as well when the device is idle
             val fileCleanupWorkRequest: OneTimeWorkRequest =
@@ -283,7 +275,10 @@ data class Attachment (
                     fmttype = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
                 )
             } catch (e: IOException) {
-                Log.w("IOException", "Failed to process file\n$e")
+                Log.w("IOException", "Failed to process file\n${e.stackTraceToString()}")
+                return null
+            } catch (e: NullPointerException) {
+                Log.w("NullPointerException", "Failed to process file\n${e.stackTraceToString()}")
                 return null
             }
         }

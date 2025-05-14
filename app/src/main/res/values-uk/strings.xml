@@ -1,13 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
+    <string name="app_permission_label">"jtx Board синхронізує Журнали, Нотатки та Завдання"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
+    <string name="save">"Зберегти"</string>
+    <string name="update">"Оновити"</string>
+    <string name="cancel">"Скасувати"</string>
     <string name="ok">"OK"</string>
+    <string name="delete">"Видалити"</string>
+    <string name="discard">"Скинути"</string>
+    <string name="open">"Відкрити"</string>
+    <string name="website">"Сайт"</string>
+    <string name="permissions">"Дозволи"</string>
+    <string name="toolbar_text_add_journal">"Додати Журнал"</string>
+    <string name="toolbar_text_add_note">"Додати Нотатку"</string>
+    <string name="toolbar_text_add_task">"Додати Завдання"</string>
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="journal_status_draft">"Чернетка"</string>
+    <string name="journal_status_cancelled">"Скасовано"</string>
+    <string name="todo_status_completed">"Виконано"</string>
+    <string name="todo_status_cancelled">"Скасовано"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">"Відкрити навігаційну панель"</string>
+    <string name="navigation_drawer_close">"Закрити навігаційну панель"</string>
+    <string name="navigation_drawer_board">"Дошка"</string>
+    <string name="navigation_drawer_synchronization">"Синхронізація"</string>
+    <string name="navigation_drawer_settings">"Налаштування"</string>
+    <string name="navigation_drawer_external_links">"Зовнішні посилання"</string>
+    <string name="navigation_drawer_website">"Сайт"</string>
+    <string name="navigation_drawer_donate">"Пожертвувати"</string>
     <string name="navigation_drawer_privacy_policy">"Політика конфіденційності"</string>
     <!-- fragment_ical_list -->
+    <string name="list_due_overdue">"Прострочено"</string>
+    <string name="list_tabitem_journals">"Журнали"</string>
+    <string name="list_tabitem_notes">"Нотатки"</string>
+    <string name="list_tabitem_todos">"Завдання"</string>
+    <string name="list_expand">"Розгорнути"</string>
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
     <string name="edit_attachment_button_text">"Додати вкладення"</string>

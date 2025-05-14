@@ -348,6 +348,12 @@
     <string name="presets_import_invalid_file">"Ungültige Datei"</string>
     <string name="presets_saved">"Voreinstellungen gespeichert"</string>
     <string name="presets_export_error">"Beim Speichern der Voreinstellungen ist ein Fehler aufgetreten"</string>
+    <string name="settings_export_settings">"Einstellungen exportieren"</string>
+    <string name="settings_import_settings">"Einstellungen importieren"</string>
+    <string name="settings_imported">"Einstellungen importiert"</string>
+    <string name="settings_import_invalid_file">"Ungültige Datei"</string>
+    <string name="settings_exported">"Einstellungen exportiert"</string>
+    <string name="settings_export_error">"Beim Export der Einstellungen ist ein Fehler aufgetreten"</string>
     <string name="more">"Mehr"</string>
     <string name="navigation_drawer_buypro">"Pro kaufen"</string>
     <string name="settings_select_theme">"Theme auswählen"</string>

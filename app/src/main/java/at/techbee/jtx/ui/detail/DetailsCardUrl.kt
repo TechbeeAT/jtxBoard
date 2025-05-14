@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.detail
 
 import android.content.ActivityNotFoundException
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,10 +18,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Link
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,7 +40,6 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.UiUtil
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsCardUrl(
     initialUrl: String,
@@ -42,6 +51,7 @@ fun DetailsCardUrl(
     val headline = stringResource(id = R.string.url)
     var url by rememberSaveable { mutableStateOf(initialUrl) }
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
 
     ElevatedCard(modifier = modifier, onClick = {
         try {
@@ -49,6 +59,10 @@ fun DetailsCardUrl(
                 uriHandler.openUri(url)
         } catch (e: ActivityNotFoundException) {
             Log.d("PropertyCardUrl", "Failed opening Uri $url\n$e")
+            Toast.makeText(context, e.message?:"", Toast.LENGTH_LONG).show()
+        } catch (e: IllegalArgumentException) {
+            Log.d("PropertyCardUrl", "Failed opening Uri $url$e")
+            Toast.makeText(context, e.message?:"", Toast.LENGTH_LONG).show()
         }
     }) {
         Column(

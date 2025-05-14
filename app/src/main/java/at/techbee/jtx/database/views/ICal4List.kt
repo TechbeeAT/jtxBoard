@@ -251,11 +251,11 @@ data class ICal4List(
 ) {
 
     companion object {
-        fun getSample() =
+        fun getSample(module: Module = Module.JOURNAL) =
             ICal4List(
                 id = 1L,
-                module = Module.JOURNAL.name,
-                component = Component.VJOURNAL.name,
+                module = module.name,
+                component = if(module == Module.JOURNAL) Component.VJOURNAL.name else Component.VTODO.name,
                 summary = "My Summary",
                 description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tellus risus, tristique ac elit vitae, mollis feugiat quam. Duis aliquet arcu at purus porttitor ultricies. Vivamus sagittis feugiat ex eu efficitur. Aliquam nec cursus ante, a varius nisi. In a malesuada urna, in rhoncus est. Maecenas auctor molestie quam, quis lobortis tortor sollicitudin sagittis. Curabitur sit amet est varius urna mattis interdum.\n" +
                         "\n" +
@@ -593,6 +593,8 @@ data class ICal4List(
         fun getQueryForAllSubEntries(component: Component,
                                      hideBiometricProtected: List<Classification>,
                                      searchText: String?,
+                                     searchStatus: List<Status> = emptyList(),
+                                     searchXStatus: List<String> = emptyList(),
                                      orderBy: OrderBy,
                                      sortOrder: SortOrder
         ): SimpleSQLiteQuery {
@@ -615,6 +617,23 @@ data class ICal4List(
                 queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_SUMMARY LIKE ? OR $VIEW_NAME_ICAL4LIST.$COLUMN_DESCRIPTION LIKE ? )"
                 queryArgs.add("%${searchText!!}%")
                 queryArgs.add("%${searchText}%")
+            }
+
+            if (searchStatus.isNotEmpty()) {
+                queryString += "AND ("
+                queryString += searchStatus.joinToString(separator = "OR ", transform = { "$COLUMN_STATUS = ? " })
+                queryArgs.addAll(searchStatus.map { it.status ?:"" })
+
+                if (searchStatus.contains(Status.NO_STATUS))
+                    queryString += "OR $COLUMN_STATUS IS NULL"
+                queryString += ") "
+            }
+
+            if (searchXStatus.isNotEmpty()) {
+                queryString += "AND ("
+                queryString += searchXStatus.joinToString(separator = "OR ", transform = { "$COLUMN_EXTENDED_STATUS = ? " })
+                queryArgs.addAll(searchXStatus.map { it })
+                queryString += ") "
             }
 
             queryString += "ORDER BY ${orderBy.getQueryAppendix(sortOrder)}"

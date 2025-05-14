@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"ローカルのコレクションを追加"</string>
     <string name="navigation_drawer_website_news">"ヘルプ &amp; リリースノート"</string>
     <string name="color">"色"</string>
+    <string name="selected_color">"選択中の色"</string>
+    <string name="system_colors">"システムの色"</string>
     <string name="priority_0_no_priority">"優先度なし"</string>
     <string name="priority_1_highest">"1 - 最高"</string>
     <string name="priority_2_higher">"2 - 特に高"</string>
@@ -674,4 +676,5 @@
     <string name="dialog_create_multiple_subtasks">サブ ToDo を一括作成</string>
     <string name="dialog_create_multiple_subnotes">リンクされたメモを一括作成</string>
     <string name="dialog_detected_multiple_subtasks">テキストに複数のサブ ToDo が含まれています。サブ ToDo %d 件を作成しますか？</string>
+    <string name="dialog_detected_multiple_subnotes">テキストに複数のリンクされたメモが含まれています。リンクされたメモ %d 件を作成しますか？</string>
 </resources>

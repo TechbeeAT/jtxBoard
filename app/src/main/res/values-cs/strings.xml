@@ -348,6 +348,12 @@
     <string name="presets_import_invalid_file">"Neplatný soubor"</string>
     <string name="presets_saved">"Přednastavení uložena"</string>
     <string name="presets_export_error">"Při ukládání přednastavení došlo k chybě"</string>
+    <string name="settings_export_settings">"Exportovat nastavení"</string>
+    <string name="settings_import_settings">"Importovat nastavení"</string>
+    <string name="settings_imported">"Nastavení importováno"</string>
+    <string name="settings_import_invalid_file">"Neplatný soubor"</string>
+    <string name="settings_exported">"Nastavení exportováno"</string>
+    <string name="settings_export_error">"Při exportu nastavení došlo k chybě"</string>
     <string name="more">"Více"</string>
     <string name="navigation_drawer_buypro">"Zakoupit Pro"</string>
     <string name="settings_select_theme">"Vybrat motiv"</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board синхронизирует журналы, заметки и задачи"</string>
+    <string name="app_permission_label">"jtx Board синхронизирует журналы, заметки и задачи."</string>
     <string name="app_permission_desc">"синхронизация содержимого jtx Board с другими приложениями, такими как DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Добавить локальную коллекцию"</string>
     <string name="navigation_drawer_website_news">"Новости и обновления"</string>
     <string name="color">"Цвет"</string>
+    <string name="selected_color">"Выбранный цвет"</string>
+    <string name="system_colors">"Системные цвета"</string>
     <string name="priority_0_no_priority">"Нет приоритета"</string>
     <string name="priority_1_highest">"1 - Максимальный"</string>
     <string name="priority_2_higher">"2 - Высокий"</string>
@@ -253,6 +255,7 @@
     <string name="menu_collections_add_remote_to_sync_app">"Добавить внешнюю коллекцию (%1$s)"</string>
     <string name="menu_collection_popup_show_in_sync_app">"Показать в %1$s"</string>
     <string name="menu_collection_popup_export_as_ics">"Экспорт .ics"</string>
+    <string name="export_as_csv">"Экспорт в формат .csv"</string>
     <string name="journal">"Журнал"</string>
     <string name="note">"Заметка"</string>
     <string name="task">"Задача"</string>
@@ -334,6 +337,8 @@
     <string name="edit_recur_ends_never">"повторять всегда"</string>
     <string name="edit_recur_ends_on">"повторять до"</string>
     <string name="edit_recur_ends_after">"повторять раз"</string>
+    <string name="list_toast_export_success">"Список успешно экспортирован"</string>
+    <string name="list_toast_export_error">"Ошибка при экспорте списка"</string>
     <string name="collections_toast_export_success">"Коллекции успешно экспортированы"</string>
     <string name="collections_toast_export_error">"Ошибка при экспорте коллекций"</string>
     <string name="menu_collections_export_all">"Экспортировать всё"</string>
@@ -383,6 +388,7 @@
     <string name="settings_default_expand_subtasks">"Показывать подзадачи в списке по умолчанию"</string>
     <string name="settings_default_expand_subnotes">"Показывать дочерние заметки в списке по умолчанию"</string>
     <string name="settings_default_expand_attachments">"Показывать вложения в списке по умолчанию"</string>
+    <string name="settings_default_expand_parents">"Развернуть родительские элементы в списке по умолчанию"</string>
     <string name="sorry">"Извините"</string>
     <string name="back">"Назад"</string>
     <string name="details">"Подробности"</string>
@@ -609,6 +615,7 @@
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Внимание: В настоящее время в виджете поддерживается только первый уровень иерархии. Чтобы увидеть записи более низких уровней, выберите настройку Без иерархии."</string>
     <string name="widget_list_maximum_entries_reached">"Достигнуто максимальное число записей в виджете (%1$d)."</string>
     <string name="widget_list_compat_updating_widget_notification">"Обновление виджета"</string>
+    <string name="widget_list_default_categories">"Установить категории по умолчанию для новых записей из виджета"</string>
     <string name="opacity">"Непрозрачность"</string>
     <string name="general">"Общее"</string>
     <string name="list_collapse">"Свернуть"</string>
@@ -667,4 +674,10 @@
     <string name="exact_alarm_permission_dialog_message">"jtx Board требуется разрешение для установки точного времени напоминания, в противном случае уведомления могут быть задержаны. Пожалуйста, предоставьте это разрешение для использования этой функции."</string>
     <string name="call_contact">"Позвонить %1$s"</string>
     <string name="email_contact">"E-Mail %1$s"</string>
+    <string name="dialog_create_multiple_subtasks">Массовое создание подзадач</string>
+    <string name="dialog_create_multiple_subnotes">Массовое создание связанных заметок</string>
+    <string name="dialog_detected_multiple_subtasks">Текст, возможно, содержит несколько подзадач. Вы хотите создать %d подзадач?</string>
+    <string name="dialog_detected_multiple_subnotes">Текст, возможно, содержит несколько связанных заметок. Вы хотите создать %d связанных заметок?</string>
+    <string name="dialog_confirm_create_multiple">Создать несколько</string>
+    <string name="dialog_confirm_create_single">Создать один</string>
 </resources>

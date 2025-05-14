@@ -60,9 +60,9 @@
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Késésben"</string>
     <string name="list_due_shortly">"Hamarosan esedékes"</string>
-    <string name="list_due_today">"Mai határidő"</string>
-    <string name="list_due_tomorrow">"Holnapi határidő"</string>
-    <string name="list_due_within_7_days">"Határidő 7 napon belül"</string>
+    <string name="list_due_today">"Ma esedékes"</string>
+    <string name="list_due_tomorrow">"Holnap esedékes"</string>
+    <string name="list_due_within_7_days">"7 napon belül esedékes"</string>
     <string name="list_due_inXhours">"%d órán belül esedékes"</string>
     <string name="list_due_on_weekday">"Határidő: %s"</string>
     <string name="list_start_past">"Múltbéli kezdés"</string>
@@ -103,7 +103,7 @@
     <string name="edit_subtasks_add_helper">"Alfeladat hozzáadása"</string>
     <string name="detail_top_app_bar_quick_add_subtask">"Alfeladat gyors hozzáadása"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Aljegyzet gyors hozzáadása"</string>
-    <string name="edit_attachment_add_link_dialog">"Webes hivatkozás hozzáadása"</string>
+    <string name="edit_attachment_add_link_dialog">"Melléklethivatkozás hozzáadása"</string>
     <string name="edit_recur_repeat_every_x">"Ismétlés"</string>
     <string name="edit_recur_on_weekday">" "</string>
     <string name="edit_recur_on_the_x_day_of_month">" "</string>
@@ -237,6 +237,8 @@
     <string name="menu_collections_add_local">"Helyi Gyűjtemény hozzáadása"</string>
     <string name="navigation_drawer_website_news">"Újdonságok és verzióismertetők"</string>
     <string name="color">"Szín"</string>
+    <string name="selected_color">"Kiválasztott szín"</string>
+    <string name="system_colors">"Rendszerszínek"</string>
     <string name="priority_0_no_priority">"Nincs Prioritás"</string>
     <string name="priority_1_highest">"1 - Legmagasabb"</string>
     <string name="priority_2_higher">"2 - Magasabb"</string>
@@ -346,6 +348,12 @@
     <string name="presets_import_invalid_file">"Nem megfelelő a fájl tartalma"</string>
     <string name="presets_saved">"Egyéni jellemzők elmentve"</string>
     <string name="presets_export_error">"Hiba történt az előbeállítások mentése során"</string>
+    <string name="settings_export_settings">"A beállítások exportálása"</string>
+    <string name="settings_import_settings">"Beállítások importálása"</string>
+    <string name="settings_imported">"Beállítások sikeresen importálva"</string>
+    <string name="settings_import_invalid_file">"A fájl nem megfelelő"</string>
+    <string name="settings_exported">"A beállítások sikeresen exportálva"</string>
+    <string name="settings_export_error">"A beállítások exportálása közben hiba történt"</string>
     <string name="more">"Továbbiak"</string>
     <string name="navigation_drawer_buypro">"Pro verzió megvásárlása"</string>
     <string name="settings_select_theme">"Téma kiválasztása"</string>

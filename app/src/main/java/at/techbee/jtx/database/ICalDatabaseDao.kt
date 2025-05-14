@@ -135,8 +135,17 @@ interface ICalDatabaseDao {
      * @return a list of [Collection] as LiveData<List<ICalCollection>>
      */
     @Transaction
-    @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION WHERE $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID IN (SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    @Query("SELECT collection.* " +
+            "FROM $TABLE_NAME_COLLECTION collection WHERE collection.$COLUMN_COLLECTION_ID IN (SELECT ical.$COLUMN_ICALOBJECT_COLLECTIONID FROM $TABLE_NAME_ICALOBJECT ical WHERE $COLUMN_MODULE = :module) ORDER BY $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollections(module: String): LiveData<List<ICalCollection>>
+
+    /**
+     * Retrieve an list of all Collections ([Collection])
+     * @return a list of [Collection] as List<ICalCollection>
+     */
+    @Transaction
+    @Query("SELECT $TABLE_NAME_COLLECTION.* FROM $TABLE_NAME_COLLECTION")
+    fun getAllCollectionsSync(): List<ICalCollection>
 
 
     /**
@@ -237,7 +246,7 @@ interface ICalDatabaseDao {
      * @param
      * @return Int with the total number of [ICal4List] in the table for the given module.
      */
-    @Query("SELECT count(*) FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_MODULE = :module AND $VIEW_NAME_ICAL4LIST.isChildOfTodo = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfJournal = 0 AND $VIEW_NAME_ICAL4LIST.isChildOfNote = 0 ")
+    @Query("SELECT count(*) FROM $VIEW_NAME_ICAL4LIST ical4list WHERE $COLUMN_MODULE = :module AND ical4list.isChildOfTodo = 0 AND ical4list.isChildOfJournal = 0 AND ical4list.isChildOfNote = 0 ")
     fun getICal4ListCount(module: String): LiveData<Int?>
 
     /**
@@ -296,7 +305,7 @@ interface ICalDatabaseDao {
      * Retrieve all tasks that are done (Status = Completed or Percent = 100)
      * @return list of [ICalObject]
      */
-    @Query("SELECT $TABLE_NAME_ICALOBJECT.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT INNER JOIN $TABLE_NAME_COLLECTION ON $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ICALOBJECT_COLLECTIONID AND $TABLE_NAME_COLLECTION.$COLUMN_COLLECTION_READONLY = 0 WHERE $COLUMN_COMPONENT = 'VTODO' AND ($COLUMN_STATUS = 'COMPLETED' OR $COLUMN_PERCENT = 100)")
+    @Query("SELECT ical.$COLUMN_ID FROM $TABLE_NAME_ICALOBJECT ical INNER JOIN $TABLE_NAME_COLLECTION collection ON collection.$COLUMN_COLLECTION_ID = ical.$COLUMN_ICALOBJECT_COLLECTIONID AND collection.$COLUMN_COLLECTION_READONLY = 0 WHERE $COLUMN_COMPONENT = 'VTODO' AND ($COLUMN_STATUS = 'COMPLETED' OR $COLUMN_PERCENT = 100)")
     fun getDoneTasks(): List<Long>
 
 
@@ -332,17 +341,17 @@ interface ICalDatabaseDao {
      * Returns a list of (distinct) ICalObjects that have an active alarm
      * (an alarm, that was already triggered but not removed)
      * The list contains only elements that haven't been completed (status, percent)
+     * and that still have an alarm in the past (it was not rescheduled)
      */
-    @Query("SELECT DISTINCT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT " +
+    @Query("SELECT DISTINCT ical.* " +
+            "FROM $TABLE_NAME_ICALOBJECT ical " +
+            "INNER JOIN $TABLE_NAME_ALARM alarm ON ical.$COLUMN_ID = alarm.$COLUMN_ALARM_ICALOBJECT_ID AND alarm.$COLUMN_ALARM_TRIGGER_TIME < :now " +
             "WHERE $COLUMN_IS_ALARM_NOTIFICATION_ACTIVE = 1 " +
             "AND ($COLUMN_PERCENT IS NULL OR $COLUMN_PERCENT < 100) " +
             "AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS != 'COMPLETED') ")
-    fun getICalObjectsWithActiveAlarms(): List<ICalObject>
+    fun getICalObjectsWithActiveAlarmsInPast(now: Long = System.currentTimeMillis()): List<ICalObject>
 
-/*
-iCalObject.percent != 100
-                            && iCalObject.status != Status.COMPLETED.status
- */
+
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_IS_ALARM_NOTIFICATION_ACTIVE = :active WHERE $COLUMN_ID = :iCalObjectId")
     fun setAlarmNotification(iCalObjectId: Long, active: Boolean)
 
@@ -556,8 +565,9 @@ iCalObject.percent != 100
      */
     @Query(
         "SELECT $TABLE_NAME_ALARM.* " +
-                "FROM $TABLE_NAME_ALARM " +
-                "INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ALARM.$COLUMN_ALARM_ICALOBJECT_ID = $TABLE_NAME_ICALOBJECT.$COLUMN_ID " +
+                "FROM $TABLE_NAME_ALARM alarm " +
+                "INNER JOIN $TABLE_NAME_ICALOBJECT ical " +
+                "ON alarm.$COLUMN_ALARM_ICALOBJECT_ID = ical.$COLUMN_ID " +
                 "WHERE $COLUMN_DELETED = 0 " +
                 "AND $COLUMN_RRULE IS NULL " +
                 "AND $COLUMN_ALARM_TRIGGER_TIME > :minDate " +
@@ -627,7 +637,9 @@ iCalObject.percent != 100
 
 
     @Transaction
-    @Query("SELECT * FROM $VIEW_NAME_ICAL4LIST WHERE $COLUMN_UID in (SELECT $COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO INNER JOIN $TABLE_NAME_ICALOBJECT ON $TABLE_NAME_ICALOBJECT.$COLUMN_ID = $TABLE_NAME_RELATEDTO.$COLUMN_RELATEDTO_ICALOBJECT_ID AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $COLUMN_DELETED = 0)")
+    @Query("SELECT * " +
+            "FROM $VIEW_NAME_ICAL4LIST " +
+            "WHERE $COLUMN_UID in (SELECT $COLUMN_RELATEDTO_TEXT FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical ON ical.$COLUMN_ID = rel.$COLUMN_RELATEDTO_ICALOBJECT_ID AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT' AND $COLUMN_DELETED = 0)")
     fun getAllParents(): LiveData<List<ICal4ListRel>>
 
     /**
@@ -694,7 +706,7 @@ iCalObject.percent != 100
 
 
     /** This query returns all ids of child elements of the given [parentKey]  */
-    @Query("SELECT $TABLE_NAME_ICALOBJECT.* FROM $TABLE_NAME_ICALOBJECT WHERE $TABLE_NAME_ICALOBJECT.$COLUMN_ID IN (SELECT rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical ON rel.$COLUMN_RELATEDTO_TEXT = ical.$COLUMN_UID AND ical.$COLUMN_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')")
+    @Query("SELECT ical.* FROM $TABLE_NAME_ICALOBJECT ical WHERE ical.$COLUMN_ID IN (SELECT rel.$COLUMN_RELATEDTO_ICALOBJECT_ID FROM $TABLE_NAME_RELATEDTO rel INNER JOIN $TABLE_NAME_ICALOBJECT ical_inner ON rel.$COLUMN_RELATEDTO_TEXT = ical_inner.$COLUMN_UID AND ical_inner.$COLUMN_ID = :parentKey AND $COLUMN_RELATEDTO_RELTYPE = 'PARENT')")
     suspend fun getRelatedChildren(parentKey: Long): List<ICalObject>
 
     @Query("SELECT * from $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :icalobjectid AND $COLUMN_RELATEDTO_TEXT = :linkedUID AND $COLUMN_RELATEDTO_RELTYPE = :reltype")
@@ -964,7 +976,7 @@ iCalObject.percent != 100
             item.property.sequence = 0
             item.property.dirty = true
             item.property.lastModified = System.currentTimeMillis()
-            item.property.created = System.currentTimeMillis()
+            //item.property.created = System.currentTimeMillis()  // keeping now the original creation date, see https://github.com/TechbeeAT/jtxBoard/issues/1815
             item.property.dtstamp = System.currentTimeMillis()
             item.property.uid = newUID
             item.property.flags = null
@@ -1043,7 +1055,7 @@ iCalObject.percent != 100
             parentUID?.let { uid -> getICalObjectFor(uid)?.let { topParent = it } }
 
             //make sure no endless loop occurs in the error case that an entry links to itself
-            if (allRelatedTo.any { it.icalObjectId == topParent?.id && it.text == topParent?.uid }) {
+            if (allRelatedTo.any { it.icalObjectId == topParent?.id && it.text == topParent.uid }) {
                 Log.w("findTopParent", "Entry links to itself, cannot return parent.")
                 return null
             }
@@ -1301,7 +1313,7 @@ iCalObject.percent != 100
                     } catch (e: IllegalArgumentException) {
                         Log.w(
                             "DurationParsing",
-                            "Duration could not be parsed for instance, skipping this alarm."
+                            "Duration could not be parsed for instance, skipping this alarm\n${e.stackTraceToString()}."
                         )
                     }
                 }
@@ -1330,7 +1342,7 @@ iCalObject.percent != 100
             val children = getRelatedChildren(instance.id)
             val updatedEntry = unlinkFromSeries(instance)
             children.forEach forEachChild@{ child ->
-                createCopy(child.id, child.getModuleFromString(), updatedEntry.uid)
+                createCopyWithChildren(child.id, child.getModuleFromString(), updatedEntry.uid)
             }
         }
 
@@ -1363,19 +1375,20 @@ iCalObject.percent != 100
     @Transaction
     suspend fun createCopy(
         iCalObjectIdToCopy: Long,
-        newModule: Module
-    ) = createCopy(iCalObjectIdToCopy, newModule, null)
+        module: Module,
+        parentUID: String?
+    ) = createCopyWithChildren(iCalObjectIdToCopy, module, parentUID)
 
 
-    private suspend fun createCopy(
+    private suspend fun createCopyWithChildren(
         iCalObjectIdToCopy: Long,
-        newModule: Module,
-        newParentUID: String?
+        module: Module,
+        parentUID: String?
     ): Long? {
 
         val icalEntityToCopy = getSync(iCalObjectIdToCopy) ?: return  null
 
-        val newEntity = icalEntityToCopy.getIcalEntityCopy(newModule)
+        val newEntity = icalEntityToCopy.getIcalEntityCopy(module)
         try {
             val newId = insertICalObject(newEntity.property)
             newEntity.alarms?.forEach { alarm ->
@@ -1444,12 +1457,12 @@ iCalObject.percent != 100
             }
 
             newEntity.relatedto?.forEach { relatedto ->
-                if (relatedto.reltype == Reltype.PARENT.name && newParentUID != null) {
+                if (relatedto.reltype == Reltype.PARENT.name && parentUID != null) {
                     insertRelatedto(
                         relatedto.copy(
                             relatedtoId = 0L,
                             icalObjectId = newId,
-                            text = newParentUID
+                            text = parentUID
                         )
                     )
                 }
@@ -1457,15 +1470,15 @@ iCalObject.percent != 100
 
             val children = getRelatedChildren(icalEntityToCopy.property.id)
             children.forEach { child ->
-                    createCopy(
+                createCopyWithChildren(
                         iCalObjectIdToCopy = child.id,
-                        newModule = child.getModuleFromString(),
-                        newParentUID = newEntity.property.uid
+                        module = child.getModuleFromString(),
+                        parentUID = newEntity.property.uid
                     )
 
             }
 
-            return if (newParentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
+            return if (parentUID == null)   // we navigate only to the parent (not to the children that are invoked recursively)
                 newId
             else
                 null

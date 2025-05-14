@@ -10,7 +10,6 @@ package at.techbee.jtx.database
 
 import androidx.room.TypeConverter
 import at.techbee.jtx.database.locals.StoredListSettingData
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class Converters {
