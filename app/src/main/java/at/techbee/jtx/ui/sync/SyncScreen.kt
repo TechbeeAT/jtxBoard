@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.sync
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -51,6 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
@@ -210,7 +210,7 @@ fun SyncScreenContent(
                                     context.startActivity(
                                         Intent(
                                             Intent.ACTION_VIEW,
-                                            Uri.parse(syncApp.setupURL)
+                                            syncApp.setupURL.toUri()
                                         )
                                     )
                                 }
@@ -247,7 +247,7 @@ fun SyncScreenContent(
                                     context.startActivity(
                                         Intent(
                                             Intent.ACTION_VIEW,
-                                            Uri.parse(syncApp.websiteURL)
+                                            syncApp.websiteURL.toUri()
                                         )
                                     )
                                 }
