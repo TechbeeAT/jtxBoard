@@ -33,7 +33,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
-import androidx.core.content.edit
 
 
 class NotificationPublisher : BroadcastReceiver() {
@@ -120,11 +119,6 @@ class NotificationPublisher : BroadcastReceiver() {
         private const val MAX_ALARMS_SCHEDULED = 5
         private const val MAX_DUE_ALARMS_SCHEDULED = 5
 
-        @Deprecated("Not in use anymore, only for legacy handling")
-        const val PREFS_SCHEDULED_ALARMS = "prefsScheduledNotifications"  // ICalObjectIds as StringSet
-
-
-
 
         fun scheduleNextNotifications(context: Context) {
 
@@ -154,18 +148,6 @@ class NotificationPublisher : BroadcastReceiver() {
                 val iCal4List = database.getICal4ListSync(alarm.icalObjectId) ?: return@forEach
                 alarm.scheduleNotification(context = context, requestCode = iCal4List.id.toInt(), isReadOnly = iCal4List.isReadOnly, notificationSummary = iCal4List.summary, notificationDescription = iCal4List.description)
             }
-
-
-            // Legacy handling - TODO: Remove in Future
-            prefs.getStringSet(PREFS_SCHEDULED_ALARMS, null)
-                ?.map { try { it.toInt()} catch (e: NumberFormatException) { return } }
-                ?.let {
-                    it.forEach { iCalObjectId ->
-                        database.setAlarmNotification(iCalObjectId.toLong(), true)
-                    }
-                }
-            prefs.edit { remove(PREFS_SCHEDULED_ALARMS) }
-            // End Legacy handling
         }
 
         suspend fun addPostponedAlarm(alarmId: Long, delay: Long, context: Context) {
