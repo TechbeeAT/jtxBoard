@@ -12,6 +12,7 @@ import android.content.SharedPreferences
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessTime
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.core.content.edit
 import at.techbee.jtx.R
 import java.time.DateTimeException
 import java.time.LocalTime
@@ -39,15 +40,13 @@ enum class TimeSetting(
 
     fun saveSetting(time: LocalTime?, prefs: SharedPreferences) {
         if(time == null) {
-            prefs.edit()
-                .remove(keyHour)
-                .remove(keyMinute)
-                .apply()
+            prefs.edit {
+                remove(keyHour).remove(keyMinute)
+            }
         } else {
-            prefs.edit()
-                .putInt(keyHour, time.hour)
-                .putInt(keyMinute, time.minute)
-                .apply()
+            prefs.edit {
+                putInt(keyHour, time.hour).putInt(keyMinute, time.minute)
+            }
         }
     }
 
@@ -72,7 +71,7 @@ enum class TimeSetting(
 
             return try {
                 LocalTime.of(hourInt, minuteInt)
-            } catch (e: DateTimeException) {
+            } catch (_: DateTimeException) {
                 null
             }
         }
