@@ -57,20 +57,20 @@ data class ICal4ListRel(
                     if (module == Module.TODO && it.iCal4List.percent != 100)
                         try {
                             Status.valueOf(it.iCal4List.status ?: Status.NO_STATUS.name).ordinal
-                        } catch (e: java.lang.IllegalArgumentException) {
+                        } catch (_: java.lang.IllegalArgumentException) {
                             -1
                         }
                     else
                         try {
                             Status.valueOf(it.iCal4List.status ?: Status.FINAL.name).ordinal
-                        } catch (e: java.lang.IllegalArgumentException) {
+                        } catch (_: java.lang.IllegalArgumentException) {
                             -1
                         }
                 }.let { if (sortOrder == SortOrder.DESC) it.asReversed() else it }
                 GroupBy.CLASSIFICATION -> initialList.sortedBy {
                     try {
                         Classification.valueOf(it.iCal4List.classification ?: Classification.PUBLIC.name).ordinal
-                    } catch (e: java.lang.IllegalArgumentException) {
+                    } catch (_: java.lang.IllegalArgumentException) {
                         -1
                     }
                 }.let { if (sortOrder == SortOrder.DESC) it.asReversed() else it }
