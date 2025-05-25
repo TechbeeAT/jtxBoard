@@ -1,0 +1,4 @@
+- Notifications are removed now if tasks are marked as done or deleted on a server
+- Library updates
+- Persian language support
+- Fixed colors for contrast theme
