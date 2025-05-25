@@ -11,8 +11,8 @@ package at.techbee.jtx.flavored
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import android.util.Log
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.ICalDatabase
 import kotlinx.coroutines.CoroutineScope
@@ -28,10 +28,6 @@ abstract class GeofenceClientDefinition(val context: Context) {
 
     fun setGeofences() {
 
-        // Due to necessity of PendingIntent.FLAG_IMMUTABLE, the notification functionality can only be used from Build Versions > M (Api-Level 23)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-            return
-
         CoroutineScope(Dispatchers.IO).launch {
 
             val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
@@ -44,10 +40,12 @@ abstract class GeofenceClientDefinition(val context: Context) {
             geofenceObjects.forEach { iCalObject ->
                 addGeofence(iCalObject.geoLat!!, iCalObject.geoLong!!, iCalObject.geofenceRadius!!, iCalObject.id)
             }
-            prefs.edit().putStringSet(
-                PREFS_ACTIVE_GEOFENCES,
-                geofenceObjects.map { it.id.toString() }.toSet()
-            ).apply()
+            prefs.edit {
+                putStringSet(
+                    PREFS_ACTIVE_GEOFENCES,
+                    geofenceObjects.map { it.id.toString() }.toSet()
+                )
+            }
             Log.d("GeofenceBroadcastRec", "Geofence set for ${activeGeofences.joinToString(separator = ", ")}")
         }
     }

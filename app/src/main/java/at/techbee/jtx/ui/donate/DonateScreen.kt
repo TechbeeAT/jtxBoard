@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.donate
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import at.techbee.jtx.R
@@ -121,7 +121,7 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
             context.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("https://ko-fi.com/jtxBoard")
+                    "https://ko-fi.com/jtxBoard".toUri()
                 )
             )
         }) {
@@ -145,7 +145,7 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
             context.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(context.getString(R.string.link_paypal))
+                    context.getString(R.string.link_paypal).toUri()
                 )
             )
         }) {
@@ -179,7 +179,7 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
                 context.startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(context.getString(R.string.link_jtx_donate))
+                        context.getString(R.string.link_jtx_donate).toUri()
                     )
                 )
             }

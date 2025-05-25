@@ -12,6 +12,7 @@ import android.content.SharedPreferences
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.core.content.edit
 import at.techbee.jtx.R
 import java.util.TimeZone
 
@@ -45,7 +46,7 @@ enum class DropdownSettingTimezone(
     );
 
     fun saveSetting(newTimezone: String?, prefs: SharedPreferences) =
-        prefs.edit().putString(key, newTimezone).apply()
+        prefs.edit { putString(key, newTimezone) }
 
     fun getSetting(prefs: SharedPreferences) = TimeZone.getAvailableIDs().find { timezone ->
         timezone == prefs.getString(key, null)

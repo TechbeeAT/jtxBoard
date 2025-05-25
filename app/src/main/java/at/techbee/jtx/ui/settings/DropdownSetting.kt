@@ -20,6 +20,7 @@ import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.core.content.edit
 import at.techbee.jtx.R
 
 enum class DropdownSetting(
@@ -172,7 +173,7 @@ enum class DropdownSetting(
     ;
 
     fun saveSetting(newDropdownSettingOption: DropdownSettingOption, prefs: SharedPreferences) =
-        prefs.edit().putString(key, newDropdownSettingOption.key).apply()
+        prefs.edit { putString(key, newDropdownSettingOption.key) }
 
     fun getSetting(prefs: SharedPreferences) = DropdownSettingOption.entries.find { setting ->
         setting.key == prefs.getString(key, default.key)

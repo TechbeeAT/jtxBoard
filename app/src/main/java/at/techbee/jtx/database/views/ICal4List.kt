@@ -12,6 +12,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.net.toUri
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -672,10 +673,10 @@ data class ICal4List(
     fun getAudioAttachmentAsUri(): Uri? {
         return try {
             if(audioAttachment?.startsWith("content://") == true)
-                Uri.parse(audioAttachment)
+                audioAttachment?.toUri()
             else
                 null
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             null
         }
     }

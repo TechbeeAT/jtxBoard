@@ -309,7 +309,7 @@ fun CollectionsScreen(
                                 importCollection = collection
                             } else {
                                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-                                val lastUsedModule = try { Module.valueOf(prefs.getString(PREFS_LAST_MODULE, null)?: Module.JOURNAL.name) } catch (e: java.lang.IllegalArgumentException) { Module.JOURNAL }
+                                val lastUsedModule = try { Module.valueOf(prefs.getString(PREFS_LAST_MODULE, null)?: Module.JOURNAL.name) } catch (_: java.lang.IllegalArgumentException) { Module.JOURNAL }
 
                                 navController.navigate(
                                     FilteredListDestination.FilteredList.getRoute(

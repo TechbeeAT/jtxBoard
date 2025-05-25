@@ -124,7 +124,7 @@ fun ListBottomAppBar(
                 val selectedZoned = selectedDate?.let {ZonedDateTime.ofInstant(Instant.ofEpochMilli(selectedDate), ZoneId.systemDefault()) } ?: return@DatePickerDialog
 
                 var match = iCal4ListRel.firstOrNull {
-                    val dtstartZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.iCal4List.dtstart!!), DateTimeUtils.requireTzId(it.iCal4List.dtstartTimezone))
+                    val dtstartZoned = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it.iCal4List.dtstart?:System.currentTimeMillis()), DateTimeUtils.requireTzId(it.iCal4List.dtstartTimezone))
                     if(listSettings.sortOrder.value == SortOrder.ASC)
                         dtstartZoned.year >= selectedZoned.year && dtstartZoned.monthValue >= selectedZoned.monthValue && dtstartZoned.dayOfMonth >= selectedZoned.dayOfMonth
                     else

@@ -74,7 +74,7 @@ enum class DropdownSettingOption(
     fun getProgressStepKeyAsInt(): Int {
         return try {
             this.key.toInt()
-        } catch(e: NumberFormatException) {
+        } catch(_: NumberFormatException) {
             Log.w("KeyIsNotInt", "Failed casting key to Int: Key $key")
             1
         }

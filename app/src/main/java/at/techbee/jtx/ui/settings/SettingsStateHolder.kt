@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.settings
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.ui.detail.DetailTopAppBarMode
@@ -70,15 +71,15 @@ class SettingsStateHolder(val context: Context) {
     //invisible settings
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))
         set(newValue) {
-            prefs.edit().putBoolean(SETTINGS_PRO_INFO_SHOWN, newValue.value).apply()
+            prefs.edit { putBoolean(SETTINGS_PRO_INFO_SHOWN, newValue.value) }
             field = newValue
         }
 
     var lastUsedModule = mutableStateOf(
-        try { Module.valueOf(prefs.getString(PREFS_LAST_MODULE, null)?: Module.JOURNAL.name) } catch (e: java.lang.IllegalArgumentException) { Module.JOURNAL }
+        try { Module.valueOf(prefs.getString(PREFS_LAST_MODULE, null)?: Module.JOURNAL.name) } catch (_: java.lang.IllegalArgumentException) { Module.JOURNAL }
     )
         set(newValue) {
-            prefs.edit().putString(PREFS_LAST_MODULE, newValue.value.name).apply()
+            prefs.edit { putString(PREFS_LAST_MODULE, newValue.value.name) }
             field = newValue
         }
 
@@ -87,7 +88,7 @@ class SettingsStateHolder(val context: Context) {
     )
     fun setDetailTopAppBarMode(mode: DetailTopAppBarMode) {
         detailTopAppBarMode.value = mode
-        prefs.edit().putString(PREFS_DETAIL_TOP_APP_BAR_MODE, mode.name).apply()
+        prefs.edit { putString(PREFS_DETAIL_TOP_APP_BAR_MODE, mode.name) }
     }
 
 
