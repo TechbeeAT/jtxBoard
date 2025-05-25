@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -126,7 +127,7 @@ fun ListCardGrid(
                         markdown = iCalObject.description?.trim() ?: "",
                         maxLines = 3,
                         //overflow = TextOverflow.Ellipsis,
-                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
+                        style = TextStyle(textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)

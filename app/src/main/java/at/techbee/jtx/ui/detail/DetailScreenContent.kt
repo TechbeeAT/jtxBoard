@@ -31,6 +31,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -56,7 +57,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -206,7 +206,7 @@ fun DetailScreenContent(
     val color = rememberSaveable { mutableStateOf(iCalObject.color) }
     var summary by rememberSaveable { mutableStateOf(iCalObject.summary ?:"") }
     var description by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue(iCalObject.description ?: "")) }
-
+    val currentTextColor = LocalContentColor.current.toArgb()
 
     // make sure the values get propagated in the iCalObject again when the orientation changes
     if(iCalObject.summary != summary.ifEmpty { null } || iCalObject.description != description.text.ifEmpty { null } || iCalObject.color != color.value) {
@@ -419,10 +419,10 @@ fun DetailScreenContent(
                                                     if (collection?.readonly == false)
                                                         isEditMode.value = true
                                                 }),
-                                            style = TextStyle(
+                                            style = LocalTextStyle.current.copy(
                                                 textDirection = TextDirection.Content,
                                                 fontFamily = LocalTextStyle.current.fontFamily
-                                                ),
+                                            ),
                                         )
                                     else
                                         Text(
@@ -534,7 +534,10 @@ fun DetailScreenContent(
                                                 markdownState.value = MarkdownState.OBSERVING
                                             else if (!focusState.hasFocus)
                                                 markdownState.value = MarkdownState.DISABLED
-                                        }
+                                        }, 
+                                    setView = {
+                                        it.setTextColor(currentTextColor)
+                                    }
                                 )
                             }
                         }

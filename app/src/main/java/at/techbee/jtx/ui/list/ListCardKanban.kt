@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -95,7 +96,7 @@ fun ListCardKanban(
                     MarkdownText(
                         markdown = iCalObject.description?.trim() ?: "",
                         maxLines = 4,
-                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
+                        style = TextStyle(textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null)
                         //overflow = TextOverflow.Ellipsis
                     )
                 else
