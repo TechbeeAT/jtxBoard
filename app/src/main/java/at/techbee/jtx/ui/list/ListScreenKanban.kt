@@ -87,7 +87,7 @@ fun ListScreenKanban(
     onXStatusChanged: (itemid: Long, status: ExtendedStatus, scrollOnce: Boolean) -> Unit,
     onSwapCategories: (itemid: Long, old: String, new: String) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -175,36 +175,35 @@ fun ListScreenKanban(
                     var offsetX by remember { mutableFloatStateOf(0f) }  // see https://developer.android.com/jetpack/compose/gestures
                     val maxOffset = 50f
 
-                    ListCardKanban(
-                        iCal4ListRelObject.iCal4List,
-                        storedCategories = storedCategories,
-                        storedStatuses = storedStatuses,
-                        selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
-                        markdownEnabled = markdownEnabled,
-                        player = player,
-                        modifier = Modifier
-                            .clip(jtxCardCornerShape)
-                            .combinedClickable(
-                                onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
-                                onLongClick = {
-                                    if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                        onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
-                                }
-                            )
-                            .fillMaxWidth()
-                            .offset { IntOffset(offsetX.roundToInt(), 0) }
-                            .draggable(
-                                orientation = Orientation.Horizontal,
-                                state = rememberDraggableState { delta ->
-                                    if (iCal4ListRelObject.iCal4List.isReadOnly)   // no drag state for read only objects!
-                                        return@rememberDraggableState
-                                    if (settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty())
-                                        return@rememberDraggableState  // no drag is status depends on subtasks
-                                    if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
-                                        offsetX += delta
-                                },
-                                onDragStopped = {
-                                    if (abs(offsetX) > maxOffset / 2 && !iCal4ListRelObject.iCal4List.isReadOnly) {
+                        ListCardKanban(
+                            iCal4ListRelObject.iCal4List,
+                            storedCategories = storedCategories,
+                            storedStatuses = storedStatuses,
+                            selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
+                            markdownEnabled = markdownEnabled,
+                            player = player,
+                            modifier = Modifier
+                                .clip(jtxCardCornerShape)
+                                .combinedClickable(
+                                    onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
+                                    onLongClick = {
+                                        onLongClick(iCal4ListRelObject.iCal4List.id, iCal4ListRelObject.iCal4List.isReadOnly)
+                                    }
+                                )
+                                .fillMaxWidth()
+                                .offset { IntOffset(offsetX.roundToInt(), 0) }
+                                .draggable(
+                                    orientation = Orientation.Horizontal,
+                                    state = rememberDraggableState { delta ->
+                                        if (iCal4ListRelObject.iCal4List.isReadOnly)   // no drag state for read only objects!
+                                            return@rememberDraggableState
+                                        if (settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty())
+                                            return@rememberDraggableState  // no drag is status depends on subtasks
+                                        if (abs(offsetX) <= maxOffset)     // once maxOffset is reached, we don't update anymore
+                                            offsetX += delta
+                                    },
+                                    onDragStopped = {
+                                        if (abs(offsetX) > maxOffset / 2 && !iCal4ListRelObject.iCal4List.isReadOnly) {
 
                                         val draggedToColumn = when {
                                             offsetX < 0f && index > 0 -> index - 1

@@ -265,7 +265,9 @@ fun ListQuickAddElement(
                             currentModule = Module.TODO
                         else if (currentModule == Module.TODO && currentCollection?.supportsVTODO == false)
                             currentModule = Module.NOTE
-                    }
+                    },
+                    showSyncButton = false,
+                    enableSelector = true
                 )
 
                 OutlinedTextField(
@@ -355,7 +357,7 @@ fun ListQuickAddElement(
                         return@forEach
                     AttachmentCard(
                         attachment = attachment,
-                        isEditMode = true,
+                        isReadOnly = false,
                         isRemoteCollection = currentCollection?.accountType != LOCAL_ACCOUNT_TYPE,
                         player = player,
                         onAttachmentDeleted = { currentAttachments.remove(attachment) },

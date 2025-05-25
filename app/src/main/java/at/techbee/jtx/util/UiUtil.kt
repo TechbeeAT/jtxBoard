@@ -25,11 +25,11 @@ import java.util.regex.Matcher
 object UiUtil {
 
     fun isValidURL(urlString: String?): Boolean {
-        return PatternsCompat.WEB_URL.matcher(urlString.toString()).matches()
+        return !urlString.isNullOrEmpty() && PatternsCompat.WEB_URL.matcher(urlString).matches()
     }
 
     fun isValidEmail(emailString: String?): Boolean {
-        return emailString?.isNotEmpty() == true && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()
+        return !emailString.isNullOrEmpty() && PatternsCompat.EMAIL_ADDRESS.matcher(emailString).matches()
     }
 
 
@@ -188,4 +188,10 @@ object UiUtil {
         println(color.toString() + " " + a*100)
         return a > 0.5
     }
+
+    /**
+     * @param double number to format
+     * @return the double number as a string with 5 decimals
+     */
+    fun doubleTo5DecimalString(double: Double?) = double?.let { String.format(Locale.getDefault(), "%.5f", it) }
 }

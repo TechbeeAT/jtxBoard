@@ -67,7 +67,6 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
@@ -107,7 +106,7 @@ fun ListScreenList(
     isSubtaskDragAndDropEnabled: Boolean,
     isSubnoteDragAndDropEnabled: Boolean,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean, isSubnotesExpanded: Boolean, isParentsExpanded: Boolean, isAttachmentsExpanded: Boolean) -> Unit,
     onSaveListSettings: () -> Unit,
@@ -207,72 +206,67 @@ fun ListScreenList(
                         }
                     }
 
-                    ReorderableItem(reorderableLazyListState, key = iCal4ListRelObject.iCal4List.id) {
-                        ListCard(
-                            iCalObject = iCal4ListRelObject.iCal4List,
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
-                            subtasks = currentSubtasks,
-                            subnotes = currentSubnotes,
-                            parents = currentParents,
-                            storedCategories = storedCategories,
-                            storedResources = storedResources,
-                            storedStatuses = storedStatuses,
-                            selected = selectedEntries,
-                            attachments = currentAttachments ?: emptyList(),
-                            isSubtasksExpandedDefault = isSubtasksExpandedDefault,
-                            isSubnotesExpandedDefault = isSubnotesExpandedDefault,
-                            isAttachmentsExpandedDefault = isAttachmentsExpandedDefault,
-                            isParentsExpandedDefault = isParentsExpandedDefault,
-                            settingShowProgressMaintasks = settingShowProgressMaintasks,
-                            settingShowProgressSubtasks = settingShowProgressSubtasks,
-                            settingDisplayTimezone = settingDisplayTimezone,
-                            settingIsAccessibilityMode = settingIsAccessibilityMode,
-                            progressIncrement = settingProgressIncrement.getProgressStepKeyAsInt(),
-                            linkProgressToSubtasks = settingLinkProgressToSubtasks,
-                            markdownEnabled = markdownEnabled,
-                            onClick = onClick,
-                            onLongClick = onLongClick,
-                            onProgressChanged = onProgressChanged,
-                            onExpandedChanged = onExpandedChanged,
-                            onUpdateSortOrder = onUpdateSortOrder,
-                            player = player,
-                            isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
-                            isSubnoteDragAndDropEnabled = isSubnoteDragAndDropEnabled,
-                            dragHandle = {
-                                if(isListDragAndDropEnabled)
-                                    DragHandleLazy(this)
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 8.dp)
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = {
-                                        onClick(
-                                            iCal4ListRelObject.iCal4List.id,
-                                            groupedList
-                                                .flatMap { it.value }
-                                                .map { it.iCal4List },
-                                            iCal4ListRelObject.iCal4List.isReadOnly
-                                        )
-                                    },
-                                    onLongClick = {
-                                        if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(
+                        ReorderableItem(reorderableLazyListState, key = iCal4ListRelObject.iCal4List.id) {
+                            ListCard(
+                                iCalObject = iCal4ListRelObject.iCal4List,
+                                categories = iCal4ListRelObject.categories,
+                                resources = iCal4ListRelObject.resources,
+                                subtasks = currentSubtasks,
+                                subnotes = currentSubnotes,
+                                parents = currentParents,
+                                storedCategories = storedCategories,
+                                storedResources = storedResources,
+                                storedStatuses = storedStatuses,
+                                selected = selectedEntries,
+                                attachments = currentAttachments ?: emptyList(),
+                                isSubtasksExpandedDefault = isSubtasksExpandedDefault,
+                                isSubnotesExpandedDefault = isSubnotesExpandedDefault,
+                                isAttachmentsExpandedDefault = isAttachmentsExpandedDefault,
+                                isParentsExpandedDefault = isParentsExpandedDefault,
+                                settingShowProgressMaintasks = settingShowProgressMaintasks,
+                                settingShowProgressSubtasks = settingShowProgressSubtasks,
+                                settingDisplayTimezone = settingDisplayTimezone,
+                                settingIsAccessibilityMode = settingIsAccessibilityMode,
+                                progressIncrement = settingProgressIncrement.getProgressStepKeyAsInt(),
+                                linkProgressToSubtasks = settingLinkProgressToSubtasks,
+                                markdownEnabled = markdownEnabled,
+                                onClick = onClick,
+                                onLongClick = onLongClick,
+                                onProgressChanged = onProgressChanged,
+                                onExpandedChanged = onExpandedChanged,
+                                onUpdateSortOrder = onUpdateSortOrder,
+                                player = player,
+                                isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
+                                isSubnoteDragAndDropEnabled = isSubnoteDragAndDropEnabled,
+                                dragHandle = {
+                                    if(isListDragAndDropEnabled)
+                                        DragHandleLazy(this)
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 8.dp)
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = {
+                                            onClick(
                                                 iCal4ListRelObject.iCal4List.id,
                                                 groupedList
                                                     .flatMap { it.value }
-                                                    .map { it.iCal4List })
-                                    }
-                                )
-                                .testTag("benchmark:ListCard")
-                        )
+                                                    .map { it.iCal4List },
+                                                iCal4ListRelObject.iCal4List.isReadOnly
+                                            )
+                                        },
+                                        onLongClick = {
+                                            onLongClick(iCal4ListRelObject.iCal4List.id, iCal4ListRelObject.iCal4List.isReadOnly)
+                                        }
+                                    )
+                                    .testTag("benchmark:ListCard")
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 
     Crossfade(listState.canScrollBackward, label = "showScrollUp") {
         if (it) {
@@ -365,7 +359,7 @@ fun ListScreenList_TODO() {
             isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
+            onLongClick = { _, _ ->  },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
             onSaveListSettings = { },
@@ -448,7 +442,7 @@ fun ListScreenList_JOURNAL() {
             isSubnoteDragAndDropEnabled = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
+            onLongClick = { _, _ ->  },
             listSettings = listSettings,
             onExpandedChanged = { _, _, _, _, _ -> },
             onSaveListSettings = { },

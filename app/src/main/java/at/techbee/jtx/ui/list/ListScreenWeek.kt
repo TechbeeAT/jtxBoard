@@ -77,7 +77,7 @@ fun ListScreenWeek(
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit,
 ) {
 
     val currentDate = remember { LocalDate.now() }
@@ -196,7 +196,7 @@ fun Day(
     list: List<ICal4ListRel>,
     selectedEntries: SnapshotStateList<Long>,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit
 ) {
 
     val list4day = list.filter {
@@ -254,10 +254,7 @@ fun Day(
                                 )
                             },
                             onLongClick = {
-                                if (!iCal4ListRel.iCal4List.isReadOnly)
-                                    onLongClick(
-                                        iCal4ListRel.iCal4List.id,
-                                        list4day.map { it.iCal4List })
+                                onLongClick(iCal4ListRel.iCal4List.id, iCal4ListRel.iCal4List.isReadOnly)
                             }
                         )
                         .aspectRatio(1f)

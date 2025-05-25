@@ -8,13 +8,10 @@
 
 package at.techbee.jtx.ui.reusable.cards
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -41,21 +37,18 @@ import at.techbee.jtx.util.DateTimeUtils
 import java.time.ZonedDateTime
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizontalDateCard(
     datetime: Long?,
     timezone: String?,
-    isEditMode: Boolean,
     allowNull: Boolean,
     dateOnly: Boolean,
+    isReadOnly: Boolean,
     modifier: Modifier = Modifier,
     labelTop: String? = null,
     pickerMinDate: ZonedDateTime? = null,
     pickerMaxDate: ZonedDateTime? = null,
-    enabled: Boolean = true,
-    onDateTimeChanged: (Long?, String?) -> Unit,
-    toggleEditMode: () -> Unit
+    onDateTimeChanged: (Long?, String?) -> Unit
 ) {
 
     var showDatePickerDialog by rememberSaveable { mutableStateOf(false) }
@@ -64,17 +57,11 @@ fun HorizontalDateCard(
     val settingDisplayTimezone = DropdownSetting.SETTING_DISPLAY_TIMEZONE.getSetting(prefs)
 
 
-    Card(
+    ElevatedCard(
         onClick = {
-            if(!isEditMode)
-                toggleEditMode()
-            showDatePickerDialog = true
+            if(!isReadOnly)
+                showDatePickerDialog = true
         },
-        shape = if(isEditMode) CardDefaults.outlinedShape else CardDefaults.elevatedShape,
-        colors = if(isEditMode) CardDefaults.outlinedCardColors() else CardDefaults.elevatedCardColors(),
-        elevation = if(isEditMode) CardDefaults.outlinedCardElevation() else CardDefaults.elevatedCardElevation(),
-        border = if(isEditMode) CardDefaults.outlinedCardBorder() else BorderStroke(0.dp, Color.Transparent),
-        enabled = !isEditMode || enabled,
         modifier = modifier
     ) {
 
@@ -104,29 +91,27 @@ fun HorizontalDateCard(
                                 else -> null
                             }
                         ),
-                        fontStyle = if (!isEditMode) FontStyle.Italic else null,
-                        fontWeight = if (!isEditMode) FontWeight.Bold else null
+                        fontStyle = FontStyle.Italic,
+                        fontWeight = FontWeight.Bold
                     )
                 }
-                if((isEditMode && timezone != null && timezone != TZ_ALLDAY)
-                    || (timezone != null && timezone != TZ_ALLDAY &&
+                if((timezone != null && timezone != TZ_ALLDAY &&
                     (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL
-                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL)
-                            )
+                        || settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_LOCAL_AND_ORIGINAL))
                     ) {
                     Text(
                         DateTimeUtils.convertLongToFullDateTimeString(
                             datetime,
                             timezone
                         ),
-                        fontStyle = if (!isEditMode && settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL) FontStyle.Italic else null,
-                        fontWeight = if (!isEditMode && settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL) FontWeight.Bold else null
+                        fontStyle = if (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL) FontStyle.Italic else null,
+                        fontWeight = if (settingDisplayTimezone == DropdownSettingOption.DISPLAY_TIMEZONE_ORIGINAL) FontWeight.Bold else null
                     )
                 }
             } else {
                 Text(
                     text = stringResource(id = R.string.not_set2),
-                    fontStyle = if(!isEditMode) FontStyle.Italic else null
+                    fontStyle = FontStyle.Italic
                 )
             }
         }
@@ -156,10 +141,9 @@ fun HorizontalDateCard_Preview_Allday() {
             datetime = System.currentTimeMillis(),
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
-            isEditMode = false,
+            isReadOnly = false,
             dateOnly = false,
-            onDateTimeChanged = { _, _ -> },
-            toggleEditMode = { }
+            onDateTimeChanged = { _, _ -> }
         )
     }
 }
@@ -172,10 +156,9 @@ fun HorizontalDateCard_Preview_Allday_edit() {
             datetime = System.currentTimeMillis(),
             timezone = ICalObject.TZ_ALLDAY,
             allowNull = true,
-            isEditMode = true,
+            isReadOnly = true,
             dateOnly = false,
-            onDateTimeChanged = { _, _ -> },
-            toggleEditMode = { }
+            onDateTimeChanged = { _, _ -> }
         )
     }
 }
@@ -187,12 +170,11 @@ fun HorizontalDateCard_Preview_WithTime() {
         HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = null,
-            isEditMode = false,
+            isReadOnly = false,
             allowNull = true,
             dateOnly = false,
             onDateTimeChanged = { _, _ -> },
-            labelTop = stringResource(id = R.string.completed),
-            toggleEditMode = { }
+            labelTop = stringResource(id = R.string.completed)
         )
     }
 }
@@ -204,11 +186,10 @@ fun HorizontalDateCard_Preview_WithTimezone() {
         HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = "Europe/Vienna",
-            isEditMode = false,
+            isReadOnly = false,
             allowNull = true,
             dateOnly = false,
-            onDateTimeChanged = { _, _ -> },
-            toggleEditMode = { }
+            onDateTimeChanged = { _, _ -> }
         )
     }
 }
@@ -220,11 +201,10 @@ fun HorizontalDateCard_Preview_WithTimezone2() {
         HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = "Africa/Addis_Ababa",
-            isEditMode = false,
+            isReadOnly = false,
             allowNull = true,
             dateOnly = false,
-            onDateTimeChanged = { _, _ -> },
-            toggleEditMode = { }
+            onDateTimeChanged = { _, _ -> }
         )
     }
 }
@@ -236,11 +216,10 @@ fun HorizontalDateCard_Preview_SameOffset() {
         HorizontalDateCard(
             datetime = System.currentTimeMillis(),
             timezone = "Europe/Rome",
-            isEditMode = false,
+            isReadOnly = false,
             allowNull = true,
             dateOnly = false,
-            onDateTimeChanged = { _, _ -> },
-            toggleEditMode = { }
+            onDateTimeChanged = { _, _ -> }
         )
     }
 }
@@ -252,12 +231,11 @@ fun HorizontalDateCard_Preview_NotSet() {
         HorizontalDateCard(
             datetime = null,
             timezone = null,
-            isEditMode = false,
+            isReadOnly = false,
             allowNull = true,
             dateOnly = false,
             onDateTimeChanged = { _, _ -> },
-            labelTop = stringResource(id = R.string.due),
-            toggleEditMode = { }
+            labelTop = stringResource(id = R.string.due)
         )
     }
 }
@@ -270,12 +248,11 @@ fun HorizontalDateCard_Preview_edit_NotSet() {
         HorizontalDateCard(
             datetime = null,
             timezone = null,
-            isEditMode = true,
+            isReadOnly = true,
             allowNull = true,
             dateOnly = false,
             onDateTimeChanged = { _, _ -> },
-            labelTop = stringResource(id = R.string.due),
-            toggleEditMode = { }
+            labelTop = stringResource(id = R.string.due)
         )
     }
 }

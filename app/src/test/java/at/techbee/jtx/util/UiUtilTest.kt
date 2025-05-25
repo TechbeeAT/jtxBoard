@@ -63,6 +63,9 @@ class UiUtilTest {
     @Test fun isValidURL_testTrue4() = assertTrue(isValidURL("https://www.example.com/asdf"))
     @Test fun isValidURL_testFalse1() = assertFalse(isValidURL("AABB"))
     @Test fun isValidURL_testFalse2() = assertFalse(isValidURL("asdf://AABB.com"))
+    @Test fun isValidURL_test_empty() = assertFalse(isValidURL(""))
+    @Test fun isValidURL_test_spaces() = assertFalse(isValidURL(" "))
+
 
     @Test fun getAttachmentSizeString_bytes() = assertEquals("100 Bytes", getAttachmentSizeString(100))
     @Test fun getAttachmentSizeString_kilobytes() = assertEquals("1 KB", getAttachmentSizeString(1024))

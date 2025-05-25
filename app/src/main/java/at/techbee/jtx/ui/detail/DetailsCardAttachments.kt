@@ -20,16 +20,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddLink
 import androidx.compose.material.icons.outlined.Attachment
 import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Upload
-import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,7 +55,7 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 @Composable
 fun DetailsCardAttachments(
     attachments: SnapshotStateList<Attachment>,
-    isEditMode: Boolean,
+    isReadOnly: Boolean,
     isRemoteCollection: Boolean,
     player: MediaPlayer?,
     onAttachmentsUpdated: () -> Unit,
@@ -105,7 +104,42 @@ fun DetailsCardAttachments(
                 .padding(8.dp),
         ) {
 
-            HeadlineWithIcon(icon = Icons.Outlined.Attachment, iconDesc = headline, text = headline)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                HeadlineWithIcon(icon = Icons.Outlined.Attachment, iconDesc = headline, text = headline)
+
+                if(!isReadOnly) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.horizontalScroll(rememberScrollState())
+                    ) {
+
+                        IconButton(onClick = { pickFileLauncher.launch("*/*") }) {
+                            Icon(Icons.Outlined.Upload, stringResource(id = R.string.edit_attachment_button_text))
+                        }
+                        // don't show the button if the device does not have a camera
+                        if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                            IconButton(onClick = {
+                                Attachment.getNewAttachmentUriForPhoto(context)?.let {
+                                    newPictureUri.value = it
+                                    takePictureLauncher.launch(it)
+                                }
+                            }) {
+                                Icon(
+                                    Icons.Outlined.CameraAlt,
+                                    stringResource(id = R.string.edit_take_picture_button_text)
+                                )
+                            }
+                        }
+                        IconButton(onClick = { showAddLinkAttachmentDialog = true }) {
+                            Icon(Icons.Outlined.AddLink, stringResource(id = R.string.edit_add_link_button_text))
+                        }
+                    }
+                }
+            }
 
             AnimatedVisibility(attachments.isNotEmpty()) {
                 Column(
@@ -114,31 +148,10 @@ fun DetailsCardAttachments(
                         .fillMaxWidth()
                 ) {
 
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        attachments.asReversed().filter { it.fmttype?.startsWith("image/") == true }
-                            .forEach { attachment ->
-                                AttachmentCard(
-                                    attachment = attachment,
-                                    isEditMode = isEditMode,
-                                    isRemoteCollection = isRemoteCollection,
-                                    player = player,
-                                    onAttachmentDeleted = {
-                                        attachments.remove(attachment)
-                                        onAttachmentsUpdated()
-                                    },
-                                    modifier = Modifier.size(100.dp, 140.dp)
-                                )
-                            }
-                    }
-
-                    attachments.asReversed().filter { it.fmttype == null || it.fmttype?.startsWith("image/") == false }.forEach { attachment ->
+                    attachments.asReversed().forEach { attachment ->
                         AttachmentCard(
                             attachment = attachment,
-                            isEditMode = isEditMode,
+                            isReadOnly = isReadOnly,
                             isRemoteCollection = isRemoteCollection,
                             player = player,
                             onAttachmentDeleted = {
@@ -150,48 +163,13 @@ fun DetailsCardAttachments(
                 }
             }
 
-            AnimatedVisibility(isEditMode) {
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                        .padding(top = 8.dp)
-                ) {
-
-                    Button(onClick = { pickFileLauncher.launch("*/*") }) {
-                        Icon(Icons.Outlined.Upload, stringResource(id = R.string.edit_attachment_button_text))
-                    }
-                    // don't show the button if the device does not have a camera
-                    if (context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-                        Button(onClick = {
-                            Attachment.getNewAttachmentUriForPhoto(context)?.let {
-                                newPictureUri.value = it
-                                takePictureLauncher.launch(it)
-                            }
-                        }) {
-                            Icon(
-                                Icons.Outlined.CameraAlt,
-                                stringResource(id = R.string.edit_take_picture_button_text)
-                            )
-                        }
-                    }
-                    Button(onClick = { showAddLinkAttachmentDialog = true }) {
-                        Icon(Icons.Outlined.AddLink, stringResource(id = R.string.edit_add_link_button_text))
-                    }
-                }
-            }
-
-            AnimatedVisibility((isEditMode && attachments.any { (it.getFilesize(context)?:0) > 100000 } && isRemoteCollection) || LocalInspectionMode.current) {
+            AnimatedVisibility((attachments.any { (it.getFilesize(context)?:0) > 100000 } && isRemoteCollection) || LocalInspectionMode.current) {
                 Text(
                     stringResource(id = R.string.details_attachment_beta_info),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.error
                 )
             }
-
         }
     }
 }
@@ -203,7 +181,7 @@ fun DetailsCardAttachments_Preview() {
 
         DetailsCardAttachments(
             attachments = remember { mutableStateListOf(Attachment(filename = "test.pdf")) },
-            isEditMode = false,
+            isReadOnly = false,
             isRemoteCollection = true,
             player = null,
             onAttachmentsUpdated = { }
@@ -218,7 +196,7 @@ fun DetailsCardAttachments_Preview_Images() {
 
         DetailsCardAttachments(
             attachments = remember { mutableStateListOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")) },
-            isEditMode = false,
+            isReadOnly = false,
             isRemoteCollection = true,
             player = null,
             onAttachmentsUpdated = { }
@@ -233,7 +211,7 @@ fun DetailsCardAttachments_Preview_edit() {
     MaterialTheme {
         DetailsCardAttachments(
             attachments = remember { mutableStateListOf(Attachment(filename = "test.pdf")) },
-            isEditMode = true,
+            isReadOnly = true,
             isRemoteCollection = true,
             player = null,
             onAttachmentsUpdated = { }
@@ -249,7 +227,22 @@ fun DetailsCardAttachments_Preview_Images_edit() {
 
         DetailsCardAttachments(
             attachments = remember { mutableStateListOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")) },
-            isEditMode = true,
+            isReadOnly = false,
+            isRemoteCollection = true,
+            player = null,
+            onAttachmentsUpdated = { }
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsCardAttachments_Preview_Images_readOnly() {
+    MaterialTheme {
+
+        DetailsCardAttachments(
+            attachments = remember { mutableStateListOf(Attachment(filename = "test.pdf"), Attachment(filename = "image.jpg", fmttype = "image/jpg"), Attachment(filename = "image2.jpg", fmttype = "image/jpg")) },
+            isReadOnly = true,
             isRemoteCollection = true,
             player = null,
             onAttachmentsUpdated = { }

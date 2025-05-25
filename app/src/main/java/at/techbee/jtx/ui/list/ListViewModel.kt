@@ -109,7 +109,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
     var toastMessage = mutableStateOf<String?>(null)
 
     val selectedEntries = mutableStateListOf<Long>()
-    val multiselectEnabled = mutableStateOf(false)
 
     init {
         // only ad the welcomeEntries on first install and exclude all installs that didn't have this preference before (installed before 1641596400000L = 2022/01/08

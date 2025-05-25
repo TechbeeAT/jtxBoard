@@ -81,7 +81,7 @@ fun ListScreenGrid(
     isListDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
-    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
+    onLongClick: (itemId: Long, isReadOnly: Boolean) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -131,41 +131,38 @@ fun ListScreenGrid(
                 key = iCal4ListRelObject.iCal4List.id
             ) {
 
-                ListCardGrid(
-                    iCal4ListRelObject.iCal4List,
-                    storedCategories = storedCategories,
-                    storedStatuses = storedStatuses,
-                    selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
-                    progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
-                    markdownEnabled = markdownEnabled,
-                    player = player,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(jtxCardCornerShape)
-                        .combinedClickable(
-                            onClick = {
-                                onClick(
-                                    iCal4ListRelObject.iCal4List.id,
-                                    list.map { it.iCal4List },
-                                    iCal4ListRelObject.iCal4List.isReadOnly
-                                )
-                            },
-                            onLongClick = {
-                                if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                    onLongClick(
+                    ListCardGrid(
+                        iCal4ListRelObject.iCal4List,
+                        storedCategories = storedCategories,
+                        storedStatuses = storedStatuses,
+                        selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
+                        progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
+                        markdownEnabled = markdownEnabled,
+                        player = player,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(jtxCardCornerShape)
+                            .combinedClickable(
+                                onClick = {
+                                    onClick(
                                         iCal4ListRelObject.iCal4List.id,
-                                        list.map { it.iCal4List })
-                            }
-                        ),
-                    onProgressChanged = onProgressChanged,
-                    dragHandle = {
-                        if(isListDragAndDropEnabled)
-                            DragHandleLazy(this)
-                    },
-                )
+                                        list.map { it.iCal4List },
+                                        iCal4ListRelObject.iCal4List.isReadOnly
+                                    )
+                                },
+                                onLongClick = {
+                                    onLongClick(iCal4ListRelObject.iCal4List.id, iCal4ListRelObject.iCal4List.isReadOnly)
+                                }
+                            ),
+                        onProgressChanged = onProgressChanged,
+                        dragHandle = {
+                            if(isListDragAndDropEnabled)
+                                DragHandleLazy(this)
+                        },
+                    )
+                }
             }
         }
-    }
 
     Crossfade(gridState.canScrollBackward, label = "showScrollUp") {
         if (it) {
@@ -238,7 +235,7 @@ fun ListScreenGrid_TODO() {
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
+            onLongClick = { _, _ ->  },
             isListDragAndDropEnabled = true
         )
     }
@@ -293,7 +290,7 @@ fun ListScreenGrid_JOURNAL() {
             player = null,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
-            onLongClick = { _, _ -> },
+            onLongClick = { _, _ ->  },
             isListDragAndDropEnabled = false
         )
     }

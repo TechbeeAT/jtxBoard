@@ -18,7 +18,6 @@ import androidx.navigation.NavController
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 
@@ -47,17 +46,17 @@ fun ListScreen(
     )
 
     fun processOnClick(itemId: Long, ical4list: List<ICal4List>, isReadOnly: Boolean) {
-        if (listViewModel.multiselectEnabled.value && isReadOnly)
+        if(isReadOnly && listViewModel.selectedEntries.isNotEmpty())
             return
-        else if (listViewModel.multiselectEnabled.value)
+        else if (listViewModel.selectedEntries.isNotEmpty())
             if (listViewModel.selectedEntries.contains(itemId)) listViewModel.selectedEntries.remove(itemId) else listViewModel.selectedEntries.add(itemId)
         else
             navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, false))
     }
 
-    fun processOnLongClick(itemId: Long, ical4list: List<ICal4List>) {
-        if (!listViewModel.multiselectEnabled.value && BillingManager.getInstance().isProPurchased.value == true)
-            navController.navigate(DetailDestination.Detail.getRoute(itemId, ical4list.map { it.id }, true))
+    fun processOnLongClick(itemId: Long, isReadOnly: Boolean) {
+        if(!isReadOnly)
+            listViewModel.selectedEntries.add(itemId)
     }
 
     fun processOnProgressChanged(itemId: Long, newPercent: Int, scrollOnce: Boolean = false) {
@@ -183,7 +182,7 @@ fun ListScreen(
                 selectedEntries = listViewModel.selectedEntries,
                 scrollOnceId = listViewModel.scrollOnceId,
                 onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
-                onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
+                onLongClick = { itemId, isReadOnly -> processOnLongClick(itemId, isReadOnly) },
             )
         }
     }
