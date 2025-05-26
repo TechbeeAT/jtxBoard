@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.list
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import com.arnyminerz.markdowntext.MarkdownText
@@ -46,6 +48,7 @@ import com.arnyminerz.markdowntext.MarkdownText
 @Composable
 fun ListCardGrid(
     iCalObject: ICal4List,
+    iCalObjectList: List<ICal4List>,
     storedCategories: List<StoredCategory>,
     storedStatuses: List<ExtendedStatus>,
     selected: Boolean,
@@ -54,8 +57,10 @@ fun ListCardGrid(
     player: MediaPlayer?,
     modifier: Modifier = Modifier,
     dragHandle:@Composable () -> Unit = { },
-    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit
-) {
+    onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
+    onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
+    ) {
     Card(
         colors = CardDefaults.elevatedCardColors(
             containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else CardDefaults.elevatedCardColors().containerColor,
@@ -63,7 +68,22 @@ fun ListCardGrid(
         ),
         elevation = CardDefaults.elevatedCardElevation(),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
-        modifier = modifier
+        modifier = modifier.combinedClickable(
+            onClick = {
+                onClick(
+                    iCalObject.id,
+                    iCalObjectList,
+                    iCalObject.isReadOnly
+                )
+            },
+            onLongClick = {
+                if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                    onLongClick(
+                        iCalObject.id,
+                        iCalObjectList
+                    )
+            }
+        )
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(3.dp, Alignment.Top),
@@ -127,6 +147,13 @@ fun ListCardGrid(
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
+                        onClick = {
+                            onClick(
+                                iCalObject.id,
+                                iCalObjectList,
+                                iCalObject.isReadOnly
+                            )
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)
@@ -158,6 +185,7 @@ fun ListCardGrid_JOURNAL() {
         }
         ListCardGrid(
             icalobject,
+            iCalObjectList = emptyList(),
             storedCategories = emptyList(),
             storedStatuses = emptyList(),
             selected = false,
@@ -165,7 +193,9 @@ fun ListCardGrid_JOURNAL() {
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> }, modifier = Modifier
-                .width(150.dp)
+                .width(150.dp),
+            onClick = {_, _, _ -> },
+            onLongClick = {_, _ -> },
         )
     }
 }
@@ -184,6 +214,7 @@ fun ListCardGrid_NOTE() {
         }
         ListCardGrid(
             icalobject,
+            iCalObjectList = emptyList(),
             storedCategories = emptyList(),
             storedStatuses = emptyList(),
             selected = true,
@@ -191,7 +222,9 @@ fun ListCardGrid_NOTE() {
             markdownEnabled = false,
             onProgressChanged = { _, _ -> },
             player = null,
-            modifier = Modifier.width(150.dp)
+            modifier = Modifier.width(150.dp),
+            onClick = {_, _, _ -> },
+            onLongClick = {_, _ -> },
         )
     }
 }
@@ -219,13 +252,17 @@ fun ListCardGrid_TODO() {
         }
         ListCardGrid(
             icalobject,
+            iCalObjectList = emptyList(),
             storedCategories = emptyList(),
             storedStatuses = emptyList(),
             selected = false,
             progressUpdateDisabled = false,
             markdownEnabled = false,
             player = null,
-            onProgressChanged = { _, _ -> }, modifier = Modifier.width(150.dp)
+            onProgressChanged = { _, _ -> },
+            onClick = {_, _, _ -> },
+            onLongClick = {_, _ -> },
+            modifier = Modifier.width(150.dp)
         )
     }
 }
@@ -255,6 +292,7 @@ fun ListCardGrid_TODO_short() {
         }
         ListCardGrid(
             icalobject,
+            iCalObjectList = emptyList(),
             storedCategories = emptyList(),
             storedStatuses = emptyList(),
             selected = false,
@@ -262,6 +300,8 @@ fun ListCardGrid_TODO_short() {
             markdownEnabled = false,
             player = null,
             onProgressChanged = { _, _ -> },
+            onClick = {_, _, _ -> },
+            onLongClick = {_, _ -> },
             modifier = Modifier.width(150.dp)
         )
     }

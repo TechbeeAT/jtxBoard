@@ -85,6 +85,7 @@ import sh.calvin.reorderable.ReorderableColumn
 @Composable
 fun ListCard(
     iCalObject: ICal4List,
+    iCalObjectList: List<ICal4List>,
     categories: List<Category>,
     resources: List<Resource>,
     subtasks: List<ICal4List>,
@@ -153,6 +154,13 @@ fun ListCard(
                 maxLines = 6,
                 overflow = TextOverflow.Ellipsis,
                 textDecoration = summaryDescriptionTextDecoration,
+                onClick = {
+                    onClick(
+                        iCalObject.id,
+                        iCalObjectList,
+                        iCalObject.isReadOnly
+                    )
+                },
                 modifier = Modifier.fillMaxWidth()
             )
         else
@@ -172,7 +180,22 @@ fun ListCard(
         ),
         elevation = CardDefaults.elevatedCardElevation(),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
-        modifier = modifier
+        modifier = modifier.combinedClickable(
+            onClick = {
+                onClick(
+                    iCalObject.id,
+                    iCalObjectList,
+                    iCalObject.isReadOnly
+                )
+            },
+            onLongClick = {
+                if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                    onLongClick(
+                        iCalObject.id,
+                        iCalObjectList
+                    )
+            }
+        )
     ) {
 
         Column(
@@ -601,6 +624,7 @@ fun ICalObjectListCardPreview_JOURNAL() {
         }
         ListCard(
             iCalObject = icalobject,
+            iCalObjectList = emptyList(),
             categories = listOf(Category(text = "Test"), Category(text = "two")),
             resources = listOf(Resource(text = "Projector"), Resource(text="another")),
             subtasks = listOf(ICal4List.getSample().apply {
@@ -652,6 +676,7 @@ fun ICalObjectListCardPreview_NOTE() {
         }
         ListCard(
             iCalObject = icalobject,
+            iCalObjectList = emptyList(),
             categories = emptyList(),
             resources = emptyList(),
             subtasks = listOf(ICal4List.getSample().apply {
@@ -705,6 +730,7 @@ fun ICalObjectListCardPreview_TODO() {
         }
         ListCard(
             iCalObject = icalobject,
+            iCalObjectList = emptyList(),
             categories = emptyList(),
             resources = emptyList(),
             subtasks = listOf(ICal4List.getSample().apply {
@@ -758,6 +784,7 @@ fun ICalObjectListCardPreview_TODO_no_progress() {
         }
         ListCard(
             iCalObject = icalobject,
+            iCalObjectList = emptyList(),
             categories = emptyList(),
             resources = emptyList(),
             subtasks = listOf(ICal4List.getSample().apply {
@@ -813,6 +840,7 @@ fun ICalObjectListCardPreview_TODO_recur_exception() {
         }
         ListCard(
             iCalObject = icalobject,
+            iCalObjectList = emptyList(),
             categories = emptyList(),
             resources = emptyList(),
             subtasks = listOf(ICal4List.getSample().apply {
@@ -876,6 +904,7 @@ fun ICalObjectListCardPreview_NOTE_simple() {
         }
         ListCard(
             iCalObject = icalobject,
+            iCalObjectList = emptyList(),
             categories = emptyList(),
             resources = emptyList(),
             subtasks = emptyList(),
@@ -932,6 +961,7 @@ fun ICalObjectListCardPreview_TASK_one_liner() {
         }
         ListCard(
             iCalObject = icalobject,
+            iCalObjectList = emptyList(),
             categories = emptyList(),
             resources = emptyList(),
             subtasks = emptyList(),
@@ -988,6 +1018,7 @@ fun ICalObjectListCardPreview_NOTE_one_liner() {
         }
         ListCard(
             iCalObject = icalobject,
+            iCalObjectList = emptyList(),
             categories = emptyList(),
             resources = emptyList(),
             subtasks = emptyList(),

@@ -11,7 +11,6 @@ package at.techbee.jtx.ui.list
 import android.media.MediaPlayer
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -132,7 +131,8 @@ fun ListScreenGrid(
             ) {
 
                 ListCardGrid(
-                    iCal4ListRelObject.iCal4List,
+                    iCalObject = iCal4ListRelObject.iCal4List,
+                    iCalObjectList = list.map { it.iCal4List },
                     storedCategories = storedCategories,
                     storedStatuses = storedStatuses,
                     selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
@@ -141,23 +141,10 @@ fun ListScreenGrid(
                     player = player,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(jtxCardCornerShape)
-                        .combinedClickable(
-                            onClick = {
-                                onClick(
-                                    iCal4ListRelObject.iCal4List.id,
-                                    list.map { it.iCal4List },
-                                    iCal4ListRelObject.iCal4List.isReadOnly
-                                )
-                            },
-                            onLongClick = {
-                                if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                    onLongClick(
-                                        iCal4ListRelObject.iCal4List.id,
-                                        list.map { it.iCal4List })
-                            }
-                        ),
+                        .clip(jtxCardCornerShape),
                     onProgressChanged = onProgressChanged,
+                    onClick = onClick,
+                    onLongClick = onLongClick,
                     dragHandle = {
                         if(isListDragAndDropEnabled)
                             DragHandleLazy(this)
