@@ -21,6 +21,7 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Transaction
 import androidx.room.Update
+import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 import at.techbee.jtx.database.locals.COLUMN_STORED_LIST_SETTING_ID
 import at.techbee.jtx.database.locals.COLUMN_STORED_LIST_SETTING_MODULE
@@ -1324,11 +1325,14 @@ interface ICalDatabaseDao {
     @Transaction
     suspend fun updateSortOrder(sortedList: List<Long>) {
         sortedList.forEachIndexed { index, iCalObjectId ->
-                val iCalObject = getICalObjectById(iCalObjectId) ?: return@forEachIndexed
-                iCalObject.sortIndex = index
-                iCalObject.makeDirty()
-                update(iCalObject)
-            }
+            val updateQuery = "UPDATE $TABLE_NAME_ICALOBJECT " +
+                    "SET $COLUMN_SORT_INDEX = $index " +
+                    //"$COLUMN_LAST_MODIFIED = ${System.currentTimeMillis()}, " +
+                    //"$COLUMN_SEQUENCE = $COLUMN_SEQUENCE + 1, " +
+                    //"$COLUMN_DIRTY = 1 " +
+                    "WHERE $COLUMN_ID = $iCalObjectId"
+            executeRAW(SimpleSQLiteQuery(updateQuery))
+        }
     }
 
     @Transaction
