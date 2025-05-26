@@ -459,7 +459,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
     fun updateSortOrder(list: List<ICal4List>) {
         viewModelScope.launch(Dispatchers.IO) {
             databaseDao.updateSortOrder(list.map { it.id })
-            onChangeDone(updateNotifications = false)
+            ListWidget().updateAll(getApplication())  // no onChangeDone as only the widget needs to be notified
         }
     }
 

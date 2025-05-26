@@ -271,7 +271,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     fun updateSortOrder(list: List<ICal4List>) {
         viewModelScope.launch(Dispatchers.IO) {
             databaseDao.updateSortOrder(list.map { it.id })
-            onChangeDone()
+            ListWidget().updateAll(getApplication())   //onChangeDone() not necessary as field is not in Sync
         }
     }
 
