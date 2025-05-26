@@ -11,7 +11,6 @@ package at.techbee.jtx.ui.reusable.dialogs
 import android.media.MediaPlayer
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -426,6 +425,7 @@ fun UpdateEntriesDialog(
                                 return@forEachIndexed
                             ListCardGrid(
                                 iCalObject = entry.iCal4List,
+                                iCalObjectList = emptyList(),
                                 selected = entry.iCal4List == selectFromAllListSelectedEntry,
                                 progressUpdateDisabled = true,
                                 markdownEnabled = false,
@@ -433,12 +433,13 @@ fun UpdateEntriesDialog(
                                 onProgressChanged = {_, _ -> },
                                 storedCategories = emptyList(),
                                 storedStatuses = emptyList(),
-                                modifier = Modifier.clickable {
+                                onClick = { _, _, _ ->
                                     selectFromAllListSelectedEntry = if(entry.iCal4List == selectFromAllListSelectedEntry)
                                         null
                                     else
                                         entry.iCal4List
-                                }
+                                },
+                                onLongClick = { _, _ -> }
                             )
                         }
                     }

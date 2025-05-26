@@ -10,7 +10,6 @@ package at.techbee.jtx.ui.reusable.dialogs
 
 import android.media.MediaPlayer
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -199,6 +198,7 @@ fun LinkExistingEntryDialog(
 
                             ListCardGrid(
                                 iCalObject = entry.iCal4List,
+                                iCalObjectList = emptyList(),
                                 selected = selectedEntries.contains(entry.iCal4List),
                                 progressUpdateDisabled = true,
                                 markdownEnabled = false,
@@ -206,12 +206,13 @@ fun LinkExistingEntryDialog(
                                 player = player,
                                 storedCategories = emptyList(),
                                 storedStatuses = emptyList(),
-                                modifier = Modifier.clickable {
+                                onClick = { _, _, _ ->
                                     if (selectedEntries.contains(entry.iCal4List))
                                         selectedEntries.remove(entry.iCal4List)
                                     else
                                         selectedEntries.add(entry.iCal4List)
-                                }
+                                },
+                                onLongClick = { _, _ -> }
                             )
                         }
                     }

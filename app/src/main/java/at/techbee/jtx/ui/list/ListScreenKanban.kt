@@ -17,7 +17,6 @@ import android.os.Vibrator
 import android.os.VibratorManager
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -176,21 +175,17 @@ fun ListScreenKanban(
                     val maxOffset = 50f
 
                     ListCardKanban(
-                        iCal4ListRelObject.iCal4List,
+                        iCalObject = iCal4ListRelObject.iCal4List,
+                        iCalObjectList = list.map { it.iCal4List },
                         storedCategories = storedCategories,
                         storedStatuses = storedStatuses,
                         selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                         markdownEnabled = markdownEnabled,
                         player = player,
+                        onClick = onClick,
+                        onLongClick = onLongClick,
                         modifier = Modifier
                             .clip(jtxCardCornerShape)
-                            .combinedClickable(
-                                onClick = { onClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List }, iCal4ListRelObject.iCal4List.isReadOnly) },
-                                onLongClick = {
-                                    if (!iCal4ListRelObject.iCal4List.isReadOnly)
-                                        onLongClick(iCal4ListRelObject.iCal4List.id, list.map { it.iCal4List })
-                                }
-                            )
                             .fillMaxWidth()
                             .offset { IntOffset(offsetX.roundToInt(), 0) }
                             .draggable(

@@ -10,6 +10,7 @@ package at.techbee.jtx.ui.list
 
 import android.media.MediaPlayer
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +36,7 @@ import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import com.arnyminerz.markdowntext.MarkdownText
@@ -43,13 +45,16 @@ import com.arnyminerz.markdowntext.MarkdownText
 @Composable
 fun ListCardKanban(
     iCalObject: ICal4List,
+    iCalObjectList: List<ICal4List>,
     storedCategories: List<StoredCategory>,
     storedStatuses: List<ExtendedStatus>,
     markdownEnabled: Boolean,
     selected: Boolean,
     player: MediaPlayer?,
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier,
+    onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
+    onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
+    ) {
 
     Card(
         colors = CardDefaults.elevatedCardColors(
@@ -58,7 +63,22 @@ fun ListCardKanban(
         ),
         elevation = CardDefaults.elevatedCardElevation(),
         border = iCalObject.colorItem?.let { BorderStroke(jtxCardBorderStrokeWidth, Color(it)) },
-        modifier = modifier
+        modifier = modifier.combinedClickable(
+                onClick = {
+                    onClick(
+                        iCalObject.id,
+                        iCalObjectList,
+                        iCalObject.isReadOnly
+                    )
+                },
+            onLongClick = {
+                if (!iCalObject.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                    onLongClick(
+                        iCalObject.id,
+                        iCalObjectList
+                    )
+            }
+        )
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(3.dp, Alignment.Top),
@@ -96,6 +116,13 @@ fun ListCardKanban(
                         markdown = iCalObject.description?.trim() ?: "",
                         maxLines = 4,
                         textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
+                        onClick = {
+                            onClick(
+                                iCalObject.id,
+                                iCalObjectList,
+                                iCalObject.isReadOnly
+                            )
+                        },
                         overflow = TextOverflow.Ellipsis
                     )
                 else
@@ -120,13 +147,16 @@ fun ListCardKanban_JOURNAL() {
         }
         ListCardKanban(
             icalobject,
+            iCalObjectList = emptyList(),
             storedCategories = emptyList(),
             storedStatuses = emptyList(),
             selected = false,
             markdownEnabled = false,
             player = null,
             modifier = Modifier
-                .width(150.dp)
+                .width(150.dp),
+            onClick = {_, _, _ -> },
+            onLongClick = {_, _ -> }
         )
     }
 }
@@ -146,13 +176,16 @@ fun ListCardKanban_NOTE() {
         }
         ListCardKanban(
             icalobject,
+            iCalObjectList = emptyList(),
             storedCategories = emptyList(),
             storedStatuses = emptyList(),
             selected = true,
             markdownEnabled = false,
             player = null,
             modifier = Modifier
-                .width(150.dp)
+                .width(150.dp),
+            onClick = {_, _, _ -> },
+            onLongClick = {_, _ -> }
         )
     }
 }
@@ -180,11 +213,14 @@ fun ListCardKanban_TODO() {
         }
         ListCardKanban(
             icalobject,
+            iCalObjectList = emptyList(),
             storedCategories = emptyList(),
             storedStatuses = emptyList(),
             selected = false,
             markdownEnabled = false,
             player = null,
+            onClick = {_, _, _ -> },
+            onLongClick = {_, _ -> }
         )
     }
 }

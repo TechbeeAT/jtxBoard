@@ -13,7 +13,6 @@ import android.media.MediaPlayer
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -67,7 +66,6 @@ import at.techbee.jtx.database.properties.Attachment
 import at.techbee.jtx.database.properties.Reltype
 import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
-import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.elements.DragHandleLazy
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
@@ -210,6 +208,7 @@ fun ListScreenList(
                     ReorderableItem(reorderableLazyListState, key = iCal4ListRelObject.iCal4List.id) {
                         ListCard(
                             iCalObject = iCal4ListRelObject.iCal4List,
+                            iCalObjectList = groupedList.flatMap { it.value }.map { it.iCal4List },
                             categories = iCal4ListRelObject.categories,
                             resources = iCal4ListRelObject.resources,
                             subtasks = currentSubtasks,
@@ -247,25 +246,6 @@ fun ListScreenList(
                                 .fillMaxWidth()
                                 .padding(bottom = 8.dp)
                                 .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = {
-                                        onClick(
-                                            iCal4ListRelObject.iCal4List.id,
-                                            groupedList
-                                                .flatMap { it.value }
-                                                .map { it.iCal4List },
-                                            iCal4ListRelObject.iCal4List.isReadOnly
-                                        )
-                                    },
-                                    onLongClick = {
-                                        if (!iCal4ListRelObject.iCal4List.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(
-                                                iCal4ListRelObject.iCal4List.id,
-                                                groupedList
-                                                    .flatMap { it.value }
-                                                    .map { it.iCal4List })
-                                    }
-                                )
                                 .testTag("benchmark:ListCard")
                         )
                     }
