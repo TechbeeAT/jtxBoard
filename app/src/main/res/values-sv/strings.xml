@@ -133,7 +133,6 @@
     <string name="about_special_thanks">"Särskilt tack till"</string>
     <string name="about_app_version">"Version: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Kodnamn: %1$s"</string>
-    <string name="about_app_build_date">"Kompilerad %s"</string>
     <string name="about_app_terms">"Allmänna villkor"</string>
     <string name="about_thanks_ffg">"Särskilt tack till FFG för deras förtroende och ekonomiska stöd för att förverkliga detta projekt."</string>
     <!-- menus -->
