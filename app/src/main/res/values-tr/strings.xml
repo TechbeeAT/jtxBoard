@@ -115,7 +115,6 @@
     <string name="about_special_thanks">"Özel teşekkürler"</string>
     <string name="about_app_version">"Sürüm: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Kod adı: %1$s"</string>
-    <string name="about_app_build_date">"%s tarihinde derlendi"</string>
     <string name="about_app_terms">"Şartlar &amp; Koşullar"</string>
     <string name="about_thanks_ffg">"Bu projenin gerçekleştirilmesindeki güveni ve finansal desteği için FFG'ye özellikle teşekkür ederiz."</string>
     <!-- menus -->
