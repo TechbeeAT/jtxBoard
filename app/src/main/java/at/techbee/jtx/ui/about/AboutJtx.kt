@@ -44,7 +44,6 @@ import androidx.core.net.toUri
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
-import java.text.SimpleDateFormat
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -101,13 +100,6 @@ fun AboutJtx(modifier: Modifier = Modifier) {
                 ),
                 style = Typography.bodyLarge,
                 textAlign = TextAlign.Center
-            )
-            Text(
-                text = stringResource(
-                    id = R.string.about_app_build_date,
-                    SimpleDateFormat.getDateInstance().format(BuildConfig.buildTime)
-                ),
-                style = Typography.bodyLarge,
             )
             Text(
                 text = stringResource(id = R.string.about_app_terms),

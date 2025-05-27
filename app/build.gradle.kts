@@ -26,7 +26,6 @@ android {
     compileSdk = 35
     defaultConfig {
         applicationId = "at.techbee.jtx"
-        buildConfigField("long", "buildTime", "${System.currentTimeMillis()}L")
         minSdk = 23
         targetSdk = 35
         versionCode = 211050002
