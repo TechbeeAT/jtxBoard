@@ -133,7 +133,6 @@
     <string name="about_special_thanks">"Specjalne podziękowania"</string>
     <string name="about_app_version">"Wersja: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nazwa kodowa: %1$s"</string>
-    <string name="about_app_build_date">"Skompilowano dnia %s"</string>
     <string name="about_app_terms">"Zasady &amp; Warunki Użytkowania"</string>
     <string name="about_thanks_ffg">"Szczególne podziękowania dla FFG za ich zaufanie i wsparcie finansowe w realizacji tego projektu."</string>
     <!-- menus -->

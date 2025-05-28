@@ -133,7 +133,6 @@
     <string name="about_special_thanks">"Đặc biệt cảm ơn"</string>
     <string name="about_app_version">"Phiên bản %1$s (%2$d)"</string>
     <string name="about_app_codename">"Tên mã: %1$s"</string>
-    <string name="about_app_build_date">"Được biên soạn vào %s"</string>
     <string name="about_app_terms">"Điều khoản &amp; Điều kiện"</string>
     <string name="about_thanks_ffg">"Đặc biệt cảm ơn FFG vì sự tin tưởng và hỗ trợ tài chính để thực hiện dự án này."</string>
     <!-- menus -->

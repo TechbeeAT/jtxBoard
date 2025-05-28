@@ -133,7 +133,6 @@
     <string name="about_special_thanks">"Agraïments especials"</string>
     <string name="about_app_version">"Versió: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Codi: %1$s"</string>
-    <string name="about_app_build_date">"Compilada el %s"</string>
     <string name="about_app_terms">"Termes i Condicions"</string>
     <string name="about_thanks_ffg">"Agraïments especials a FFG per la seua confiança i suport econòmic per a dur a terme aquest projecte."</string>
     <!-- menus -->

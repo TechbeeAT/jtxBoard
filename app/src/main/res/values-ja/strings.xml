@@ -133,7 +133,6 @@
     <string name="about_special_thanks">"スペシャルサンクス"</string>
     <string name="about_app_version">"バージョン: %1$s (%2$d)"</string>
     <string name="about_app_codename">"コードネーム: %1$s"</string>
-    <string name="about_app_build_date">"コンパイル: %s"</string>
     <string name="about_app_terms">"利用規約 &amp; 利用条件"</string>
     <string name="about_thanks_ffg">"このプロジェクトを実現するにあたっての FFG からの信頼と財政支援に特別な感謝を申し上げます。"</string>
     <!-- menus -->

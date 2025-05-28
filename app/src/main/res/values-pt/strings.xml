@@ -133,7 +133,6 @@
     <string name="about_special_thanks">"Agradecimentos especiais"</string>
     <string name="about_app_version">"Versão: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nome de código: %1$s"</string>
-    <string name="about_app_build_date">"Compilado em %s"</string>
     <string name="about_app_terms">"Termos &amp; Condições"</string>
     <string name="about_thanks_ffg">"Um agradecimento especial a FFG pela sua confiança e apoio financeiro para realizar este projeto."</string>
     <!-- menus -->
