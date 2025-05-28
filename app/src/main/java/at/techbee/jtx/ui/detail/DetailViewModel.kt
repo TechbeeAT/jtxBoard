@@ -128,16 +128,18 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
 
-            mutableCategories.clear()
-            mutableResources.clear()
-            mutableAttendees.clear()
-            mutableComments.clear()
-            mutableAttachments.clear()
-            mutableAlarms.clear()
-
             withContext(Dispatchers.IO) {
+
                 originalEntry = databaseDao.getSync(icalObjectId)
                 mutableICalObject = originalEntry?.property
+
+                mutableCategories.clear()
+                mutableResources.clear()
+                mutableAttendees.clear()
+                mutableComments.clear()
+                mutableAttachments.clear()
+                mutableAlarms.clear()
+
                 mutableCategories.addAll(databaseDao.getCategoriesSync(icalObjectId))
                 mutableResources.addAll(databaseDao.getResourcesSync(icalObjectId))
                 mutableAttendees.addAll(databaseDao.getAttendeesSync(icalObjectId))
@@ -152,7 +154,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             collection = icalObject.switchMap {
                 it?.let { cur -> databaseDao.getCollection(cur.collectionId) }
-
             }
 
             relatedParents = relatedTo.switchMap {
