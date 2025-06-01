@@ -8,12 +8,20 @@
 
 package at.techbee.jtx.widgets
 
+import android.content.ContentResolver
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
+import androidx.glance.LocalGlanceId
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
@@ -59,6 +67,7 @@ fun ListWidgetContent(
 ) {
 
     val context = LocalContext.current
+    val glanceId = LocalGlanceId.current // Ensure we have a GlanceId
     val groupedList = ICal4ListRel.getGroupedList(
         initialList = list,
         groupBy = listWidgetConfig.groupBy,
@@ -66,6 +75,29 @@ fun ListWidgetContent(
         module = listWidgetConfig.module,
         context = context
     )
+
+    var isSyncInProgress by remember { mutableStateOf(false) }
+
+    LaunchedEffect(glanceId, isSyncInProgress) {
+        // Request an update for this specific widget instance
+        ListWidget().update(context, glanceId)
+    }
+
+    LaunchedEffect(glanceId) { // Use glanceId to ensure the effect runs once per widget instance
+        try {
+            Log.d("ListWidget", "Adding status change listener")
+            ContentResolver.addStatusChangeListener(ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE) {
+                val newSyncStatus = ContentResolver.getCurrentSyncs().isNotEmpty()
+                Log.d("ListWidget", "Sync status changed: $newSyncStatus")
+                if (isSyncInProgress != newSyncStatus) {
+                    isSyncInProgress = newSyncStatus
+                }
+            }
+        } catch (e: Exception) { // especially necessary as ContentResolver is not available in preview (would cause exception)
+            Log.d("ListWidget", "Error adding status change listener: ${e.stackTraceToString()}")
+        }
+    }
+
 
     Scaffold(
         backgroundColor = backgroundColor,
@@ -82,6 +114,16 @@ fun ListWidgetContent(
                 },
                 textColor = textColor,
                 actions = {
+
+                    if(isSyncInProgress) {
+                        CircleIconButton(
+                            imageProvider = ImageProvider(R.drawable.ic_sync),
+                            contentDescription = context.getString(R.string.sync_in_progress),
+                            onClick = {  },
+                            contentColor = textColor,
+                            backgroundColor = null
+                        )
+                    }
 
                     CircleIconButton(
                         imageProvider = ImageProvider(R.drawable.ic_open_in_new),
