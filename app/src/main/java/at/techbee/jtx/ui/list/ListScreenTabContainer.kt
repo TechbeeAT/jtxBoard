@@ -333,16 +333,16 @@ fun ListScreenTabContainer(
     ) {
 
         val newICalObject = ICalObject.fromText(
-            module,
-            collectionId,
-            text,
-            settingsStateHolder.settingDefaultJournalsDate.value,
-            settingsStateHolder.settingDefaultStartDate.value,
-            settingsStateHolder.settingDefaultStartTime.value,
-            settingsStateHolder.settingDefaultStartTimezone.value,
-            settingsStateHolder.settingDefaultDueDate.value,
-            settingsStateHolder.settingDefaultDueTime.value,
-            settingsStateHolder.settingDefaultDueTimezone.value,
+            module = module,
+            collectionId = collectionId,
+            text = text,
+            defaultJournalDateSettingOption = settingsStateHolder.settingDefaultJournalsDate.value,
+            defaultStartDateSettingOption = settingsStateHolder.settingDefaultStartDate.value,
+            defaultStartTime = settingsStateHolder.settingDefaultStartTime.value,
+            defaultStartTimezone = settingsStateHolder.settingDefaultStartTimezone.value,
+            defaultDueDateSettingOption = settingsStateHolder.settingDefaultDueDate.value,
+            defaultDueTime = settingsStateHolder.settingDefaultDueTime.value,
+            defaultDueTimezone = settingsStateHolder.settingDefaultDueTimezone.value,
         )
         val mergedCategories = mutableListOf<Category>()
         categories.forEach {
