@@ -262,9 +262,23 @@ interface ICalDatabaseDao {
     @Query("SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :iCalObjectId")
     fun getRelatedTo(iCalObjectId: Long): LiveData<List<Relatedto>>
 
+    /**
+     * Retrieve the UID of an [ICalObject] as LiveData
+     *
+     * @param id The id of the [ICalObject] in the DB
+     * @return the [UID]
+     */
+    @Query("SELECT $COLUMN_UID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
+    fun getICalObjectUID(id: Long): LiveData<String?>
+
+
+    /*
     @Query("SELECT * FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID = :collectionId")
     fun getCollection(collectionId: Long): LiveData<ICalCollection>
+     */
 
+    @Query("SELECT collection.* FROM $TABLE_NAME_COLLECTION collection INNER JOIN $TABLE_NAME_ICALOBJECT icalobject ON icalobject.$COLUMN_ICALOBJECT_COLLECTIONID = collection.$COLUMN_COLLECTION_ID WHERE icalobject.$COLUMN_ID = :iCalObjectId")
+    fun getCollectionFromICalObjectId(iCalObjectId: Long): LiveData<ICalCollection>
 
     /**
      * Retrieve an [ICalObject] by Id asynchronously (suspend)

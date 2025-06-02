@@ -157,8 +157,6 @@ fun DetailScreenContent(
     onShowLinkExistingDialog: (modules: List<Module>, reltype: Reltype) -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit,
     ) {
-    if(iCalObject == null)
-        return
 
     val parents = parentsLive.observeAsState(emptyList())
     val subtasks = subtasksLive.observeAsState(emptyList())
@@ -167,17 +165,16 @@ fun DetailScreenContent(
     val isChild = isChildLive.observeAsState(false)
     val allWriteableCollections = allWriteableCollectionsLive.observeAsState(emptyList())
 
-
     var timeout by remember { mutableStateOf(false) }
-    LaunchedEffect(timeout, observedICalObject.value) {
-        if (observedICalObject.value == null && !timeout) {
+    LaunchedEffect(timeout, iCalObject) {
+        if (iCalObject == null && !timeout) {
             delay((10).seconds)
             timeout = true
         }
     }
 
     // item was not loaded yet or was deleted in the background
-    if (observedICalObject.value == null && timeout) {
+    if (iCalObject == null && timeout) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -192,7 +189,7 @@ fun DetailScreenContent(
             }
         }
         return
-    } else if (observedICalObject.value == null && !timeout) {
+    } else if (iCalObject == null) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -271,7 +268,7 @@ fun DetailScreenContent(
 
             val dur = try {
                 Duration.parse(alarm.triggerRelativeDuration!!)
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 return@forEach
             }
             if (alarm.triggerRelativeTo == AlarmRelativeTo.END.name) {
@@ -344,8 +341,8 @@ fun DetailScreenContent(
                         color = color,
                         changeState = changeState,
                         allPossibleCollections = allPossibleCollections,
-                        includeVJOURNAL = if (observedICalObject.value?.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
-                        includeVTODO = if (observedICalObject.value?.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
+                        includeVJOURNAL = if (iCalObject.component == Component.VJOURNAL.name || subnotes.value.isNotEmpty()) true else null,
+                        includeVTODO = if (iCalObject.component == Component.VTODO.name || subtasks.value.isNotEmpty()) true else null,
                         onMoveToNewCollection = onMoveToNewCollection,
                         modifier = detailElementModifier
                     )
@@ -355,10 +352,9 @@ fun DetailScreenContent(
                     DetailsCardDates(
                         icalObject = iCalObject,
                         isEditMode = isEditMode.value,
-                        enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] ?: true || iCalObject.getModuleFromString() == Module.JOURNAL,
-                        enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] ?: true,
-                        enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED]
-                            ?: true,
+                        enableDtstart = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || iCalObject.getModuleFromString() == Module.JOURNAL,
+                        enableDue = detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false,
+                        enableCompleted = detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false,
                         allowCompletedChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                         onDtstartChanged = { datetime, timezone ->
                             iCalObject.dtstart = datetime
@@ -577,9 +573,9 @@ fun DetailScreenContent(
                         DetailsCardStatusClassificationPriority(
                             icalObject = iCalObject,
                             isEditMode = isEditMode.value,
-                            enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] ?: true || showAllOptions,
-                            enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] ?: true || showAllOptions,
-                            enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] ?: true || showAllOptions,
+                            enableStatus = detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || showAllOptions,
+                            enableClassification = detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || showAllOptions,
+                            enablePriority = detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false || showAllOptions,
                             allowStatusChange = !(linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                             extendedStatuses = extendedStatuses,
                             onStatusChanged = { newStatus ->
@@ -945,7 +941,7 @@ fun DetailScreenContent(
 
         if(!isEditMode.value) {
             item {
-                val curIndex = icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0)
+                val curIndex = icalObjectIdList.indexOf(iCalObject.id)
                 if (icalObjectIdList.size > 1 && curIndex >= 0) {
                     Row(
                         modifier = Modifier
@@ -972,7 +968,7 @@ fun DetailScreenContent(
                         } else {
                             Spacer(modifier = Modifier.size(48.dp))
                         }
-                        Text(text = "${icalObjectIdList.indexOf(observedICalObject.value?.id ?: 0) + 1}/${icalObjectIdList.size}")
+                        Text(text = "${icalObjectIdList.indexOf(iCalObject.id) + 1}/${icalObjectIdList.size}")
                         if (curIndex != icalObjectIdList.lastIndex) {
                             IconButton(onClick = {
                                 goToDetail(
@@ -1003,7 +999,6 @@ fun DetailScreenContent_JOURNAL() {
     MaterialTheme {
         val entity = ICalEntity().apply {
             this.property = ICalObject.createJournal("MySummary")
-            //this.property.dtstart = System.currentTimeMillis()
         }
         entity.property.description = "Hello World, this \nis my description."
         entity.property.contact = "John Doe, +1 555 5545"
