@@ -110,7 +110,7 @@ fun DetailsScreen(
     val markdownState = remember { mutableStateOf(MarkdownState.DISABLED) }
     val scrollToSection = remember { mutableStateOf<DetailsScreenSection?>(null) }
 
-    val iCalObject = detailViewModel.icalObject.observeAsState(null)
+    //val iCalObject = detailViewModel.icalObject.observeAsState(null)
     val collection = detailViewModel.collection.observeAsState()
 
     val seriesElement = detailViewModel.seriesElement.observeAsState(null)
@@ -124,7 +124,7 @@ fun DetailsScreen(
     var newSubtaskTextToProcess by remember { mutableStateOf("") }
     var newSubnoteTextToProcess by remember { mutableStateOf("") }
 
-    iCalObject.value?.getModuleFromString()?.let {
+    detailViewModel.mutableICalObject?.getModuleFromString()?.let {
         detailViewModel.detailSettings.load(it, context)
     }
 
@@ -143,9 +143,9 @@ fun DetailsScreen(
                 if (
                     (isEditMode.value
                             && detailViewModel.changeState.value == DetailViewModel.DetailChangeState.UNCHANGED
-                            && iCalObject.value?.sequence == 0L
-                            && iCalObject.value?.summary == null
-                            && iCalObject.value?.description == null) && detailViewModel.mutableAttachments.isEmpty()
+                            && detailViewModel.mutableICalObject?.sequence == 0L
+                            && detailViewModel.mutableICalObject?.summary == null
+                            && detailViewModel.mutableICalObject?.description == null) && detailViewModel.mutableAttachments.isEmpty()
                 ) {
                     showDeleteDialog = true
                 } else if(!detailViewModel.mutableICalObject?.rrule.isNullOrEmpty())  {
@@ -176,6 +176,7 @@ fun DetailsScreen(
                 navigateUp = false
             }
             DetailViewModel.DetailChangeState.CHANGESAVED -> {
+                detailViewModel.saveEntry(false)
                 showUnsavedChangesDialog = false
                 if(isEditMode.value)
                     isEditMode.value = false
@@ -201,7 +202,7 @@ fun DetailsScreen(
     }
 
     if (showDeleteDialog) {
-        iCalObject.value?.let {
+        detailViewModel.mutableICalObject?.let {
             DeleteEntryDialog(
                 icalObject = it,
                 onConfirm = {
@@ -239,7 +240,7 @@ fun DetailsScreen(
     }
     if(showLinkEntryDialog) {
         LinkExistingEntryDialog(
-            excludeCurrentId = iCalObject.value?.id,
+            excludeCurrentId = detailViewModel.mutableICalObject?.id,
             preselectedLinkEntryModules = linkEntryDialogModule,
             preselectedLinkEntryReltype = linkEntryDialogReltype ?: Reltype.CHILD,
             allEntriesLive = detailViewModel.selectFromAllList,
@@ -264,7 +265,7 @@ fun DetailsScreen(
             textToProcess = newSubtaskTextToProcess,
             module = Module.TODO,
             onCreate = { itemList ->
-                iCalObject.value?.let {
+                detailViewModel.mutableICalObject?.let {
                     itemList.forEach { subentry ->
                         subentry.classification = it.classification
                         subentry.due = it.due
@@ -283,7 +284,7 @@ fun DetailsScreen(
             textToProcess = newSubnoteTextToProcess,
             module = Module.NOTE,
             onCreate = { itemList ->
-                iCalObject.value?.let {
+                detailViewModel.mutableICalObject?.let {
                     itemList.forEach { subentry ->
                         subentry.classification = it.classification
                     }
@@ -303,8 +304,8 @@ fun DetailsScreen(
             }) {
             DetailOptionsBottomSheet(
                 module = try {
-                    Module.valueOf(iCalObject.value?.module ?: Module.NOTE.name)
-                } catch (e: Exception) {
+                    Module.valueOf(detailViewModel.mutableICalObject?.module ?: Module.NOTE.name)
+                } catch (_: Exception) {
                     Module.NOTE
                 },
                 detailSettings = detailViewModel.detailSettings,
@@ -317,7 +318,7 @@ fun DetailsScreen(
     Scaffold(
         topBar = {
             DetailsTopAppBar(
-                readonly = collection.value?.readonly ?: true,
+                readonly = collection.value?.readonly != false,
                 goBack = {
                     navigateUp = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
@@ -449,7 +450,7 @@ fun DetailsScreen(
                                     detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] = it
                                     detailViewModel.detailSettings.save()
                                 },
-                                isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] ?: true,
+                                isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] != false,
                             )
                         }
 
@@ -461,13 +462,13 @@ fun DetailsScreen(
                                 detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] = it
                                 detailViewModel.detailSettings.save()
                             },
-                            isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] ?: true,
+                            isSelected = detailViewModel.detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false,
                         )
 
                         HorizontalDivider()
 
                         if(collection.value?.readonly == false && collection.value?.supportsVJOURNAL == true) {
-                            if (iCalObject.value?.module != Module.JOURNAL.name) {
+                            if (detailViewModel.mutableICalObject?.getModuleFromString() != Module.JOURNAL) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_journal)) },
                                     onClick = { detailViewModel.convertTo(Module.JOURNAL) },
@@ -480,7 +481,7 @@ fun DetailsScreen(
                                     }
                                 )
                             }
-                            if (iCalObject.value?.module != Module.NOTE.name) {
+                            if (detailViewModel.mutableICalObject?.getModuleFromString() != Module.NOTE) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_note)) },
                                     onClick = { detailViewModel.convertTo(Module.NOTE) },
@@ -495,7 +496,7 @@ fun DetailsScreen(
                             }
                         }
                         if(collection.value?.readonly == false && collection.value?.supportsVTODO == true) {
-                            if(iCalObject.value?.module != Module.TODO.name) {
+                            if(detailViewModel.mutableICalObject?.getModuleFromString() != Module.TODO) {
                                 DropdownMenuItem(
                                     text = { Text(text = stringResource(id = R.string.menu_view_convert_to_task)) },
                                     onClick = { detailViewModel.convertTo(Module.TODO) },
@@ -516,7 +517,7 @@ fun DetailsScreen(
         content = { paddingValues ->
 
             DetailScreenContent(
-                observedICalObject = iCalObject,
+                observedICalObject = ICalDatabase.getInstance(context).iCalDatabaseDao().getICalObject(detailViewModel.mutableICalObject?.id?:0L).observeAsState(),
                 collection = collection.value,
                 iCalObject = detailViewModel.mutableICalObject,
                 categories = detailViewModel.mutableCategories,
@@ -557,7 +558,7 @@ fun DetailsScreen(
                 },
                 onProgressChanged = { itemId, newPercent -> detailViewModel.updateProgress(itemId, newPercent) },
                 onMoveToNewCollection = { newCollection -> detailViewModel.moveToNewCollection(newCollection.collectionId) },
-                onAudioSubEntryAdded = { subEntry, attachment -> detailViewModel.addSubEntry(subEntry, attachment, iCalObject.value?.uid!!, iCalObject.value?.collectionId!!) },
+                onAudioSubEntryAdded = { subEntry, attachment -> detailViewModel.addSubEntry(subEntry, attachment, detailViewModel.mutableICalObject?.uid!!, detailViewModel.mutableICalObject?.collectionId!!) },
                 onSubEntryAdded = { module, text ->
                     when(module) {
                         Module.TODO -> newSubtaskTextToProcess = text
@@ -576,7 +577,7 @@ fun DetailsScreen(
                 goToFilteredList = {
                     navController.navigate(
                         FilteredListDestination.FilteredList.getRoute(
-                            module = iCalObject.value?.getModuleFromString() ?: Module.NOTE,
+                            module = detailViewModel.mutableICalObject?.getModuleFromString() ?: Module.NOTE,
                             storedListSettingData = it
                         )
                     )
@@ -597,7 +598,7 @@ fun DetailsScreen(
         },
         bottomBar = {
             DetailBottomAppBar(
-                icalObject = iCalObject.value,
+                icalObject = detailViewModel.mutableICalObject,
                 seriesElement = seriesElement.value,
                 collection = collection.value,
                 isEditMode = isEditMode,

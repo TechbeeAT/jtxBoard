@@ -73,7 +73,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     private var mainICalObjectId: Long? = null
 
-    var icalObject: LiveData<ICalObject?> = MutableLiveData(null)
+    var icalObjectUID: LiveData<String?> = MutableLiveData(null)
     private var relatedTo: LiveData<List<Relatedto>> = MutableLiveData(emptyList())
     var collection: LiveData<ICalCollection> = MutableLiveData(null)
     var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
@@ -148,21 +148,17 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 mutableAlarms.addAll(databaseDao.getAlarmsSync(icalObjectId))
             }
 
-            //icalEntity = databaseDao.get(icalObjectId)
-            icalObject = databaseDao.getICalObject(icalObjectId)
+            icalObjectUID = databaseDao.getICalObjectUID(icalObjectId)
             relatedTo = databaseDao.getRelatedTo(icalObjectId)
-
-            collection = icalObject.switchMap {
-                it?.let { cur -> databaseDao.getCollection(cur.collectionId) }
-            }
+            collection = databaseDao.getCollectionFromICalObjectId(icalObjectId)
 
             relatedParents = relatedTo.switchMap {
                 it.map { relatedto -> relatedto.text }.let { uids ->
                     databaseDao.getICal4ListByUIDs(uids)
                 }
             }
-            relatedSubtasks = icalObject.switchMap {
-                it?.uid?.let { parentUid ->
+            relatedSubtasks = icalObjectUID.switchMap {
+                it?.let { parentUid ->
                     databaseDao.getIcal4List(
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
@@ -178,8 +174,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     )
                 }
             }
-            relatedSubnotes = icalObject.switchMap {
-                it?.uid?.let { parentUid ->
+            relatedSubnotes = icalObjectUID.switchMap {
+                it?.let { parentUid ->
                     databaseDao.getIcal4List(
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
@@ -195,9 +191,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     )
                 }
             }
-            seriesElement = icalObject.switchMap { databaseDao.getSeriesICalObjectIdByUID(it?.uid) }
-            seriesInstances =
-                icalObject.switchMap { databaseDao.getSeriesInstancesICalObjectsByUID(it?.uid) }
+            seriesElement = icalObjectUID.switchMap { databaseDao.getSeriesICalObjectIdByUID(it) }
+            seriesInstances = icalObjectUID.switchMap { databaseDao.getSeriesInstancesICalObjectsByUID(it) }
             isChild = databaseDao.isChild(icalObjectId)
 
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.UNCHANGED }
@@ -330,16 +325,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
 
             mutableICalObject?.let {
-                // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
-                icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
-                icalObject.value?.flags.let { currentFlags -> it.flags = currentFlags }
-                icalObject.value?.scheduleTag.let { currentScheduleTag ->
-                    it.scheduleTag = currentScheduleTag
-                }
-                icalObject.value?.fileName.let { currentFileName ->
-                    it.fileName = currentFileName
-                }
-
                 saveSuspend(false)
                 onChangeDone()
                 val newId = databaseDao.moveToCollection(it.id, newCollectionId)
@@ -404,7 +389,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     mutableAttachments,
                     mutableAlarms,
                     mutableICalObject!!.id != mainICalObjectId
-
                 )
             }
             onChangeDone()
@@ -413,17 +397,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
 
     fun saveEntry(triggerImmediateAlarm: Boolean) {
-        mutableICalObject?.let {
-            // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
-            icalObject.value?.eTag.let { currentETag -> it.eTag = currentETag }
-            icalObject.value?.flags.let { currentFlags -> it.flags = currentFlags }
-            icalObject.value?.scheduleTag.let { currentScheduleTag ->
-                it.scheduleTag = currentScheduleTag
-            }
-            icalObject.value?.fileName.let { currentFileName ->
-                it.fileName = currentFileName
-            }
-        }
         viewModelScope.launch(Dispatchers.IO) {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
             saveSuspend(triggerImmediateAlarm)
@@ -434,6 +407,14 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
     private suspend fun saveSuspend(triggerImmediateAlarm: Boolean) {
         mutableICalObject?.let {
+
+            val current = databaseDao.getICalObjectById(it.id)
+            // make sure the eTag, flags, scheduleTag and fileName gets updated in the background if the sync is triggered, so that another sync won't overwrite the changes!
+            current?.eTag.let { currentETag -> it.eTag = currentETag }
+            current?.flags.let { currentFlags -> it.flags = currentFlags }
+            current?.scheduleTag.let { currentScheduleTag -> it.scheduleTag = currentScheduleTag }
+            current?.fileName.let { currentFileName -> it.fileName = currentFileName }
+
             databaseDao.saveAll(
                 it,
                 mutableCategories,
@@ -477,22 +458,24 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         val originalICalObject = originalEntry?.property ?: return
         viewModelScope.launch(Dispatchers.IO) {
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
-            databaseDao.saveAll(
-                icalObject = originalICalObject.apply {
-                    eTag = icalObject.value?.eTag
-                    sequence = (icalObject.value?.sequence ?: 0) + 1
-                },
-                categories = originalEntry?.categories ?: emptyList(),
-                comments = originalEntry?.comments ?: emptyList(),
-                attendees = originalEntry?.attendees ?: emptyList(),
-                resources = originalEntry?.resources ?: emptyList(),
-                attachments = originalEntry?.attachments ?: emptyList(),
-                alarms = originalEntry?.alarms ?: emptyList(),
-                enforceUpdateAll = mutableICalObject!!.id != mainICalObjectId
+            mutableICalObject = originalICalObject.copy(sequence = (mutableICalObject?.sequence?:0) + 1)
+            mutableCategories.clear()
+            mutableCategories.addAll(originalEntry?.categories ?: emptyList())
+            mutableComments.clear()
+            mutableComments.addAll(originalEntry?.comments ?: emptyList())
+            mutableAttendees.clear()
+            mutableAttendees.addAll(originalEntry?.attendees ?: emptyList())
+            mutableResources.clear()
+            mutableResources.addAll(originalEntry?.resources ?: emptyList())
+            mutableAttachments.clear()
+            mutableAttachments.addAll(originalEntry?.attachments ?: emptyList())
+            mutableAlarms.clear()
+            mutableAlarms.addAll(originalEntry?.alarms ?: emptyList())
 
-            )
+            saveSuspend(false)
+
             withContext (Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-            navigateToId.value = icalObject.value?.id
+            //navigateToId.value = icalObject.value?.id
             onChangeDone()
         }
     }
@@ -591,7 +574,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     .setType("text/calendar")
                     .addStream(icsContentUri)
                     .startChooser()
-            } catch (e: ActivityNotFoundException) {
+            } catch (_: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to open file.")
                 toastMessage.value = "No app found to open this file."
             } finally {
@@ -659,7 +642,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
 
             try {
                 shareIntentBuilder.startChooser()
-            } catch (e: ActivityNotFoundException) {
+            } catch (_: ActivityNotFoundException) {
                 Log.i("ActivityNotFound", "No activity found to send this entry.")
                 toastMessage.value =
                     _application.getString(R.string.error_no_app_found_to_open_entry)
@@ -710,7 +693,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             }
 
             outputFile
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Log.i("fileprovider", "Failed to attach ICS File")
             toastMessage.value = "Failed to attach ICS File."
 
