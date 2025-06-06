@@ -28,8 +28,8 @@ android {
         applicationId = "at.techbee.jtx"
         minSdk = 23
         targetSdk = 35
-        versionCode = 211050005
-        versionName = "2.11.05-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode = 211050006
+        versionName = "2.11.05"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField("String", "versionCodename", "\"Pride is a protest \uD83C\uDF08\"")
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true

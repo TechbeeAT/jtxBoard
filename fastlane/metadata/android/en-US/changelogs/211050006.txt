@@ -1,0 +1,5 @@
+- Fixed multiplication of categories caused by certain actions
+- Manual sort order is now preserved also when sync is running in background
+- Adapted/Harmonized  colors for devices without dynamic colors
+- Description formatted with markdown now also reacts on tap
+- Fixed possible overwrite/loss of text after sync in a certain constellation
