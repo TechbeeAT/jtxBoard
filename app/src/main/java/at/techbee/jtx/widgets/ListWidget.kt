@@ -22,6 +22,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceTheme
+import androidx.glance.LocalGlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.provideContent
@@ -41,6 +42,7 @@ import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.UiUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 const val MAX_WIDGET_ENTRIES = 50
@@ -141,6 +143,7 @@ class ListWidget : GlanceAppWidget() {
             val subnotes by remember(subnotesQuery) { database.getSubEntriesFlow(subnotesQuery) }.collectAsState(initial = emptyList())
 
             val scope = rememberCoroutineScope()
+            val glanceId = LocalGlanceId.current
 
             GlanceTheme {
 
@@ -178,19 +181,24 @@ class ListWidget : GlanceAppWidget() {
                         val keepInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value
                         val linkProgress = settingsStateHolder.settingLinkProgressToSubtasks.value
 
-                        scope.launch(Dispatchers.IO) {
-                            //val iCalObject = database.getICalObjectByIdSync(iCalObjectId) ?: return@launch
-                            database.updateProgress(
-                                id = iCalObjectId,
-                                newPercent = if(checked) null else 100,
-                                settingKeepStatusProgressCompletedInSync = keepInSync,
-                                settingLinkProgressToSubtasks = linkProgress
-                            )
-                            if(!checked) {
-                                NotificationManagerCompat.from(context).cancel(iCalObjectId.toInt())
-                                database.setAlarmNotification(iCalObjectId, false)
+                        scope.launch {
+                            withContext(Dispatchers.IO) {
+                                database.updateProgress(
+                                    id = iCalObjectId,
+                                    newPercent = if(checked) null else 100,
+                                    settingKeepStatusProgressCompletedInSync = keepInSync,
+                                    settingLinkProgressToSubtasks = linkProgress
+                                )
+                                ListWidget().update(context, glanceId)
                             }
-                            NotificationPublisher.scheduleNextNotifications(context)
+
+                            withContext(Dispatchers.IO) {
+                                if (!checked) {
+                                    NotificationManagerCompat.from(context).cancel(iCalObjectId.toInt())
+                                    database.setAlarmNotification(iCalObjectId, false)
+                                }
+                                NotificationPublisher.scheduleNextNotifications(context)
+                            }
                             SyncUtil.notifyContentObservers(context)
                         }
                     },
