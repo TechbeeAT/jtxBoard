@@ -82,7 +82,7 @@ fun ListEntry(
                 .fillMaxWidth()
                 .padding(6.dp)
                 .background(entryColor)
-                .cornerRadius(8.dp)
+                .cornerRadius(6.dp)
                 .clickable(onClick = actionStartActivity(intent)),
             verticalAlignment = Alignment.CenterVertically
         ) {

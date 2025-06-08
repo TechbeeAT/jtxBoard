@@ -67,6 +67,9 @@ fun ListWidgetContent(
         context = context
     )
 
+    val entryPaddingBottom = 1.dp
+    val subEntryPaddingStart = 16.dp
+
     Scaffold(
         backgroundColor = backgroundColor,
         titleBar = {
@@ -158,7 +161,7 @@ fun ListWidgetContent(
                                     modifier = GlanceModifier
                                         .fillMaxWidth()
                                         .padding(
-                                            bottom = 2.dp,
+                                            bottom = entryPaddingBottom,
                                         )
                                 )
                             }
@@ -187,8 +190,8 @@ fun ListWidgetContent(
                                                 modifier = GlanceModifier
                                                     .fillMaxWidth()
                                                     .padding(
-                                                        bottom = 2.dp,
-                                                        start = 16.dp
+                                                        bottom = entryPaddingBottom,
+                                                        start = subEntryPaddingStart
                                                     )
                                             )
                                         }
@@ -215,8 +218,8 @@ fun ListWidgetContent(
                                                 modifier = GlanceModifier
                                                     .fillMaxWidth()
                                                     .padding(
-                                                        bottom = 2.dp,
-                                                        start = 16.dp
+                                                        bottom = entryPaddingBottom,
+                                                        start = subEntryPaddingStart
                                                     )
                                             )
                                         }
