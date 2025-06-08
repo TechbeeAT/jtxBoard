@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -39,6 +41,7 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +65,6 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.TimeZone
-import kotlin.collections.contains
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -116,6 +118,11 @@ fun DatePickerDialog(
         }
     )
     val timePickerState = rememberTimePickerState(initialZonedDateTime?.hour?:0, initialZonedDateTime?.minute?:0)
+    val showTabs = !dateOnly || allowNull
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { if(showTabs) 3 else 1 })
+    LaunchedEffect(selectedTab) {
+        pagerState.animateScrollToPage(selectedTab)
+    }
 
     var newTimezone by rememberSaveable { mutableStateOf(timezone) }
     val defaultTimezone = if (LocalInspectionMode.current) "Europe/Vienna" else TimeZone.getDefault().id
@@ -128,11 +135,11 @@ fun DatePickerDialog(
         text = {
 
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                if (!dateOnly || allowNull) {    // show the tabs if not date only
+                if (showTabs) {    // show the tabs if not date only
 
                     SecondaryTabRow(selectedTabIndex = selectedTab) {
                         Tab(selected = selectedTab == tabIndexDate,
@@ -219,37 +226,48 @@ fun DatePickerDialog(
                     }
                 }
 
-                AnimatedVisibility(selectedTab == tabIndexDate && datePickerState.selectedDateMillis == null && datePickerState.displayMode != DisplayMode.Input) {
-                    Text(
-                        stringResource(id = R.string.not_set2),
-                        fontStyle = FontStyle.Italic,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 32.dp)
-                    )
-                }
-
-                AnimatedVisibility(selectedTab == tabIndexDate && (datePickerState.selectedDateMillis != null || datePickerState.displayMode == DisplayMode.Input)) {
-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                        DatePicker(
-                            state = datePickerState,
-                            modifier = Modifier.requiredWidth(360.dp)  // from DatePickerModalTokens.ContainerWidth
-                        )
-                    }
-                }
-
-                AnimatedVisibility(selectedTab == tabIndexTime) {
-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                        TimePicker(state = timePickerState)
-                    }
-                }
-                AnimatedVisibility(selectedTab == tabIndexTimezone) {
-                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                        TimezoneAutocompleteTextfield(
-                            timezone = newTimezone,
-                            onTimezoneChanged = { tz -> newTimezone = tz }
-                        )
+                HorizontalPager(
+                    state = pagerState,
+                    verticalAlignment = Alignment.Top,
+                    modifier = Modifier.fillMaxWidth()
+                ) { page ->
+                    when (page) {
+                        tabIndexDate -> {
+                            if(datePickerState.selectedDateMillis == null && datePickerState.displayMode != DisplayMode.Input) {
+                                Text(
+                                    stringResource(id = R.string.not_set2),
+                                    fontStyle = FontStyle.Italic,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 32.dp)
+                                )
+                            } else {
+                                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                    DatePicker(
+                                        state = datePickerState,
+                                        modifier = Modifier.requiredWidth(360.dp)  // from DatePickerModalTokens.ContainerWidth
+                                    )
+                                }
+                            }
+                        }
+                        tabIndexTime -> {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier.verticalScroll(rememberScrollState()).fillMaxWidth())
+                            {
+                                TimePicker(state = timePickerState)
+                            }
+                        }
+                        tabIndexTimezone -> {
+                            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                TimezoneAutocompleteTextfield(
+                                    timezone = newTimezone,
+                                    onTimezoneChanged = { tz -> newTimezone = tz }
+                                )
+                            }
+                        }
                     }
                 }
             }
