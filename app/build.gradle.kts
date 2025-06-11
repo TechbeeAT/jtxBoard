@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 /*
  * Copyright (c) Techbee e.U.
  * All rights reserved. This program and the accompanying materials
@@ -19,6 +22,12 @@ plugins {
     alias(libs.plugins.mikepenz.aboutLibraries)
     //alias(libs.plugins.huawei.agconnect)
 }
+
+// Creates a variable called keystorePropertiesFile, and initializes it to the keystore.properties file.
+// see https://developer.android.com/build/gradle-tips#remove-private-signing-information-from-your-project
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties() // Initializes a new Properties() object called keystoreProperties.
+keystoreProperties.load(FileInputStream(keystorePropertiesFile)) // Loads the keystore.properties file into the keystoreProperties object.
 
 
 android {
@@ -46,17 +55,18 @@ android {
         //buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
         //resourceConfigurations += locales
 
-        buildConfigField("String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: providers.gradleProperty("crowdin.apikey") ) + "\"")
+        buildConfigField("String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: keystoreProperties["crowdin.apikey"]?.toString()) + "\"")
         //buildConfigField("String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GH_CONTRIBUTORS_API_KEY") ?: providers.gradleProperty("githubcontributors.apikey") ) + "\"")
-        resValue("string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: "")
+        resValue("string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: keystoreProperties["google.geo.apikey"]?.toString() ?: "")
+    }
+
+    kotlin {
+        jvmToolchain(21) // Or your desired consistent JVM version
     }
 
     compileOptions {
         // enable because ical4android requires desugaring
         isCoreLibraryDesugaringEnabled = true
-
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 
     buildFeatures {
@@ -90,10 +100,10 @@ android {
 
     signingConfigs {
         create("jtx") {
-            storeFile = file(System.getenv("ANDROID_KEYSTORE") ?: "/dev/null") //?: providers.gradleProperty("keystore.file") )
-            storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD") //?: providers.gradleProperty("keystore.password")
-            keyAlias = System.getenv("ANDROID_KEY_ALIAS") //?: providers.gradleProperty("keystore.key.alias")
-            keyPassword = System.getenv("ANDROID_KEY_PASSWORD") //?: providers.gradleProperty("keystore.key.password")
+            storeFile = file(System.getenv("ANDROID_KEYSTORE") ?: keystoreProperties["keystore.file"]?.toString() ?: "/dev/null") // )
+            storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: keystoreProperties["keystore.password"]?.toString()
+            keyAlias = System.getenv("ANDROID_KEY_ALIAS") ?: keystoreProperties["keystore.key.alias"]?.toString()
+            keyPassword = System.getenv("ANDROID_KEY_PASSWORD") ?: keystoreProperties["keystore.key.password"]?.toString()
         }
     }
 
