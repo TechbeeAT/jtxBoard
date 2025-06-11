@@ -67,28 +67,7 @@ jobs:
           run: yes | "$ANDROID_HOME"/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
         - name: Generate profile
-          run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest
-
-        # Generates Baseline Profile
-        #- name: Generate Baseline Profile
-
-          ## swiftshader_indirect: 
-          ## Required to use software acceleration on machines that can't use hardware acceleration
-
-          ## enabledRules=BaselineProfile:
-          ## Required to skip macrobenchmark tests. 
-          ## Read more at https://developer.android.com/topic/performance/benchmarking/benchmarking-in-ci#real-devices
-          ## Read more at https://developer.android.com/topic/performance/benchmarking/macrobenchmark-overview#configuration-errors
-          
-          ## gradle.workers.max: 
-          ## Required to avoid running multiple managed device tests concurrently. Read more at https://issuetracker.google.com/issues/193118030
-          
-          #run: ./gradlew :benchmark:pixel2Api31BenchmarkAndroidTest -P android.testoptions.manageddevices.emulator.gpu="swiftshader_indirect" -P android.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile
-
-        # Sets the Baseline Profile on its proper place so it gets correctly bundled into Play Store
-        - name: Move & Rename Baseline Profiles
-          run:  |
-            mv -f benchmark/build/outputs/managed_device_android_test_additional_output/pixel2Api31/BaselineProfileGenerator_startup-baseline-prof.txt app/src/main/baseline-prof.txt
+          run: ./gradlew :app:generateBaselineProfile
 
         # Commits the generated Baseline Profile to your origin/remote
         - name: Commit Baseline Profiles
