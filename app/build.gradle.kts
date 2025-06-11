@@ -1,4 +1,5 @@
 import java.io.FileInputStream
+import java.io.IOException
 import java.util.Properties
 
 /*
@@ -27,8 +28,13 @@ plugins {
 // see https://developer.android.com/build/gradle-tips#remove-private-signing-information-from-your-project
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties() // Initializes a new Properties() object called keystoreProperties.
-keystoreProperties.load(FileInputStream(keystorePropertiesFile)) // Loads the keystore.properties file into the keystoreProperties object.
-
+try {
+    // Loads the keystore.properties file into the keystoreProperties object.
+    FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
+} catch (e: IOException) {
+    // Handle the exception
+    println("Error loading keystore properties from local file: ${e.message}")
+}
 
 android {
     namespace = "at.techbee.jtx"
