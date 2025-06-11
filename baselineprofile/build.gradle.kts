@@ -8,20 +8,15 @@ plugins {
 
 android {
     namespace = "at.techbee.jtx.baselineprofile"
-    compileSdk = 34
+    compileSdk = 35
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
+    kotlin {
+        jvmToolchain(21) // Or your desired consistent JVM version
     }
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 34
+        targetSdk = 35
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,8 +28,6 @@ android {
         create("gplay") { dimension = "version" }
         create("amazon") { dimension = "version" }
         create("ose") { dimension = "version" }
-        //create("generic") { dimension = "version" }
-        //create("huawei") { dimension = "version" }
     }
 
     // This code creates the gradle managed device used to generate baseline profiles.
