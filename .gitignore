@@ -6,5 +6,6 @@
 /build
 /captures
 .externalNativeBuild
+/app/local.properties
 .kotlin
 /keystore.properties
