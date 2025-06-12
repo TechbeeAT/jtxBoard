@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest-4-cores
     strategy:
       matrix:
-        api-level: [ 31 ]
+        api-level: [ 34 ]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -71,7 +71,7 @@ jobs:
       - name: Prepare keystore
         run: echo ${{ secrets.android_keystore_base64 }} | base64 -d >$GITHUB_WORKSPACE/keystore.jks
 
-      - name: Create baseline profiles
+      - name: Create baseline profiles OSE
         uses: reactivecircus/android-emulator-runner@v2
         env:
           ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
@@ -87,8 +87,43 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew :app:generateBaselineProfile
+          script: ./gradlew :app:generateOseReleaseBaselineProfile
 
+      - name: Create baseline profiles GPlay
+        uses: reactivecircus/android-emulator-runner@v2
+        env:
+          ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
+          ANDROID_KEY_ALIAS: ${{ secrets.android_key_alias }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
+          CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
+          GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
+          GH_CONTRIBUTORS_API_KEY: ${{ secrets.gh_contributors_api_key }}
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew :app:generateGplayReleaseBaselineProfile
+
+      - name: Create baseline profiles AMAZON
+        uses: reactivecircus/android-emulator-runner@v2
+        env:
+          ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
+          ANDROID_KEY_ALIAS: ${{ secrets.android_key_alias }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
+          CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
+          GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
+          GH_CONTRIBUTORS_API_KEY: ${{ secrets.gh_contributors_api_key }}
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew :app:generateAmazonReleaseBaselineProfile
       # Commits the generated Baseline Profile to your origin/remote
       - name: Commit Baseline Profiles
         run: |
