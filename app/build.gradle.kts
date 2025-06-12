@@ -91,6 +91,7 @@ android {
         }
         create("ose") {
             versionNameSuffix = ".ose"
+            isDefault = true
         }
         /*
         create("generic") {
