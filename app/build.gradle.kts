@@ -29,11 +29,9 @@ plugins {
 val keystorePropertiesFile = rootProject.file("keystore.properties")
 val keystoreProperties = Properties() // Initializes a new Properties() object called keystoreProperties.
 try {
-    // Loads the keystore.properties file into the keystoreProperties object.
     FileInputStream(keystorePropertiesFile).use { keystoreProperties.load(it) }
 } catch (e: IOException) {
-    // Handle the exception
-    println("Error loading keystore properties from local file: ${e.message}")
+    logger.log(LogLevel.WARN, "Could not load keystore properties from local file: ${e.message}")
 }
 
 android {
