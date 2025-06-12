@@ -80,10 +80,11 @@ import at.techbee.jtx.database.COLUMN_GEO_LONG
 import at.techbee.jtx.database.COLUMN_LOCATION
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.flavored.MapComposable
+import at.techbee.jtx.flavored.GoogleMapsComposable
 import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
+import at.techbee.jtx.ui.reusable.maps.OSMComposable
 import at.techbee.jtx.util.UiUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -430,18 +431,33 @@ fun DetailsCardLocation(
             }
 
             AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode && !LocalInspectionMode.current) {
-                MapComposable(
-                    initialLocation = location,
-                    initialGeoLat = geoLat,
-                    initialGeoLong = geoLong,
-                    isEditMode = false,
-                    enableCurrentLocation = false,
-                    onLocationUpdated = { _, _, _ -> /* only view, no update here */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .padding(top = 8.dp)
-                )
+                if(BuildFlavor.getCurrent() == BuildFlavor.GPLAY) {
+                    GoogleMapsComposable(
+                        initialLocation = location,
+                        initialGeoLat = geoLat,
+                        initialGeoLong = geoLong,
+                        isEditMode = false,
+                        enableCurrentLocation = false,
+                        onLocationUpdated = { _, _, _ -> /* only view, no update here */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(top = 8.dp)
+                    )
+                } else {
+                    OSMComposable(
+                        initialLocation = location,
+                        initialGeoLat = geoLat,
+                        initialGeoLong = geoLong,
+                        isEditMode = false,
+                        enableCurrentLocation = false,
+                        onLocationUpdated = { _, _, _ -> /* only view, no update here */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(top = 8.dp)
+                    )
+                }
             }
 
             if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY) {

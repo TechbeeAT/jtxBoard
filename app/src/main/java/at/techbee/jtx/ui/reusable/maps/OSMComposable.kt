@@ -1,23 +1,21 @@
-/*
- * Copyright (c) Techbee e.U.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- */
+package at.techbee.jtx.ui.reusable.maps
 
-package at.techbee.jtx.flavored
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,9 +33,8 @@ import org.osmdroid.views.overlay.Overlay
 import org.osmdroid.views.overlay.OverlayItem
 
 
-@SuppressLint("UNUSED_PARAMETER")
 @Composable
-fun MapComposable(
+fun OSMComposable(
     initialLocation: String?,
     initialGeoLat: Double?,
     initialGeoLong: Double?,
@@ -53,7 +50,7 @@ fun MapComposable(
 
     if (initialGeoLat == null && initialGeoLong == null && enableCurrentLocation
         && (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
     ) {
         val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val bestProvider = locationManager.getProviders(false).firstOrNull()
@@ -118,9 +115,9 @@ fun MapComposable(
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardLocation_Preview_Wien() {
+fun OSMComposable_Preview_Wien() {
     MaterialTheme {
-        MapComposable(
+        OSMComposable(
             initialLocation = "Vienna, Stephansplatz",
             initialGeoLat = 48.208492,
             initialGeoLong = 16.373127,
@@ -137,9 +134,9 @@ fun DetailsCardLocation_Preview_Wien() {
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardLocation_Preview_empty() {
+fun OSMComposable_Preview_empty() {
     MaterialTheme {
-        MapComposable(
+        OSMComposable(
             initialLocation = null,
             initialGeoLat = null,
             initialGeoLong = null,
