@@ -13,6 +13,8 @@
     <string name="font_roboto" translatable="false">"Roboto"</string>
     <string name="font_noto" translatable="false">"Noto"</string>
     <string name="font_montserrat_alternates" translatable="false">"Montserrat Alternates"</string>
+    <string name="map_google_maps" translatable="false">"Google Maps"</string>
+    <string name="map_osm" translatable="false">"Open Street Maps (OSM)"</string>
     <!-- Global Strings -->
     <string name="save">"Save"</string>
     <string name="update">"Update"</string>
@@ -381,6 +383,7 @@
     <string name="settings_timezone_display_original">"Show time in original timezone"</string>
     <string name="settings_timezone_display_local_and_original">"Show time in local and in original timezone (detail view only)"</string>
     <string name="settings_font">"Font"</string>
+    <string name="settings_maps_provider">"Maps provider"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>
