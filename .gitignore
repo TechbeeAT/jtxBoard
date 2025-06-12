@@ -8,4 +8,4 @@
 .externalNativeBuild
 /app/local.properties
 .kotlin
-/keystore.properties
+keystore.properties
