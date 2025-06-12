@@ -1,7 +1,7 @@
 # template: https://levelup.gitconnected.com/baseline-profiles-github-actions-ce8bc6858bb3
 
 # Workflow name
-name: generate baseline-profiles
+name: Generate Baseline-Profiles
 
 # Workflow title
 # run-name: ${{ github.actor }} requested a workflow
@@ -26,8 +26,8 @@ on:
 
 # Jobs to executed on GitHub machines
 jobs:
-  test_on_emulator:
-    name: Tests with emulator
+  generate_baseline_profiles:
+    name: Generate Baseline-Profiles
     runs-on: ubuntu-latest-4-cores
     strategy:
       matrix:
