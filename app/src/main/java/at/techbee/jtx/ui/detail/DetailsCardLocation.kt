@@ -86,6 +86,8 @@ import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.ui.reusable.maps.OSMComposable
+import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.UiUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -116,6 +118,7 @@ fun DetailsCardLocation(
     var showLocationPickerDialog by rememberSaveable { mutableStateOf(false) }
     var showRequestGeofencePermissionsDialog by rememberSaveable { mutableStateOf(false) }
     val openPermissionsIntent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
+    val settingsStateHolder = SettingsStateHolder(context)
 
     var location by rememberSaveable { mutableStateOf(initialLocation ?: "") }
     var geoLat by rememberSaveable { mutableStateOf(initialGeoLat) }
@@ -432,7 +435,7 @@ fun DetailsCardLocation(
             }
 
             AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode && !LocalInspectionMode.current) {
-                if(BuildFlavor.getCurrent() == BuildFlavor.GPLAY) {
+                if(BuildFlavor.getCurrent() == BuildFlavor.GPLAY && settingsStateHolder.settingMapsProvider.value == DropdownSettingOption.MAP_GOOGLE_MAPS) {
                     GoogleMapsComposable(
                         initialLocation = location,
                         initialGeoLat = geoLat,
