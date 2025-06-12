@@ -68,6 +68,9 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
+      - name: Prepare keystore
+        run: echo ${{ secrets.android_keystore_base64 }} | base64 -d >$GITHUB_WORKSPACE/keystore.jks
+
       - name: Create baseline profiles
         uses: reactivecircus/android-emulator-runner@v2
         env:
