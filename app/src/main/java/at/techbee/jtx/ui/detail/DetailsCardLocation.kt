@@ -72,6 +72,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.room.ColumnInfo
 import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
@@ -249,19 +250,19 @@ fun DetailsCardLocation(
 
                             IconButton(onClick = {
                                 val uri = if(geoLat == null && geoLong == null && location.isNotEmpty()) {
-                                    Uri.parse("geo:0,0?q=$location")
+                                    "geo:0,0?q=$location".toUri()
                                 } else if (geoLat != null && geoLong != null && location.isEmpty()) {
                                     val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
-                                    Uri.parse("geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
+                                    "geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})".toUri()
                                 } else {
                                     val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
-                                    Uri.parse("geo:$latLngParam")
+                                    "geo:$latLngParam".toUri()
                                 }
 
                                 val geoIntent = Intent(Intent.ACTION_VIEW, uri)
                                 try {
                                     context.startActivity(geoIntent)
-                                } catch (e: ActivityNotFoundException) {
+                                } catch (_: ActivityNotFoundException) {
                                     context.startActivity(
                                         Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, location, BuildFlavor.getCurrent()))
                                     )
