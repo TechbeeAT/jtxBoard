@@ -1,7 +1,7 @@
 # template: https://levelup.gitconnected.com/baseline-profiles-github-actions-ce8bc6858bb3
 
 # Workflow name
-name: generate baseline-profiles
+name: Generate Baseline-Profiles
 
 # Workflow title
 # run-name: ${{ github.actor }} requested a workflow
@@ -26,54 +26,74 @@ on:
 
 # Jobs to executed on GitHub machines
 jobs:
+  generate_baseline_profiles:
+    name: Generate Baseline-Profiles
+    runs-on: ubuntu-latest-4-cores
+    strategy:
+      matrix:
+        api-level: [ 31 ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
 
-    # Job name
-    generate-baseline-profiles:
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
 
-      # Operating system where the job gets to be executed
-      runs-on: ubuntu-latest-4-cores
-      strategy:
-        matrix:
-          api-level: [ 31 ]
+      - name: Cache AVD and APKs
+        uses: actions/cache@v4
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
 
-      # Job steps
-      steps:
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
 
-        # Checks your code out on the machine
-        - uses: actions/checkout@v4
+      - name: Prepare keystore
+        run: echo ${{ secrets.android_keystore_base64 }} | base64 -d >$GITHUB_WORKSPACE/keystore.jks
 
-        # Sets java up
-        - uses: actions/setup-java@v4
-          with:
-            distribution: temurin
-            java-version: 17
+      - name: Create baseline profiles
+        uses: reactivecircus/android-emulator-runner@v2
+        env:
+          ANDROID_KEYSTORE: ${{ github.workspace }}/keystore.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.android_keystore_password }}
+          ANDROID_KEY_ALIAS: ${{ secrets.android_key_alias }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.android_key_password }}
+          CROWDIN_API_KEY: ${{ secrets.crowdin_api_key }}
+          GOOGLE_GEO_API_KEY: ${{ secrets.google_geo_api_key }}
+          GH_CONTRIBUTORS_API_KEY: ${{ secrets.gh_contributors_api_key }}
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew :app:generateBaselineProfile
 
-        # Sets gradle up
-        - name: Setup Gradle
-          uses: gradle/actions/setup-gradle@v4
-
-        # Grants execute permission to gradle (safety step)
-        - name: Grant Permissions to gradlew
-          run: chmod +x gradlew
-
-        # Cleans managed device if previously settle and space currently is not available
-        - name: Clean Managed Devices
-          run: ./gradlew cleanManagedDevices --unused-only
-
-        - name: Install GMD image for baseline profile generation
-          run: yes | "$ANDROID_HOME"/cmdline-tools/latest/bin/sdkmanager "system-images;android-33;aosp_atd;x86_64"
-
-        - name: Accept Android licenses
-          run: yes | "$ANDROID_HOME"/cmdline-tools/latest/bin/sdkmanager --licenses || true
-
-        - name: Generate profile
-          run: ./gradlew :app:generateBaselineProfile
-
-        # Commits the generated Baseline Profile to your origin/remote
-        - name: Commit Baseline Profiles
-          run: |
-            git config --global user.name 'Baseline Profiles - GitHub Actions'
-            git config --global user.email 'github@actions'
-            git add app/src/main/baseline-prof.txt
-            git commit -m "Generate baseline profiles"
-            git push
+      # Commits the generated Baseline Profile to your origin/remote
+      - name: Commit Baseline Profiles
+        run: |
+          git config --global user.name 'Baseline Profiles - GitHub Actions'
+          git config --global user.email 'github@actions'
+          git add app/src/main/baseline-prof.txt
+          git commit -m "Generate baseline profiles"
+          git push
