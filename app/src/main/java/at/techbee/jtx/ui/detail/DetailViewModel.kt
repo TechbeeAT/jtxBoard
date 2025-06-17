@@ -76,8 +76,10 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     var icalObjectUID: LiveData<String?> = MutableLiveData(null)
     private var relatedTo: LiveData<List<Relatedto>> = MutableLiveData(emptyList())
     var collection: LiveData<ICalCollection> = MutableLiveData(null)
-    var relatedSubnotes: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
-    var relatedSubtasks: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
+    var relatedSubnotes: LiveData<List<ICal4ListRel>> = MutableLiveData(emptyList())
+    var relatedSubtasks: LiveData<List<ICal4ListRel>> = MutableLiveData(emptyList())
+    var relatedSubnotesSorted: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
+    var relatedSubtasksSorted: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var relatedParents: LiveData<List<ICal4List>> = MutableLiveData(emptyList())
     var seriesElement: LiveData<ICalObject?> = MutableLiveData(null)
     var seriesInstances: LiveData<List<ICalObject>> = MutableLiveData(emptyList())
@@ -159,37 +161,60 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             }
             relatedSubtasks = icalObjectUID.switchMap {
                 it?.let { parentUid ->
-                    databaseDao.getIcal4List(
+                    databaseDao.getIcal4ListRel(
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
                             component = Component.VTODO,
                             hideBiometricProtected = if (_isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(
                                 _application
-                            ),
-                            orderBy = detailSettings.listSettings?.subtasksOrderBy?.value
-                                ?: OrderBy.CREATED,
-                            sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value
-                                ?: SortOrder.DESC
+                            )
                         )
                     )
                 }
             }
+
             relatedSubnotes = icalObjectUID.switchMap {
                 it?.let { parentUid ->
-                    databaseDao.getIcal4List(
+                    databaseDao.getIcal4ListRel(
                         ICal4List.getQueryForAllSubentriesForParentUID(
                             parentUid = parentUid,
                             component = Component.VJOURNAL,
                             hideBiometricProtected = if (_isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(
                                 _application
-                            ),
-                            orderBy = detailSettings.listSettings?.subnotesOrderBy?.value
-                                ?: OrderBy.CREATED,
-                            sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value
-                                ?: SortOrder.DESC
+                            )
                         )
                     )
                 }
+            }
+
+            relatedSubtasksSorted = relatedSubtasks.switchMap { unsortedList ->
+                MutableLiveData(
+                    ICal4ListRel.getSortedList(
+                        initialList = unsortedList,
+                        orderBy = detailSettings.listSettings?.subtasksOrderBy?.value
+                            ?: OrderBy.CREATED,
+                        sortOrder = detailSettings.listSettings?.subtasksSortOrder?.value
+                            ?: SortOrder.DESC,
+                        orderBy2 = null,
+                        sortOrder2 = SortOrder.ASC,
+                        module = Module.TODO
+                    ).map { it.iCal4List }
+                )
+            }
+
+            relatedSubnotesSorted = relatedSubnotes.switchMap { unsortedList ->
+                MutableLiveData(
+                    ICal4ListRel.getSortedList(
+                            initialList = unsortedList,
+                            orderBy = detailSettings.listSettings?.subnotesOrderBy?.value
+                                ?: OrderBy.CREATED,
+                            sortOrder = detailSettings.listSettings?.subnotesSortOrder?.value
+                                ?: SortOrder.DESC,
+                            orderBy2 = null,
+                            sortOrder2 = SortOrder.ASC,
+                            module = Module.NOTE
+                    ).map { it.iCal4List }
+                )
             }
             seriesElement = icalObjectUID.switchMap { databaseDao.getSeriesICalObjectIdByUID(it) }
             seriesInstances = icalObjectUID.switchMap { databaseDao.getSeriesInstancesICalObjectsByUID(it) }
@@ -217,8 +242,6 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                 searchAccount = if (sameAccount) collection.value?.accountName?.let { listOf(it) }
                     ?: emptyList() else emptyList(),
                 flatView = true,
-                orderBy = OrderBy.LAST_MODIFIED,
-                sortOrder = SortOrder.DESC,
                 hideBiometricProtected = if (_isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(
                     _application
                 )

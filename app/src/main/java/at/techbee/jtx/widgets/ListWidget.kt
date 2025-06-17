@@ -34,9 +34,11 @@ import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.relations.ICal4ListRel
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.CheckboxPosition
 import at.techbee.jtx.ui.list.ListSettings
+import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.UiUtil
@@ -82,10 +84,6 @@ class ListWidget : GlanceAppWidget() {
                     searchPriority = listWidgetConfig.searchPriority,
                     searchCollection = listWidgetConfig.searchCollection,
                     searchAccount = listWidgetConfig.searchAccount,
-                    orderBy = listWidgetConfig.orderBy,
-                    sortOrder = listWidgetConfig.sortOrder,
-                    orderBy2 = listWidgetConfig.orderBy2,
-                    sortOrder2 = listWidgetConfig.sortOrder2,
                     isExcludeDone = listWidgetConfig.isExcludeDone,
                     isFilterOverdue = listWidgetConfig.isFilterOverdue,
                     isFilterDueToday = listWidgetConfig.isFilterDueToday,
@@ -116,13 +114,19 @@ class ListWidget : GlanceAppWidget() {
                 )
             }
             val list by remember(listQuery) { database.getIcal4ListFlow(listQuery) }.collectAsState(initial = emptyList())
+            val listSorted = ICal4ListRel.getSortedList(
+                initialList = list,
+                orderBy = listWidgetConfig.orderBy,
+                sortOrder = listWidgetConfig.sortOrder,
+                orderBy2 = listWidgetConfig.orderBy2,
+                sortOrder2 = listWidgetConfig.sortOrder2,
+                module = listWidgetConfig.module
+            )
 
             val subtasksQuery = remember(listWidgetConfig) {
                 ICal4List.getQueryForAllSubEntries(
                     component = Component.VTODO,
                     hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
-                    orderBy = listWidgetConfig.subtasksOrderBy,
-                    sortOrder = listWidgetConfig.subtasksSortOrder,
                     searchText = null,
                     searchStatus = listWidgetConfig.searchStatus,
                     searchXStatus = listWidgetConfig.searchXStatus
@@ -132,8 +136,6 @@ class ListWidget : GlanceAppWidget() {
                 ICal4List.getQueryForAllSubEntries(
                     component = Component.VJOURNAL,
                     hideBiometricProtected = ListSettings.getProtectedClassificationsFromSettings(context),  // protected entries are always hidden
-                    orderBy = listWidgetConfig.subnotesOrderBy,
-                    sortOrder = listWidgetConfig.subnotesSortOrder,
                     searchText = null,
                     searchStatus = listWidgetConfig.searchStatus,
                     searchXStatus = listWidgetConfig.searchXStatus
@@ -142,6 +144,23 @@ class ListWidget : GlanceAppWidget() {
             val subtasks by remember(subtasksQuery) { database.getSubEntriesFlow(subtasksQuery) }.collectAsState(initial = emptyList())
             val subnotes by remember(subnotesQuery) { database.getSubEntriesFlow(subnotesQuery) }.collectAsState(initial = emptyList())
 
+            val subtasksSorted = ICal4ListRel.getSortedList(
+                initialList = subtasks,
+                orderBy = listWidgetConfig.subtasksOrderBy,
+                sortOrder = listWidgetConfig.subtasksSortOrder,
+                orderBy2 = null,
+                sortOrder2 = SortOrder.ASC,
+                module = Module.NOTE
+            )
+            val subnotesSorted = ICal4ListRel.getSortedList(
+                initialList = subnotes,
+                orderBy = listWidgetConfig.subnotesOrderBy,
+                sortOrder = listWidgetConfig.subnotesSortOrder,
+                orderBy2 = null,
+                sortOrder2 = SortOrder.ASC,
+                module = Module.TODO
+            )
+
             val scope = rememberCoroutineScope()
             val glanceId = LocalGlanceId.current
 
@@ -149,9 +168,9 @@ class ListWidget : GlanceAppWidget() {
 
                 ListWidgetContent(
                     listWidgetConfig,
-                    list = list,
-                    subtasks = subtasks,
-                    subnotes = subnotes,
+                    list = listSorted,
+                    subtasks = subtasksSorted,
+                    subnotes = subnotesSorted,
                     backgroundColor = if (listWidgetConfig.widgetColor == null)
                             GlanceTheme.colors.primaryContainer
                         else

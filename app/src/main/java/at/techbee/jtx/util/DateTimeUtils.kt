@@ -279,8 +279,10 @@ object DateTimeUtils {
      * @return if the timezone is TZ_ALLDAY, this returns the ZonedDateTime at the beginning of the day in the local time,
      * if the timezone is empy, it returns the ZonedDateTime in the current timezone, otherwise in the given timezone
      */
-    fun getZonedDateTimeInLocalTZ(datetime: Long, timezone: String?): ZonedDateTime {
-        return if(timezone == TZ_ALLDAY)
+    fun getZonedDateTimeInLocalTZ(datetime: Long?, timezone: String?): ZonedDateTime? {
+        return if (datetime == null)
+            null
+        else if(timezone == TZ_ALLDAY)
             ZonedDateTime.ofInstant(Instant.ofEpochMilli(datetime), ZoneId.of("UTC")).withZoneSameLocal(ZoneId.systemDefault())
         else
             ZonedDateTime.ofInstant(Instant.ofEpochMilli(datetime), requireTzId(timezone)).withZoneSameInstant(ZoneId.systemDefault())

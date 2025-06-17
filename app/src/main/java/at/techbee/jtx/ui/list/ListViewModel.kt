@@ -28,19 +28,6 @@ import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
-import at.techbee.jtx.database.COLUMN_CLASSIFICATION
-import at.techbee.jtx.database.COLUMN_COLLECTION_ACCOUNT_NAME
-import at.techbee.jtx.database.COLUMN_COLLECTION_DISPLAYNAME
-import at.techbee.jtx.database.COLUMN_COMPLETED
-import at.techbee.jtx.database.COLUMN_CREATED
-import at.techbee.jtx.database.COLUMN_DTSTART
-import at.techbee.jtx.database.COLUMN_DUE
-import at.techbee.jtx.database.COLUMN_LAST_MODIFIED
-import at.techbee.jtx.database.COLUMN_PERCENT
-import at.techbee.jtx.database.COLUMN_PRIORITY
-import at.techbee.jtx.database.COLUMN_SORT_INDEX
-import at.techbee.jtx.database.COLUMN_STATUS
-import at.techbee.jtx.database.COLUMN_SUMMARY
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection
@@ -88,10 +75,28 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     private var allSubtasksQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubtasks: LiveData<List<ICal4ListRel>> = allSubtasksQuery.switchMap { databaseDao.getIcal4ListRel(it) }
+    val allSubtasks: LiveData<List<ICal4ListRel>> = allSubtasksQuery.switchMap { databaseDao.getIcal4ListRel(it) }
+    val allSubtasksSorted: LiveData<List<ICal4ListRel>> = allSubtasks.map { list -> ICal4ListRel.getSortedList(
+        initialList = list,
+        orderBy = listSettings.subtasksOrderBy.value,
+        sortOrder = listSettings.subtasksSortOrder.value,
+        orderBy2 = null,
+        sortOrder2 = SortOrder.ASC,
+        module = module
+    )
+    }
 
     private var allSubnotesQuery: MutableLiveData<SimpleSQLiteQuery> = MutableLiveData<SimpleSQLiteQuery>()
-    var allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { databaseDao.getIcal4ListRel(it) }
+    val allSubnotes: LiveData<List<ICal4ListRel>> = allSubnotesQuery.switchMap { databaseDao.getIcal4ListRel(it) }
+    val allSubnotesSorted: LiveData<List<ICal4ListRel>> = allSubnotes.map { list -> ICal4ListRel.getSortedList(
+        initialList = list,
+        orderBy = listSettings.subnotesOrderBy.value,
+        sortOrder = listSettings.subnotesSortOrder.value,
+        orderBy2 = null,
+        sortOrder2 = SortOrder.ASC,
+        module = module
+    )
+    }
 
     var allParents: LiveData<List<ICal4ListRel>> = databaseDao.getAllParents()
 
@@ -152,10 +157,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
             searchPriority = listSettings.searchPriority,
             searchCollection = listSettings.searchCollection,
             searchAccount = listSettings.searchAccount,
-            orderBy = listSettings.orderBy.value,
-            sortOrder = listSettings.sortOrder.value,
-            orderBy2 = listSettings.orderBy2.value,
-            sortOrder2 = listSettings.sortOrder2.value,
             isExcludeDone = listSettings.isExcludeDone.value,
             isFilterOverdue = listSettings.isFilterOverdue.value,
             isFilterDueToday = listSettings.isFilterDueToday.value,
@@ -190,8 +191,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
             ICal4List.getQueryForAllSubEntries(
                 component = Component.VTODO,
                 hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
-                orderBy = listSettings.subtasksOrderBy.value,
-                sortOrder = listSettings.subtasksSortOrder.value,
                 searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null,
                 searchStatus = listSettings.searchStatus,
                 searchXStatus = listSettings.searchXStatus
@@ -201,8 +200,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
             ICal4List.getQueryForAllSubEntries(
                 component = Component.VJOURNAL,
                 hideBiometricProtected = if(isAuthenticated) emptyList() else ListSettings.getProtectedClassificationsFromSettings(_application),
-                orderBy = listSettings.subnotesOrderBy.value,
-                sortOrder = listSettings.subnotesSortOrder.value,
                 searchText = if(listSettings.showOnlySearchMatchingSubentries.value) listSettings.searchText.value else null,
                 searchStatus = listSettings.searchStatus,
                 searchXStatus = listSettings.searchXStatus
@@ -219,8 +216,6 @@ open class ListViewModel(application: Application, val module: Module) : Android
             modules = listOf(Module.JOURNAL, Module.NOTE, Module.TODO),
             searchText = searchText,
             flatView = true,
-            orderBy = OrderBy.LAST_MODIFIED,
-            sortOrder = SortOrder.DESC,
             hideBiometricProtected = if(isAuthenticated) emptyList() else  ListSettings.getProtectedClassificationsFromSettings(_application)
         ))
     }
@@ -533,27 +528,6 @@ enum class OrderBy(@StringRes val stringResource: Int) {
     DRAG_AND_DROP(R.string.order_by_drag_and_drop),
     CATEGORIES(R.string.categories),
     RESOURCES(R.string.resources);
-
-    fun getQueryAppendix(sortOrder: SortOrder): String {
-        return when(this) {
-            START_VTODO -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100) OR $COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
-            START_VJOURNAL -> "$COLUMN_DTSTART IS NULL, $COLUMN_DTSTART ${sortOrder.name} "
-            DUE -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100), $COLUMN_DUE IS NULL, $COLUMN_DUE ${sortOrder.name} "
-            COMPLETED -> "IFNULL($COLUMN_COMPLETED, 0) ${sortOrder.name} "
-            CREATED -> "$COLUMN_COMPLETED IS NOT NULL OR ($COLUMN_PERCENT IS NOT NULL AND $COLUMN_PERCENT = 100), $COLUMN_CREATED ${sortOrder.name} "
-            LAST_MODIFIED -> "$COLUMN_LAST_MODIFIED ${sortOrder.name} "
-            SUMMARY -> "UPPER($COLUMN_SUMMARY) ${sortOrder.name} "
-            PRIORITY -> "CASE WHEN $COLUMN_PRIORITY IS NULL THEN 1 WHEN $COLUMN_PRIORITY = 0 THEN 1 ELSE 0 END, $COLUMN_PRIORITY ${sortOrder.name} "
-            CLASSIFICATION -> "$COLUMN_CLASSIFICATION IS NULL, $COLUMN_CLASSIFICATION ${sortOrder.name} "
-            STATUS -> "$COLUMN_STATUS IS NULL, $COLUMN_STATUS ${sortOrder.name} "
-            PROGRESS -> "$COLUMN_PERCENT ${sortOrder.name} "
-            ACCOUNT -> "$COLUMN_COLLECTION_ACCOUNT_NAME ${sortOrder.name} "
-            COLLECTION -> "$COLUMN_COLLECTION_DISPLAYNAME ${sortOrder.name} "
-            DRAG_AND_DROP -> "$COLUMN_SORT_INDEX "
-            CATEGORIES -> "categories ${sortOrder.name} "
-            RESOURCES -> "resources ${sortOrder.name} "
-        }
-    }
 
     companion object {
         fun getValuesFor(module: Module): Array<OrderBy> =
