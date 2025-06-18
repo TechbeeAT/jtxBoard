@@ -72,6 +72,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.room.ColumnInfo
 import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
@@ -80,10 +81,13 @@ import at.techbee.jtx.database.COLUMN_GEO_LONG
 import at.techbee.jtx.database.COLUMN_LOCATION
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
-import at.techbee.jtx.flavored.MapComposable
+import at.techbee.jtx.flavored.GoogleMapsComposable
 import at.techbee.jtx.ui.reusable.dialogs.LocationPickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
+import at.techbee.jtx.ui.reusable.maps.OSMComposable
+import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.UiUtil
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -114,6 +118,7 @@ fun DetailsCardLocation(
     var showLocationPickerDialog by rememberSaveable { mutableStateOf(false) }
     var showRequestGeofencePermissionsDialog by rememberSaveable { mutableStateOf(false) }
     val openPermissionsIntent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
+    val settingsStateHolder = SettingsStateHolder(context)
 
     var location by rememberSaveable { mutableStateOf(initialLocation ?: "") }
     var geoLat by rememberSaveable { mutableStateOf(initialGeoLat) }
@@ -248,19 +253,19 @@ fun DetailsCardLocation(
 
                             IconButton(onClick = {
                                 val uri = if(geoLat == null && geoLong == null && location.isNotEmpty()) {
-                                    Uri.parse("geo:0,0?q=$location")
+                                    "geo:0,0?q=$location".toUri()
                                 } else if (geoLat != null && geoLong != null && location.isEmpty()) {
                                     val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
-                                    Uri.parse("geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})")
+                                    "geo:0,0?q=$latLngParam(${URLEncoder.encode(location, Charsets.UTF_8.name())})".toUri()
                                 } else {
                                     val latLngParam = "%.5f".format(Locale.ENGLISH, geoLat) + "," + "%.5f".format(Locale.ENGLISH, geoLong)
-                                    Uri.parse("geo:$latLngParam")
+                                    "geo:$latLngParam".toUri()
                                 }
 
                                 val geoIntent = Intent(Intent.ACTION_VIEW, uri)
                                 try {
                                     context.startActivity(geoIntent)
-                                } catch (e: ActivityNotFoundException) {
+                                } catch (_: ActivityNotFoundException) {
                                     context.startActivity(
                                         Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, location, BuildFlavor.getCurrent()))
                                     )
@@ -430,18 +435,33 @@ fun DetailsCardLocation(
             }
 
             AnimatedVisibility(geoLat != null && geoLong != null && !isEditMode && !LocalInspectionMode.current) {
-                MapComposable(
-                    initialLocation = location,
-                    initialGeoLat = geoLat,
-                    initialGeoLong = geoLong,
-                    isEditMode = false,
-                    enableCurrentLocation = false,
-                    onLocationUpdated = { _, _, _ -> /* only view, no update here */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .padding(top = 8.dp)
-                )
+                if(BuildFlavor.getCurrent() == BuildFlavor.GPLAY && settingsStateHolder.settingMapsProvider.value == DropdownSettingOption.MAP_GOOGLE_MAPS) {
+                    GoogleMapsComposable(
+                        initialLocation = location,
+                        initialGeoLat = geoLat,
+                        initialGeoLong = geoLong,
+                        isEditMode = false,
+                        enableCurrentLocation = false,
+                        onLocationUpdated = { _, _, _ -> /* only view, no update here */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(top = 8.dp)
+                    )
+                } else {
+                    OSMComposable(
+                        initialLocation = location,
+                        initialGeoLat = geoLat,
+                        initialGeoLong = geoLong,
+                        isEditMode = false,
+                        enableCurrentLocation = false,
+                        onLocationUpdated = { _, _, _ -> /* only view, no update here */ },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .padding(top = 8.dp)
+                    )
+                }
             }
 
             if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY) {

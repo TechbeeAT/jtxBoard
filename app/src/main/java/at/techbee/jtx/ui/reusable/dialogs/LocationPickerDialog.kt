@@ -21,11 +21,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
-import at.techbee.jtx.flavored.MapComposable
+import at.techbee.jtx.flavored.GoogleMapsComposable
+import at.techbee.jtx.ui.reusable.maps.OSMComposable
+import at.techbee.jtx.ui.settings.DropdownSettingOption
+import at.techbee.jtx.ui.settings.SettingsStateHolder
 
 
 @Composable
@@ -38,6 +43,9 @@ fun LocationPickerDialog(
     onDismiss: () -> Unit
 ) {
 
+    val context = LocalContext.current
+    val settingsStateHolder = SettingsStateHolder(context)
+
     var location by rememberSaveable { mutableStateOf(initialLocation) }
     var lat by rememberSaveable { mutableStateOf(initialGeoLat) }
     var long by rememberSaveable { mutableStateOf(initialGeoLong) }
@@ -46,23 +54,42 @@ fun LocationPickerDialog(
         onDismissRequest = { onDismiss() },
         title = { Text(stringResource(id = R.string.location)) },
         text = {
-               MapComposable(
-                   initialLocation = location,
-                   initialGeoLat = lat,
-                   initialGeoLong = long,
-                   isEditMode = true,
-                   enableCurrentLocation = enableCurrentLocation,
-                   onLocationUpdated = { newLocation, newLat, newLong ->
-                       location = newLocation
-                       lat = newLat
-                       long = newLong
-                   },
-                   modifier = Modifier
-                       .fillMaxWidth()
-                       .height(400.dp)
-                       .padding(top = 8.dp)
-               )
-               },
+            if(BuildFlavor.getCurrent() == BuildFlavor.GPLAY && settingsStateHolder.settingMapsProvider.value == DropdownSettingOption.MAP_GOOGLE_MAPS) {
+                GoogleMapsComposable(
+                    initialLocation = location,
+                    initialGeoLat = lat,
+                    initialGeoLong = long,
+                    isEditMode = true,
+                    enableCurrentLocation = enableCurrentLocation,
+                    onLocationUpdated = { newLocation, newLat, newLong ->
+                        location = newLocation
+                        lat = newLat
+                        long = newLong
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .padding(top = 8.dp)
+                )
+            } else {
+                OSMComposable(
+                    initialLocation = location,
+                    initialGeoLat = lat,
+                    initialGeoLong = long,
+                    isEditMode = true,
+                    enableCurrentLocation = enableCurrentLocation,
+                    onLocationUpdated = { newLocation, newLat, newLong ->
+                        location = newLocation
+                        lat = newLat
+                        long = newLong
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .padding(top = 8.dp)
+                )
+            }
+        },
         confirmButton = {
             TextButton(
                 onClick = {

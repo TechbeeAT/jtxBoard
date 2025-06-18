@@ -72,6 +72,7 @@ import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_JOURNALS_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DEFAULT_START_DATE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_DISPLAY_TIMEZONE
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_FONT
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_MAPS_PROVIDER
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROGRESS_STEP
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROTECT_BIOMETRIC
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_THEME
@@ -207,6 +208,12 @@ fun SettingsScreen(
                             val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_FONT.default
                             settingsStateHolder.settingFont.value = settingOption
                             SETTING_FONT.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+
+                        map[SETTING_MAPS_PROVIDER.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: SETTING_MAPS_PROVIDER.default
+                            settingsStateHolder.settingMapsProvider.value = settingOption
+                            SETTING_MAPS_PROVIDER.saveSetting(settingOption, settingsStateHolder.prefs)
                         }
 
                         map[SETTING_AUDIO_FORMAT.key].let setting@ { setting ->
@@ -575,6 +582,17 @@ fun SettingsScreen(
                                 SETTING_AUDIO_FORMAT.saveSetting(selection, settingsStateHolder.prefs)
                             }
                         )
+
+                        if(SETTING_MAPS_PROVIDER.options.size > 1) {
+                            DropdownSettingElement(
+                                setting = SETTING_MAPS_PROVIDER,
+                                selected = settingsStateHolder.settingMapsProvider.value,
+                                onSelectionChanged = { selection ->
+                                    settingsStateHolder.settingMapsProvider.value = selection
+                                    SETTING_MAPS_PROVIDER.saveSetting(selection, settingsStateHolder.prefs)
+                                }
+                            )
+                        }
 
                         if(globalStateHolder.biometricStatus == BiometricManager.BIOMETRIC_SUCCESS) {
                             DropdownSettingElement(

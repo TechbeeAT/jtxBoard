@@ -68,7 +68,10 @@ enum class DropdownSettingOption(
 
     FONT_ROBOTO("font_roboto", R.string.font_roboto),
     FONT_NOTO("font_noto", R.string.font_noto),
-    FONT_MONTSERRAT_ALTERNATES("font_montserrat_alternates", R.string.font_montserrat_alternates)
+    FONT_MONTSERRAT_ALTERNATES("font_montserrat_alternates", R.string.font_montserrat_alternates),
+
+    MAP_GOOGLE_MAPS("map_google_maps", R.string.map_google_maps),
+    MAP_OSM("map_osm", R.string.map_osm)
     ;
 
     fun getProgressStepKeyAsInt(): Int {

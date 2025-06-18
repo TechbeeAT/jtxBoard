@@ -34,7 +34,7 @@ import com.google.maps.android.compose.*
 @SuppressLint("MissingPermission")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MapComposable(
+fun GoogleMapsComposable(
     initialLocation: String?,
     initialGeoLat: Double?,
     initialGeoLong: Double?,
@@ -46,7 +46,7 @@ fun MapComposable(
 
     val context = LocalContext.current
     var location by remember { mutableStateOf(initialLocation ?: "") }
-    val marker = rememberMarkerState(null, LatLng(initialGeoLat?:0.0, initialGeoLong?:0.0))
+    val marker = rememberUpdatedMarkerState(LatLng(initialGeoLat?:0.0, initialGeoLong?:0.0))
     val locationPermissionState = if(!LocalInspectionMode.current) rememberMultiplePermissionsState(
         permissions = listOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -135,9 +135,9 @@ fun MapComposable(
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardLocation_Preview_Wien() {
+fun GoogleMapsComposable_Preview_Wien() {
     MaterialTheme {
-        MapComposable(
+        GoogleMapsComposable(
             initialLocation = "Vienna, Stephansplatz",
             initialGeoLat = 48.208492,
             initialGeoLong = 16.373127,
@@ -154,9 +154,9 @@ fun DetailsCardLocation_Preview_Wien() {
 
 @Preview(showBackground = true)
 @Composable
-fun DetailsCardLocation_Preview_empty() {
+fun GoogleMapsComposable_Preview_empty() {
     MaterialTheme {
-        MapComposable(
+        GoogleMapsComposable(
             initialLocation = null,
             initialGeoLat = null,
             initialGeoLong = null,

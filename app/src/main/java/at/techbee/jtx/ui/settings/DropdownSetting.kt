@@ -16,11 +16,13 @@ import androidx.compose.material.icons.outlined.EditCalendar
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.FontDownload
 import androidx.compose.material.icons.outlined.FormatPaint
+import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Public
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.content.edit
+import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
 
 enum class DropdownSetting(
@@ -169,6 +171,16 @@ enum class DropdownSetting(
             DropdownSettingOption.FONT_MONTSERRAT_ALTERNATES
         ),
         default = DropdownSettingOption.FONT_ROBOTO
+    ),
+    SETTING_MAPS_PROVIDER(
+        key = "setting_maps_provider",
+        icon = Icons.Outlined.Map,
+        title = R.string.settings_maps_provider,
+        options = if(BuildFlavor.getCurrent() == BuildFlavor.GPLAY)
+            listOf(DropdownSettingOption.MAP_GOOGLE_MAPS, DropdownSettingOption.MAP_OSM)
+                    else
+                        listOf(DropdownSettingOption.MAP_OSM),
+        default = if(BuildFlavor.getCurrent() == BuildFlavor.GPLAY) DropdownSettingOption.MAP_GOOGLE_MAPS else DropdownSettingOption.MAP_OSM
     )
     ;
 
