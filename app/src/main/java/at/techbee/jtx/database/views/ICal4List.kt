@@ -446,22 +446,26 @@ data class ICal4List(
                 queryString += ") "
             }
 
-            if (searchStatus.isNotEmpty()) {
+            if (searchStatus.isNotEmpty() || searchXStatus.isNotEmpty()) {
                 queryString += "AND ("
-                queryString += searchStatus.joinToString(separator = "OR ", transform = { "$COLUMN_STATUS = ? " })
-                args.addAll(searchStatus.map { it.status ?:"" })
 
-                if (searchStatus.contains(Status.NO_STATUS))
-                    queryString += "OR $COLUMN_STATUS IS NULL"
+                if(searchStatus.isNotEmpty()) {
+                    queryString += searchStatus.joinToString(separator = "OR ", transform = { "$COLUMN_STATUS = ? " })
+                    args.addAll(searchStatus.map { it.status ?: "" })
+                    if (searchStatus.contains(Status.NO_STATUS))
+                        queryString += "OR $COLUMN_STATUS IS NULL "
+                }
+                if(searchStatus.isNotEmpty() && searchXStatus.isNotEmpty())
+                    queryString += "OR "
+
+                if (searchXStatus.isNotEmpty()) {
+                    queryString += searchXStatus.joinToString(separator = "OR ", transform = { "$COLUMN_EXTENDED_STATUS = ? " })
+                    args.addAll(searchXStatus.map { it })
+                }
                 queryString += ") "
             }
 
-            if (searchXStatus.isNotEmpty()) {
-                queryString += "AND ("
-                queryString += searchXStatus.joinToString(separator = "OR ", transform = { "$COLUMN_EXTENDED_STATUS = ? " })
-                args.addAll(searchXStatus.map { it })
-                queryString += ") "
-            }
+
 
             if (isExcludeDone)
                 queryString += "AND $COLUMN_PERCENT IS NOT 100 AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS NOT IN ('${Status.COMPLETED.status}', '${Status.CANCELLED.status}')) "

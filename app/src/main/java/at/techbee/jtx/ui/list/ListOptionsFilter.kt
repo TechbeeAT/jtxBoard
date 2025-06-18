@@ -765,6 +765,7 @@ fun ListOptionsFilter(
             headline = stringResource(id = R.string.status),
             onResetSelection = {
                 listSettings.searchStatus.clear()
+                listSettings.searchXStatus.clear()
                 onListSettingsChanged()
             },
             onInvertSelection = {
@@ -772,6 +773,13 @@ fun ListOptionsFilter(
                     .filter { status -> !listSettings.searchStatus.contains(status) }
                 listSettings.searchStatus.clear()
                 listSettings.searchStatus.addAll(missing)
+
+                val missingXStatus = extendedStatuses.filter { xstatus ->
+                    !listSettings.searchXStatus.contains(xstatus.xstatus)
+                }
+                listSettings.searchXStatus.clear()
+                listSettings.searchXStatus.addAll(missingXStatus.map { it.xstatus })
+
                 onListSettingsChanged()
             })
         {
@@ -788,25 +796,9 @@ fun ListOptionsFilter(
                     label = { Text(stringResource(id = status.stringResource)) }
                 )
             }
-        }
 
-        if (extendedStatuses.any { it.module == module }) {
-            FilterSection(
-                icon = Icons.Outlined.PublishedWithChanges,
-                headline = stringResource(id = R.string.extended_status),
-                onResetSelection = {
-                    listSettings.searchXStatus.clear()
-                    onListSettingsChanged()
-                },
-                onInvertSelection = {
-                    val missing = extendedStatuses.filter { xstatus ->
-                        !listSettings.searchXStatus.contains(xstatus.xstatus)
-                    }
-                    listSettings.searchXStatus.clear()
-                    listSettings.searchXStatus.addAll(missing.map { it.xstatus })
-                    onListSettingsChanged()
-                })
-            {
+            if (extendedStatuses.any { it.module == module }) {
+
                 var maxEntries by rememberSaveable { mutableIntStateOf(MAX_ITEMS_PER_SECTION) }
 
                 extendedStatuses.filter { it.module == module }.forEachIndexed { index, xstatus ->
