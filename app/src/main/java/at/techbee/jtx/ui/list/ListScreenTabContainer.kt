@@ -222,9 +222,10 @@ fun ListScreenTabContainer(
     var showUpdateEntriesDialog by rememberSaveable { mutableStateOf(false) }
     var showCollectionSelectorDialog by rememberSaveable { mutableStateOf(false) }
 
+    val availableSyncApps = SyncUtil.availableSyncApps(context)
     var isRefreshing by remember { mutableStateOf(false) }
     val isPullRefreshEnabled = remember {
-        SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) } && settingsStateHolder.settingSyncOnPullRefresh.value
+        availableSyncApps.any { SyncUtil.isSyncAppCompatible(it, context) } && settingsStateHolder.settingSyncOnPullRefresh.value
     }
 
     fun getActiveViewModel() = when (pagerState.currentPage) {
@@ -534,7 +535,7 @@ fun ListScreenTabContainer(
 
 
 
-                        if(SyncUtil.availableSyncApps(context).any { SyncUtil.isSyncAppCompatible(it, context) }) {
+                        if(availableSyncApps.any { SyncUtil.isSyncAppCompatible(it, context) }) {
                             DropdownMenuItem(
                                 text = {
                                     Text(
@@ -686,7 +687,7 @@ fun ListScreenTabContainer(
                         listViewModel.listSettings.newEntryText.value = ""
                     },
                     showQuickEntry = showQuickAdd,
-                    incompatibleSyncApps = SyncUtil.availableSyncApps(context).filter { !SyncUtil.isSyncAppCompatible(it, context) },
+                    incompatibleSyncApps = availableSyncApps.filter { !SyncUtil.isSyncAppCompatible(it, context) },
                     multiselectEnabled = listViewModel.multiselectEnabled,
                     selectedEntries = listViewModel.selectedEntries,
                     listSettings = listViewModel.listSettings,
