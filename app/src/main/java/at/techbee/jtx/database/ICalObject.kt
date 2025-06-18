@@ -725,7 +725,7 @@ data class ICalObject(
 
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localStart = DateTimeUtils.getZonedDateTimeInLocalTZ(dtstart, dtstartTimezone)
+            val localStart = DateTimeUtils.getZonedDateTimeInLocalTZ(dtstart, dtstartTimezone) ?: return ""
             var finalString = ""
 
             fun getTimeAndTimezone(): String {
@@ -791,7 +791,7 @@ data class ICalObject(
 
             val localNow = ZonedDateTime.now()
             val localTomorrow = localNow.plusDays(1)
-            val localDue = DateTimeUtils.getZonedDateTimeInLocalTZ(due, dueTimezone)
+            val localDue = DateTimeUtils.getZonedDateTimeInLocalTZ(due, dueTimezone) ?: return ""
             var finalString = ""
 
             fun getTimeAndTimezone(): String {

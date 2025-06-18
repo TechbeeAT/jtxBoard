@@ -91,8 +91,6 @@ import at.techbee.jtx.database.properties.TABLE_NAME_COMMENT
 import at.techbee.jtx.database.properties.TABLE_NAME_RELATEDTO
 import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
 import at.techbee.jtx.ui.list.AnyAllNone
-import at.techbee.jtx.ui.list.OrderBy
-import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.DateTimeUtils
 import java.util.UUID
 import kotlin.time.Duration.Companion.days
@@ -323,10 +321,6 @@ data class ICal4List(
             searchPriority: List<Int?> = emptyList(),
             searchCollection: List<String> = emptyList(),
             searchAccount: List<String> = emptyList(),
-            orderBy: OrderBy = OrderBy.CREATED,
-            sortOrder: SortOrder = SortOrder.ASC,
-            orderBy2: OrderBy = OrderBy.SUMMARY,
-            sortOrder2: SortOrder = SortOrder.ASC,
             isExcludeDone: Boolean = false,
             isFilterOverdue: Boolean = false,
             isFilterDueToday: Boolean = false,
@@ -576,11 +570,14 @@ data class ICal4List(
                         "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_UID = $VIEW_NAME_ICAL4LIST.$COLUMN_UID AND recurList.$COLUMN_RECURID IS NOT NULL AND recurList.$COLUMN_DTSTART >= ${DateTimeUtils.getTodayAsLong()} )) "
             }
 
+            queryString += "ORDER BY $COLUMN_LAST_MODIFIED DESC "
+
+            /*
             queryString += "ORDER BY "
             queryString += orderBy.getQueryAppendix(sortOrder)
-
             queryString += ", "
             queryString += orderBy2.getQueryAppendix(sortOrder2)
+             */
 
             limit?.let { queryString += "LIMIT $it" }
 
@@ -592,16 +589,12 @@ data class ICal4List(
         /**
          * Returns all sub-entries
          * @param component: Use Component.VTODO to get all subtasks, use Component.VJOURNAL to get all subnotes/subjournals
-         * @param orderBy
-         * @param sortOrder
          */
         fun getQueryForAllSubEntries(component: Component,
                                      hideBiometricProtected: List<Classification>,
                                      searchText: String?,
                                      searchStatus: List<Status> = emptyList(),
-                                     searchXStatus: List<String> = emptyList(),
-                                     orderBy: OrderBy,
-                                     sortOrder: SortOrder
+                                     searchXStatus: List<String> = emptyList()
         ): SimpleSQLiteQuery {
 
             val queryArgs = mutableListOf<String>()
@@ -640,18 +633,14 @@ data class ICal4List(
                 queryArgs.addAll(searchXStatus.map { it })
                 queryString += ") "
             }
-
-            queryString += "ORDER BY ${orderBy.getQueryAppendix(sortOrder)}"
-
+            //queryString += "ORDER BY ${orderBy.getQueryAppendix(sortOrder)}"
             return SimpleSQLiteQuery(queryString, queryArgs.toTypedArray())
         }
 
         fun getQueryForAllSubentriesForParentUID(
             parentUid: String,
             hideBiometricProtected: List<Classification>,
-            component: Component,
-            orderBy: OrderBy,
-            sortOrder: SortOrder
+            component: Component
         ): SimpleSQLiteQuery = SimpleSQLiteQuery("SELECT $VIEW_NAME_ICAL4LIST.* " +
                 "from $VIEW_NAME_ICAL4LIST " +
                 "INNER JOIN $TABLE_NAME_RELATEDTO ON ${TABLE_NAME_RELATEDTO}.${COLUMN_RELATEDTO_ICALOBJECT_ID} = ${VIEW_NAME_ICAL4LIST}.${COLUMN_ID} " +
@@ -666,8 +655,7 @@ data class ICal4List(
                     }
                 } else
                     ""
-                + "ORDER BY ${orderBy.getQueryAppendix(sortOrder)}")
-
+        )
     }
 
 

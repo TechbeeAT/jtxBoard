@@ -38,8 +38,16 @@ fun ListScreen(
     }
 
     val list by listViewModel.iCal4ListRel.observeAsState(emptyList())
-    val groupedList = ICal4ListRel.getGroupedList(
+    val sortedList = ICal4ListRel.getSortedList(
         initialList = list,
+        orderBy = listViewModel.listSettings.orderBy.value,
+        sortOrder = listViewModel.listSettings.sortOrder.value,
+        orderBy2 = listViewModel.listSettings.orderBy2.value,
+        sortOrder2 = listViewModel.listSettings.sortOrder2.value,
+        module = listViewModel.module
+    )
+    val groupedList = ICal4ListRel.getGroupedList(
+        sortedList = sortedList,
         groupBy = listViewModel.listSettings.groupBy.value,
         sortOrder = listViewModel.listSettings.sortOrder.value,
         module = listViewModel.module,
@@ -73,8 +81,8 @@ fun ListScreen(
         ViewMode.LIST -> {
             ListScreenList(
                 groupedList = groupedList,
-                subtasksLive = listViewModel.allSubtasks,
-                subnotesLive = listViewModel.allSubnotes,
+                subtasksLive = listViewModel.allSubtasksSorted,
+                subnotesLive = listViewModel.allSubnotesSorted,
                 parentsLive = listViewModel.allParents,
                 selectedEntries = listViewModel.selectedEntries,
                 attachmentsLive = listViewModel.allAttachmentsMap,
@@ -118,8 +126,8 @@ fun ListScreen(
         }
         ViewMode.GRID -> {
             ListScreenGrid(
-                list = list,
-                subtasksLive = listViewModel.allSubtasks,
+                list = sortedList,
+                subtasksLive = listViewModel.allSubtasksSorted,
                 storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
                 storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
                 selectedEntries = listViewModel.selectedEntries,
@@ -138,7 +146,7 @@ fun ListScreen(
         ViewMode.COMPACT -> {
             ListScreenCompact(
                 groupedList = groupedList,
-                subtasksLive = listViewModel.allSubtasks,
+                subtasksLive = listViewModel.allSubtasksSorted,
                 storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
                 storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
                 selectedEntries = listViewModel.selectedEntries,
@@ -158,8 +166,8 @@ fun ListScreen(
         ViewMode.KANBAN -> {
             ListScreenKanban(
                 module = listViewModel.module,
-                list = list,
-                subtasksLive = listViewModel.allSubtasks,
+                list = sortedList,
+                subtasksLive = listViewModel.allSubtasksSorted,
                 storedCategories = database.getStoredCategories().observeAsState(emptyList()).value,
                 storedStatuses = database.getStoredStatuses().observeAsState(emptyList()).value,
                 selectedEntries = listViewModel.selectedEntries,
@@ -179,7 +187,7 @@ fun ListScreen(
         }
         ViewMode.WEEK -> {
             ListScreenWeek(
-                list = list,
+                list = sortedList,
                 selectedEntries = listViewModel.selectedEntries,
                 scrollOnceId = listViewModel.scrollOnceId,
                 onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },

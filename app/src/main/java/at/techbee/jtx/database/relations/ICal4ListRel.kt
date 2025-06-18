@@ -26,6 +26,7 @@ import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.GroupBy
+import at.techbee.jtx.ui.list.OrderBy
 import at.techbee.jtx.ui.list.SortOrder
 import at.techbee.jtx.util.DateTimeUtils
 import java.time.Instant
@@ -50,35 +51,63 @@ data class ICal4ListRel(
 ) {
     companion object {
 
-        fun getGroupedList(initialList: List<ICal4ListRel>, groupBy: GroupBy?, sortOrder: SortOrder, module: Module, context: Context): Map<String, List<ICal4ListRel>> {
-            // first apply a proper sort order, then group
-            var sortedList = when (groupBy) {
-                GroupBy.STATUS -> initialList.sortedBy {
-                    if (module == Module.TODO && it.iCal4List.percent != 100)
-                        try {
-                            Status.valueOf(it.iCal4List.status ?: Status.NO_STATUS.name).ordinal
-                        } catch (_: java.lang.IllegalArgumentException) {
-                            -1
-                        }
+        fun getComparator(orderBy: OrderBy?, module: Module): Comparator<ICal4ListRel> {
+            return when (orderBy) {
+                OrderBy.START_VTODO, OrderBy.START_VJOURNAL -> compareBy(nullsLast()) {
+                    DateTimeUtils.getZonedDateTimeInLocalTZ(it.iCal4List.dtstart, it.iCal4List.dtstartTimezone)
+                }
+                OrderBy.DUE -> compareBy(nullsLast()) {
+                    DateTimeUtils.getZonedDateTimeInLocalTZ(it.iCal4List.due, it.iCal4List.dueTimezone)
+                }
+                OrderBy.COMPLETED -> compareBy(nullsLast()) {
+                    DateTimeUtils.getZonedDateTimeInLocalTZ(it.iCal4List.completed, it.iCal4List.completedTimezone)
+                }
+                null, OrderBy.CREATED -> compareBy(nullsLast()) {
+                    DateTimeUtils.getZonedDateTimeInLocalTZ(it.iCal4List.created, "UTC")
+                }
+                OrderBy.LAST_MODIFIED -> compareBy(nullsLast()) {
+                    DateTimeUtils.getZonedDateTimeInLocalTZ(it.iCal4List.lastModified, "UTC")
+                }
+                OrderBy.SUMMARY -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.summary ?: "" } // Handle null and case-insensitive
+                OrderBy.PRIORITY -> compareBy(nullsLast()) { it.iCal4List.priority }
+                OrderBy.CLASSIFICATION -> compareBy {
+                    Classification.getClassificationFromString(it.iCal4List.classification)?.ordinal ?: Classification.NO_CLASSIFICATION.ordinal
+                }
+                OrderBy.STATUS -> compareBy {
+                    if (module == Module.TODO && it.iCal4List.percent == 100)
+                        Status.COMPLETED.ordinal
                     else
-                        try {
-                            Status.valueOf(it.iCal4List.status ?: Status.FINAL.name).ordinal
-                        } catch (_: java.lang.IllegalArgumentException) {
-                            -1
-                        }
-                }.let { if (sortOrder == SortOrder.DESC) it.asReversed() else it }
-                GroupBy.CLASSIFICATION -> initialList.sortedBy {
-                    try {
-                        Classification.valueOf(it.iCal4List.classification ?: Classification.PUBLIC.name).ordinal
-                    } catch (_: java.lang.IllegalArgumentException) {
-                        -1
-                    }
-                }.let { if (sortOrder == SortOrder.DESC) it.asReversed() else it }
-                else -> initialList
+                        Status.getStatusFromString(it.iCal4List.status)?.ordinal ?: Int.MAX_VALUE
+                }
+                OrderBy.PROGRESS -> compareBy { it.iCal4List.percent ?: 0 }
+                OrderBy.ACCOUNT -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.accountName ?: "" }
+                OrderBy.COLLECTION -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.collectionDisplayName ?: "" }
+                OrderBy.DRAG_AND_DROP -> compareBy(nullsLast()) { it.iCal4List.sortIndex}
+                OrderBy.CATEGORIES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.categories.firstOrNull()?.text } // Handle null categories and case-insensitive
+                OrderBy.RESOURCES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.resources.firstOrNull()?.text } // Handle null resources and case-insensitive
             }
+        }
 
-            if ((groupBy == GroupBy.STATUS || groupBy == GroupBy.CLASSIFICATION) && sortOrder == SortOrder.DESC)
-                sortedList = sortedList.asReversed()
+
+        fun getSortedList(initialList: List<ICal4ListRel>, orderBy: OrderBy?, sortOrder: SortOrder, orderBy2: OrderBy?, sortOrder2: SortOrder, module: Module): List<ICal4ListRel> {
+            // first apply a proper sort order, then group
+
+            //var comparator: Comparator<ICal4ListRel>  = compareBy { it.iCal4List.module }
+            var comparator: Comparator<ICal4ListRel>  = compareBy { it.iCal4List.status == Status.COMPLETED.name || it.iCal4List.status == Status.CANCELLED.name || it.iCal4List.percent == 100 || it.iCal4List.completed != null  }
+            if(orderBy != null && sortOrder == SortOrder.ASC)
+                comparator = comparator.then(getComparator(orderBy, module))
+            else if(orderBy != null && sortOrder == SortOrder.DESC)
+                comparator = comparator.then(getComparator(orderBy, module).reversed())
+
+            if(orderBy2 != null && sortOrder2 == SortOrder.ASC)
+                comparator = comparator.then(getComparator(orderBy2, module))
+            else if(orderBy2 != null && sortOrder2 == SortOrder.DESC)
+                comparator = comparator.then(getComparator(orderBy2, module).reversed())
+
+            return initialList.sortedWith(comparator)
+        }
+
+        fun getGroupedList(sortedList: List<ICal4ListRel>, groupBy: GroupBy?, sortOrder: SortOrder, module: Module, context: Context): Map<String, List<ICal4ListRel>> {
 
             return when (groupBy) {
                 GroupBy.CATEGORY -> mutableMapOf<String, MutableList<ICal4ListRel>>().apply {
@@ -131,12 +160,10 @@ data class ICal4ListRel(
                 GroupBy.STATUS -> sortedList.groupBy {
                     Status.entries.find { status -> status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.iCal4List.status ?: ""
                 }
-
                 GroupBy.CLASSIFICATION -> sortedList.groupBy {
                     Classification.entries.find { classif -> classif.classification == it.iCal4List.classification }?.stringResource?.let { stringRes -> context.getString(stringRes) }
                         ?: it.iCal4List.classification ?: ""
                 }
-
                 GroupBy.ACCOUNT -> sortedList.groupBy { it.iCal4List.accountName ?: "" }
                 GroupBy.COLLECTION -> sortedList.groupBy { it.iCal4List.collectionDisplayName ?: "" }
                 GroupBy.PRIORITY -> sortedList.groupBy {
@@ -146,7 +173,6 @@ data class ICal4ListRel(
                         else -> it.iCal4List.priority.toString()
                     }
                 }
-
                 GroupBy.DATE, GroupBy.START -> sortedList.groupBy {
                     ICalObject.getDtstartTextInfo(
                         module = module,
@@ -156,7 +182,7 @@ data class ICal4ListRel(
                         context = context
                     )
                 }
-                GroupBy.DATE_WEEK, GroupBy.START_WEEK -> sortedList.groupBy {ical4ListRel ->
+                GroupBy.DATE_WEEK, GroupBy.START_WEEK -> sortedList.groupBy { ical4ListRel ->
                     if(ical4ListRel.iCal4List.dtstart == null && module == Module.TODO)
                         context.getString(R.string.list_start_without)
                     else if(ical4ListRel.iCal4List.dtstart == null)
@@ -171,7 +197,7 @@ data class ICal4ListRel(
                             )
                         }
                 }
-                GroupBy.DATE_MONTH, GroupBy.START_MONTH -> sortedList.groupBy {ical4ListRel ->
+                GroupBy.DATE_MONTH, GroupBy.START_MONTH -> sortedList.groupBy { ical4ListRel ->
                     if(ical4ListRel.iCal4List.dtstart == null && module == Module.TODO)
                         context.getString(R.string.list_start_without)
                     else if(ical4ListRel.iCal4List.dtstart == null)
@@ -193,7 +219,7 @@ data class ICal4ListRel(
                         context = context
                     )
                 }
-                GroupBy.DUE_WEEK -> sortedList.groupBy {ical4ListRel ->
+                GroupBy.DUE_WEEK -> sortedList.groupBy { ical4ListRel ->
                     if(ical4ListRel.iCal4List.due == null)
                         context.getString(R.string.list_due_without)
                     else
@@ -206,7 +232,7 @@ data class ICal4ListRel(
                             )
                         }
                 }
-                GroupBy.DUE_MONTH -> sortedList.groupBy {ical4ListRel ->
+                GroupBy.DUE_MONTH -> sortedList.groupBy { ical4ListRel ->
                     if(ical4ListRel.iCal4List.due == null)
                         context.getString(R.string.list_due_without)
                     else
@@ -215,7 +241,6 @@ data class ICal4ListRel(
                             "${date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${date.year}"
                         }
                 }
-
                 null -> sortedList.groupBy { it.iCal4List.module }
             }
         }

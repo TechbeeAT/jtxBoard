@@ -59,8 +59,16 @@ fun ListWidgetContent(
 ) {
 
     val context = LocalContext.current
-    val groupedList = ICal4ListRel.getGroupedList(
+    val sortedList = ICal4ListRel.getSortedList(
         initialList = list,
+        orderBy = listWidgetConfig.orderBy,
+        sortOrder = listWidgetConfig.sortOrder,
+        orderBy2 = listWidgetConfig.orderBy2,
+        sortOrder2 = listWidgetConfig.sortOrder2,
+        module = listWidgetConfig.module
+    )
+    val groupedList = ICal4ListRel.getGroupedList(
+        sortedList = sortedList,
         groupBy = listWidgetConfig.groupBy,
         sortOrder = listWidgetConfig.sortOrder,
         module = listWidgetConfig.module,
