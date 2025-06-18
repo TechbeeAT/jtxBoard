@@ -157,6 +157,14 @@ interface ICalDatabaseDao {
     @Query("SELECT * FROM $VIEW_NAME_COLLECTIONS_VIEW ORDER BY $COLUMN_COLLECTION_ACCOUNT_TYPE = 'LOCAL' DESC, $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
     fun getAllCollectionsView(): LiveData<List<CollectionsView>>
 
+    /**
+     * Retrieve an list of all Collections with the data necessary for the notification channel
+     * This includes the [collectionId], [displayName] and [accountName] of the collection
+     * @return a list of [ICalCollectionNotificationChannelInfo]
+     */
+    @Query("select $COLUMN_COLLECTION_ID, $COLUMN_COLLECTION_DISPLAYNAME, $COLUMN_COLLECTION_ACCOUNT_NAME from $TABLE_NAME_COLLECTION ORDER BY $COLUMN_COLLECTION_ACCOUNT_TYPE = 'LOCAL' DESC, $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
+    suspend fun getCollectionNotificationChannelInfo(): List<ICalCollectionNotificationChannelInfo>
+
 
     /**
      * Retrieve a list of ICalObjectIds that can be moved to a new collection

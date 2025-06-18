@@ -146,7 +146,14 @@ class NotificationPublisher : BroadcastReceiver() {
                     return@forEach
 
                 val iCal4List = database.getICal4ListSync(alarm.icalObjectId) ?: return@forEach
-                alarm.scheduleNotification(context = context, requestCode = iCal4List.id.toInt(), isReadOnly = iCal4List.isReadOnly, notificationSummary = iCal4List.summary, notificationDescription = iCal4List.description)
+                alarm.scheduleNotification(
+                    context = context,
+                    requestCode = iCal4List.id.toInt(),
+                    isReadOnly = iCal4List.isReadOnly,
+                    notificationSummary = iCal4List.summary,
+                    notificationDescription = iCal4List.description,
+                    notificationChannel = iCal4List.collectionId.toString()
+                )
             }
         }
 
@@ -172,13 +179,13 @@ class NotificationPublisher : BroadcastReceiver() {
                 return
 
             val notification = Alarm.createNotification(
-                iCalObject.id,
-                0L,
-                iCalObject.summary,
-                iCalObject.description,
-                false,   // can never be read only
-                MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
-                context
+                iCalObjectId = iCalObject.id,
+                alarmId = 0L,
+                notificationSummary = iCalObject.summary,
+                notificationDescription = iCalObject.description,
+                isReadOnly = false,   // can never be read only
+                notificationChannel = iCalObject.collectionId.toString(),
+                context = context
             )
             val notificationManager = NotificationManagerCompat.from(context)
             if (ActivityCompat.checkSelfPermission(
@@ -206,8 +213,8 @@ class NotificationPublisher : BroadcastReceiver() {
                         database.getAlarmsSync(iCalObject.id).firstOrNull()?.alarmId?:0L, // if any explicit alarm exists, we take it an pass it on to make the actions available.
                         iCalObject.summary,
                         iCalObject.description,
-                        collections.find { collection -> collection.collectionId == iCalObject.collectionId }?.readonly ?: true,
-                        MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
+                        collections.find { collection -> collection.collectionId == iCalObject.collectionId }?.readonly != false,
+                        iCalObject.collectionId.toString(),
                         context
                     )
                     notificationManager.notify(iCalObject.id.toInt(), notification)

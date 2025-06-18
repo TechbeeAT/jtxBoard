@@ -409,7 +409,8 @@ data class Alarm(
         requestCode: Int,
         isReadOnly: Boolean,
         notificationSummary: String?,
-        notificationDescription: String?
+        notificationDescription: String?,
+        notificationChannel: String,
     ) {
 
         if ((this.triggerTime ?: 0) < System.currentTimeMillis())
@@ -424,7 +425,7 @@ data class Alarm(
             notificationSummary,
             notificationDescription,
             isReadOnly,
-            MainActivity2.NOTIFICATION_CHANNEL_ALARMS,
+            notificationChannel,
             context
         )
 
@@ -450,6 +451,7 @@ data class Alarm(
             else
                 alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime!!, pendingIntent)
         } catch (e: IllegalStateException) {
+            Log.w("scheduleNotification", e.stackTraceToString())
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 alarmManager.cancelAll()
             } else {
