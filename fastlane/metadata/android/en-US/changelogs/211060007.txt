@@ -1,0 +1,3 @@
+- Fixed improper calculation of relative due time in list view
+- Technical updates & improvements
+- Version updates
