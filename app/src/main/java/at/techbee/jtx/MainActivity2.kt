@@ -32,6 +32,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.NotificationChannelCompat
+import androidx.core.app.NotificationChannelGroupCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.glance.appwidget.updateAll
@@ -107,7 +108,7 @@ class MainActivity2 : AppCompatActivity() {
     private lateinit var settingsStateHolder: SettingsStateHolder
 
     companion object {
-        const val NOTIFICATION_CHANNEL_ALARMS = "REMINDER_DUE"   // different name for legacy handling!
+        const val NOTIFICATION_CHANNEL_GROUP_ALARMS = "ALARMS_GROUP"
         const val NOTIFICATION_CHANNEL_GEOFENCES = "NOTIFICATION_CHANNEL_GEOFENCES"
 
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
@@ -120,6 +121,48 @@ class MainActivity2 : AppCompatActivity() {
         const val INTENT_EXTRA_COLLECTION2PRESELECT = "collection2preselect"
         const val INTENT_EXTRA_CATEGORIES2PRESELECT = "categories2preselect"
         const val INTENT_EXTRA_LISTWIDGETCONFIG = "listWidgetConfig"
+
+        suspend fun restoreNotificationChannels(context: Context) {
+
+            val notificationManager = NotificationManagerCompat.from(context)
+            val collectionNotificationChannels = ICalDatabase.getInstance(context).iCalDatabaseDao().getCollectionNotificationChannelInfo()
+            val notificationChannelGroupAlarms = NotificationChannelGroupCompat
+                .Builder(NOTIFICATION_CHANNEL_GROUP_ALARMS)
+                .setName(context.getString(R.string.notification_channel_alarms_name))
+                .build()
+
+            val notificationChannels = mutableListOf<NotificationChannelCompat>()
+            collectionNotificationChannels.forEach { collectionChannel ->
+                notificationChannels.add(
+                    NotificationChannelCompat.Builder(collectionChannel.collectionId.toString(), NotificationManagerCompat.IMPORTANCE_MAX)
+                        .setName("${collectionChannel.displayName?:""} (${collectionChannel.accountName})" )
+                        .setLightsEnabled(true)
+                        .setVibrationEnabled(true)
+                        .setGroup(NOTIFICATION_CHANNEL_GROUP_ALARMS)
+                        .setShowBadge(true)
+                        .build()
+                )
+            }
+            // remove old channels that don't exist anymore
+            notificationManager.notificationChannelsCompat.map { it.id }.forEach {
+                if(!collectionNotificationChannels.map { it.collectionId.toString() }.contains(it)
+                    && it != NOTIFICATION_CHANNEL_GEOFENCES) {
+                    notificationManager.deleteNotificationChannel(it.toString())
+                }
+            }
+
+            val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_MAX)
+                .setName(context.getString(R.string.notification_channel_geofences_name))
+                .setLightsEnabled(true)
+                .build()
+            if(BuildFlavor.getCurrent().hasGeofence)
+                notificationChannels.add(geofenceChannel)
+
+            notificationManager.createNotificationChannelGroupsCompat(listOf(notificationChannelGroupAlarms))
+            notificationManager.createNotificationChannelsCompat(notificationChannels)
+
+            NotificationPublisher.scheduleNextNotifications(context)
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -139,7 +182,9 @@ class MainActivity2 : AppCompatActivity() {
         settingsStateHolder = SettingsStateHolder(this)
 
         TimeZoneRegistryFactory.getInstance().createRegistry() // necessary for ical4j
-        createNotificationChannels()   // Register Notification Channel for Reminders
+        lifecycleScope.launch(Dispatchers.IO) {
+            restoreNotificationChannels(this@MainActivity2)
+        }
         BillingManager.getInstance().initialise(this)
 
         /* START Initialise biometric prompt */
@@ -331,21 +376,6 @@ class MainActivity2 : AppCompatActivity() {
             ListWidget().updateAll(applicationContext)
         }
         globalStateHolder.authenticationTimeout = System.currentTimeMillis() + (10).minutes.inWholeMilliseconds
-    }
-
-    private fun createNotificationChannels() {
-        val alarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_ALARMS, NotificationManagerCompat.IMPORTANCE_MAX)
-            .setName(getString(R.string.notification_channel_alarms_name))
-            .setLightsEnabled(true)
-            .build()
-        val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_MAX)
-            .setName(getString(R.string.notification_channel_geofences_name))
-            .setLightsEnabled(true)
-            .build()
-        if(BuildFlavor.getCurrent().hasGeofence)
-            NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel, geofenceChannel))
-        else
-            NotificationManagerCompat.from(this).createNotificationChannelsCompat(listOf(alarmChannel))
     }
 }
 

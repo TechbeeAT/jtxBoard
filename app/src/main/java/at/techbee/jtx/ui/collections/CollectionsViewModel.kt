@@ -15,6 +15,7 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
@@ -61,6 +62,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
             else
                 database.updateCollection(collection)
 
+            MainActivity2.restoreNotificationChannels(_application)
             isProcessing.postValue(false)
         }
     }
@@ -69,6 +71,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             database.deleteICalCollection(collection)
+            MainActivity2.restoreNotificationChannels(_application)
             isProcessing.postValue(false)
         }
     }
@@ -182,6 +185,7 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
             database.deleteAccount(account.name, account.type)
+            MainActivity2.restoreNotificationChannels(_application)
             isProcessing.postValue(false)
         }
     }

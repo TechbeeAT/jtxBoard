@@ -275,6 +275,12 @@ class SyncContentProvider : ContentProvider() {
             database.removeOrphans()    // remove orpahns (recurring instances of a deleted original item)
         }
 
+        if (sUriMatcher.match(uri) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR) {
+            CoroutineScope(Dispatchers.IO).launch {
+                context?.let { MainActivity2.restoreNotificationChannels(it) }
+            }
+        }
+
         CoroutineScope(Dispatchers.Default).launch {
             context?.let { ListWidget().updateAll(it) }
         }
@@ -368,7 +374,7 @@ class SyncContentProvider : ContentProvider() {
                     val duration = Duration.parse(durString)
                     alarm.updateDuration(
                         dur = duration,
-                        alarmRelativeTo = try { alarm.triggerRelativeTo?.let { AlarmRelativeTo.valueOf(it) } } catch(e: IllegalArgumentException) { null },
+                        alarmRelativeTo = try { alarm.triggerRelativeTo?.let { AlarmRelativeTo.valueOf(it) } } catch(_: IllegalArgumentException) { null },
                         referenceDate = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.due ?: System.currentTimeMillis() else iCalObject.dtstart ?: System.currentTimeMillis(),
                         referenceTimezone = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.dueTimezone else iCalObject.dtstartTimezone
                     )
@@ -384,6 +390,12 @@ class SyncContentProvider : ContentProvider() {
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()
+
+        if (sUriMatcher.match(uri) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR) {
+            CoroutineScope(Dispatchers.IO).launch {
+                context?.let { MainActivity2.restoreNotificationChannels(it) }
+            }
+        }
 
         CoroutineScope(Dispatchers.Default).launch {
             context?.let { ListWidget().updateAll(it) }
@@ -481,9 +493,9 @@ class SyncContentProvider : ContentProvider() {
                         attachmentUri,
                         Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                     )
-                } catch (e: NullPointerException) {
+                } catch (_: NullPointerException) {
                     Log.i("attachment", "Uri not present or could not be parsed.")
-                } catch (e: IllegalStateException) {
+                } catch (_: IllegalStateException) {
                     Log.d("attachment", "Cursor for attachments is empty")
                 }
             }
@@ -661,7 +673,7 @@ class SyncContentProvider : ContentProvider() {
                         val duration = Duration.parse(durString)
                         alarm.updateDuration(
                             dur = duration,
-                            alarmRelativeTo = try { alarm.triggerRelativeTo?.let { AlarmRelativeTo.valueOf(it) } } catch(e: IllegalArgumentException) { null },
+                            alarmRelativeTo = try { alarm.triggerRelativeTo?.let { AlarmRelativeTo.valueOf(it) } } catch(_: IllegalArgumentException) { null },
                             referenceDate = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.due ?: System.currentTimeMillis() else iCalObject.dtstart ?: System.currentTimeMillis(),
                             referenceTimezone = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.dueTimezone else iCalObject.dtstartTimezone
                         )
@@ -678,6 +690,12 @@ class SyncContentProvider : ContentProvider() {
             || sUriMatcher.match(uri) == CODE_ALARM_ITEM
         )
             NotificationPublisher.scheduleNextNotifications(context!!)
+
+        if (sUriMatcher.match(uri) == CODE_COLLECTION_ITEM || sUriMatcher.match(uri) == CODE_COLLECTION_DIR) {
+            CoroutineScope(Dispatchers.IO).launch {
+                context?.let { MainActivity2.restoreNotificationChannels(it) }
+            }
+        }
 
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
             GeofenceClient(context!!).setGeofences()

@@ -18,7 +18,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import at.techbee.jtx.R
-
 import kotlinx.parcelize.Parcelize
 
 
@@ -216,3 +215,10 @@ data class ICalCollection(
          */
         fun getAccount(): Account = Account(accountName?:"", accountType?: LOCAL_ACCOUNT_TYPE)
 }
+
+
+data class ICalCollectionNotificationChannelInfo(
+        @ColumnInfo(index = true, name = COLUMN_COLLECTION_ID) var collectionId: Long = 0L,
+        @ColumnInfo(name = COLUMN_COLLECTION_DISPLAYNAME) var displayName: String? = null,
+        @ColumnInfo(name = COLUMN_COLLECTION_ACCOUNT_NAME) var accountName: String? = null
+)
