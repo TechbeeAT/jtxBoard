@@ -108,9 +108,7 @@ fun ListScreenWeek(
     }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            //.background(Color.White)
+        modifier = Modifier.fillMaxSize()
     ) {
 
         MonthAndWeekCalendarTitle(
@@ -130,7 +128,9 @@ fun ListScreenWeek(
                     onLongClick = onLongClick
                 )
             },
-            modifier = Modifier.weight(1f, true)
+            modifier = Modifier
+                .weight(1f, true)
+                .verticalScroll(rememberScrollState())
         )
     }
 }
@@ -207,7 +207,7 @@ fun Day(
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
             modifier = Modifier
@@ -232,8 +232,7 @@ fun Day(
         }
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.verticalScroll(rememberScrollState())
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             list4day.forEach { iCal4ListRel ->
                 ListCardWeek(
@@ -260,8 +259,8 @@ fun Day(
                                         list4day.map { it.iCal4List })
                             }
                         )
-                        .aspectRatio(1f)
                         .padding(2.dp)
+                        .fillMaxWidth()
                 )
             }
         }
