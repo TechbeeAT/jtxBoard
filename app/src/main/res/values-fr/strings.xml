@@ -369,6 +369,7 @@
     <string name="settings_timezone_display_original">"Afficher l'heure dans le fuseau horaire d'origine"</string>
     <string name="settings_timezone_display_local_and_original">"Afficher l'heure en local et dans le fuseau horaire d'origine (vue détaillée seulement)"</string>
     <string name="settings_font">"Police"</string>
+    <string name="settings_maps_provider">"Fournisseur de cartes"</string>
     <string name="donate_dialog_title">"Vous aimez jtx Board?"</string>
     <string name="donate_dialog_message">"Le développement d'une application est complexe et la maintenance et le support sont des tâches difficiles. Si vous aimez cette application et si vous souhaitez en assurer le développement continu, pensez à faire un don :-)
 Merci !"</string>
@@ -493,6 +494,8 @@ Merci !"</string>
     <string name="dialog_edit_stored_resource_title">"Ajouter/éditer le préréglage de la catégorie"</string>
     <string name="dialog_edit_stored_status_title">"Ajouter/éditer le préréglage de l'état"</string>
     <string name="dialog_add_audio_entry_title">"Ajouter un enregistrement audio"</string>
+    <string name="dialog_delete_obsolete_collections_title">"Supprimer les collections des comptes manquants ?"</string>
+    <string name="dialog_delete_obsolete_collections_message">"Les comptes des collections suivantes ne peuvent plus être trouvés. Voulez-vous les supprimer ?"</string>
     <string name="menu_list_viewmode_compact">"Vue compacte"</string>
     <string name="menu_list_viewmode_kanban">"Vue Kanban"</string>
     <string name="menu_list_viewmode_week">"Vue semaine"</string>
