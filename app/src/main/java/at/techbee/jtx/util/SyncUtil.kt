@@ -23,6 +23,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.core.net.toUri
 import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
 import at.techbee.jtx.SYNC_PROVIDER_AUTHORITY
@@ -93,7 +94,7 @@ class SyncUtil {
                 try {
                     if(context.packageManager?.getPackageInfoCompat(syncApp.packageName, 0) != null)
                         availableSyncApps.add(syncApp)
-                } catch (e: PackageManager.NameNotFoundException) {
+                } catch (_: PackageManager.NameNotFoundException) {
                     Log.d("SyncAppNotFound", "NameNotFoundException for ${syncApp.packageName}")
                 }
             }
@@ -113,7 +114,7 @@ class SyncUtil {
                     @Suppress("DEPRECATION")
                     syncAppInfo.versionCode >= syncApp.minVersionCode
                 }
-            } catch (e: PackageManager.NameNotFoundException) {
+            } catch (_: PackageManager.NameNotFoundException) {
                 return false
             }
         }
@@ -195,9 +196,11 @@ class SyncUtil {
 
         fun openSyncAppInStore(syncApp: SyncApp, context: Context?) {
             try {
-                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${syncApp.packageName}&referrer=${Uri.encode("utm_source=" + BuildConfig.APPLICATION_ID)}")))
-            } catch (anfe: ActivityNotFoundException) {
-                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${syncApp.packageName}&referrer=${Uri.encode("utm_source=" + BuildConfig.APPLICATION_ID)}")))
+                context?.startActivity(Intent(Intent.ACTION_VIEW,
+                    "market://details?id=${syncApp.packageName}&referrer=${Uri.encode("utm_source=" + BuildConfig.APPLICATION_ID)}".toUri()))
+            } catch (_: ActivityNotFoundException) {
+                context?.startActivity(Intent(Intent.ACTION_VIEW,
+                    "https://play.google.com/store/apps/details?id=${syncApp.packageName}&referrer=${Uri.encode("utm_source=" + BuildConfig.APPLICATION_ID)}".toUri()))
             }
         }
     }
