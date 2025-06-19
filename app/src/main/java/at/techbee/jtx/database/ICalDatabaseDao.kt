@@ -476,6 +476,13 @@ interface ICalDatabaseDao {
     fun deleteICalCollection(collection: ICalCollection)
 
     /**
+     * Delete ICalCollections by their Ids
+     * @param [collectionIds] of the collections to be deleted.
+     */
+    @Query("DELETE FROM $TABLE_NAME_COLLECTION WHERE $COLUMN_COLLECTION_ID in (:collectionIds)")
+    fun deleteICalCollectionsByIds(collectionIds: List<Long>)
+
+    /**
      * Delete all collections of an account.
      * @param [accountName] and [accountType] of the Account to be deleted.
      */

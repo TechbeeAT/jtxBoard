@@ -26,6 +26,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.preference.PreferenceManager
 import androidx.sqlite.db.SimpleSQLiteQuery
+import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.NotificationPublisher
 import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
@@ -455,6 +456,17 @@ open class ListViewModel(application: Application, val module: Module) : Android
         viewModelScope.launch(Dispatchers.IO) {
             databaseDao.updateSortOrder(list.map { it.id })
             ListWidget().updateAll(getApplication())  // no onChangeDone as only the widget needs to be notified
+        }
+    }
+
+    /**
+     * Deletes the selected collections
+     * @param collections to be deleted
+     */
+    fun deleteCollections(collections: List<ICalCollection>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseDao.deleteICalCollectionsByIds(collections.map { it.collectionId })
+            MainActivity2.restoreNotificationChannels(_application)
         }
     }
 

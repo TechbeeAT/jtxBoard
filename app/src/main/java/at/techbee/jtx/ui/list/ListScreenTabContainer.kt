@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
@@ -54,9 +55,11 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -75,9 +78,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
+import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
@@ -92,6 +98,7 @@ import at.techbee.jtx.ui.GlobalStateHolder
 import at.techbee.jtx.ui.reusable.appbars.JtxNavigationDrawer
 import at.techbee.jtx.ui.reusable.destinations.DetailDestination
 import at.techbee.jtx.ui.reusable.dialogs.CollectionSelectorDialog
+import at.techbee.jtx.ui.reusable.dialogs.DeleteObsoleteCollectionsDialog
 import at.techbee.jtx.ui.reusable.dialogs.DeleteSelectedDialog
 import at.techbee.jtx.ui.reusable.dialogs.ErrorOnUpdateDialog
 import at.techbee.jtx.ui.reusable.dialogs.UpdateEntriesDialog
@@ -221,6 +228,7 @@ fun ListScreenTabContainer(
     var showDeleteSelectedDialog by rememberSaveable { mutableStateOf(false) }
     var showUpdateEntriesDialog by rememberSaveable { mutableStateOf(false) }
     var showCollectionSelectorDialog by rememberSaveable { mutableStateOf(false) }
+    val obsoleteCollections = remember { mutableStateListOf<ICalCollection>() }
 
     val availableSyncApps = SyncUtil.availableSyncApps(context)
     var isRefreshing by remember { mutableStateOf(false) }
@@ -247,6 +255,18 @@ fun ListScreenTabContainer(
             storedListSettingData.applyToListSettings(icalListViewModelNotes.listSettings)
             storedListSettingData.applyToListSettings(icalListViewModelTodos.listSettings)
             getActiveViewModel().updateSearch(saveListSettings = false, isAuthenticated = globalStateHolder.isAuthenticated.value)
+        }
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateFlow.collectAsState()
+    LaunchedEffect(lifecycleState) {
+        if (lifecycleState == Lifecycle.State.RESUMED) {
+            scope.launch(Dispatchers.IO) {
+                val allCollections = database.getAllCollectionsSync()
+                obsoleteCollections.clear()
+                obsoleteCollections.addAll(SyncUtil.getObsoleteCollections(allCollections, context))
+            }
         }
     }
 
@@ -300,6 +320,17 @@ fun ListScreenTabContainer(
                 getActiveViewModel().listSettings.saveToPrefs(getActiveViewModel().prefs)
             },
             onDismiss = { showCollectionSelectorDialog = false }
+        )
+    }
+
+    if (obsoleteCollections.isNotEmpty() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {  // don't show it for versions of Android 7 and lower as this was not recognized properly in the past
+        DeleteObsoleteCollectionsDialog(
+            collections = obsoleteCollections,
+            onConfirm = {
+                listViewModel.deleteCollections(obsoleteCollections.toList()) // adding toList() here, otherwise the list would be cleared before it's processed
+                obsoleteCollections.clear()
+            },
+            onDismiss = { obsoleteCollections.clear() }
         )
     }
 

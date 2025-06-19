@@ -9,6 +9,7 @@
 package at.techbee.jtx.util
 
 import android.accounts.Account
+import android.accounts.AccountManager
 import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
@@ -27,6 +28,8 @@ import at.techbee.jtx.BuildConfig
 import at.techbee.jtx.R
 import at.techbee.jtx.SYNC_PROVIDER_AUTHORITY
 import at.techbee.jtx.contract.JtxContract
+import at.techbee.jtx.database.ICalCollection
+import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 
 const val TAG = "SyncUtil"
 
@@ -53,6 +56,31 @@ class SyncUtil {
                 extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)     // run immediately (don't queue)
                 ContentResolver.requestSync(account, SYNC_PROVIDER_AUTHORITY, extras)
             }
+        }
+
+
+        /**
+         * Retrieves a list of all collections that have an account that cannot be found in the account manager anymore
+         *
+         * @param collections The list of collections to check.
+         * @param context The application context.
+         * @return A list of obsolete collections
+         */
+        fun getObsoleteCollections(collections: List<ICalCollection>, context: Context): List<ICalCollection> {
+
+            val foundAccounts = mutableSetOf<Account>()
+            collections.map { it.accountType }.distinct().forEach { accountType ->
+                if(accountType == LOCAL_ACCOUNT_TYPE)
+                    return@forEach
+                val account = AccountManager.get(context).getAccountsByType(accountType)
+                foundAccounts.addAll(account)
+            }
+            val obsoleteCollections = mutableListOf<ICalCollection>()
+            collections.forEach { collection ->
+                if(!foundAccounts.contains(collection.getAccount()) && collection.accountType != LOCAL_ACCOUNT_TYPE)
+                    obsoleteCollections.add(collection)
+            }
+            return obsoleteCollections
         }
 
         fun showSyncRequestedToast(context: Context) = Toast.makeText(context, context.getString(R.string.toast_sync_requested), Toast.LENGTH_SHORT).show()
