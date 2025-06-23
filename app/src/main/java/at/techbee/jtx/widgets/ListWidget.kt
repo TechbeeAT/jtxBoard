@@ -77,7 +77,9 @@ class ListWidget : GlanceAppWidget() {
                 ICal4List.constructQuery(
                     modules = listOf(listWidgetConfig.module),
                     searchCategories = listWidgetConfig.searchCategories,
+                    searchCategoriesAnyAllNone = listWidgetConfig.searchCategoriesAnyAllNone,
                     searchResources = listWidgetConfig.searchResources,
+                    searchResourcesAnyAllNone = listWidgetConfig.searchResourcesAnyAllNone,
                     searchStatus = listWidgetConfig.searchStatus,
                     searchXStatus = listWidgetConfig.searchXStatus,
                     searchClassification = listWidgetConfig.searchClassification,
