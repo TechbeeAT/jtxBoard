@@ -364,6 +364,7 @@
     <string name="settings_timezone_display_original">"Εμφάνιση ώρας στην αρχική ζώνη ώρας"</string>
     <string name="settings_timezone_display_local_and_original">"Εμφάνιση ώρας στην τοπική και στην αρχική ζώνη ώρας (προβολή λεπτομερειών μόνο)"</string>
     <string name="settings_font">"Γραμματοσειρά"</string>
+    <string name="settings_maps_provider">"Πάροχος χάρτη"</string>
     <string name="donate_dialog_title">"Σας αρέσει το jtx Board;"</string>
     <string name="donate_dialog_message">"Η δημιουργία μιας εφαρμογής είναι ένα σύνθετο θέμα και η ανάπτυξη, η συντήρηση και η υποστήριξη είναι επίσης μια σκληρή δουλειά. Εάν σας αρέσει αυτή η εφαρμογή και εάν θέλετε να εξασφαλίσετε την συνεχή ανάπτυξη της, σκεφτείτε για μια δωρεά :-)
  Ευχαριστώ!"</string>
@@ -489,6 +490,8 @@
     <string name="dialog_edit_stored_resource_title">"Προσθήκη/Επεξεργασία προεπιλογής κατηγορίας"</string>
     <string name="dialog_edit_stored_status_title">"Προσθήκη/Επεξεργασία προεπιλογής κατηγορίας"</string>
     <string name="dialog_add_audio_entry_title">"Προσθήκη καταχώρησης ήχου"</string>
+    <string name="dialog_delete_obsolete_collections_title">"Διαγραφή των συλλογών από λογαριασμών που λείπουν?"</string>
+    <string name="dialog_delete_obsolete_collections_message">"Οι λογαριασμοί από τις ακόλουθες συλλογές δεν μπορούν να βρεθούν πια. Θα θέλατε να τις διαγράψετε;"</string>
     <string name="menu_list_viewmode_compact">"Προβολή Compact"</string>
     <string name="menu_list_viewmode_kanban">"Προβολή Kanban"</string>
     <string name="menu_list_viewmode_week">"Προβολή εβδομάδας"</string>
