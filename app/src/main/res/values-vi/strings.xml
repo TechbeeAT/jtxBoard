@@ -330,9 +330,9 @@
     <string name="notification_done">"Xong"</string>
     <string name="notification_add_1h">"+ 1 giờ"</string>
     <string name="notification_add_1d">"+ 1 ngày"</string>
-    <string name="edit_recur_ends_never">"không bao giờ kết thúc"</string>
-    <string name="edit_recur_ends_on">"kết thúc vào"</string>
-    <string name="edit_recur_ends_after">"kết thúc sau"</string>
+    <string name="recur_ends_never">"không bao giờ kết thúc"</string>
+    <string name="recur_ends_on">"kết thúc vào"</string>
+    <string name="recur_ends_after">"kết thúc sau"</string>
     <string name="collections_toast_export_success">"Đã xuất thành công bộ sưu tập"</string>
     <string name="collections_toast_export_error">"Lỗi khi xuất bộ sưu tập"</string>
     <string name="menu_collections_export_all">"Xuất tất cả"</string>

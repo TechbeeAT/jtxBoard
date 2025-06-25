@@ -9,7 +9,6 @@
 package at.techbee.jtx.ui.detail
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -19,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material3.AssistChip
@@ -27,10 +25,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -43,6 +40,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -57,12 +55,14 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.ui.reusable.dialogs.DatePickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.DetachFromSeriesDialog
-import at.techbee.jtx.ui.reusable.dialogs.UnsupportedRRuleDialog
+import at.techbee.jtx.ui.reusable.elements.CheckboxWithText
 import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.UiUtil.asDayOfWeek
 import net.fortuna.ical4j.model.Date
+import net.fortuna.ical4j.model.Month
+import net.fortuna.ical4j.model.MonthList
 import net.fortuna.ical4j.model.NumberList
 import net.fortuna.ical4j.model.Recur
 import net.fortuna.ical4j.model.Recur.Frequency
@@ -89,7 +89,7 @@ fun DetailsCardRecur(
     modifier: Modifier = Modifier
 ) {
 
-    val headline = stringResource(id = R.string.recurrence)
+    val context = LocalContext.current
     val dtstartWeekday = when (ZonedDateTime.ofInstant(Instant.ofEpochMilli(icalObject.dtstart?:0L), requireTzId(icalObject.dtstartTimezone)).dayOfWeek) {
         DayOfWeek.MONDAY -> WeekDay.MO
         DayOfWeek.TUESDAY -> WeekDay.TU
@@ -100,30 +100,36 @@ fun DetailsCardRecur(
         DayOfWeek.SUNDAY -> WeekDay.SU
         else -> null
     }
-    //var updatedRRule by rememberSaveable { mutableStateOf(icalObject.getRecur()) }
 
-    var isRecurActivated by rememberSaveable { mutableStateOf(icalObject.getRecur() != null) }
     var frequency by rememberSaveable { mutableStateOf(icalObject.getRecur()?.frequency) }
     var interval by rememberSaveable { mutableStateOf(icalObject.getRecur()?.interval?.let { if(it<=0) null else it }) }
     var count by rememberSaveable { mutableStateOf(icalObject.getRecur()?.count?.let { if (it<=0) null else it }) }
     var until by rememberSaveable { mutableStateOf(icalObject.getRecur()?.until) }
-    val dayList = remember { icalObject.getRecur()?.dayList?.toMutableStateList() ?: mutableStateListOf() }
-    val monthDayList = remember { mutableStateListOf(icalObject.getRecur()?.monthDayList?.firstOrNull() ?: 1) }
+    val weekDayList = remember { icalObject.getRecur()?.dayList?.toMutableStateList() ?: mutableStateListOf() }
+    val monthDayList = remember { icalObject.getRecur()?.monthDayList?.toMutableStateList() ?: mutableStateListOf() }
+    val setPosList = remember { icalObject.getRecur()?.setPosList?.toMutableStateList() ?: mutableStateListOf() }
+    val monthList = remember { icalObject.getRecur()?.monthList?.toMutableStateList() ?: mutableStateListOf() }
 
     var frequencyExpanded by rememberSaveable { mutableStateOf(false) }
     var intervalExpanded by rememberSaveable { mutableStateOf(false) }
+    var weekDayListExpanded by rememberSaveable { mutableStateOf(false) }
     var monthDayListExpanded by rememberSaveable { mutableStateOf(false) }
+    var monthListExpanded by rememberSaveable { mutableStateOf(false) }
+    var posListExpanded by rememberSaveable { mutableStateOf(false) }
     var endAfterExpaneded by rememberSaveable { mutableStateOf(false) }
     var endsExpanded by rememberSaveable { mutableStateOf(false) }
     var showDatepicker by rememberSaveable { mutableStateOf(false) }
     var showDetachSingleFromSeriesDialog by rememberSaveable { mutableStateOf(false) }
     var showDetachAllFromSeriesDialog by rememberSaveable { mutableStateOf(false) }
 
-
+    val weekdays = if (DateTimeUtils.isLocalizedWeekstartMonday())
+        listOf(WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA, WeekDay.SU)
+    else
+        listOf(WeekDay.SU, WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA)
 
 
     fun buildRRule(): Recur? {
-        if(!isRecurActivated)
+        if(frequency == null)
             return null
         else {
             val updatedRRule = Recur.Builder().apply {
@@ -131,21 +137,34 @@ fun DetailsCardRecur(
                     interval(interval!!)
                 until?.let { until(it) }
                 count?.let { count(it) }
+
                 frequency(frequency ?: Frequency.DAILY)
 
-                if(frequency == Frequency.WEEKLY || dayList.isNotEmpty()) {    // there might be a dayList also for DAILY recurrences coming from Thunderbird!
+                if(weekDayList.isNotEmpty()) {    // there might be a dayList also for DAILY recurrences coming from Thunderbird!
                     val newDayList = WeekDayList().apply {
-                        dayList.forEach { weekDay -> this.add(weekDay) }
-                        if(!dayList.contains(dtstartWeekday))
-                            dayList.add(dtstartWeekday)
+                        this.addAll(weekDayList)
+                        if(!weekDayList.contains(dtstartWeekday))
+                            weekDayList.add(dtstartWeekday)
                     }
                     dayList(newDayList)
                 }
-                if(frequency == Frequency.MONTHLY) {
-                    val newMonthList = NumberList().apply {
-                        monthDayList.forEach { monthDay -> this.add(monthDay) }
+                if(monthDayList.isNotEmpty()) {
+                    val newMonthDayList = NumberList().apply {
+                        this.addAll(monthDayList)
                     }
-                    monthDayList(newMonthList)
+                    monthDayList(newMonthDayList)
+                }
+                if(monthList.isNotEmpty()) {
+                    val newMonthList = MonthList().apply {
+                        this.addAll(monthList)
+                    }
+                    monthList(newMonthList)
+                }
+                if(setPosList.isNotEmpty()) {
+                    val newSetPosList = NumberList().apply {
+                        this.addAll(setPosList)
+                    }
+                    setPosList(newSetPosList)
                 }
             }.build()
             return updatedRRule
@@ -182,6 +201,7 @@ fun DetailsCardRecur(
         )
     }
 
+    /*
     icalObject.getRecur()?.let { recur ->
         if(isEditMode && (recur.experimentalValues?.isNotEmpty() == true
                     || recur.hourList?.isNotEmpty() == true
@@ -201,47 +221,24 @@ fun DetailsCardRecur(
             )
         }
     }
+     */
 
 
 
     ElevatedCard(modifier = modifier) {
 
         Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
         ) {
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+            HeadlineWithIcon(
+                icon = Icons.Outlined.EventRepeat,
+                iconDesc = stringResource(id = R.string.recurrence),
+                text = stringResource(id = R.string.recurrence),
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                HeadlineWithIcon(
-                    icon = Icons.Outlined.EventRepeat,
-                    iconDesc = headline,
-                    text = headline
-                )
-
-                AnimatedVisibility(isEditMode && icalObject.recurid == null) {
-                    Switch(
-                        checked = isRecurActivated,
-                        enabled = icalObject.dtstart != null,
-                        onCheckedChange = {
-                            isRecurActivated = it
-                            if (it) {
-                                frequency = Frequency.DAILY
-                                count = 1
-                                interval = 1
-                                until = null
-                                //dayList = null
-                                //monthDayList = null
-                            }
-                            onRecurUpdated(buildRRule())
-                        }
-                    )
-                }
-            }
+            )
 
             AnimatedVisibility(isEditMode && icalObject.dtstart == null) {
                 Text(
@@ -250,102 +247,579 @@ fun DetailsCardRecur(
                 )
             }
 
-            AnimatedVisibility(isEditMode && isRecurActivated) {
+                    AssistChip(
+                        onClick = { frequencyExpanded = true },
+                        enabled = isEditMode && icalObject.recurid == null,
+                        label = {
+                            Text(
+                                when {
+                                    frequency == Frequency.YEARLY && weekDayList.isNotEmpty() -> stringResource(id = R.string.recur_yearly_by_day)
+                                    frequency == Frequency.YEARLY && monthDayList.isNotEmpty() -> stringResource(id = R.string.recur_yearly_by_date)
+                                    frequency == Frequency.MONTHLY && weekDayList.isNotEmpty() -> stringResource(id = R.string.recur_monthly_by_day)
+                                    frequency == Frequency.MONTHLY && monthDayList.isNotEmpty() -> stringResource(id = R.string.recur_monthly_by_date)
+                                    frequency == Frequency.WEEKLY -> stringResource(id = R.string.recur_weekly)
+                                    frequency == Frequency.DAILY -> stringResource(id = R.string.recur_daily)
+                                    frequency == null -> stringResource(id = R.string.recur_no_recurrence)
+                                    else -> frequency?.name ?: ""
+                                }
+                            )
 
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                ) {
+                            DropdownMenu(
+                                expanded = frequencyExpanded,
+                                onDismissRequest = { frequencyExpanded = false }
+                            ) {
 
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(
-                            8.dp,
-                            Alignment.CenterHorizontally
-                        ),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.horizontalScroll(rememberScrollState())
-                    ) {
-                        Text(stringResource(id = R.string.edit_recur_repeat_every_x))
-
-                        AssistChip(
-                            onClick = { intervalExpanded = true },
-                            label = {
-                                Text(
-                                    if(interval == null || interval!! < 1)
-                                        "1"
-                                    else
-                                        interval?.toString() ?: "1"
+                                //No recurrence
+                                DropdownMenuItem(
+                                    onClick = {
+                                        frequency = null
+                                        count = null
+                                        interval = null
+                                        monthDayList.clear()
+                                        weekDayList.clear()
+                                        monthList.clear()
+                                        setPosList.clear()
+                                        onRecurUpdated(buildRRule())
+                                        frequencyExpanded = false
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_no_recurrence)) }
                                 )
 
+                                //Yearly by day
+                                DropdownMenuItem(
+                                    onClick = {
+                                        frequency = Frequency.YEARLY
+                                        if(count == null)
+                                            count = 1
+                                        if(interval == null)
+                                            interval = 1
+                                        monthDayList.clear()
+                                        monthList.clear()
+                                        if(monthList.isEmpty())
+                                            monthList.add(Month.valueOf(1))
+                                        if(setPosList.isEmpty())
+                                            setPosList.add(0)
+                                        if(weekDayList.isEmpty())
+                                            weekDayList.add(WeekDay.MO)
+                                        onRecurUpdated(buildRRule())
+                                        frequencyExpanded = false
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_yearly_by_day)) }
+                                )
+
+                                //Yearly by date
+                                DropdownMenuItem(
+                                    onClick = {
+                                        frequency = Frequency.YEARLY
+                                        if(count == null)
+                                            count = 1
+                                        if(interval == null)
+                                            interval = 1
+                                        weekDayList.clear()
+                                        setPosList.clear()
+                                        if(monthList.isEmpty())
+                                            monthList.add(Month.valueOf(1))
+                                        if(monthDayList.isEmpty())
+                                            monthDayList.add(1)
+                                        onRecurUpdated(buildRRule())
+                                        frequencyExpanded = false
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_yearly_by_date)) }
+                                )
+
+                                //Monthly by day
+                                DropdownMenuItem(
+                                    onClick = {
+                                        frequency = Frequency.MONTHLY
+                                        if(count == null)
+                                            count = 1
+                                        if(interval == null)
+                                            interval = 1
+                                        if(weekDayList.isEmpty())
+                                            weekDayList.add(WeekDay.MO)
+                                        if(setPosList.isEmpty())
+                                            setPosList.add(0)
+                                        monthDayList.clear()
+                                        monthList.clear()
+                                        onRecurUpdated(buildRRule())
+                                        frequencyExpanded = false
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_monthly_by_day)) }
+                                )
+
+                                //Monthly by date
+                                DropdownMenuItem(
+                                    onClick = {
+                                        frequency = Frequency.MONTHLY
+                                        if(count == null)
+                                            count = 1
+                                        if(interval == null)
+                                            interval = 1
+                                        if(monthDayList.isEmpty())
+                                            monthDayList.add(1)
+                                        monthList.clear()
+                                        weekDayList.clear()
+                                        setPosList.clear()
+                                        onRecurUpdated(buildRRule())
+                                        frequencyExpanded = false
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_monthly_by_date)) }
+                                )
+
+                                //Weekly
+                                DropdownMenuItem(
+                                    onClick = {
+                                        frequency = Frequency.WEEKLY
+                                        if(count == null)
+                                            count = 1
+                                        if(interval == null)
+                                            interval = 1
+                                        setPosList.clear()
+                                        monthList.clear()
+                                        monthDayList.clear()
+                                        if(weekDayList.isEmpty())
+                                            weekDayList.add(WeekDay.MO)
+                                        onRecurUpdated(buildRRule())
+                                        frequencyExpanded = false
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_weekly)) }
+                                )
+
+                                //Daily
+                                DropdownMenuItem(
+                                    onClick = {
+                                        frequency = Frequency.DAILY
+                                        if(count == null)
+                                            count = 1
+                                        if(interval == null)
+                                            interval = 1
+                                        weekDayList.clear()
+                                        monthDayList.clear()
+                                        monthList.clear()
+                                        setPosList.clear()
+                                        onRecurUpdated(buildRRule())
+                                        frequencyExpanded = false
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_daily)) }
+                                )
+                            }
+                        }
+                    )
+
+
+                    AnimatedVisibility(frequency != null) {
+                    AssistChip(
+                        onClick = { intervalExpanded = true },
+                        enabled = isEditMode && icalObject.recurid == null,
+                        label = {
+                            Text(
+                                if(frequency == Frequency.YEARLY)
+                                    when (interval) {
+                                        null, 1 -> stringResource(R.string.recur_every_year)
+                                        2 -> stringResource(R.string.recur_every_other_year)
+                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_year, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        else -> interval.toString()
+                                    }
+                                else if (frequency == Frequency.MONTHLY)
+                                    when (interval) {
+                                        null, 1 -> stringResource(R.string.recur_every_month)
+                                        2 -> stringResource(R.string.recur_every_other_month)
+                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_month, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        else -> interval.toString()
+                                    }
+                                else if (frequency == Frequency.WEEKLY)
+                                    when (interval) {
+                                        null, 1 -> stringResource(R.string.recur_every_week)
+                                        2 -> stringResource(R.string.recur_every_other_week)
+                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_week, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        else -> interval.toString()
+                                    }
+                                else if (frequency == Frequency.DAILY)
+                                    when (interval) {
+                                        null, 1 -> stringResource(R.string.recur_every_day)
+                                        2 -> stringResource(R.string.recur_every_other_day)
+                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_day, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        else -> interval.toString()
+                                    }
+                                else
+                                    interval.toString()
+                            )
+
+                            DropdownMenu(
+                                expanded = intervalExpanded,
+                                onDismissRequest = { intervalExpanded = false }
+                            ) {
+                                val maxInterval = when(frequency) {
+                                    Frequency.DAILY -> 30
+                                    Frequency.WEEKLY -> 52
+                                    Frequency.MONTHLY -> 12
+                                    Frequency.YEARLY -> 10
+                                    else -> 100
+                                }
+                                for (number in 1..maxInterval) {
+                                    DropdownMenuItem(
+                                        onClick = {
+                                            interval = number
+                                            intervalExpanded = false
+                                            onRecurUpdated(buildRRule())
+                                        },
+                                        text = { Text(
+                                            if(frequency == Frequency.YEARLY)
+                                                when (number) {
+                                                    1 -> stringResource(R.string.recur_every_year)
+                                                    2 -> stringResource(R.string.recur_every_other_year)
+                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_year, DateTimeUtils.getLocalizedOrdinalFor(number))
+                                                    else -> interval.toString()
+                                                }
+                                            else if (frequency == Frequency.MONTHLY)
+                                                when (number) {
+                                                    1 -> stringResource(R.string.recur_every_month)
+                                                    2 -> stringResource(R.string.recur_every_other_month)
+                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_month, DateTimeUtils.getLocalizedOrdinalFor(number))
+                                                    else -> interval.toString()
+                                                }
+                                            else if (frequency == Frequency.WEEKLY)
+                                                when (number) {
+                                                    1 -> stringResource(R.string.recur_every_week)
+                                                    2 -> stringResource(R.string.recur_every_other_week)
+                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_week, DateTimeUtils.getLocalizedOrdinalFor(number))
+                                                    else -> interval.toString()
+                                                }
+                                            else if (frequency == Frequency.DAILY)
+                                                when (number) {
+                                                    1 -> stringResource(R.string.recur_every_day)
+                                                    2 -> stringResource(R.string.recur_every_other_day)
+                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_day, DateTimeUtils.getLocalizedOrdinalFor(number))
+                                                    else -> interval.toString()
+                                                }
+                                            else
+                                                number.toString()
+                                        )}
+                                    )
+                                }
+                            }
+                        }
+                    )
+                    }
+
+                    AnimatedVisibility(monthList.isNotEmpty() || weekDayList.isNotEmpty() || monthDayList.isNotEmpty()) {
+
+                        FlowRow (
+                            horizontalArrangement = Arrangement.spacedBy(
+                                8.dp,
+                                Alignment.CenterHorizontally
+                            ),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+
+                            if(monthList.isNotEmpty()) {
+                                AssistChip(
+                                    onClick = { monthListExpanded = true },
+                                    enabled = isEditMode && icalObject.recurid == null,
+                                    label = {
+                                        Text(
+                                            monthList
+                                                .map { month -> java.time.Month.of(month.monthOfYear) }
+                                                .joinToString(
+                                                    separator = ", ",
+                                                    transform = { month ->
+                                                        month.getDisplayName(
+                                                            java.time.format.TextStyle.FULL_STANDALONE,
+                                                            Locale.getDefault()
+                                                        )
+                                                    })
+                                        )
+
+                                        DropdownMenu(
+                                            expanded = monthListExpanded,
+                                            onDismissRequest = { monthListExpanded = false }
+                                        ) {
+
+                                            java.time.Month.entries.forEach { month ->
+                                                DropdownMenuItem(
+                                                    onClick = {
+                                                        val ical4jmonth = Month(month.value)
+                                                        if (monthList.contains(ical4jmonth) && monthList.size > 1)
+                                                            monthList.remove(ical4jmonth)
+                                                        else
+                                                            monthList.add(ical4jmonth)
+                                                        monthListExpanded = false
+                                                        onRecurUpdated(buildRRule())
+                                                    },
+                                                    text = {
+
+                                                        CheckboxWithText(
+                                                            text = month.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, Locale.getDefault()),
+                                                            isSelected = monthList.contains(Month(month.value)),
+                                                            onCheckedChange = {
+                                                                val ical4jmonth = Month(month.value)
+                                                                if (monthList.contains(ical4jmonth) && monthList.size > 1)
+                                                                    monthList.remove(ical4jmonth)
+                                                                else
+                                                                    monthList.add(ical4jmonth)
+                                                                monthListExpanded = false
+                                                                onRecurUpdated(buildRRule())
+                                                            }
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+
+
+                            if(setPosList.isNotEmpty()) {
+                                AssistChip(
+                                    onClick = { posListExpanded = true },
+                                    enabled = isEditMode && icalObject.recurid == null,
+                                    label = {
+                                        Text(
+                                            if (setPosList.isEmpty())
+                                                DateTimeUtils.getLocalizedOrdinalFor(1)
+                                            else
+                                                setPosList.joinToString(
+                                                    separator = ", ",
+                                                    transform = { pos ->
+                                                        if (pos == -1)
+                                                            context.getString(R.string.recur_last_weekday)
+                                                        else
+                                                            DateTimeUtils.getLocalizedOrdinalFor(pos + 1)
+                                                    }
+                                                )
+                                        )
+
+                                        DropdownMenu(
+                                            expanded = posListExpanded,
+                                            onDismissRequest = { posListExpanded = false }
+                                        ) {
+
+                                            for (setPos in listOf(0, 1, 2, 3, 4, -1)) {
+                                                DropdownMenuItem(
+                                                    onClick = {
+                                                        if (setPosList.contains(setPos) && setPosList.size > 1)
+                                                            setPosList.remove(setPos)
+                                                        else
+                                                            setPosList.add(setPos)
+                                                        posListExpanded = false
+                                                        onRecurUpdated(buildRRule())
+                                                    },
+                                                    text = {
+                                                        CheckboxWithText(
+                                                            text = if (setPos == -1)
+                                                                context.getString(R.string.recur_last_weekday)
+                                                            else
+                                                                DateTimeUtils.getLocalizedOrdinalFor(setPos + 1),
+                                                            isSelected = setPosList.contains(setPos),
+                                                            onCheckedChange = {
+                                                                if (setPosList.contains(setPos) && setPosList.size > 1)
+                                                                    setPosList.remove(setPos)
+                                                                else
+                                                                    setPosList.add(setPos)
+                                                            }
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+
+                            if(weekDayList.isNotEmpty()) {
+                                AssistChip(
+                                    onClick = { weekDayListExpanded = true },
+                                    enabled = isEditMode && icalObject.recurid == null,
+                                    label = {
+                                        Text(
+                                            weekDayList.joinToString(
+                                                separator = ", ",
+                                                transform = { day ->
+                                                    day.asDayOfWeek()
+                                                        ?.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, Locale.getDefault())
+                                                        ?: day.toString()
+                                                }
+                                            )
+                                        )
+
+                                        DropdownMenu(
+                                            expanded = weekDayListExpanded,
+                                            onDismissRequest = { weekDayListExpanded = false }
+                                        ) {
+
+                                            weekdays.forEach { weekday ->
+                                                DropdownMenuItem(
+                                                    onClick = {
+                                                        if (weekDayList.contains(weekday) && weekDayList.size > 1)
+                                                            weekDayList.remove(weekday)
+                                                        else
+                                                            weekDayList.add(weekday)
+                                                        onRecurUpdated(buildRRule())
+                                                    },
+                                                    text = {
+                                                        CheckboxWithText(
+                                                            text = weekday.asDayOfWeek()?.getDisplayName(
+                                                                java.time.format.TextStyle.FULL_STANDALONE,
+                                                                Locale.getDefault()
+                                                            ) ?: "",
+                                                            isSelected = weekDayList.contains(weekday),
+                                                            onCheckedChange = {
+                                                                if (weekDayList.contains(weekday) && weekDayList.size > 1)
+                                                                    weekDayList.remove(weekday)
+                                                                else
+                                                                    weekDayList.add(weekday)
+                                                                onRecurUpdated(buildRRule())
+                                                            }
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+
+                            if(monthDayList.isNotEmpty()) {
+                                AssistChip(
+                                    onClick = { monthDayListExpanded = true },
+                                    label = {
+                                        Text(
+                                            monthDayList.joinToString(
+                                                separator = ", ",
+                                                transform = { monthDay ->
+                                                    if(monthDay == -1)
+                                                        context.getString(R.string.recur_last_day_of_the_month)
+                                                    else if(monthDay < 0)
+                                                        context.getString(R.string.recur_xth_last_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(monthDay.absoluteValue))
+                                                    else
+                                                        context.getString(R.string.recur_xth_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(monthDay))
+                                                }
+                                            )
+
+                                        )
+
+                                        DropdownMenu(
+                                            expanded = monthDayListExpanded,
+                                            onDismissRequest = { monthDayListExpanded = false }
+                                        ) {
+                                            for (number in 1..31) {
+                                                DropdownMenuItem(
+                                                    onClick = {
+                                                        monthDayList.clear()
+                                                        monthDayList.add(number)
+                                                        monthDayListExpanded = false
+                                                        onRecurUpdated(buildRRule())
+                                                    },
+                                                    text = {
+                                                        Text(context.getString(R.string.recur_xth_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(number)))
+                                                    }
+                                                )
+                                            }
+
+                                            HorizontalDivider()
+
+                                            for (number in 1..31) {
+                                                DropdownMenuItem(
+                                                    onClick = {
+                                                        monthDayList.clear()
+                                                        monthDayList.add(number*(-1))
+                                                        monthDayListExpanded = false
+                                                        onRecurUpdated(buildRRule())
+                                                    },
+                                                    text = {
+                                                        if(number == 1)
+                                                            Text(context.getString(R.string.recur_last_day_of_the_month))
+                                                        else
+                                                            Text(context.getString(R.string.recur_xth_last_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(number)))
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+
+            AnimatedVisibility(frequency != null) {
+
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(
+                        8.dp,
+                        Alignment.CenterHorizontally
+                    ),
+                    verticalArrangement = Arrangement.Center
+                ) {
+
+                    AssistChip(
+                        onClick = { endsExpanded = true },
+                        enabled = isEditMode && icalObject.recurid == null,
+                        label = {
+                            Text(
+                                when {
+                                    count != null -> stringResource(id = R.string.recur_ends_after)
+                                    until != null -> stringResource(id = R.string.recur_ends_on)
+                                    else -> stringResource(id = R.string.recur_ends_never)
+                                }
+                            )
+
+                            DropdownMenu(
+                                expanded = endsExpanded,
+                                onDismissRequest = { endsExpanded = false }
+                            ) {
+                                DropdownMenuItem(
+                                    onClick = {
+                                        count = 1
+                                        until = null
+                                        endsExpanded = false
+                                        onRecurUpdated(buildRRule())
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_ends_after)) }
+                                )
+                                DropdownMenuItem(
+                                    onClick = {
+                                        count = null
+                                        until = Date(icalObject.dtstart ?: System.currentTimeMillis())
+                                        endsExpanded = false
+                                        onRecurUpdated(buildRRule())
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_ends_on)) }
+                                )
+                                DropdownMenuItem(
+                                    onClick = {
+                                        count = null
+                                        until = null
+                                        endsExpanded = false
+                                        onRecurUpdated(buildRRule())
+                                    },
+                                    text = { Text(stringResource(id = R.string.recur_ends_never)) }
+                                )
+                            }
+                        }
+                    )
+
+                    AnimatedVisibility(count != null) {
+                        AssistChip(
+                            onClick = { endAfterExpaneded = true },
+                            enabled = isEditMode && icalObject.recurid == null,
+                            label = {
+                                Text(stringResource(R.string.recur_x_occurrences, count?:1))
+
                                 DropdownMenu(
-                                    expanded = intervalExpanded,
-                                    onDismissRequest = { intervalExpanded = false }
+                                    expanded = endAfterExpaneded,
+                                    onDismissRequest = { endAfterExpaneded = false }
                                 ) {
                                     for (number in 1..100) {
                                         DropdownMenuItem(
                                             onClick = {
-                                                interval = number
-                                                intervalExpanded = false
+                                                count = number
+                                                endAfterExpaneded = false
                                                 onRecurUpdated(buildRRule())
-                                            },
-                                            text = { Text("$number") }
-                                        )
-                                    }
-                                }
-                            }
-                        )
-
-                        AssistChip(
-                            onClick = { frequencyExpanded = true },
-                            label = {
-                                Text(
-                                    when (frequency) {
-                                        Frequency.YEARLY -> stringResource(id = R.string.edit_recur_year)
-                                        Frequency.MONTHLY -> stringResource(id = R.string.edit_recur_month)
-                                        Frequency.WEEKLY -> stringResource(id = R.string.edit_recur_week)
-                                        Frequency.DAILY -> stringResource(id = R.string.edit_recur_day)
-                                        Frequency.HOURLY -> stringResource(id = R.string.edit_recur_hour)
-                                        Frequency.MINUTELY -> stringResource(id = R.string.edit_recur_minute)
-                                        Frequency.SECONDLY -> stringResource(id = R.string.edit_recur_second)
-                                        else -> "not supported"
-                                    }
-                                )
-
-                                DropdownMenu(
-                                    expanded = frequencyExpanded,
-                                    onDismissRequest = { frequencyExpanded = false }
-                                ) {
-
-                                    Frequency.entries.reversed().forEach { frequency2select ->
-                                        if(icalObject.dtstartTimezone == TZ_ALLDAY
-                                            && listOf(Frequency.SECONDLY, Frequency.MINUTELY, Frequency.HOURLY).contains(frequency2select))
-                                            return@forEach
-                                        if(frequency2select == Frequency.SECONDLY)
-                                            return@forEach
-
-                                        DropdownMenuItem(
-                                            onClick = {
-                                                frequency = frequency2select
-                                                onRecurUpdated(buildRRule())
-                                                frequencyExpanded = false
                                             },
                                             text = {
-                                                Text(
-                                                    when (frequency2select) {
-                                                        Frequency.YEARLY -> stringResource(id = R.string.edit_recur_year)
-                                                        Frequency.MONTHLY -> stringResource(id = R.string.edit_recur_month)
-                                                        Frequency.WEEKLY -> stringResource(id = R.string.edit_recur_week)
-                                                        Frequency.DAILY -> stringResource(id = R.string.edit_recur_day)
-                                                        Frequency.HOURLY -> stringResource(id = R.string.edit_recur_hour)
-                                                        Frequency.MINUTELY -> stringResource(id = R.string.edit_recur_minute)
-                                                        //Frequency.SECONDLY -> stringResource(id = R.string.edit_recur_second)
-                                                        else -> frequency2select.name
-                                                    }
-                                                )
+                                                Text(stringResource(R.string.recur_x_occurrences, number))
                                             }
                                         )
                                     }
@@ -354,228 +828,18 @@ fun DetailsCardRecur(
                         )
                     }
 
-
-                    AnimatedVisibility(frequency == Frequency.WEEKLY || dayList.isNotEmpty()) {
-
-                        val weekdays = if (DateTimeUtils.isLocalizedWeekstartMonday())
-                            listOf(
-                                WeekDay.MO,
-                                WeekDay.TU,
-                                WeekDay.WE,
-                                WeekDay.TH,
-                                WeekDay.FR,
-                                WeekDay.SA,
-                                WeekDay.SU
-                            )
-                        else
-                            listOf(
-                                WeekDay.SU,
-                                WeekDay.MO,
-                                WeekDay.TU,
-                                WeekDay.WE,
-                                WeekDay.TH,
-                                WeekDay.FR,
-                                WeekDay.SA
-                            )
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(
-                                8.dp,
-                                Alignment.CenterHorizontally
-                            ),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.horizontalScroll(rememberScrollState())
-                        ) {
-                            Text(stringResource(id = R.string.edit_recur_on_weekday))
-
-                            weekdays.forEach { weekday ->
-                                FilterChip(
-                                    selected = dayList.contains(weekday),
-                                    onClick = {
-                                        if (dayList.contains(weekday))
-                                            dayList.remove(weekday)
-                                        else
-                                            (dayList).add(weekday)
-                                        onRecurUpdated(buildRRule())
-                                    },
-                                    enabled = dtstartWeekday != weekday,
-                                    label = {
-                                        Text(
-                                        weekday.asDayOfWeek()?.getDisplayName(
-                                                java.time.format.TextStyle.SHORT,
-                                                Locale.getDefault()
-                                            ) ?: ""
-                                        )
-                                    }
-                                )
-                            }
-                        }
-                    }
-
-                    AnimatedVisibility(frequency == Frequency.MONTHLY) {
-
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(
-                                8.dp,
-                                Alignment.CenterHorizontally
-                            ),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.horizontalScroll(rememberScrollState())
-                        ) {
-                            Text(stringResource(id = R.string.edit_recur_on_the_x_day_of_month))
-
-                            AssistChip(
-                                onClick = { monthDayListExpanded = true },
-                                label = {
-                                    val monthDay = monthDayList.firstOrNull()?:1
-                                    Text(
-                                        if(monthDay < 0)
-                                            stringResource(id = R.string.edit_recur_LAST_day_of_the_month) + if(monthDay < -1) " - ${monthDay.absoluteValue-1}" else ""
-                                        else
-                                            DateTimeUtils.getLocalizedOrdinalFor(monthDay)
-                                    )
-
-                                    DropdownMenu(
-                                        expanded = monthDayListExpanded,
-                                        onDismissRequest = { monthDayListExpanded = false }
-                                    ) {
-                                        for (number in 1..31) {
-                                            DropdownMenuItem(
-                                                onClick = {
-                                                    monthDayList.clear()
-                                                    monthDayList.add(number)
-                                                    monthDayListExpanded = false
-                                                    onRecurUpdated(buildRRule())
-                                                },
-                                                text = {
-                                                    Text(DateTimeUtils.getLocalizedOrdinalFor(number))
-                                                }
-                                            )
-                                        }
-
-                                        for (number in 1..31) {
-                                            DropdownMenuItem(
-                                                onClick = {
-                                                    monthDayList.clear()
-                                                    monthDayList.add(number*(-1))
-                                                    monthDayListExpanded = false
-                                                    onRecurUpdated(buildRRule())
-                                                },
-                                                text = {
-                                                    Text(stringResource(id = R.string.edit_recur_LAST_day_of_the_month) + if(number > 1) " - ${number-1}" else "")
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            )
-
-                            Text(stringResource(id = R.string.edit_recur_x_day_of_the_month))
-                        }
-
-                    }
-
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(
-                            8.dp,
-                            Alignment.CenterHorizontally
-                        ),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.horizontalScroll(rememberScrollState())
-                    ) {
-
+                    AnimatedVisibility(until != null) {
                         AssistChip(
-                            onClick = { endsExpanded = true },
+                            onClick = { showDatepicker = true },
                             label = {
-
                                 Text(
-                                    when {
-                                        count != null -> stringResource(id = R.string.edit_recur_ends_after)
-                                        until != null -> stringResource(id = R.string.edit_recur_ends_on)
-                                        else -> stringResource(id = R.string.edit_recur_ends_never)
-                                    }
+                                    DateTimeUtils.convertLongToFullDateString(
+                                        until?.time,
+                                        TZ_ALLDAY
+                                    )
                                 )
-
-                                DropdownMenu(
-                                    expanded = endsExpanded,
-                                    onDismissRequest = { endsExpanded = false }
-                                ) {
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            count = 1
-                                            until = null
-                                            endsExpanded = false
-                                            onRecurUpdated(buildRRule())
-                                        },
-                                        text = { Text(stringResource(id = R.string.edit_recur_ends_after)) }
-                                    )
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            count = null
-                                            until = Date(icalObject.dtstart ?: System.currentTimeMillis())
-                                            endsExpanded = false
-                                            onRecurUpdated(buildRRule())
-                                        },
-                                        text = { Text(stringResource(id = R.string.edit_recur_ends_on)) }
-                                    )
-                                    DropdownMenuItem(
-                                        onClick = {
-                                            count = null
-                                            until = null
-                                            endsExpanded = false
-                                            onRecurUpdated(buildRRule())
-                                        },
-                                        text = { Text(stringResource(id = R.string.edit_recur_ends_never)) }
-                                    )
-                                }
                             }
                         )
-
-                        AnimatedVisibility(count != null) {
-                            AssistChip(
-                                onClick = { endAfterExpaneded = true },
-                                label = {
-                                    Text((count?:1).toString())
-
-                                    DropdownMenu(
-                                        expanded = endAfterExpaneded,
-                                        onDismissRequest = { endAfterExpaneded = false }
-                                    ) {
-                                        for (number in 1..100) {
-                                            DropdownMenuItem(
-                                                onClick = {
-                                                    count = number
-                                                    endAfterExpaneded = false
-                                                    onRecurUpdated(buildRRule())
-                                                },
-                                                text = {
-                                                    Text(number.toString())
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                            )
-                        }
-
-                        AnimatedVisibility(count != null) {
-                            Text(stringResource(R.string.edit_recur_x_times))
-                        }
-
-                        AnimatedVisibility(until != null) {
-                            AssistChip(
-                                onClick = { showDatepicker = true },
-                                label = {
-                                    Text(
-                                        DateTimeUtils.convertLongToFullDateString(
-                                            until?.time,
-                                            TZ_ALLDAY
-                                        )
-                                    )
-                                }
-                            )
-                        }
                     }
                 }
             }

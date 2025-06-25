@@ -334,9 +334,9 @@
     <string name="notification_done">"انجام شد"</string>
     <string name="notification_add_1h">"۱+ ساعت"</string>
     <string name="notification_add_1d">"۱+ روز"</string>
-    <string name="edit_recur_ends_never">"هیچوقت پایان نیابد"</string>
-    <string name="edit_recur_ends_on">"پایان در"</string>
-    <string name="edit_recur_ends_after">"پایان بعد از"</string>
+    <string name="recur_ends_never">"هیچوقت پایان نیابد"</string>
+    <string name="recur_ends_on">"پایان در"</string>
+    <string name="recur_ends_after">"پایان بعد از"</string>
     <string name="list_toast_export_success">"فهرست با موفقیت برون‌بری شد"</string>
     <string name="list_toast_export_error">"خطا در برون‌بری فهرست"</string>
     <string name="collections_toast_export_success">"مجموعه‌ها با موفقیت برون‌بری شدند"</string>

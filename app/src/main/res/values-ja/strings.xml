@@ -332,9 +332,9 @@
     <string name="notification_done">"完了"</string>
     <string name="notification_add_1h">"+ 1 時間"</string>
     <string name="notification_add_1d">"+ 1 日"</string>
-    <string name="edit_recur_ends_never">"永久に繰り返し"</string>
-    <string name="edit_recur_ends_on">"終了する日時"</string>
-    <string name="edit_recur_ends_after">"終了までの回数"</string>
+    <string name="recur_ends_never">"永久に繰り返し"</string>
+    <string name="recur_ends_on">"終了する日時"</string>
+    <string name="recur_ends_after">"終了までの回数"</string>
     <string name="list_toast_export_success">"リストをエクスポートしました"</string>
     <string name="list_toast_export_error">"リストのエクスポート中にエラーが発生しました"</string>
     <string name="collections_toast_export_success">"コレクションをエクスポートしました"</string>

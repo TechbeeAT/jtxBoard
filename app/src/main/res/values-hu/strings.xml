@@ -333,9 +333,9 @@
     <string name="notification_done">"Kész"</string>
     <string name="notification_add_1h">"+ 1 óra"</string>
     <string name="notification_add_1d">"+1 nap"</string>
-    <string name="edit_recur_ends_never">"vég nélkül"</string>
-    <string name="edit_recur_ends_on">"befejezés"</string>
-    <string name="edit_recur_ends_after">"ismétlés"</string>
+    <string name="recur_ends_never">"vég nélkül"</string>
+    <string name="recur_ends_on">"befejezés"</string>
+    <string name="recur_ends_after">"ismétlés"</string>
     <string name="list_toast_export_success">"Lista sikeresen exportálva"</string>
     <string name="list_toast_export_error">"Hiba a lista exportálása során"</string>
     <string name="collections_toast_export_success">"Gyűjtemények exportálása sikeres"</string>

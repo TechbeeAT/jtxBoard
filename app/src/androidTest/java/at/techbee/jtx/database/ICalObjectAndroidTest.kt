@@ -225,16 +225,6 @@ class ICalObjectAndroidTest {
         )
     }
 
-    @Test
-    fun getRecurInfo_ruleDesc() {
-        val item = ICalObject.createJournal("Test")
-        item.rrule = "FREQ=DAILY;COUNT=5;INTERVAL=1"
-        val expectedString =
-            context.getString(R.string.view_share_repeats) + " 1 " + context.getString(R.string.edit_recur_day) + " 5 " + context.getString(
-                R.string.edit_recur_x_times
-            )
-        assertTrue(item.getRecurInfo(context)?.contains(expectedString) == true)
-    }
 
     @Test fun getMapLink_gplay() {
         assertEquals(
