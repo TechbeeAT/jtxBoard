@@ -201,30 +201,6 @@ fun DetailsCardRecur(
         )
     }
 
-    /*
-    icalObject.getRecur()?.let { recur ->
-        if(isEditMode && (recur.experimentalValues?.isNotEmpty() == true
-                    || recur.hourList?.isNotEmpty() == true
-                    || recur.minuteList?.isNotEmpty() == true
-                    || recur.monthList?.isNotEmpty() == true
-                    || recur.secondList?.isNotEmpty() == true
-                    || recur.setPosList?.isNotEmpty() == true
-                    || recur.skip != null
-                    || recur.weekNoList?.isNotEmpty() == true
-                    || recur.weekStartDay != null
-                    || recur.yearDayList?.isNotEmpty() == true
-                    || (recur.monthDayList?.size?:0) > 1)
-        ) {
-            UnsupportedRRuleDialog(
-                onConfirm = {  },
-                onDismiss = { goToDetail(icalObject.id, false, emptyList()) }
-            )
-        }
-    }
-     */
-
-
-
     ElevatedCard(modifier = modifier) {
 
         Column(
@@ -297,8 +273,6 @@ fun DetailsCardRecur(
                                         monthList.clear()
                                         if(monthList.isEmpty())
                                             monthList.add(Month.valueOf(1))
-                                        if(setPosList.isEmpty())
-                                            setPosList.add(0)
                                         if(weekDayList.isEmpty())
                                             weekDayList.add(WeekDay.MO)
                                         onRecurUpdated(buildRRule())
@@ -337,8 +311,6 @@ fun DetailsCardRecur(
                                             interval = 1
                                         if(weekDayList.isEmpty())
                                             weekDayList.add(WeekDay.MO)
-                                        if(setPosList.isEmpty())
-                                            setPosList.add(0)
                                         monthDayList.clear()
                                         monthList.clear()
                                         onRecurUpdated(buildRRule())
@@ -569,25 +541,19 @@ fun DetailsCardRecur(
                                 )
                             }
 
-
-                            if(setPosList.isNotEmpty()) {
+                            // posList can only be used in combination with weekDayList and only if one weekday is selected
+                            if(weekDayList.isNotEmpty()) {
                                 AssistChip(
                                     onClick = { posListExpanded = true },
-                                    enabled = isEditMode && icalObject.recurid == null,
+                                    enabled = isEditMode && icalObject.recurid == null && weekDayList.size == 1,
                                     label = {
                                         Text(
                                             if (setPosList.isEmpty())
                                                 DateTimeUtils.getLocalizedOrdinalFor(1)
+                                            else if (setPosList.first() == -1)
+                                                context.getString(R.string.recur_last_weekday)
                                             else
-                                                setPosList.joinToString(
-                                                    separator = ", ",
-                                                    transform = { pos ->
-                                                        if (pos == -1)
-                                                            context.getString(R.string.recur_last_weekday)
-                                                        else
-                                                            DateTimeUtils.getLocalizedOrdinalFor(pos + 1)
-                                                    }
-                                                )
+                                                DateTimeUtils.getLocalizedOrdinalFor(setPosList.first())
                                         )
 
                                         DropdownMenu(
@@ -595,29 +561,21 @@ fun DetailsCardRecur(
                                             onDismissRequest = { posListExpanded = false }
                                         ) {
 
-                                            for (setPos in listOf(0, 1, 2, 3, 4, -1)) {
+                                            for (setPos in listOf(1, 2, 3, 4, 5, -1)) {
                                                 DropdownMenuItem(
                                                     onClick = {
-                                                        if (setPosList.contains(setPos) && setPosList.size > 1)
-                                                            setPosList.remove(setPos)
-                                                        else
+                                                        setPosList.clear()
+                                                        if (setPos != 1)    // if it's 0, then we only clear
                                                             setPosList.add(setPos)
                                                         posListExpanded = false
                                                         onRecurUpdated(buildRRule())
                                                     },
                                                     text = {
-                                                        CheckboxWithText(
+                                                        Text(
                                                             text = if (setPos == -1)
                                                                 context.getString(R.string.recur_last_weekday)
                                                             else
-                                                                DateTimeUtils.getLocalizedOrdinalFor(setPos + 1),
-                                                            isSelected = setPosList.contains(setPos),
-                                                            onCheckedChange = {
-                                                                if (setPosList.contains(setPos) && setPosList.size > 1)
-                                                                    setPosList.remove(setPos)
-                                                                else
-                                                                    setPosList.add(setPos)
-                                                            }
+                                                                DateTimeUtils.getLocalizedOrdinalFor(setPos),
                                                         )
                                                     }
                                                 )
@@ -655,6 +613,8 @@ fun DetailsCardRecur(
                                                             weekDayList.remove(weekday)
                                                         else
                                                             weekDayList.add(weekday)
+                                                        if(weekDayList.size > 1)
+                                                            setPosList.clear()
                                                         onRecurUpdated(buildRRule())
                                                     },
                                                     text = {
