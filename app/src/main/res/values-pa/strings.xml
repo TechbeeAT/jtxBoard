@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"ਛੇਤੀ ਦਣੀ ਉੱਪ-ਕਾਰਜ ਜੋੜੋ"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"ਛੇਤੀ ਦਣੀ ਉੱਪ-ਨੋਟ ਜੋੜੋ"</string>
     <string name="edit_attachment_add_link_dialog">"ਅਟੈਚਮੈਂਟ ਲਿੰਕ ਜੋੜੋ"</string>
-    <string name="edit_recur_repeat_every_x">"ਰੋਜ਼ਾਨਾ ਦੁਹਰਾਓ"</string>
-    <string name="edit_recur_on_weekday">"ਚਾਲੂ"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"ਤੇ"</string>
-    <string name="edit_recur_x_day_of_the_month">"ਮਹੀਨੇ ਦਾ ਦਿਨ"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"ਅਖੀਰਲਾ"</string>
-    <string name="edit_recur_x_times">"ਵਾਰੀ"</string>
     <string name="edit_recur_toast_requires_start_date">"ਦੁਹਰਾਓ ਨੂੰ ਸੈੱਟ ਕਰਨ ਲਈ ਇੱਕ ਸ਼ੁਰੂਆਤੀ ਮਿਤੀ ਦੀ ਲੋੜ ਹੁੰਦੀ ਹੈ!"</string>
     <string name="edit_datepicker_dialog_select_date">"ਮਿਤੀ ਚੁਣੋ"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"ਮਿਤੀ ਦੀ ਹੱਦ ਚੁਣੋ"</string>
