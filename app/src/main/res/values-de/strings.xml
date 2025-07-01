@@ -239,6 +239,10 @@
     <string name="priority_4_medium_high">"4 - Mittel hoch"</string>
     <string name="priority_5_medium">"5 - Mittel"</string>
     <string name="priority_6_medium_low">"6 - Mittel gering"</string>
+    <string name="recur_yearly_by_day">"Jährlich am Tag"</string>
+    <string name="recur_yearly_by_date">"Jährlich am Datum"</string>
+    <string name="recur_monthly_by_day">"Monatlich am Tag"</string>
+    <string name="recur_monthly_by_date">"Monatlich am Datum"</string>
     <string name="recur_ends_never">"endet nie"</string>
     <string name="recur_ends_on">"endet am"</string>
     <string name="recur_ends_after">"endet nach"</string>
