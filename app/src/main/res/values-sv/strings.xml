@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Snabb-lägg-till deluppgift"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Snabb-lägg-till underanteckning"</string>
     <string name="edit_attachment_add_link_dialog">"Lägg till länk till bilaga"</string>
-    <string name="edit_recur_repeat_every_x">"Upprepa var"</string>
-    <string name="edit_recur_on_weekday">"på"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"på den"</string>
-    <string name="edit_recur_x_day_of_the_month">"dagen i månaden"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"sista"</string>
-    <string name="edit_recur_x_times">"gånger"</string>
     <string name="edit_recur_toast_requires_start_date">"Återkomst kräver att ett startdatum är satt!"</string>
     <string name="edit_datepicker_dialog_select_date">"Välj datum"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Välj datumspann"</string>
@@ -243,10 +237,9 @@
     <string name="priority_4_medium_high">"4 - Medelhög"</string>
     <string name="priority_5_medium">"5 - Medel"</string>
     <string name="priority_6_medium_low">"6 - Medellåg"</string>
-    <string name="edit_recur_day">"dag(ar)"</string>
-    <string name="edit_recur_week">"vecka/-or"</string>
-    <string name="edit_recur_month">"månad(er)"</string>
-    <string name="edit_recur_year">"år"</string>
+    <string name="recur_ends_never">"slutar aldrig"</string>
+    <string name="recur_ends_on">"slutar den"</string>
+    <string name="recur_ends_after">"slutar efter"</string>
     <string name="attachment_export_saved_successfully">"Sparades"</string>
     <string name="attachment_export_error_error_occurred">"Ett fel inträffade vid sparandet av filen!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Lägg till Fjärrsamling (%1$s)"</string>
@@ -330,9 +323,6 @@
     <string name="notification_done">"Slutförd"</string>
     <string name="notification_add_1h">"+ 1 timme"</string>
     <string name="notification_add_1d">"+ 1 dag"</string>
-    <string name="edit_recur_ends_never">"slutar aldrig"</string>
-    <string name="edit_recur_ends_on">"slutar den"</string>
-    <string name="edit_recur_ends_after">"slutar efter"</string>
     <string name="collections_toast_export_success">"Samlingar har exporterats"</string>
     <string name="collections_toast_export_error">"Fel vid export av samlingar"</string>
     <string name="menu_collections_export_all">"Exportera alla"</string>
@@ -432,8 +422,6 @@ Tack!"</string>
     <string name="details_show_hide_elements">Visa/dölj element</string>
     <string name="details_attendees_processing_info">"Observera: Servrar kan automatiskt hantera deltagare t.ex. genom att skicka iMIP-meddelanden."</string>
     <string name="details_toast_entry_deleted">"Post kasserad/borttagen"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"Återkomstregel som inte stöds upptäckt!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"En okänd eller ej stödd upprepningsregel upptäcktes. Om du fortsätter kommer den befintliga upprepningsregeln att raderas/skrivas över."</string>
     <string name="details_entry_could_not_be_loaded">"Denna post har antingen tagits bort i bakgrunden eller kunde inte laddas."</string>
     <string name="details_attachment_beta_info">"* Synkronisering av bilagor är en experimentell funktion. Vi rekommenderar starkt att endast använda små bilagor (upp till 100 KB) eftersom större kan leda till långa synkroniseringstider och oväntat beteende."</string>
     <string name="details_unchanged_part_of_series">"Denna post är en del av en serie. Denna post kommer att kopiera alla ändringar som gjorts för serien."</string>
@@ -613,9 +601,6 @@ Tack!"</string>
     <string name="opacity">"Opacitet"</string>
     <string name="general">"Allmänt"</string>
     <string name="list_collapse">"Fäll ihop"</string>
-    <string name="edit_recur_second">"sekund(er)"</string>
-    <string name="edit_recur_minute">"minut(er)"</string>
-    <string name="edit_recur_hour">"timma(r)"</string>
     <string name="filter_group_sort">"Gruppera/Sortera"</string>
     <string name="widget_list_configuration_widget_background">"Widgetbakgrund"</string>
     <string name="widget_list_configuration_entries_background">"Bakgrund för poster"</string>
