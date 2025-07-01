@@ -423,7 +423,7 @@ fun DetailsScreen(
                                             .iCalDatabaseDao()
                                             .getSync(currentICalObjectId)
                                             ?.let {
-                                                val text = it.getShareText(context)
+                                                val text = it.getShareText(context, detailViewModel.settingsStateHolder.settingMapsProvider.value)
                                                 val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                                                 clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
                                                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.

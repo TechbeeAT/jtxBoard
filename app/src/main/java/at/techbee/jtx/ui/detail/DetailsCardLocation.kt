@@ -99,7 +99,7 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 
-@SuppressLint("MissingPermission")
+@SuppressLint("MissingPermission", "DefaultLocale")
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun DetailsCardLocation(
@@ -267,7 +267,7 @@ fun DetailsCardLocation(
                                     context.startActivity(geoIntent)
                                 } catch (_: ActivityNotFoundException) {
                                     context.startActivity(
-                                        Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, location, BuildFlavor.getCurrent()))
+                                        Intent(Intent.ACTION_VIEW, ICalObject.getMapLink(geoLat, geoLong, location, settingsStateHolder.settingMapsProvider.value))
                                     )
                                 }
                             }) {

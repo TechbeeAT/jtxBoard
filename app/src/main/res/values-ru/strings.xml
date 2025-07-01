@@ -333,9 +333,9 @@
     <string name="notification_done">"Готово"</string>
     <string name="notification_add_1h">"+ 1 час"</string>
     <string name="notification_add_1d">"+ 1 день"</string>
-    <string name="edit_recur_ends_never">"повторять всегда"</string>
-    <string name="edit_recur_ends_on">"повторять до"</string>
-    <string name="edit_recur_ends_after">"повторять раз"</string>
+    <string name="recur_ends_never">"повторять всегда"</string>
+    <string name="recur_ends_on">"повторять до"</string>
+    <string name="recur_ends_after">"повторять раз"</string>
     <string name="list_toast_export_success">"Список успешно экспортирован"</string>
     <string name="list_toast_export_error">"Ошибка при экспорте списка"</string>
     <string name="collections_toast_export_success">"Коллекции успешно экспортированы"</string>

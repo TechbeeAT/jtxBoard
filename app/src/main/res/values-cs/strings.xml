@@ -333,9 +333,9 @@
     <string name="notification_done">"Hotovo"</string>
     <string name="notification_add_1h">"+1 hodina"</string>
     <string name="notification_add_1d">"+1 den"</string>
-    <string name="edit_recur_ends_never">"nikdy nekončí"</string>
-    <string name="edit_recur_ends_on">"končí"</string>
-    <string name="edit_recur_ends_after">"končí po"</string>
+    <string name="recur_ends_never">"nikdy nekončí"</string>
+    <string name="recur_ends_on">"končí"</string>
+    <string name="recur_ends_after">"končí po"</string>
     <string name="list_toast_export_success">"Seznam úspěšně exportován"</string>
     <string name="list_toast_export_error">"Chyba při exportu seznamu"</string>
     <string name="collections_toast_export_success">"Sbírky úspěšně exportovány"</string>

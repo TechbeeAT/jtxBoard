@@ -330,9 +330,9 @@
     <string name="notification_done">"Slutförd"</string>
     <string name="notification_add_1h">"+ 1 timme"</string>
     <string name="notification_add_1d">"+ 1 dag"</string>
-    <string name="edit_recur_ends_never">"slutar aldrig"</string>
-    <string name="edit_recur_ends_on">"slutar den"</string>
-    <string name="edit_recur_ends_after">"slutar efter"</string>
+    <string name="recur_ends_never">"slutar aldrig"</string>
+    <string name="recur_ends_on">"slutar den"</string>
+    <string name="recur_ends_after">"slutar efter"</string>
     <string name="collections_toast_export_success">"Samlingar har exporterats"</string>
     <string name="collections_toast_export_error">"Fel vid export av samlingar"</string>
     <string name="menu_collections_export_all">"Exportera alla"</string>

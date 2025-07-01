@@ -333,9 +333,9 @@
     <string name="notification_done">"Klaar"</string>
     <string name="notification_add_1h">"+1 uur"</string>
     <string name="notification_add_1d">"+1 dag"</string>
-    <string name="edit_recur_ends_never">"stopt niet"</string>
-    <string name="edit_recur_ends_on">"stopt op"</string>
-    <string name="edit_recur_ends_after">"stopt na"</string>
+    <string name="recur_ends_never">"stopt niet"</string>
+    <string name="recur_ends_on">"stopt op"</string>
+    <string name="recur_ends_after">"stopt na"</string>
     <string name="list_toast_export_success">"Lijst succesvol geëxporteerd"</string>
     <string name="list_toast_export_error">"Fout bij het exporteren van lijst"</string>
     <string name="collections_toast_export_success">"Collecties succesvol geëxporteerd"</string>

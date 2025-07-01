@@ -330,9 +330,9 @@
     <string name="notification_done">"Hecho"</string>
     <string name="notification_add_1h">"+ 1 hora"</string>
     <string name="notification_add_1d">"+ 1 día"</string>
-    <string name="edit_recur_ends_never">"nunca finaliza"</string>
-    <string name="edit_recur_ends_on">"termina el"</string>
-    <string name="edit_recur_ends_after">"termina después de"</string>
+    <string name="recur_ends_never">"nunca finaliza"</string>
+    <string name="recur_ends_on">"termina el"</string>
+    <string name="recur_ends_after">"termina después de"</string>
     <string name="collections_toast_export_success">"Colecciones exportadas con éxito"</string>
     <string name="collections_toast_export_error">"Error al exportar las colecciones"</string>
     <string name="menu_collections_export_all">"Exportar todas"</string>

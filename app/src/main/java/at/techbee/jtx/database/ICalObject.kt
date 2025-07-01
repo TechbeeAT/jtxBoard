@@ -17,18 +17,20 @@ import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
+import androidx.core.net.toUri
 import androidx.core.util.PatternsCompat
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import at.techbee.jtx.BuildFlavor
+import at.bitfire.ical4android.util.TimeApiExtensions.toLocalDate
 import at.techbee.jtx.JtxContract
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
+import at.techbee.jtx.util.UiUtil.asDayOfWeek
 import kotlinx.parcelize.Parcelize
 import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.DateList
@@ -37,8 +39,8 @@ import net.fortuna.ical4j.model.Period
 import net.fortuna.ical4j.model.PeriodList
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.Recur
+import net.fortuna.ical4j.model.Recur.Frequency
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory
-import net.fortuna.ical4j.model.WeekDay
 import net.fortuna.ical4j.model.component.VJournal
 import net.fortuna.ical4j.model.component.VToDo
 import net.fortuna.ical4j.model.parameter.Value
@@ -50,7 +52,6 @@ import net.fortuna.ical4j.model.property.RecurrenceId
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.text.ParseException
-import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
@@ -60,6 +61,7 @@ import java.time.temporal.ChronoUnit
 import java.util.Locale
 import java.util.TimeZone
 import java.util.UUID
+import kotlin.math.absoluteValue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -532,7 +534,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null,
     @ColumnInfo(name = COLUMN_IS_ALARM_NOTIFICATION_ACTIVE, defaultValue = "0") var isAlarmNotificationActive: Boolean = false
-    ) : Parcelable {
+) : Parcelable {
 
 
     companion object {
@@ -663,19 +665,19 @@ data class ICalObject(
         }
 
 
-        fun getMapLink(geoLat: Double?, geoLong: Double?, location: String?, flavor: BuildFlavor): Uri? {
+        fun getMapLink(geoLat: Double?, geoLong: Double?, location: String?, mapsProvider: DropdownSettingOption): Uri? {
             return if(geoLat != null || geoLong != null) {
                 try {
-                    if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
-                        Uri.parse("https://www.google.com/maps/search/?api=1&query=$geoLat%2C$geoLong")
+                    if (mapsProvider == DropdownSettingOption.MAP_GOOGLE_MAPS)
+                        "https://www.google.com/maps/search/?api=1&query=$geoLat%2C$geoLong".toUri()
                     else
-                        Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")
-                } catch (e: java.lang.IllegalArgumentException) { null }
+                        "https://www.openstreetmap.org/#map=15/$geoLat/$geoLong".toUri()
+                } catch (_: java.lang.IllegalArgumentException) { null }
             } else if (!location.isNullOrEmpty()) {
-                if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
-                    Uri.parse("https://www.google.com/maps/search/$location/")
+                if (mapsProvider == DropdownSettingOption.MAP_GOOGLE_MAPS)
+                    "https://www.google.com/maps/search/$location/".toUri()
                 else
-                    Uri.parse("https://www.openstreetmap.org/search?query=$location")
+                    "https://www.openstreetmap.org/search?query=$location".toUri()
             } else null
         }
 
@@ -688,7 +690,7 @@ data class ICalObject(
             return if(geoLat != null && geoLong != null) {
                 "(" + "%.5f".format(Locale.ENGLISH, geoLat)  + ", "  + "%.5f".format(Locale.ENGLISH, geoLong) + ")"
             } else {
-               null
+                null
             }
         }
 
@@ -738,23 +740,23 @@ data class ICalObject(
             }
 
             if(module == Module.TODO && !shortStyle) {
-                 when {
-                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
-                     ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> finalString += context.getString(R.string.list_start_past)
-                     ChronoUnit.HOURS.between(localNow, localStart) < 1L -> finalString += context.getString(R.string.list_start_shortly)
-                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
-                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
-                         finalString += context.getString(R.string.list_start_tomorrow)
-                         finalString += getTimeAndTimezone()
-                     }
-                     ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> {
-                         finalString += context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                         finalString += getTimeAndTimezone()
-                     }
-                     else -> {
-                         finalString += DateTimeUtils.convertLongToMediumDateString(dtstart, timezone2show)
-                         finalString += getTimeAndTimezone()
-                     }
+                when {
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
+                    ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> finalString += context.getString(R.string.list_start_past)
+                    ChronoUnit.HOURS.between(localNow, localStart) < 1L -> finalString += context.getString(R.string.list_start_shortly)
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
+                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
+                        finalString += context.getString(R.string.list_start_tomorrow)
+                        finalString += getTimeAndTimezone()
+                    }
+                    ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> {
+                        finalString += context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                        finalString += getTimeAndTimezone()
+                    }
+                    else -> {
+                        finalString += DateTimeUtils.convertLongToMediumDateString(dtstart, timezone2show)
+                        finalString += getTimeAndTimezone()
+                    }
                 }
             } else {
                 when {
@@ -826,10 +828,10 @@ data class ICalObject(
         }
 
         fun getAsRecurId(datetime: Long, recuridTimezone: String?) = when {
-                recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> Date(datetime).toString()
-                recuridTimezone == TimeZone.getTimeZone("UTC").id -> DateTime(datetime).apply { this.isUtc = true }.toString()
-                recuridTimezone.isNullOrEmpty() -> DateTime(datetime).apply { this.isUtc = false }.toString()
-                else -> DateTime(datetime).apply { this.timeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(recuridTimezone) }.toString()
+            recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> Date(datetime).toString()
+            recuridTimezone == TimeZone.getTimeZone("UTC").id -> DateTime(datetime).apply { this.isUtc = true }.toString()
+            recuridTimezone.isNullOrEmpty() -> DateTime(datetime).apply { this.isUtc = false }.toString()
+            else -> DateTime(datetime).apply { this.timeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(recuridTimezone) }.toString()
         }
     }
 
@@ -1102,25 +1104,25 @@ data class ICalObject(
 
             val from = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
                 when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
-                    Recur.Frequency.SECONDLY -> it - (1).hours.inWholeMilliseconds
-                    Recur.Frequency.MINUTELY -> it - (1).days.inWholeMilliseconds
-                    Recur.Frequency.HOURLY -> it - (30).days.inWholeMilliseconds
-                    Recur.Frequency.DAILY -> it - (365).days.inWholeMilliseconds
-                    Recur.Frequency.WEEKLY -> it - (365).days.inWholeMilliseconds
-                    Recur.Frequency.MONTHLY -> it - (3650).days.inWholeMilliseconds
-                    Recur.Frequency.YEARLY -> it - (36500).days.inWholeMilliseconds
+                    Frequency.SECONDLY -> it - (1).hours.inWholeMilliseconds
+                    Frequency.MINUTELY -> it - (1).days.inWholeMilliseconds
+                    Frequency.HOURLY -> it - (30).days.inWholeMilliseconds
+                    Frequency.DAILY -> it - (365).days.inWholeMilliseconds
+                    Frequency.WEEKLY -> it - (365).days.inWholeMilliseconds
+                    Frequency.MONTHLY -> it - (3650).days.inWholeMilliseconds
+                    Frequency.YEARLY -> it - (36500).days.inWholeMilliseconds
                     else -> it - (365).days.inWholeMilliseconds
                 }
             })
             val to = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
                 when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
-                    Recur.Frequency.SECONDLY -> it + (1).hours.inWholeMilliseconds
-                    Recur.Frequency.MINUTELY -> it + (1).days.inWholeMilliseconds
-                    Recur.Frequency.HOURLY -> it + (30).days.inWholeMilliseconds
-                    Recur.Frequency.DAILY -> it + (365).days.inWholeMilliseconds
-                    Recur.Frequency.WEEKLY -> it + (365).days.inWholeMilliseconds
-                    Recur.Frequency.MONTHLY -> it + (3650).days.inWholeMilliseconds
-                    Recur.Frequency.YEARLY -> it + (36500).days.inWholeMilliseconds
+                    Frequency.SECONDLY -> it + (1).hours.inWholeMilliseconds
+                    Frequency.MINUTELY -> it + (1).days.inWholeMilliseconds
+                    Frequency.HOURLY -> it + (30).days.inWholeMilliseconds
+                    Frequency.DAILY -> it + (365).days.inWholeMilliseconds
+                    Frequency.WEEKLY -> it + (365).days.inWholeMilliseconds
+                    Frequency.MONTHLY -> it + (3650).days.inWholeMilliseconds
+                    Frequency.YEARLY -> it + (36500).days.inWholeMilliseconds
                     else -> it + (365).days.inWholeMilliseconds
                 }
             })
@@ -1180,9 +1182,9 @@ data class ICalObject(
         )
         val urlDecoded = try {
             URLDecoder.decode(text, "UTF-8")
-        } catch (e: UnsupportedEncodingException) {
+        } catch (_: UnsupportedEncodingException) {
             text
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             text
         }
 
@@ -1203,59 +1205,142 @@ data class ICalObject(
     }
 
     fun getRecurInfo(context: Context?): String? {
-        if(context == null)
+        if(context == null || (rrule == null && recurid == null))
             return null
 
-        var recurInfo = ""
+        var recurInfo = "** ${context.getString(R.string.recurrence)} ** ${System.lineSeparator()}"
 
-       if (this.recurid != null)
+        if (this.recurid != null)
             recurInfo += context.getString(R.string.view_share_part_of_series) + System.lineSeparator()
 
         val recur: Recur
         try {
             recur = Recur(this.rrule)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return if(recurInfo.isEmpty())
                 null
             else
-                recurInfo + System.lineSeparator()
+                recurInfo + System.lineSeparator() + rrule + System.lineSeparator()
         }
 
-        recurInfo += context.getString(R.string.view_share_repeats) + " "
-        recurInfo += recur.interval.toString() + " "
-        when (recur.frequency) {
-            Recur.Frequency.YEARLY -> recurInfo += context.getString(R.string.edit_recur_year) + " "
-            Recur.Frequency.MONTHLY -> {
-                recurInfo += context.getString(R.string.edit_recur_month) + " "
-                recurInfo += context.getString(R.string.edit_recur_on_the_x_day_of_month) + recur.monthDayList.first().toString() + context.getString(R.string.edit_recur_x_day_of_the_month)
-            }
-            Recur.Frequency.WEEKLY -> {
-                recurInfo += context.getString(R.string.edit_recur_week) + " "
-                recurInfo += context.getString(R.string.edit_recur_on_weekday) + " "
-                val dayList = mutableListOf<String>()
-                recur.dayList.forEach { weekday ->
-                    when(weekday) {
-                        WeekDay.MO -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
-                        WeekDay.TU -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
-                        WeekDay.WE -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
-                        WeekDay.TH -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
-                        WeekDay.FR -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
-                        WeekDay.SA -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
-                        WeekDay.SU -> dayList.add(DayOfWeek.MONDAY.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()))
-                    }
+        //frequency
+        recurInfo += when {
+            recur.frequency == Frequency.YEARLY && recur.dayList.isNotEmpty() -> context.getString(R.string.recur_yearly_by_day)
+            recur.frequency == Frequency.YEARLY && recur.monthDayList.isNotEmpty() -> context.getString(R.string.recur_yearly_by_date)
+            recur.frequency == Frequency.MONTHLY && recur.dayList.isNotEmpty() -> context.getString(R.string.recur_monthly_by_day)
+            recur.frequency == Frequency.MONTHLY && recur.monthDayList.isNotEmpty() -> context.getString(R.string.recur_monthly_by_date)
+            recur.frequency == Frequency.WEEKLY -> context.getString(R.string.recur_weekly)
+            recur.frequency == Frequency.DAILY -> context.getString(R.string.recur_daily)
+            recur.frequency == null -> context.getString(R.string.recur_no_recurrence)
+            else -> recur.frequency?.name ?: ""
+        }
+        //interval
+        recurInfo += " | "
+        recurInfo +=
+            when (recur.frequency) {
+                Frequency.YEARLY -> when (recur.interval) {
+                    -1, 1 -> context.getString(R.string.recur_every_year)
+                    2 -> context.getString(R.string.recur_every_other_year)
+                    in 3..Int.MAX_VALUE -> context.getString(
+                        R.string.recur_every_x_year,
+                        DateTimeUtils.getLocalizedOrdinalFor(recur.interval)
+                    )
+                    else -> recur.interval.toString()
                 }
-                recurInfo += dayList.joinToString(separator = ", ")
-            }
-            Recur.Frequency.DAILY -> recurInfo += context.getString(R.string.edit_recur_day) + " "
-            else -> return null
-        }
-        recurInfo += recur.count.toString() + " " + context.getString(R.string.edit_recur_x_times)
 
-        //TODO: Consider also Exceptions and additions in the future?
-        return if(recurInfo.isEmpty())
-            null
-        else
-            recurInfo + System.lineSeparator()
+                Frequency.MONTHLY -> when (recur.interval) {
+                    -1, 1 -> context.getString(R.string.recur_every_month)
+                    2 -> context.getString(R.string.recur_every_other_month)
+                    in 3..Int.MAX_VALUE -> context.getString(
+                        R.string.recur_every_x_month,
+                        DateTimeUtils.getLocalizedOrdinalFor(recur.interval)
+                    )
+                    else -> recur.interval.toString()
+                }
+
+                Frequency.WEEKLY -> when (recur.interval) {
+                    -1, 1 -> context.getString(R.string.recur_every_week)
+                    2 -> context.getString(R.string.recur_every_other_week)
+                    in 3..Int.MAX_VALUE -> context.getString(
+                        R.string.recur_every_x_week,
+                        DateTimeUtils.getLocalizedOrdinalFor(recur.interval)
+                    )
+                    else -> recur.interval.toString()
+                }
+
+                Frequency.DAILY -> when (recur.interval) {
+                    -1, 1 -> context.getString(R.string.recur_every_day)
+                    2 -> context.getString(R.string.recur_every_other_day)
+                    in 3..Int.MAX_VALUE -> context.getString(
+                        R.string.recur_every_x_day,
+                        DateTimeUtils.getLocalizedOrdinalFor(recur.interval)
+                    )
+                    else -> recur.interval.toString()
+                }
+                else -> recur.interval.toString()
+            }
+
+        //monthList
+        if(recur.monthList.isNotEmpty())
+            recurInfo += recur.monthList
+                .map { month -> java.time.Month.of(month.monthOfYear) }
+                .joinToString(
+                    prefix = " | ",
+                    separator = ", ",
+                    transform = { month ->
+                        month.getDisplayName(
+                            TextStyle.FULL_STANDALONE,
+                            Locale.getDefault()
+                        )
+                    }
+                )
+        //SetPosList
+        if(recur.setPosList.isNotEmpty())
+            recurInfo += recur.setPosList
+                .joinToString(
+                    prefix = " | ",
+                    separator = ", ",
+                    transform = { pos ->
+                        if (pos == -1)
+                            context.getString(R.string.recur_last_weekday)
+                        else
+                            DateTimeUtils.getLocalizedOrdinalFor(pos + 1)
+                    }
+                )
+        //Weekdaylist
+        if(recur.dayList.isNotEmpty())
+            recurInfo += recur.dayList.joinToString(
+                prefix = " | ",
+                separator = ", ",
+                transform = { day ->
+                    day.asDayOfWeek()
+                        ?.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
+                        ?: day.toString()
+                }
+            )
+        //MonthDayList
+        if(recur.monthDayList.isNotEmpty())
+            recurInfo += recur.monthDayList.joinToString(
+                prefix = " | ",
+                separator = ", ",
+                transform = { monthDay ->
+                    if(monthDay == -1)
+                        context.getString(R.string.recur_last_day_of_the_month)
+                    else if(monthDay < 0)
+                        context.getString(R.string.recur_xth_last_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(monthDay.absoluteValue))
+                    else
+                        context.getString(R.string.recur_xth_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(monthDay))
+                }
+            )
+
+        //ends
+        recurInfo += " | " +  when {
+            recur.count != -1 -> context.getString(R.string.recur_ends_after) + " " + context.getString(R.string.recur_x_occurrences, recur.count)
+            recur.until != null -> "${context.getString(R.string.recur_ends_on)} ${DateTimeUtils.convertLongToFullDateString(recur.until.toLocalDate().atStartOfDay(
+                ZoneId.systemDefault()).toInstant().toEpochMilli(), ZoneId.systemDefault().toString())}"
+            else -> context.getString(R.string.recur_ends_never)
+        }
+        return recurInfo + System.lineSeparator() + System.lineSeparator()
     }
 
     fun setDefaultJournalDateFromSettings(defaultJournalDateSetting: DropdownSettingOption) {
@@ -1287,7 +1372,7 @@ data class ICalObject(
                 }
                 else -> { }
             }
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
@@ -1303,7 +1388,7 @@ data class ICalObject(
                 this.dtstart = this.dtstart!! + defaultStartTime.toSecondOfDay()*1000
                 this.dtstartTimezone = defaultStartTimezone
             }
-        } catch (e: java.lang.IllegalArgumentException) {
+        } catch (_: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
@@ -1319,7 +1404,7 @@ data class ICalObject(
                 this.due = this.due!! + defaultDueTime.toSecondOfDay()*1000
                 this.dueTimezone = defaultStartTimezone
             }
-        } catch (e: java.lang.IllegalArgumentException) {
+        } catch (_: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
@@ -1429,6 +1514,4 @@ enum class Component {
 enum class Module {
     JOURNAL, NOTE, TODO
 }
-
-
 
