@@ -618,7 +618,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             val iCalEntity = databaseDao.getSync(mainICalObjectId!!) ?: return@launch
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVING }
 
-            val shareText = iCalEntity.getShareText(context)
+            val shareText = iCalEntity.getShareText(context, settingsStateHolder.settingMapsProvider.value)
             val subject = iCalEntity.property.summary
             val attendees = iCalEntity.attendees
                 ?.map { it.caladdress.removePrefix("mailto:") }

@@ -17,13 +17,13 @@ import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
+import androidx.core.net.toUri
 import androidx.core.util.PatternsCompat
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import at.bitfire.ical4android.util.TimeApiExtensions.toLocalDate
-import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.JtxContract
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.settings.DropdownSettingOption
@@ -534,7 +534,7 @@ data class ICalObject(
     @ColumnInfo(name = COLUMN_ATTACHMENTS_EXPANDED) var isAttachmentsExpanded: Boolean? = null,
     @ColumnInfo(name = COLUMN_SORT_INDEX) var sortIndex: Int? = null,
     @ColumnInfo(name = COLUMN_IS_ALARM_NOTIFICATION_ACTIVE, defaultValue = "0") var isAlarmNotificationActive: Boolean = false
-    ) : Parcelable {
+) : Parcelable {
 
 
     companion object {
@@ -665,19 +665,19 @@ data class ICalObject(
         }
 
 
-        fun getMapLink(geoLat: Double?, geoLong: Double?, location: String?, flavor: BuildFlavor): Uri? {
+        fun getMapLink(geoLat: Double?, geoLong: Double?, location: String?, mapsProvider: DropdownSettingOption): Uri? {
             return if(geoLat != null || geoLong != null) {
                 try {
-                    if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
-                        Uri.parse("https://www.google.com/maps/search/?api=1&query=$geoLat%2C$geoLong")
+                    if (mapsProvider == DropdownSettingOption.MAP_GOOGLE_MAPS)
+                        "https://www.google.com/maps/search/?api=1&query=$geoLat%2C$geoLong".toUri()
                     else
-                        Uri.parse("https://www.openstreetmap.org/#map=15/$geoLat/$geoLong")
-                } catch (e: java.lang.IllegalArgumentException) { null }
+                        "https://www.openstreetmap.org/#map=15/$geoLat/$geoLong".toUri()
+                } catch (_: java.lang.IllegalArgumentException) { null }
             } else if (!location.isNullOrEmpty()) {
-                if (flavor == BuildFlavor.GPLAY || flavor == BuildFlavor.AMAZON)
-                    Uri.parse("https://www.google.com/maps/search/$location/")
+                if (mapsProvider == DropdownSettingOption.MAP_GOOGLE_MAPS)
+                    "https://www.google.com/maps/search/$location/".toUri()
                 else
-                    Uri.parse("https://www.openstreetmap.org/search?query=$location")
+                    "https://www.openstreetmap.org/search?query=$location".toUri()
             } else null
         }
 
@@ -690,7 +690,7 @@ data class ICalObject(
             return if(geoLat != null && geoLong != null) {
                 "(" + "%.5f".format(Locale.ENGLISH, geoLat)  + ", "  + "%.5f".format(Locale.ENGLISH, geoLong) + ")"
             } else {
-               null
+                null
             }
         }
 
@@ -740,23 +740,23 @@ data class ICalObject(
             }
 
             if(module == Module.TODO && !shortStyle) {
-                 when {
-                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
-                     ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> finalString += context.getString(R.string.list_start_past)
-                     ChronoUnit.HOURS.between(localNow, localStart) < 1L -> finalString += context.getString(R.string.list_start_shortly)
-                     localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
-                     localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
-                         finalString += context.getString(R.string.list_start_tomorrow)
-                         finalString += getTimeAndTimezone()
-                     }
-                     ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> {
-                         finalString += context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
-                         finalString += getTimeAndTimezone()
-                     }
-                     else -> {
-                         finalString += DateTimeUtils.convertLongToMediumDateString(dtstart, timezone2show)
-                         finalString += getTimeAndTimezone()
-                     }
+                when {
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth && (daysOnly || timezone2show == TZ_ALLDAY) -> finalString += context.getString(R.string.list_start_today)
+                    ChronoUnit.MINUTES.between(localNow, localStart) < 0L -> finalString += context.getString(R.string.list_start_past)
+                    ChronoUnit.HOURS.between(localNow, localStart) < 1L -> finalString += context.getString(R.string.list_start_shortly)
+                    localStart.year == localNow.year && localStart.month == localNow.month && localStart.dayOfMonth == localNow.dayOfMonth -> finalString += context.getString(R.string.list_start_inXhours, ChronoUnit.HOURS.between(localNow, localStart))
+                    localStart.year == localTomorrow.year && localStart.month == localTomorrow.month && localStart.dayOfMonth == localTomorrow.dayOfMonth -> {
+                        finalString += context.getString(R.string.list_start_tomorrow)
+                        finalString += getTimeAndTimezone()
+                    }
+                    ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> {
+                        finalString += context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
+                        finalString += getTimeAndTimezone()
+                    }
+                    else -> {
+                        finalString += DateTimeUtils.convertLongToMediumDateString(dtstart, timezone2show)
+                        finalString += getTimeAndTimezone()
+                    }
                 }
             } else {
                 when {
@@ -828,10 +828,10 @@ data class ICalObject(
         }
 
         fun getAsRecurId(datetime: Long, recuridTimezone: String?) = when {
-                recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> Date(datetime).toString()
-                recuridTimezone == TimeZone.getTimeZone("UTC").id -> DateTime(datetime).apply { this.isUtc = true }.toString()
-                recuridTimezone.isNullOrEmpty() -> DateTime(datetime).apply { this.isUtc = false }.toString()
-                else -> DateTime(datetime).apply { this.timeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(recuridTimezone) }.toString()
+            recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> Date(datetime).toString()
+            recuridTimezone == TimeZone.getTimeZone("UTC").id -> DateTime(datetime).apply { this.isUtc = true }.toString()
+            recuridTimezone.isNullOrEmpty() -> DateTime(datetime).apply { this.isUtc = false }.toString()
+            else -> DateTime(datetime).apply { this.timeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(recuridTimezone) }.toString()
         }
     }
 
@@ -1104,25 +1104,25 @@ data class ICalObject(
 
             val from = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
                 when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
-                    Recur.Frequency.SECONDLY -> it - (1).hours.inWholeMilliseconds
-                    Recur.Frequency.MINUTELY -> it - (1).days.inWholeMilliseconds
-                    Recur.Frequency.HOURLY -> it - (30).days.inWholeMilliseconds
-                    Recur.Frequency.DAILY -> it - (365).days.inWholeMilliseconds
-                    Recur.Frequency.WEEKLY -> it - (365).days.inWholeMilliseconds
-                    Recur.Frequency.MONTHLY -> it - (3650).days.inWholeMilliseconds
-                    Recur.Frequency.YEARLY -> it - (36500).days.inWholeMilliseconds
+                    Frequency.SECONDLY -> it - (1).hours.inWholeMilliseconds
+                    Frequency.MINUTELY -> it - (1).days.inWholeMilliseconds
+                    Frequency.HOURLY -> it - (30).days.inWholeMilliseconds
+                    Frequency.DAILY -> it - (365).days.inWholeMilliseconds
+                    Frequency.WEEKLY -> it - (365).days.inWholeMilliseconds
+                    Frequency.MONTHLY -> it - (3650).days.inWholeMilliseconds
+                    Frequency.YEARLY -> it - (36500).days.inWholeMilliseconds
                     else -> it - (365).days.inWholeMilliseconds
                 }
             })
             val to = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
                 when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
-                    Recur.Frequency.SECONDLY -> it + (1).hours.inWholeMilliseconds
-                    Recur.Frequency.MINUTELY -> it + (1).days.inWholeMilliseconds
-                    Recur.Frequency.HOURLY -> it + (30).days.inWholeMilliseconds
-                    Recur.Frequency.DAILY -> it + (365).days.inWholeMilliseconds
-                    Recur.Frequency.WEEKLY -> it + (365).days.inWholeMilliseconds
-                    Recur.Frequency.MONTHLY -> it + (3650).days.inWholeMilliseconds
-                    Recur.Frequency.YEARLY -> it + (36500).days.inWholeMilliseconds
+                    Frequency.SECONDLY -> it + (1).hours.inWholeMilliseconds
+                    Frequency.MINUTELY -> it + (1).days.inWholeMilliseconds
+                    Frequency.HOURLY -> it + (30).days.inWholeMilliseconds
+                    Frequency.DAILY -> it + (365).days.inWholeMilliseconds
+                    Frequency.WEEKLY -> it + (365).days.inWholeMilliseconds
+                    Frequency.MONTHLY -> it + (3650).days.inWholeMilliseconds
+                    Frequency.YEARLY -> it + (36500).days.inWholeMilliseconds
                     else -> it + (365).days.inWholeMilliseconds
                 }
             })
@@ -1182,9 +1182,9 @@ data class ICalObject(
         )
         val urlDecoded = try {
             URLDecoder.decode(text, "UTF-8")
-        } catch (e: UnsupportedEncodingException) {
+        } catch (_: UnsupportedEncodingException) {
             text
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             text
         }
 
@@ -1210,7 +1210,7 @@ data class ICalObject(
 
         var recurInfo = "** ${context.getString(R.string.recurrence)} ** ${System.lineSeparator()}"
 
-       if (this.recurid != null)
+        if (this.recurid != null)
             recurInfo += context.getString(R.string.view_share_part_of_series) + System.lineSeparator()
 
         val recur: Recur
@@ -1289,7 +1289,7 @@ data class ICalObject(
                     separator = ", ",
                     transform = { month ->
                         month.getDisplayName(
-                            java.time.format.TextStyle.FULL_STANDALONE,
+                            TextStyle.FULL_STANDALONE,
                             Locale.getDefault()
                         )
                     }
@@ -1314,7 +1314,7 @@ data class ICalObject(
                 separator = ", ",
                 transform = { day ->
                     day.asDayOfWeek()
-                        ?.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, Locale.getDefault())
+                        ?.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault())
                         ?: day.toString()
                 }
             )
@@ -1372,7 +1372,7 @@ data class ICalObject(
                 }
                 else -> { }
             }
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
@@ -1388,7 +1388,7 @@ data class ICalObject(
                 this.dtstart = this.dtstart!! + defaultStartTime.toSecondOfDay()*1000
                 this.dtstartTimezone = defaultStartTimezone
             }
-        } catch (e: java.lang.IllegalArgumentException) {
+        } catch (_: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
@@ -1404,7 +1404,7 @@ data class ICalObject(
                 this.due = this.due!! + defaultDueTime.toSecondOfDay()*1000
                 this.dueTimezone = defaultStartTimezone
             }
-        } catch (e: java.lang.IllegalArgumentException) {
+        } catch (_: java.lang.IllegalArgumentException) {
             Log.d("DurationParsing", "Could not parse duration from settings")
         }
     }
@@ -1514,6 +1514,4 @@ enum class Component {
 enum class Module {
     JOURNAL, NOTE, TODO
 }
-
-
 

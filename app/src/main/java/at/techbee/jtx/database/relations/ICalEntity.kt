@@ -12,7 +12,6 @@ import android.content.Context
 import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Relation
-import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
 import at.techbee.jtx.database.COLUMN_COLLECTION_ID
 import at.techbee.jtx.database.COLUMN_ICALOBJECT_COLLECTIONID
@@ -43,6 +42,7 @@ import at.techbee.jtx.database.properties.Organizer
 import at.techbee.jtx.database.properties.Relatedto
 import at.techbee.jtx.database.properties.Resource
 import at.techbee.jtx.database.properties.Unknown
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.parcelize.Parcelize
 
@@ -187,7 +187,7 @@ data class ICalEntity(
     /**
      * @return a text that can be put in an email containing all information
      */
-    fun getShareText(context: Context): String {
+    fun getShareText(context: Context, mapsProvider: DropdownSettingOption): String {
 
         var shareText = ""
         property.dtstart?.let {
@@ -215,7 +215,7 @@ data class ICalEntity(
 
         if(property.geoLat != null && property.geoLong != null) {
             shareText += context.getString(R.string.map) + ": ${getLatLongString(property.geoLat, property.geoLong)} - "
-            getMapLink(property.geoLat, property.geoLong, property.location, BuildFlavor.getCurrent())?.let { shareText += it }
+            getMapLink(property.geoLat, property.geoLong, property.location, mapsProvider)?.let { shareText += it }
             shareText += System.lineSeparator()
         }
 

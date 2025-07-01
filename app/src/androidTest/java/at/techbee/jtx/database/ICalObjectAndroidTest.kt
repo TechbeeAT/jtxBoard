@@ -10,13 +10,13 @@ package at.techbee.jtx.database
 
 import android.content.ContentValues
 import android.content.Context
-import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.core.net.toUri
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.platform.app.InstrumentationRegistry
-import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.R
+import at.techbee.jtx.ui.settings.DropdownSettingOption
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -228,33 +228,33 @@ class ICalObjectAndroidTest {
 
     @Test fun getMapLink_gplay() {
         assertEquals(
-            Uri.parse("https://www.google.com/maps/search/?api=1&query=1.111%2C2.222"),
-            ICalObject.getMapLink(1.111, 2.222, null, BuildFlavor.GPLAY)
+            "https://www.google.com/maps/search/?api=1&query=1.111%2C2.222".toUri(),
+            ICalObject.getMapLink(1.111, 2.222, null, DropdownSettingOption.MAP_GOOGLE_MAPS)
         )
     }
 
     @Test fun getMapLink_gplay_location() {
         assertEquals(
-            Uri.parse("https://www.google.com/maps/search/urania/"),
-            ICalObject.getMapLink(null, null, "urania", BuildFlavor.GPLAY)
+            "https://www.google.com/maps/search/urania/".toUri(),
+            ICalObject.getMapLink(null, null, "urania", DropdownSettingOption.MAP_GOOGLE_MAPS)
         )
     }
 
     @Test fun getMapLink_ose() {
         assertEquals(
-            Uri.parse("https://www.openstreetmap.org/#map=15/1.111/2.222").toString(),
-            ICalObject.getMapLink(1.111, 2.222, null, BuildFlavor.OSE).toString()
+            "https://www.openstreetmap.org/#map=15/1.111/2.222".toUri(),
+            ICalObject.getMapLink(1.111, 2.222, null, DropdownSettingOption.MAP_OSM)
         )
     }
 
     @Test fun getMapLink_ose_location() {
         assertEquals(
-            Uri.parse("https://www.openstreetmap.org/search?query=urania").toString(),
-            ICalObject.getMapLink(null, null, "urania", BuildFlavor.OSE).toString()
+            "https://www.openstreetmap.org/search?query=urania".toUri(),
+            ICalObject.getMapLink(null, null, "urania", DropdownSettingOption.MAP_OSM)
         )
     }
 
     @Test fun getMapLink_empty() {
-        assertNull(ICalObject.getMapLink(null, null, null, BuildFlavor.OSE))
+        assertNull(ICalObject.getMapLink(null, null, null, DropdownSettingOption.MAP_GOOGLE_MAPS))
     }
 }
