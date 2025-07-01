@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Afegeix una subtasca ràpida"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Afegeix una subnota ràpida"</string>
     <string name="edit_attachment_add_link_dialog">"Afegir enllaç adjunt"</string>
-    <string name="edit_recur_repeat_every_x">"Repeteix cada"</string>
-    <string name="edit_recur_on_weekday">"els"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"el"</string>
-    <string name="edit_recur_x_day_of_the_month">"dia del mes"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"últim"</string>
-    <string name="edit_recur_x_times">"vegades"</string>
     <string name="edit_recur_toast_requires_start_date">"Cal establir una data d'inici a la recurrència!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleccionar data"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Selecciona el rang de dates"</string>
@@ -245,10 +239,9 @@
     <string name="priority_4_medium_high">"4 - Mitjana-alta"</string>
     <string name="priority_5_medium">"5 - Mitjana"</string>
     <string name="priority_6_medium_low">"6 - Mitjana-baixa"</string>
-    <string name="edit_recur_day">"dia(es)"</string>
-    <string name="edit_recur_week">"setmana(es)"</string>
-    <string name="edit_recur_month">"mes(os)"</string>
-    <string name="edit_recur_year">"any(s)"</string>
+    <string name="recur_ends_never">"no acaba mai"</string>
+    <string name="recur_ends_on">"acaba el"</string>
+    <string name="recur_ends_after">"acaba després de"</string>
     <string name="attachment_export_saved_successfully">"S'ha desat correctament"</string>
     <string name="attachment_export_error_error_occurred">"S'ha produït un error en desar l'arxiu seleccionat!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Afegeix una col·lecció remota (%1$s)"</string>
@@ -333,9 +326,6 @@
     <string name="notification_done">"Fet"</string>
     <string name="notification_add_1h">"+1 hora"</string>
     <string name="notification_add_1d">"+1 dia"</string>
-    <string name="edit_recur_ends_never">"no acaba mai"</string>
-    <string name="edit_recur_ends_on">"acaba el"</string>
-    <string name="edit_recur_ends_after">"acaba després de"</string>
     <string name="list_toast_export_success">"Llista exportada correctament"</string>
     <string name="list_toast_export_error">"Error a l'exportar la llista"</string>
     <string name="collections_toast_export_success">"Les col·leccions han sigut exportades"</string>
@@ -438,8 +428,6 @@ Gràcies!"</string>
     <string name="details_show_hide_elements">Mostra/amaga elements</string>
     <string name="details_attendees_processing_info">"Atenció: Els servidors poden processar els assistents automàticament, per exemple, enviant missatges iMIP."</string>
     <string name="details_toast_entry_deleted">"Entrada descartada/eliminada"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"S'ha detectat una norma de recurrència no suportada!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"S'ha detectat una norma de recurrència desconeguda o no suportada. Si continues, la norma serà eliminada/sobreescrita."</string>
     <string name="details_entry_could_not_be_loaded">"Aquesta entrada ha sigut eliminada en segon pla, o no s'ha pogut carregar."</string>
     <string name="details_attachment_beta_info">"* Sincronitzar adjunts és una funció experimental. Recomanem únicament adjuntar arxius xicotets (de fins a 100KB), ja que els més grans poden generar temps de sincronització molts llargs, i comportaments inesperats."</string>
     <string name="details_unchanged_part_of_series">"Aquesta entrada forma part d'una sèrie. Aquesta entrada copiarà tots els canvis fets per a la sèrie."</string>
@@ -619,9 +607,6 @@ Gràcies!"</string>
     <string name="opacity">"Opacitat"</string>
     <string name="general">"General"</string>
     <string name="list_collapse">"Col·lapsa"</string>
-    <string name="edit_recur_second">"segon(s)"</string>
-    <string name="edit_recur_minute">"minut(s)"</string>
-    <string name="edit_recur_hour">"hora(es)"</string>
     <string name="filter_group_sort">"Agrupa/Ordena"</string>
     <string name="widget_list_configuration_widget_background">"Fons del widget"</string>
     <string name="widget_list_configuration_entries_background">"Fons de les entrades"</string>
