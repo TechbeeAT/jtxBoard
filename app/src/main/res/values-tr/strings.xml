@@ -93,7 +93,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Hızlı alt görev ekle"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Hızlı alt not ekle"</string>
     <string name="edit_attachment_add_link_dialog">"Hızlı ek ilişimi ekle"</string>
-    <string name="edit_recur_x_times">"defa"</string>
     <string name="edit_datepicker_dialog_select_date">"Tarih seç"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Tarih aralığı seç"</string>
     <string name="edit_datepicker_dialog_add_time">"Saat ekle"</string>
@@ -218,10 +217,6 @@
     <string name="priority_4_medium_high">"4 - Orta yüksek"</string>
     <string name="priority_5_medium">"5 - Orta"</string>
     <string name="priority_6_medium_low">"6 - Orta düşük"</string>
-    <string name="edit_recur_day">"gün"</string>
-    <string name="edit_recur_week">"hafta"</string>
-    <string name="edit_recur_month">"ay"</string>
-    <string name="edit_recur_year">"yıl"</string>
     <string name="attachment_export_saved_successfully">"Başarıyla kaydedildi"</string>
     <string name="attachment_export_error_error_occurred">"Seçilen dosya kaydedilirken bir hata oluştu!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Uzak derleme ekle (%1$s)"</string>
@@ -499,9 +494,6 @@ Teşekkür ederim!"</string>
     <string name="widget_list_maximum_entries_reached">"Widget'taki maksimum giriş sayısına ulaşıldı (%1$d)."</string>
     <string name="widget_list_default_categories">"Widget'tan yeni girişler için varsayılan kategorileri ayarlayın"</string>
     <string name="list_collapse">"Daralt"</string>
-    <string name="edit_recur_second">"saniye"</string>
-    <string name="edit_recur_minute">"dakika"</string>
-    <string name="edit_recur_hour">"saat"</string>
     <string name="widget_list_show_description">"Açıklama göster"</string>
     <string name="settings_select_theme_true_dark">"Gerçek Karanlık (AMOLED)"</string>
     <string name="settings_journals">"Günlük ayarları"</string>
