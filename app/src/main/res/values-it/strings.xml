@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Aggiunta rapida sottoattività"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Aggiunta rapida sottonota"</string>
     <string name="edit_attachment_add_link_dialog">"Aggiungi link allegato"</string>
-    <string name="edit_recur_repeat_every_x">"Ripeti ogni"</string>
-    <string name="edit_recur_on_weekday">"in poi"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"sul"</string>
-    <string name="edit_recur_x_day_of_the_month">"giorno del mese"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"ultimo"</string>
-    <string name="edit_recur_x_times">"volte"</string>
     <string name="edit_recur_toast_requires_start_date">"La ricorrenza richiede una data di inizio!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleziona la data"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Seleziona periodo"</string>
@@ -245,10 +239,9 @@
     <string name="priority_4_medium_high">"4 - Medio alto"</string>
     <string name="priority_5_medium">"5 - Medio"</string>
     <string name="priority_6_medium_low">"6 - Medio basso"</string>
-    <string name="edit_recur_day">"giorno(i)"</string>
-    <string name="edit_recur_week">"settimana(e)"</string>
-    <string name="edit_recur_month">"mese(i)"</string>
-    <string name="edit_recur_year">"anno(i)"</string>
+    <string name="recur_ends_never">"finisce mai"</string>
+    <string name="recur_ends_on">"termina il"</string>
+    <string name="recur_ends_after">"termina dopo"</string>
     <string name="attachment_export_saved_successfully">"Salvato con successo"</string>
     <string name="attachment_export_error_error_occurred">"Si è verificato un errore durante il salvataggio del file selezionato!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Aggiungi Raccolta remota (%1$s)"</string>
@@ -333,9 +326,6 @@
     <string name="notification_done">"Fatto"</string>
     <string name="notification_add_1h">"+ 1 ora"</string>
     <string name="notification_add_1d">"+ 1 giorno"</string>
-    <string name="edit_recur_ends_never">"finisce mai"</string>
-    <string name="edit_recur_ends_on">"termina il"</string>
-    <string name="edit_recur_ends_after">"termina dopo"</string>
     <string name="list_toast_export_success">"Lista esportata con successo"</string>
     <string name="list_toast_export_error">"Errore nella esportazione della lista"</string>
     <string name="collections_toast_export_success">"Collezioni esportate correttamente"</string>
@@ -443,8 +433,6 @@ Grazie!"</string>
     <string name="details_show_hide_elements">Mostra/nascondi elementi</string>
     <string name="details_attendees_processing_info">"Attenzione: I server possono elaborare automaticamente i partecipanti, ad esempio inviando messaggi iMIP."</string>
     <string name="details_toast_entry_deleted">"Voce scartata/eliminata"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"Rilevata regola di ricorrenza non supportata!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"È stata rilevata una regola di ricorrenza sconosciuta o non supportata. Se si continua, la regola di ricorrenza esistente verrà cancellata/soprascritta."</string>
     <string name="details_entry_could_not_be_loaded">"Questa voce è stata cancellata in background o non è stato possibile caricarla."</string>
     <string name="details_attachment_beta_info">"* La sincronizzazione degli allegati è una funzione sperimentale. Si consiglia vivamente di utilizzare solo allegati di piccole dimensioni (fino a 100 KB), poiché quelli più grandi potrebbero causare lunghi tempi di sincronizzazione e comportamenti inaspettati."</string>
     <string name="details_unchanged_part_of_series">"Questa voce fa parte di una serie. Questa voce copierà tutte le modifiche apportate alla serie."</string>
@@ -624,9 +612,6 @@ Grazie!"</string>
     <string name="opacity">"Opacità"</string>
     <string name="general">"Generale"</string>
     <string name="list_collapse">"Ripiega"</string>
-    <string name="edit_recur_second">"secondo(i)"</string>
-    <string name="edit_recur_minute">"minuto(i)"</string>
-    <string name="edit_recur_hour">"ora(e)"</string>
     <string name="filter_group_sort">"Gruppo/ordine"</string>
     <string name="widget_list_configuration_widget_background">"Sfondo del widget"</string>
     <string name="widget_list_configuration_entries_background">"Sfondo delle voci"</string>
