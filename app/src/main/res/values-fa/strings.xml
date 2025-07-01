@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"افزودن سریع کار فرعی"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"افزودن سریع یادداشت فرعی"</string>
     <string name="edit_attachment_add_link_dialog">"افزودن پیوست پیوند"</string>
-    <string name="edit_recur_repeat_every_x">"تکرار شود هر"</string>
-    <string name="edit_recur_on_weekday">"در"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"در"</string>
-    <string name="edit_recur_x_day_of_the_month">"روز از ماه"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"آخرین"</string>
-    <string name="edit_recur_x_times">"بار"</string>
     <string name="edit_recur_toast_requires_start_date">"بازرخداد نیاز به تنظیم تاریخ شروع دارد!"</string>
     <string name="edit_datepicker_dialog_select_date">"انتخاب تاریخ"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"انتخاب محدوده تاریخ"</string>
@@ -246,10 +240,9 @@
     <string name="priority_4_medium_high">"۴ - متوسط رو به بالا"</string>
     <string name="priority_5_medium">"۵ - متوسط"</string>
     <string name="priority_6_medium_low">"۶ - متوسط رو به پایین"</string>
-    <string name="edit_recur_day">"روز"</string>
-    <string name="edit_recur_week">"هفته"</string>
-    <string name="edit_recur_month">"ماه"</string>
-    <string name="edit_recur_year">"سال"</string>
+    <string name="recur_ends_never">"هیچوقت پایان نیابد"</string>
+    <string name="recur_ends_on">"پایان در"</string>
+    <string name="recur_ends_after">"پایان بعد از"</string>
     <string name="attachment_export_saved_successfully">"با موفقیت ذخیره شد"</string>
     <string name="attachment_export_error_error_occurred">"هنگام ذخیره فایل انتخابی خطایی روی داد!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"افزودن مجموعه‌ی دورافتاده (%1$s)"</string>
@@ -334,9 +327,6 @@
     <string name="notification_done">"انجام شد"</string>
     <string name="notification_add_1h">"۱+ ساعت"</string>
     <string name="notification_add_1d">"۱+ روز"</string>
-    <string name="edit_recur_ends_never">"هیچوقت پایان نیابد"</string>
-    <string name="edit_recur_ends_on">"پایان در"</string>
-    <string name="edit_recur_ends_after">"پایان بعد از"</string>
     <string name="list_toast_export_success">"فهرست با موفقیت برون‌بری شد"</string>
     <string name="list_toast_export_error">"خطا در برون‌بری فهرست"</string>
     <string name="collections_toast_export_success">"مجموعه‌ها با موفقیت برون‌بری شدند"</string>
@@ -444,8 +434,6 @@
     <string name="details_show_hide_elements">نمایش/پنهانسازی عناصر</string>
     <string name="details_attendees_processing_info">"توجه: سرورها ممکن است شرکت‌کنندگان را به طور خودکار پردازش کنند، مثلاً با ارسال پیام‌های iMIP."</string>
     <string name="details_toast_entry_deleted">"ورودی نادیده گرفته شد/حذف شد"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"قانون تکرار پشتیبانی‌نشده شناسایی شد!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"یک قانون تکرار ناشناخته یا پشتیبانی‌نشده شناسایی شد. اگر ادامه دهید، قانون تکرار موجود پاک‌کردن/بازنویسی خواهد شد."</string>
     <string name="details_entry_could_not_be_loaded">"این یادداشت یا در پس‌زمینه پاک شده یا قابل بارگیری نیست."</string>
     <string name="details_attachment_beta_info">"* همگام‌سازی پیوست‌ها یک ویژگی آزمایشی است. بسیار توصیه می‌کنیم فقط از پیوست‌های کوچک (تا 100 کیلوبایت) استفاده کنید زیرا پیوست‌های بزرگتر ممکن است باعث زمان‌های همگام‌سازی طولانی و رفتارهای غیرمنتظره شوند."</string>
     <string name="details_unchanged_part_of_series">"این یادداشت بخشی از یک دنباله است. این یادداشت هر تغییری که برای دنباله اعمال شود را رونوشت می‌کند."</string>
@@ -625,9 +613,6 @@
     <string name="opacity">"شفافیت"</string>
     <string name="general">"عمومی"</string>
     <string name="list_collapse">"بستن"</string>
-    <string name="edit_recur_second">"ثانيه"</string>
-    <string name="edit_recur_minute">"دقیقه"</string>
-    <string name="edit_recur_hour">"ساعت"</string>
     <string name="filter_group_sort">"گروه/ترتیب"</string>
     <string name="widget_list_configuration_widget_background">"پس‌زمینه ویجت"</string>
     <string name="widget_list_configuration_entries_background">"پس‌زمینه ورودی‌ها"</string>
