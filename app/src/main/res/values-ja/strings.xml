@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"サブ ToDo をクイック追加"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"サブメモをクイック追加"</string>
     <string name="edit_attachment_add_link_dialog">"リンクを追加"</string>
-    <string name="edit_recur_repeat_every_x">"繰り返し"</string>
-    <string name="edit_recur_on_weekday">"曜日:"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"月の"</string>
-    <string name="edit_recur_x_day_of_the_month">"日目"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"末日"</string>
-    <string name="edit_recur_x_times">"回"</string>
     <string name="edit_recur_toast_requires_start_date">"繰り返すには着手日を設定してください！"</string>
     <string name="edit_datepicker_dialog_select_date">"日付を選択"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"日付の範囲を選択"</string>
@@ -245,10 +239,9 @@
     <string name="priority_4_medium_high">"4 - やや高"</string>
     <string name="priority_5_medium">"5 - 中"</string>
     <string name="priority_6_medium_low">"6 - やや低"</string>
-    <string name="edit_recur_day">"日ごと"</string>
-    <string name="edit_recur_week">"週ごと"</string>
-    <string name="edit_recur_month">"か月ごと"</string>
-    <string name="edit_recur_year">"年ごと"</string>
+    <string name="recur_ends_never">"永久に繰り返し"</string>
+    <string name="recur_ends_on">"終了する日時"</string>
+    <string name="recur_ends_after">"終了までの回数"</string>
     <string name="attachment_export_saved_successfully">"保存しました"</string>
     <string name="attachment_export_error_error_occurred">"選択したファイルの保存中にエラーが発生しました！"</string>
     <string name="menu_collections_add_remote_to_sync_app">"リモートのコレクションを追加 (%1$s)"</string>
@@ -332,9 +325,6 @@
     <string name="notification_done">"完了"</string>
     <string name="notification_add_1h">"+ 1 時間"</string>
     <string name="notification_add_1d">"+ 1 日"</string>
-    <string name="edit_recur_ends_never">"永久に繰り返し"</string>
-    <string name="edit_recur_ends_on">"終了する日時"</string>
-    <string name="edit_recur_ends_after">"終了までの回数"</string>
     <string name="list_toast_export_success">"リストをエクスポートしました"</string>
     <string name="list_toast_export_error">"リストのエクスポート中にエラーが発生しました"</string>
     <string name="collections_toast_export_success">"コレクションをエクスポートしました"</string>
@@ -436,8 +426,6 @@
     <string name="details_show_hide_elements">要素の表示/非表示</string>
     <string name="details_attendees_processing_info">"注意: iMIP メッセージを送信するなど、サーバーが自動的に参加者を処理する場合があります。"</string>
     <string name="details_toast_entry_deleted">"エントリーが破棄/削除されました"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"対応していない繰り返しルールを検出しました！"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"未知または対応していない繰り返しルールが検出されました。続行すると、既存の繰り返しルールが削除/上書きされます。"</string>
     <string name="details_entry_could_not_be_loaded">"このエントリーはバックグラウンドで削除されたか読み込めませんでした。"</string>
     <string name="details_attachment_beta_info">"* 添付ファイルの同期は試験運用中の機能です。大きなサイズのファイルでは同期に時間がかかったり予期せぬ動作が発生したりする可能性があります。サイズの小さな添付ファイル (最大 100 KB) の使用を強くおすすめします。"</string>
     <string name="details_unchanged_part_of_series">"このエントリーはシリーズの一部です。このエントリーは、シリーズに対して行われた変更をすべてコピーします。"</string>
@@ -617,9 +605,6 @@
     <string name="opacity">"不透明度"</string>
     <string name="general">"一般"</string>
     <string name="list_collapse">"閉じる"</string>
-    <string name="edit_recur_second">"秒"</string>
-    <string name="edit_recur_minute">"分"</string>
-    <string name="edit_recur_hour">"時"</string>
     <string name="filter_group_sort">"グループ/並べ替え"</string>
     <string name="widget_list_configuration_widget_background">"ウィジェットの背景"</string>
     <string name="widget_list_configuration_entries_background">"エントリーの背景"</string>
