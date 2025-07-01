@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Thêm nhanh nhiệm vụ con"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Thêm nhanh ghi chú con"</string>
     <string name="edit_attachment_add_link_dialog">"Thêm liên kết đính kèm"</string>
-    <string name="edit_recur_repeat_every_x">"Lặp lại mỗi"</string>
-    <string name="edit_recur_on_weekday">"vào"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"vào ngày"</string>
-    <string name="edit_recur_x_day_of_the_month">"ngày của tháng"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"cuối"</string>
-    <string name="edit_recur_x_times">"lần"</string>
     <string name="edit_recur_toast_requires_start_date">"Sự lặp lại yêu cầu phải thiết lập ngày bắt đầu!"</string>
     <string name="edit_datepicker_dialog_select_date">"Chọn ngày"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Chọn phạm vi ngày tháng"</string>
@@ -243,10 +237,9 @@
     <string name="priority_4_medium_high">"4 - Trung bình khá"</string>
     <string name="priority_5_medium">"5 - Trung bình"</string>
     <string name="priority_6_medium_low">"6 - Trung bình thấp"</string>
-    <string name="edit_recur_day">"ngày"</string>
-    <string name="edit_recur_week">"tuần"</string>
-    <string name="edit_recur_month">"tháng"</string>
-    <string name="edit_recur_year">"năm"</string>
+    <string name="recur_ends_never">"không bao giờ kết thúc"</string>
+    <string name="recur_ends_on">"kết thúc vào"</string>
+    <string name="recur_ends_after">"kết thúc sau"</string>
     <string name="attachment_export_saved_successfully">"Đã lưu thành công"</string>
     <string name="attachment_export_error_error_occurred">"Một lỗi xảy ra khi lưu tệp được chọn!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Thêm Bộ sưu tập từ xa (%1$s)"</string>
@@ -330,9 +323,6 @@
     <string name="notification_done">"Xong"</string>
     <string name="notification_add_1h">"+ 1 giờ"</string>
     <string name="notification_add_1d">"+ 1 ngày"</string>
-    <string name="edit_recur_ends_never">"không bao giờ kết thúc"</string>
-    <string name="edit_recur_ends_on">"kết thúc vào"</string>
-    <string name="edit_recur_ends_after">"kết thúc sau"</string>
     <string name="collections_toast_export_success">"Đã xuất thành công bộ sưu tập"</string>
     <string name="collections_toast_export_error">"Lỗi khi xuất bộ sưu tập"</string>
     <string name="menu_collections_export_all">"Xuất tất cả"</string>
@@ -431,8 +421,6 @@ Cảm ơn!"</string>
     <string name="details_show_hide_elements">Hiện/ẩn các phần tử</string>
     <string name="details_attendees_processing_info">"Chú ý: Máy chủ có thể tự động xử lý người tham dự, ví dụ: bằng cách gửi tin nhắn iMIP."</string>
     <string name="details_toast_entry_deleted">"Đã loại bỏ/xóa mục nhập"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"Đã phát hiện quy tắc lặp lại không được hỗ trợ!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"Đã phát hiện một quy tắc lặp lại không xác định hoặc không được hỗ trợ. Nếu bạn tiếp tục, quy tắc lặp lại hiện tại sẽ bị xóa/ghi đè."</string>
     <string name="details_entry_could_not_be_loaded">"Mục nhập này đã bị xóa ở chế độ nền hoặc không thể tải được."</string>
     <string name="details_attachment_beta_info">"* Đồng bộ hóa các tệp đính kèm là một tính năng thử nghiệm. Chúng tôi đặc biệt khuyến khích chỉ sử dụng các tệp đính kèm nhỏ (tối đa 100 KB) vì các tệp đính kèm lớn hơn có thể dẫn đến thời gian đồng bộ hóa lâu và hành vi không mong muốn."</string>
     <string name="details_unchanged_part_of_series">"Mục này là một phần của một chuỗi. Mục này sẽ sao chép mọi thay đổi được thực hiện cho chuỗi."</string>
@@ -612,9 +600,6 @@ Cảm ơn!"</string>
     <string name="opacity">"Độ mờ"</string>
     <string name="general">"Tổng quan"</string>
     <string name="list_collapse">"Thu gọn"</string>
-    <string name="edit_recur_second">"giây"</string>
-    <string name="edit_recur_minute">"phút"</string>
-    <string name="edit_recur_hour">"giờ"</string>
     <string name="filter_group_sort">"Nhóm/Sắp xếp"</string>
     <string name="widget_list_configuration_widget_background">"Nền tiện ích"</string>
     <string name="widget_list_configuration_entries_background">"Nền các mục"</string>
