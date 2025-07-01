@@ -22,6 +22,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import at.bitfire.ical4android.util.TimeApiExtensions.toLocalDate
 import at.techbee.jtx.BuildFlavor
 import at.techbee.jtx.JtxContract
 import at.techbee.jtx.R
@@ -1204,10 +1205,10 @@ data class ICalObject(
     }
 
     fun getRecurInfo(context: Context?): String? {
-        if(context == null)
+        if(context == null || (rrule == null && recurid == null))
             return null
 
-        var recurInfo = ""
+        var recurInfo = "** ${context.getString(R.string.recurrence)} ** ${System.lineSeparator()}"
 
        if (this.recurid != null)
             recurInfo += context.getString(R.string.view_share_part_of_series) + System.lineSeparator()
@@ -1215,15 +1216,13 @@ data class ICalObject(
         val recur: Recur
         try {
             recur = Recur(this.rrule)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return if(recurInfo.isEmpty())
                 null
             else
-                recurInfo + System.lineSeparator()
+                recurInfo + System.lineSeparator() + rrule + System.lineSeparator()
         }
 
-        recurInfo += context.getString(R.string.recurrence) + System.lineSeparator()
-        recurInfo += recur.interval.toString() + " "
         //frequency
         recurInfo += when {
             recur.frequency == Frequency.YEARLY && recur.dayList.isNotEmpty() -> context.getString(R.string.recur_yearly_by_day)
@@ -1236,52 +1235,70 @@ data class ICalObject(
             else -> recur.frequency?.name ?: ""
         }
         //interval
-        recurInfo += {
-            if(recur.frequency == Frequency.YEARLY)
-                when (recur.interval) {
-                    1 -> context.getString(R.string.recur_every_year)
+        recurInfo += " | "
+        recurInfo +=
+            when (recur.frequency) {
+                Frequency.YEARLY -> when (recur.interval) {
+                    -1, 1 -> context.getString(R.string.recur_every_year)
                     2 -> context.getString(R.string.recur_every_other_year)
-                    in 3..Int.MAX_VALUE -> context.getString(R.string.recur_every_x_year, DateTimeUtils.getLocalizedOrdinalFor(recur.interval))
-                    else -> recur.interval.toString()
-                }
-            else if (recur.frequency == Frequency.MONTHLY)
-                when (recur.interval) {
-                    1 -> context.getString(R.string.recur_every_month)
-                    2 -> context.getString(R.string.recur_every_other_month)
-                    in 3..Int.MAX_VALUE -> context.getString(R.string.recur_every_x_month, DateTimeUtils.getLocalizedOrdinalFor(recur.interval))
-                    else -> recur.interval.toString()
-                }
-            else if (recur.frequency == Frequency.WEEKLY)
-                when (recur.interval) {
-                    1 -> context.getString(R.string.recur_every_week)
-                    2 -> context.getString(R.string.recur_every_other_week)
-                    in 3..Int.MAX_VALUE -> context.getString(R.string.recur_every_x_week, DateTimeUtils.getLocalizedOrdinalFor(recur.interval))
-                    else -> recur.interval.toString()
-                }
-            else if (recur.frequency == Frequency.DAILY)
-                when (recur.interval) {
-                    1 -> context.getString(R.string.recur_every_day)
-                    2 -> context.getString(R.string.recur_every_other_day)
-                    in 3..Int.MAX_VALUE -> context.getString(R.string.recur_every_x_day, DateTimeUtils.getLocalizedOrdinalFor(recur.interval))
-                    else -> recur.interval.toString()
-                }
-            else
-                recur.interval.toString()
-        }
-        //monthList
-        recurInfo += recur.monthList
-            .map { month -> java.time.Month.of(month.monthOfYear) }
-            .joinToString(
-                separator = ", ",
-                transform = { month ->
-                    month.getDisplayName(
-                        java.time.format.TextStyle.FULL_STANDALONE,
-                        Locale.getDefault()
+                    in 3..Int.MAX_VALUE -> context.getString(
+                        R.string.recur_every_x_year,
+                        DateTimeUtils.getLocalizedOrdinalFor(recur.interval)
                     )
+                    else -> recur.interval.toString()
                 }
-            )
+
+                Frequency.MONTHLY -> when (recur.interval) {
+                    -1, 1 -> context.getString(R.string.recur_every_month)
+                    2 -> context.getString(R.string.recur_every_other_month)
+                    in 3..Int.MAX_VALUE -> context.getString(
+                        R.string.recur_every_x_month,
+                        DateTimeUtils.getLocalizedOrdinalFor(recur.interval)
+                    )
+                    else -> recur.interval.toString()
+                }
+
+                Frequency.WEEKLY -> when (recur.interval) {
+                    -1, 1 -> context.getString(R.string.recur_every_week)
+                    2 -> context.getString(R.string.recur_every_other_week)
+                    in 3..Int.MAX_VALUE -> context.getString(
+                        R.string.recur_every_x_week,
+                        DateTimeUtils.getLocalizedOrdinalFor(recur.interval)
+                    )
+                    else -> recur.interval.toString()
+                }
+
+                Frequency.DAILY -> when (recur.interval) {
+                    -1, 1 -> context.getString(R.string.recur_every_day)
+                    2 -> context.getString(R.string.recur_every_other_day)
+                    in 3..Int.MAX_VALUE -> context.getString(
+                        R.string.recur_every_x_day,
+                        DateTimeUtils.getLocalizedOrdinalFor(recur.interval)
+                    )
+                    else -> recur.interval.toString()
+                }
+                else -> recur.interval.toString()
+            }
+
+        //monthList
+        if(recur.monthList.isNotEmpty())
+            recurInfo += recur.monthList
+                .map { month -> java.time.Month.of(month.monthOfYear) }
+                .joinToString(
+                    prefix = " | ",
+                    separator = ", ",
+                    transform = { month ->
+                        month.getDisplayName(
+                            java.time.format.TextStyle.FULL_STANDALONE,
+                            Locale.getDefault()
+                        )
+                    }
+                )
         //SetPosList
-        recurInfo += recur.setPosList.joinToString(
+        if(recur.setPosList.isNotEmpty())
+            recurInfo += recur.setPosList
+                .joinToString(
+                    prefix = " | ",
                     separator = ", ",
                     transform = { pos ->
                         if (pos == -1)
@@ -1291,38 +1308,39 @@ data class ICalObject(
                     }
                 )
         //Weekdaylist
-        recur.dayList.joinToString(
-            separator = ", ",
-            transform = { day ->
-                day.asDayOfWeek()
-                    ?.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, Locale.getDefault())
-                    ?: day.toString()
-            }
-        )
+        if(recur.dayList.isNotEmpty())
+            recurInfo += recur.dayList.joinToString(
+                prefix = " | ",
+                separator = ", ",
+                transform = { day ->
+                    day.asDayOfWeek()
+                        ?.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, Locale.getDefault())
+                        ?: day.toString()
+                }
+            )
         //MonthDayList
-        recur.monthDayList.joinToString(
-            separator = ", ",
-            transform = { monthDay ->
-                if(monthDay == -1)
-                    context.getString(R.string.recur_last_day_of_the_month)
-                else if(monthDay < 0)
-                    context.getString(R.string.recur_xth_last_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(monthDay.absoluteValue))
-                else
-                    context.getString(R.string.recur_xth_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(monthDay))
-            }
-        )
+        if(recur.monthDayList.isNotEmpty())
+            recurInfo += recur.monthDayList.joinToString(
+                prefix = " | ",
+                separator = ", ",
+                transform = { monthDay ->
+                    if(monthDay == -1)
+                        context.getString(R.string.recur_last_day_of_the_month)
+                    else if(monthDay < 0)
+                        context.getString(R.string.recur_xth_last_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(monthDay.absoluteValue))
+                    else
+                        context.getString(R.string.recur_xth_day_of_the_month, DateTimeUtils.getLocalizedOrdinalFor(monthDay))
+                }
+            )
 
         //ends
-        when {
-            recur.count != null -> context.getString(R.string.recur_ends_after)
-            recur.until != null -> context.getString(R.string.recur_ends_on)
+        recurInfo += " | " +  when {
+            recur.count != -1 -> context.getString(R.string.recur_ends_after) + " " + context.getString(R.string.recur_x_occurrences, recur.count)
+            recur.until != null -> "${context.getString(R.string.recur_ends_on)} ${DateTimeUtils.convertLongToFullDateString(recur.until.toLocalDate().atStartOfDay(
+                ZoneId.systemDefault()).toInstant().toEpochMilli(), ZoneId.systemDefault().toString())}"
             else -> context.getString(R.string.recur_ends_never)
         }
-
-        return if(recurInfo.isEmpty())
-            null
-        else
-            recurInfo + System.lineSeparator()
+        return recurInfo + System.lineSeparator() + System.lineSeparator()
     }
 
     fun setDefaultJournalDateFromSettings(defaultJournalDateSetting: DropdownSettingOption) {
