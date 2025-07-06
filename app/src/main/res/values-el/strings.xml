@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Γρήγορη προσθήκη εργασίας"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Γρήγορη προσθήκη εργασίας"</string>
     <string name="edit_attachment_add_link_dialog">"Προσθήκη συνημμένου συνδέσμου"</string>
-    <string name="edit_recur_repeat_every_x">"Επανάληψη κάθε"</string>
-    <string name="edit_recur_on_weekday">"σε"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"στο"</string>
-    <string name="edit_recur_x_day_of_the_month">"ημέρα του μήνα"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"τελευταία"</string>
-    <string name="edit_recur_x_times">"φορές"</string>
     <string name="edit_recur_toast_requires_start_date">"Η επανάληψη απαιτεί να οριστεί μια ημερομηνία έναρξης!"</string>
     <string name="edit_datepicker_dialog_select_date">"Επιλογή ημερομηνίας"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Επιλέξτε εύρος ημερομηνιών"</string>
@@ -245,10 +239,9 @@
     <string name="priority_4_medium_high">"4 - Μέση προ υψηλή"</string>
     <string name="priority_5_medium">"5 - Μεσαία"</string>
     <string name="priority_6_medium_low">"6 - Μέση προς χαμηλή"</string>
-    <string name="edit_recur_day">"ημέρα(ες)"</string>
-    <string name="edit_recur_week">"εβδομάδα(ες)"</string>
-    <string name="edit_recur_month">"μήνας(ες)"</string>
-    <string name="edit_recur_year">"χρόνος(ια)"</string>
+    <string name="recur_ends_never">"Χωρίς λήξη"</string>
+    <string name="recur_ends_on">"Λήξη στις"</string>
+    <string name="recur_ends_after">"Λήξη μετά από"</string>
     <string name="attachment_export_saved_successfully">"Αποθηκεύτηκε επιτυχώς"</string>
     <string name="attachment_export_error_error_occurred">"Παρουσιάστηκε σφάλμα κατά την αποθήκευση του επιλεγμένου αρχείου!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Προσθήκη απομακρυσμένης συλλογής (%1$s)"</string>
@@ -330,9 +323,6 @@
     <string name="notification_done">"Ολοκληρώθηκε"</string>
     <string name="notification_add_1h">"+ 1 ώρα"</string>
     <string name="notification_add_1d">"+1 ημέρα"</string>
-    <string name="recur_ends_never">"Χωρίς λήξη"</string>
-    <string name="recur_ends_on">"Λήξη στις"</string>
-    <string name="recur_ends_after">"Λήξη μετά από"</string>
     <string name="collections_toast_export_success">"Οι συλλογές εξήχθησαν με επιτυχία"</string>
     <string name="collections_toast_export_error">"Σφάλμα κατά την εξαγωγή συλλογών"</string>
     <string name="menu_collections_export_all">"Εξαγωγή όλων"</string>
@@ -440,8 +430,6 @@
     <string name="details_show_hide_elements">Εμφάνιση/απόκρυψη στοιχείων</string>
     <string name="details_attendees_processing_info">"Προσοχή: Οι διακομιστές ενδέχεται να επεξεργάζονται αυτόματα τους συμμετέχοντες π.χ. με την αποστολή μηνυμάτων iMIP."</string>
     <string name="details_toast_entry_deleted">"Η εγγραφή απορρίφθηκε/διεγράφη"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"Εντοπίστηκε μη υποστηριζόμενος κανόνας επανάληψης!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"Εντοπίστηκε άγνωστος ή μη υποστηριζόμενος κανόνας επανάληψης. Εάν συνεχίσετε, ο υπάρχων κανόνας επανάληψης θα διαγραφεί/αντικατασταθεί."</string>
     <string name="details_entry_could_not_be_loaded">"Αυτή η καταχώρηση είτε διαγράφηκε στο παρασκήνιο είτε δεν ήταν δυνατή η φόρτωσή της."</string>
     <string name="details_attachment_beta_info">"* Ο συγχρονισμός συνημμένων είναι μια πειραματική δυνατότητα. Συνιστούμε θερμά να χρησιμοποιείτε μόνο μικρά συνημμένα (έως 100 KB), καθώς τα μεγαλύτερα θα μπορούσαν να οδηγήσουν σε μεγάλους χρόνους συγχρονισμού και απροσδόκητη συμπεριφορά."</string>
     <string name="details_unchanged_part_of_series">"Αυτή η καταχώρηση είναι μέρος μιας ακολουθίας. Αυτή η καταχώρηση θα αντιγράψει τυχόν αλλαγές που έγιναν για τη σειρά."</string>
@@ -623,9 +611,6 @@
     <string name="opacity">"Αδιαφάνεια"</string>
     <string name="general">"Γενικά"</string>
     <string name="list_collapse">"Αποτυχία"</string>
-    <string name="edit_recur_second">"Δευτερόλεπτο(α)"</string>
-    <string name="edit_recur_minute">"Λεπτό(ά)"</string>
-    <string name="edit_recur_hour">"Ώρα(ες)"</string>
     <string name="filter_group_sort">"Ομάδα/Ταξινόμηση"</string>
     <string name="widget_list_configuration_widget_background">"Φόντο widget"</string>
     <string name="widget_list_configuration_entries_background">"Φόντο καταχωρήσεων"</string>
