@@ -385,36 +385,53 @@ fun DetailsCardRecur(
                         enabled = isEditMode && icalObject.recurid == null,
                         label = {
                             Text(
-                                if(frequency == Frequency.YEARLY)
-                                    when (interval) {
+                                when(frequency) {
+                                    Frequency.YEARLY -> when (interval) {
                                         null, 1 -> stringResource(R.string.recur_every_year)
                                         2 -> stringResource(R.string.recur_every_other_year)
-                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_year, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        in 3..Int.MAX_VALUE -> stringResource(
+                                            R.string.recur_every_x_year,
+                                            DateTimeUtils.getLocalizedOrdinalFor(interval ?: 1)
+                                        )
+
                                         else -> interval.toString()
                                     }
-                                else if (frequency == Frequency.MONTHLY)
-                                    when (interval) {
+
+                                    Frequency.MONTHLY -> when (interval) {
                                         null, 1 -> stringResource(R.string.recur_every_month)
                                         2 -> stringResource(R.string.recur_every_other_month)
-                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_month, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        in 3..Int.MAX_VALUE -> stringResource(
+                                            R.string.recur_every_x_month,
+                                            DateTimeUtils.getLocalizedOrdinalFor(interval ?: 1)
+                                        )
+
                                         else -> interval.toString()
                                     }
-                                else if (frequency == Frequency.WEEKLY)
-                                    when (interval) {
+
+                                    Frequency.WEEKLY -> when (interval) {
                                         null, 1 -> stringResource(R.string.recur_every_week)
                                         2 -> stringResource(R.string.recur_every_other_week)
-                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_week, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        in 3..Int.MAX_VALUE -> stringResource(
+                                            R.string.recur_every_x_week,
+                                            DateTimeUtils.getLocalizedOrdinalFor(interval ?: 1)
+                                        )
+
                                         else -> interval.toString()
                                     }
-                                else if (frequency == Frequency.DAILY)
-                                    when (interval) {
+
+                                    Frequency.DAILY -> when (interval) {
                                         null, 1 -> stringResource(R.string.recur_every_day)
                                         2 -> stringResource(R.string.recur_every_other_day)
-                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_day, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        in 3..Int.MAX_VALUE -> stringResource(
+                                            R.string.recur_every_x_day,
+                                            DateTimeUtils.getLocalizedOrdinalFor(interval ?: 1)
+                                        )
+
                                         else -> interval.toString()
                                     }
-                                else
-                                    interval.toString()
+
+                                    else -> interval.toString()
+                                }
                             )
 
                             DropdownMenu(
@@ -436,36 +453,49 @@ fun DetailsCardRecur(
                                             onRecurUpdated(buildRRule())
                                         },
                                         text = { Text(
-                                            if(frequency == Frequency.YEARLY)
-                                                when (number) {
+                                            when(frequency) {
+                                                Frequency.YEARLY -> when (number) {
                                                     1 -> stringResource(R.string.recur_every_year)
                                                     2 -> stringResource(R.string.recur_every_other_year)
-                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_year, DateTimeUtils.getLocalizedOrdinalFor(number))
+                                                    in 3..Int.MAX_VALUE -> stringResource(
+                                                        R.string.recur_every_x_year,
+                                                        DateTimeUtils.getLocalizedOrdinalFor(number)
+                                                    )
+
                                                     else -> interval.toString()
                                                 }
-                                            else if (frequency == Frequency.MONTHLY)
-                                                when (number) {
-                                                    1 -> stringResource(R.string.recur_every_month)
-                                                    2 -> stringResource(R.string.recur_every_other_month)
-                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_month, DateTimeUtils.getLocalizedOrdinalFor(number))
-                                                    else -> interval.toString()
-                                                }
-                                            else if (frequency == Frequency.WEEKLY)
-                                                when (number) {
-                                                    1 -> stringResource(R.string.recur_every_week)
-                                                    2 -> stringResource(R.string.recur_every_other_week)
-                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_week, DateTimeUtils.getLocalizedOrdinalFor(number))
-                                                    else -> interval.toString()
-                                                }
-                                            else if (frequency == Frequency.DAILY)
-                                                when (number) {
-                                                    1 -> stringResource(R.string.recur_every_day)
-                                                    2 -> stringResource(R.string.recur_every_other_day)
-                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_day, DateTimeUtils.getLocalizedOrdinalFor(number))
-                                                    else -> interval.toString()
-                                                }
-                                            else
-                                                number.toString()
+                                                Frequency.MONTHLY -> when (number) {
+                                                        1 -> stringResource(R.string.recur_every_month)
+                                                        2 -> stringResource(R.string.recur_every_other_month)
+                                                        in 3..Int.MAX_VALUE -> stringResource(
+                                                            R.string.recur_every_x_month,
+                                                            DateTimeUtils.getLocalizedOrdinalFor(number)
+                                                        )
+
+                                                        else -> interval.toString()
+                                                    }
+                                                Frequency.WEEKLY -> when (number) {
+                                                        1 -> stringResource(R.string.recur_every_week)
+                                                        2 -> stringResource(R.string.recur_every_other_week)
+                                                        in 3..Int.MAX_VALUE -> stringResource(
+                                                            R.string.recur_every_x_week,
+                                                            DateTimeUtils.getLocalizedOrdinalFor(number)
+                                                        )
+
+                                                        else -> interval.toString()
+                                                    }
+                                                Frequency.DAILY -> when (number) {
+                                                        1 -> stringResource(R.string.recur_every_day)
+                                                        2 -> stringResource(R.string.recur_every_other_day)
+                                                        in 3..Int.MAX_VALUE -> stringResource(
+                                                            R.string.recur_every_x_day,
+                                                            DateTimeUtils.getLocalizedOrdinalFor(number)
+                                                        )
+
+                                                        else -> interval.toString()
+                                                    }
+                                                else -> number.toString()
+                                            }
                                         )}
                                     )
                                 }
