@@ -12,6 +12,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.core.content.edit
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -161,12 +162,12 @@ class BillingManager :
 
         val params = QueryProductDetailsParams.newBuilder().setProductList(productList)
 
-        billingClient?.queryProductDetailsAsync(params.build()) { billingResult, productDetailsList ->
+        billingClient?.queryProductDetailsAsync(params.build()) { billingResult,  queryProductDetailsResult ->
 
             if (billingResult.responseCode != BillingClient.BillingResponseCode.OK)
                 return@queryProductDetailsAsync
 
-            productDetailsList.forEach { productDetails ->
+            queryProductDetailsResult.productDetailsList.forEach { productDetails ->
                 if(productDetails.productId == IN_APP_PRODUCT_PRO)
                     proProductDetails.postValue(productDetails)
             }
@@ -223,7 +224,7 @@ class BillingManager :
                 return@queryPurchasesAsync
 
             if (purchaseList.isEmpty()) {
-                billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASE_STATE)?.apply()
+                billingPrefs?.edit { remove(PREFS_BILLING_PURCHASE_STATE) }
                 proPurchase.postValue(null)
             } else {
                 CoroutineScope(Dispatchers.IO).launch {
@@ -252,9 +253,9 @@ class BillingManager :
         if (purchase.products.contains(IN_APP_PRODUCT_PRO)) {
             if (proPurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
                 proPurchase.postValue(purchase)
-            billingPrefs?.edit()?.putString(PREFS_BILLING_PURCHASE_STATE, purchase.purchaseState.toString())?.apply()
+            billingPrefs?.edit { putString(PREFS_BILLING_PURCHASE_STATE, purchase.purchaseState.toString()) }
         } else {
-            billingPrefs?.edit()?.remove(PREFS_BILLING_PURCHASE_STATE)?.apply()
+            billingPrefs?.edit { remove(PREFS_BILLING_PURCHASE_STATE) }
             if (proPurchase.value?.purchaseState != purchase.purchaseState)         // avoid updating live data for nothing
                 proPurchase.postValue(purchase)
         }
