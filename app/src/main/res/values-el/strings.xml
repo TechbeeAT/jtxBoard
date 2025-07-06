@@ -330,9 +330,9 @@
     <string name="notification_done">"Ολοκληρώθηκε"</string>
     <string name="notification_add_1h">"+ 1 ώρα"</string>
     <string name="notification_add_1d">"+1 ημέρα"</string>
-    <string name="edit_recur_ends_never">"Χωρίς λήξη"</string>
-    <string name="edit_recur_ends_on">"Λήξη στις"</string>
-    <string name="edit_recur_ends_after">"Λήξη μετά από"</string>
+    <string name="recur_ends_never">"Χωρίς λήξη"</string>
+    <string name="recur_ends_on">"Λήξη στις"</string>
+    <string name="recur_ends_after">"Λήξη μετά από"</string>
     <string name="collections_toast_export_success">"Οι συλλογές εξήχθησαν με επιτυχία"</string>
     <string name="collections_toast_export_error">"Σφάλμα κατά την εξαγωγή συλλογών"</string>
     <string name="menu_collections_export_all">"Εξαγωγή όλων"</string>

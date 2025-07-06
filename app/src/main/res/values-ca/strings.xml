@@ -333,9 +333,9 @@
     <string name="notification_done">"Fet"</string>
     <string name="notification_add_1h">"+1 hora"</string>
     <string name="notification_add_1d">"+1 dia"</string>
-    <string name="edit_recur_ends_never">"no acaba mai"</string>
-    <string name="edit_recur_ends_on">"acaba el"</string>
-    <string name="edit_recur_ends_after">"acaba després de"</string>
+    <string name="recur_ends_never">"no acaba mai"</string>
+    <string name="recur_ends_on">"acaba el"</string>
+    <string name="recur_ends_after">"acaba després de"</string>
     <string name="list_toast_export_success">"Llista exportada correctament"</string>
     <string name="list_toast_export_error">"Error a l'exportar la llista"</string>
     <string name="collections_toast_export_success">"Les col·leccions han sigut exportades"</string>

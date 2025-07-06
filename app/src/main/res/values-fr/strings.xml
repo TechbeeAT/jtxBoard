@@ -333,9 +333,9 @@
     <string name="notification_done">"Terminé"</string>
     <string name="notification_add_1h">"+ 1 heure"</string>
     <string name="notification_add_1d">"+ 1 jour"</string>
-    <string name="edit_recur_ends_never">"ne se termine jamais"</string>
-    <string name="edit_recur_ends_on">"se termine le"</string>
-    <string name="edit_recur_ends_after">"se termine après"</string>
+    <string name="recur_ends_never">"ne se termine jamais"</string>
+    <string name="recur_ends_on">"se termine le"</string>
+    <string name="recur_ends_after">"se termine après"</string>
     <string name="list_toast_export_success">"Liste exportée avec succès"</string>
     <string name="list_toast_export_error">"Erreur lors de l'export de la liste"</string>
     <string name="collections_toast_export_success">"Collections correctement exportées"</string>
