@@ -79,11 +79,6 @@
     <string name="edit_add_link_button_text">"新增附件連結"</string>
     <string name="edit_subtasks_add_helper">"添加子任务"</string>
     <string name="edit_attachment_add_link_dialog">"添加附件连接"</string>
-    <string name="edit_recur_repeat_every_x">"回复每个"</string>
-    <string name="edit_recur_on_weekday">"在"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"在"</string>
-    <string name="edit_recur_x_day_of_the_month">"天（当月之中）"</string>
-    <string name="edit_recur_x_times">"次数"</string>
     <string name="edit_recur_toast_requires_start_date">"重复出现需要设置开始日期！"</string>
     <string name="edit_datepicker_dialog_select_date">"选择日期"</string>
     <string name="edit_datepicker_dialog_add_time">"添加時間"</string>
@@ -187,10 +182,9 @@
     <string name="priority_4_medium_high">"4 - 中高"</string>
     <string name="priority_5_medium">"5 - 中"</string>
     <string name="priority_6_medium_low">"6 - 中低"</string>
-    <string name="edit_recur_day">"天"</string>
-    <string name="edit_recur_week">"週"</string>
-    <string name="edit_recur_month">"月"</string>
-    <string name="edit_recur_year">"年"</string>
+    <string name="recur_ends_never">"从不结束"</string>
+    <string name="recur_ends_on">"结束，在"</string>
+    <string name="recur_ends_after">"结束，在此后"</string>
     <string name="menu_collection_popup_export_as_ics">"輸出為 .ics"</string>
     <string name="journal">"日誌"</string>
     <string name="note">"筆記"</string>
@@ -250,9 +244,6 @@
     <string name="notification_done">"完成"</string>
     <string name="notification_add_1h">"+ 1 小时"</string>
     <string name="notification_add_1d">"+ 1 天"</string>
-    <string name="recur_ends_never">"从不结束"</string>
-    <string name="recur_ends_on">"结束，在"</string>
-    <string name="recur_ends_after">"结束，在此后"</string>
     <string name="menu_collections_export_all">"全部导出"</string>
     <string name="more">"更多"</string>
     <string name="navigation_drawer_buypro">"购买Pro版"</string>
@@ -357,9 +348,6 @@
     <string name="select_all">全選</string>
     <string name="select_none">全不選</string>
     <string name="widget_list_configuration">"小工具設定"</string>
-    <string name="edit_recur_second">"秒"</string>
-    <string name="edit_recur_minute">"分鐘"</string>
-    <string name="edit_recur_hour">"小時"</string>
     <string name="widget_list_configuration_widget_background">"小工具背景"</string>
     <string name="widget_list_show_description">"顯示說明"</string>
     <string name="settings_journals">"日誌設定"</string>
