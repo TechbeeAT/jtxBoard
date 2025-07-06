@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Añadir subtarea rápida"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Añadir subnota rápida"</string>
     <string name="edit_attachment_add_link_dialog">"Añadir enlace a adjunto"</string>
-    <string name="edit_recur_repeat_every_x">"Repetir cada"</string>
-    <string name="edit_recur_on_weekday">"en"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"en el"</string>
-    <string name="edit_recur_x_day_of_the_month">"Día del mes"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"último"</string>
-    <string name="edit_recur_x_times">"veces"</string>
     <string name="edit_recur_toast_requires_start_date">"¡La repetición requiere que se establezca una fecha de inicio!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleccionar fecha"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Seleccione el intervalo de fechas"</string>
@@ -243,10 +237,9 @@
     <string name="priority_4_medium_high">"4 - Media alta"</string>
     <string name="priority_5_medium">"5 - Media"</string>
     <string name="priority_6_medium_low">"6 - Media baja"</string>
-    <string name="edit_recur_day">"día(s)"</string>
-    <string name="edit_recur_week">"semana(s)"</string>
-    <string name="edit_recur_month">"mese(s)"</string>
-    <string name="edit_recur_year">"año(s)"</string>
+    <string name="recur_ends_never">"nunca finaliza"</string>
+    <string name="recur_ends_on">"termina el"</string>
+    <string name="recur_ends_after">"termina después de"</string>
     <string name="attachment_export_saved_successfully">"Guardado con éxito"</string>
     <string name="attachment_export_error_error_occurred">"¡Se han producido un error mientras se guardaba el archivo seleccionado!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Añadir colección remota (%1$s)"</string>
@@ -330,9 +323,6 @@
     <string name="notification_done">"Hecho"</string>
     <string name="notification_add_1h">"+ 1 hora"</string>
     <string name="notification_add_1d">"+ 1 día"</string>
-    <string name="recur_ends_never">"nunca finaliza"</string>
-    <string name="recur_ends_on">"termina el"</string>
-    <string name="recur_ends_after">"termina después de"</string>
     <string name="collections_toast_export_success">"Colecciones exportadas con éxito"</string>
     <string name="collections_toast_export_error">"Error al exportar las colecciones"</string>
     <string name="menu_collections_export_all">"Exportar todas"</string>
@@ -432,8 +422,6 @@
     <string name="details_show_hide_elements">Mostrar/ocultar elementos</string>
     <string name="details_attendees_processing_info">"Atención: Los servidores pueden procesar automáticamente a los asistentes, por ejemplo, enviando mensajes iMIP."</string>
     <string name="details_toast_entry_deleted">"Entrada descartada/borrada"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"Se ha detectado una regla de recurrencia no soportada."</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"Se ha detectado una regla de recurrencia desconocida o no soportada. Si continúa, la regla de recurrencia existente se borrará/sobrescribirá."</string>
     <string name="details_entry_could_not_be_loaded">"
 This entry was either deleted in the background or could not be loaded."</string>
     <string name="details_attachment_beta_info">"* La sincronización de archivos adjuntos es una característica experimental. Recomendamos encarecidamente que sólo se utilicen archivos adjuntos pequeños (hasta 100 KB), ya que los de mayor tamaño podrían dar lugar a largos tiempos de sincronización y a un comportamiento inesperado."</string>
@@ -614,9 +602,6 @@ This entry was either deleted in the background or could not be loaded."</string
     <string name="opacity">"Opacidad"</string>
     <string name="general">"General"</string>
     <string name="list_collapse">"Contraer"</string>
-    <string name="edit_recur_second">"segundo(s)"</string>
-    <string name="edit_recur_minute">"minuto(s)"</string>
-    <string name="edit_recur_hour">"hora(s)"</string>
     <string name="filter_group_sort">"Grupo/Ordenar"</string>
     <string name="widget_list_configuration_widget_background">"Fondo del widget"</string>
     <string name="widget_list_configuration_entries_background">"Entradas en segundo plano"</string>
