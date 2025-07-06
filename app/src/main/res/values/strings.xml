@@ -271,8 +271,8 @@
     <string name="recur_every_day">"Every day"</string>
     <string name="recur_every_other_day">"Every other day"</string>
     <string name="recur_every_x_day">"Every %1$s day"</string>
-    <string name="recur_last_weekday">"Last""</string>
-    <string name="recur_no_recurrence">"No recurrence""</string>
+    <string name="recur_last_weekday">"Last"</string>
+    <string name="recur_no_recurrence">"No recurrence"</string>
     <string name="recur_ends_never">"Ends never"</string>
     <string name="recur_ends_on">"Ends on"</string>
     <string name="recur_ends_after">"Ends after"</string>
@@ -280,7 +280,6 @@
     <string name="recur_xth_day_of_the_month">"%1$s day of the month"</string>
     <string name="recur_xth_last_day_of_the_month">"%1$s last day of the month"</string>
     <string name="recur_last_day_of_the_month">"Last day of the month"</string>
-
     <string name="attachment_export_saved_successfully">"Saved successfully"</string>
     <string name="attachment_export_error_error_occurred">"An error occurred while saving the selected file!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Add remote Collection (%1$s)"</string>
