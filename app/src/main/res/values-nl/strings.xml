@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Subtaak snel toevoegen"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Subnotitie snel toevoegen"</string>
     <string name="edit_attachment_add_link_dialog">"Link van bijlage toevoegen"</string>
-    <string name="edit_recur_repeat_every_x">"Herhaal elke"</string>
-    <string name="edit_recur_on_weekday">"op"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"op de"</string>
-    <string name="edit_recur_x_day_of_the_month">"dag van de maand"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"laatste"</string>
-    <string name="edit_recur_x_times">"keer"</string>
     <string name="edit_recur_toast_requires_start_date">"Herhaling vereist een startdatum!"</string>
     <string name="edit_datepicker_dialog_select_date">"Kies datum"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Selecteer een datumbereik"</string>
@@ -245,10 +239,9 @@
     <string name="priority_4_medium_high">"4 - Middel hoog"</string>
     <string name="priority_5_medium">"5 - Gemiddeld"</string>
     <string name="priority_6_medium_low">"6 - Gemiddeld laag"</string>
-    <string name="edit_recur_day">"dag(en)"</string>
-    <string name="edit_recur_week">"week(en)"</string>
-    <string name="edit_recur_month">"maand(en)"</string>
-    <string name="edit_recur_year">"ja(a)r(en)"</string>
+    <string name="recur_ends_never">"stopt niet"</string>
+    <string name="recur_ends_on">"stopt op"</string>
+    <string name="recur_ends_after">"stopt na"</string>
     <string name="attachment_export_saved_successfully">"Opslaan is gelukt"</string>
     <string name="attachment_export_error_error_occurred">"Er is een fout opgetreden bij het opslaan van het bestand!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Externe verzameling toevoegen (%1$s)"</string>
@@ -333,9 +326,6 @@
     <string name="notification_done">"Klaar"</string>
     <string name="notification_add_1h">"+1 uur"</string>
     <string name="notification_add_1d">"+1 dag"</string>
-    <string name="recur_ends_never">"stopt niet"</string>
-    <string name="recur_ends_on">"stopt op"</string>
-    <string name="recur_ends_after">"stopt na"</string>
     <string name="list_toast_export_success">"Lijst succesvol geëxporteerd"</string>
     <string name="list_toast_export_error">"Fout bij het exporteren van lijst"</string>
     <string name="collections_toast_export_success">"Collecties succesvol geëxporteerd"</string>
@@ -443,8 +433,6 @@ Dank u!"</string>
     <string name="details_show_hide_elements">Toon/verberg delen</string>
     <string name="details_attendees_processing_info">"Let op: Servers kunnen deelnemers automatisch verwerken, bijvoorbeeld door iMIP berichten te verzenden."</string>
     <string name="details_toast_entry_deleted">"Item verworpen/verwijderd"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"Niet-ondersteunde herhalingsregel gedetecteerd!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"Er is een onbekende of niet-ondersteunde herhalingsregel gedetecteerd. Als je doorgaat, wordt de bestaande herhalingsregel verwijderd/overschreven."</string>
     <string name="details_entry_could_not_be_loaded">"Dit item werd verwijderd op de achtergrond of kon niet geladen worden."</string>
     <string name="details_attachment_beta_info">"* Synchroniseren van bijlagen is een experimentele functie. We raden sterk aan om alleen kleine bijlagen te gebruiken (tot 100 KB) omdat grotere kunnen leiden tot lange synchronisatietijden en onverwacht gedrag."</string>
     <string name="details_unchanged_part_of_series">"Dit item maakt deel uit van een serie. Dit item kopieert eventuele wijzigingen in de serie."</string>
@@ -624,9 +612,6 @@ Dank u!"</string>
     <string name="opacity">"Transparantie"</string>
     <string name="general">"Algemeen"</string>
     <string name="list_collapse">"Inklappen"</string>
-    <string name="edit_recur_second">"seconde(n)"</string>
-    <string name="edit_recur_minute">"minu(u)t(en)"</string>
-    <string name="edit_recur_hour">"u(u)r(en)"</string>
     <string name="filter_group_sort">"Groepeer/Sorteer"</string>
     <string name="widget_list_configuration_widget_background">"Widget-achtergrond"</string>
     <string name="widget_list_configuration_entries_background">"Items achtergrond"</string>

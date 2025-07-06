@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Adição rápida de subtarefa"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Adição rápida de subnota"</string>
     <string name="edit_attachment_add_link_dialog">"Adicionar link de anexo"</string>
-    <string name="edit_recur_repeat_every_x">"Repetir a cada"</string>
-    <string name="edit_recur_on_weekday">"em"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"no"</string>
-    <string name="edit_recur_x_day_of_the_month">"dia do mês"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"último"</string>
-    <string name="edit_recur_x_times">"vezes"</string>
     <string name="edit_recur_toast_requires_start_date">"A recorrência requer uma data inicial para ser definida!"</string>
     <string name="edit_datepicker_dialog_select_date">"Selecionar data"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Selecione o intervalo de datas"</string>

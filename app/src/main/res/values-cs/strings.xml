@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Rychle přidat dílčí úkol"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Rychle přidat dílčí poznámku"</string>
     <string name="edit_attachment_add_link_dialog">"Přidat odkaz na přílohu"</string>
-    <string name="edit_recur_repeat_every_x">"Opakovat každých"</string>
-    <string name="edit_recur_on_weekday">"v"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"v"</string>
-    <string name="edit_recur_x_day_of_the_month">"den v měsíci"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"poslední"</string>
-    <string name="edit_recur_x_times">"krát"</string>
     <string name="edit_recur_toast_requires_start_date">"Opakování vyžaduje nastavení počátečního data!"</string>
     <string name="edit_datepicker_dialog_select_date">"Vybrat datum"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Vyberte časové období"</string>
@@ -245,10 +239,9 @@
     <string name="priority_4_medium_high">"4 - Středně vysoká"</string>
     <string name="priority_5_medium">"5 - Střední"</string>
     <string name="priority_6_medium_low">"6 - Středně nízká"</string>
-    <string name="edit_recur_day">"dní"</string>
-    <string name="edit_recur_week">"týdnů"</string>
-    <string name="edit_recur_month">"měsíců"</string>
-    <string name="edit_recur_year">"let"</string>
+    <string name="recur_ends_never">"nikdy nekončí"</string>
+    <string name="recur_ends_on">"končí"</string>
+    <string name="recur_ends_after">"končí po"</string>
     <string name="attachment_export_saved_successfully">"Úspěšně úloženo"</string>
     <string name="attachment_export_error_error_occurred">"Při ukládání vybraného souboru došlo k chybě!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Přidat vzdálenou Sbírku (%1$s)"</string>
@@ -333,9 +326,6 @@
     <string name="notification_done">"Hotovo"</string>
     <string name="notification_add_1h">"+1 hodina"</string>
     <string name="notification_add_1d">"+1 den"</string>
-    <string name="recur_ends_never">"nikdy nekončí"</string>
-    <string name="recur_ends_on">"končí"</string>
-    <string name="recur_ends_after">"končí po"</string>
     <string name="list_toast_export_success">"Seznam úspěšně exportován"</string>
     <string name="list_toast_export_error">"Chyba při exportu seznamu"</string>
     <string name="collections_toast_export_success">"Sbírky úspěšně exportovány"</string>
@@ -443,8 +433,6 @@ Děkujeme vám!"</string>
     <string name="details_show_hide_elements">Zobrazit/skrýt prvky</string>
     <string name="details_attendees_processing_info">"Pozor: Servery mohou účastníky automaticky zpracovávat např. zasíláním zpráv iMIP."</string>
     <string name="details_toast_entry_deleted">"Záznam byl zahozen nebo odstraněn"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"Rozpoznáno nepodporované pravidlo opakování!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"Bylo rozpoznáno neznámé nebo nepodporované pravidlo opakování. Pokud budete pokračovat, stávající pravidlo opakování bude odstraněno nebo přepsáno."</string>
     <string name="details_entry_could_not_be_loaded">"Tento záznam byla buď na pozadí odstraněna neb ho nebylo možné načíst."</string>
     <string name="details_attachment_beta_info">"* Synchronizace příloh je experimentální funkce. Důrazně doporučujeme používat pouze malé přílohy (do 100 KB), protože větší přílohy by mohly vést k dlouhým synchronizačním časům a neočekávanému chování."</string>
     <string name="details_unchanged_part_of_series">"Tento záznam je součástí série. Tento záznam zkopíruje všechny změny provedené pro sérii."</string>
@@ -624,9 +612,6 @@ Děkujeme vám!"</string>
     <string name="opacity">"Neprůhlednost"</string>
     <string name="general">"Obecné"</string>
     <string name="list_collapse">"Sbalit"</string>
-    <string name="edit_recur_second">"sekund"</string>
-    <string name="edit_recur_minute">"minut"</string>
-    <string name="edit_recur_hour">"hodin"</string>
     <string name="filter_group_sort">"Seskupit/Seřadit"</string>
     <string name="widget_list_configuration_widget_background">"Pozadí widgetu"</string>
     <string name="widget_list_configuration_entries_background">"Pozadí záznamů"</string>

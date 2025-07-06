@@ -58,11 +58,6 @@
     <!-- fragment_ical_edit -->
     <string name="edit_subtasks_add_helper">"Lisää alitehtävä"</string>
     <string name="edit_attachment_add_link_dialog">"Lisää liite linkkinä"</string>
-    <string name="edit_recur_repeat_every_x">"Toista joka"</string>
-    <string name="edit_recur_on_weekday">"joka"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"kuukauden"</string>
-    <string name="edit_recur_x_day_of_the_month">"päivänä"</string>
-    <string name="edit_recur_x_times">"kertaa"</string>
     <string name="edit_recur_toast_requires_start_date">"Toisto vaatii aloituspäivän valintaa"</string>
     <string name="edit_datepicker_dialog_select_date">"Valise päivä"</string>
     <string name="edit_dialog_sure_to_delete_title">"Poista \"%1$s\"?"</string>

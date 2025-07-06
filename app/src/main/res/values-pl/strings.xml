@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Szybkie dodawanie podzadania"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Szybkie dodawanie subnotatki"</string>
     <string name="edit_attachment_add_link_dialog">"Dodaj link załącznika"</string>
-    <string name="edit_recur_repeat_every_x">"Powtarzaj każdego"</string>
-    <string name="edit_recur_on_weekday">"w"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"w dniu"</string>
-    <string name="edit_recur_x_day_of_the_month">"dzień miesiąca"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"ostatni"</string>
-    <string name="edit_recur_x_times">"razy"</string>
     <string name="edit_recur_toast_requires_start_date">"Powtarzanie wymaga ustawienia daty rozpoczęcia!"</string>
     <string name="edit_datepicker_dialog_select_date">"Wybierz datę"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Wybierz zakres dat"</string>
@@ -243,10 +237,6 @@
     <string name="priority_4_medium_high">"Średnio wysoki"</string>
     <string name="priority_5_medium">"Średni"</string>
     <string name="priority_6_medium_low">"Średnio niski"</string>
-    <string name="edit_recur_day">"dzień/dni"</string>
-    <string name="edit_recur_week">"tydzień/tygodnie"</string>
-    <string name="edit_recur_month">"miesiąc/miesiące"</string>
-    <string name="edit_recur_year">"rok/lata"</string>
     <string name="attachment_export_saved_successfully">"Zapisano pomyślnie"</string>
     <string name="attachment_export_error_error_occurred">"Wystąpił błąd podczas zapisywania wybranego pliku!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Dodaj zdalną kolekcję (%1$s)"</string>

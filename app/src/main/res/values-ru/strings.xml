@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Быстрое добавление подзадачи"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Быстрое добавление доч. заметки"</string>
     <string name="edit_attachment_add_link_dialog">"Добавить ссылку на вложение"</string>
-    <string name="edit_recur_repeat_every_x">"Повторять каждые"</string>
-    <string name="edit_recur_on_weekday">"по"</string>
-    <string name="edit_recur_on_the_x_day_of_month">"на"</string>
-    <string name="edit_recur_x_day_of_the_month">"день месяца"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"последний"</string>
-    <string name="edit_recur_x_times">"раз"</string>
     <string name="edit_recur_toast_requires_start_date">"Установите дату начала, чтобы активировать повторения!"</string>
     <string name="edit_datepicker_dialog_select_date">"Выбрать дату"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Диапазон дат"</string>
@@ -245,10 +239,9 @@
     <string name="priority_4_medium_high">"4 - Выше среднего"</string>
     <string name="priority_5_medium">"5 ‐ Средний"</string>
     <string name="priority_6_medium_low">"6 - Ниже среднего"</string>
-    <string name="edit_recur_day">"дн."</string>
-    <string name="edit_recur_week">"нед."</string>
-    <string name="edit_recur_month">"мес."</string>
-    <string name="edit_recur_year">"лет"</string>
+    <string name="recur_ends_never">"повторять всегда"</string>
+    <string name="recur_ends_on">"повторять до"</string>
+    <string name="recur_ends_after">"повторять раз"</string>
     <string name="attachment_export_saved_successfully">"Сохранено"</string>
     <string name="attachment_export_error_error_occurred">"Ошибка при сохранении файла"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Добавить внешнюю коллекцию (%1$s)"</string>
@@ -333,9 +326,6 @@
     <string name="notification_done">"Готово"</string>
     <string name="notification_add_1h">"+ 1 час"</string>
     <string name="notification_add_1d">"+ 1 день"</string>
-    <string name="recur_ends_never">"повторять всегда"</string>
-    <string name="recur_ends_on">"повторять до"</string>
-    <string name="recur_ends_after">"повторять раз"</string>
     <string name="list_toast_export_success">"Список успешно экспортирован"</string>
     <string name="list_toast_export_error">"Ошибка при экспорте списка"</string>
     <string name="collections_toast_export_success">"Коллекции успешно экспортированы"</string>
@@ -441,8 +431,6 @@
     <string name="details_show_hide_elements">Показать/скрыть элементы</string>
     <string name="details_attendees_processing_info">"Внимание: Серверы могут автоматически обрабатывать участников (например, отправляя iMIP-сообщения)."</string>
     <string name="details_toast_entry_deleted">"Запись сброшена/удалена"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"Обнаружена неподдерживаемая настройка повторения!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"Обнаружена неизвестная или неподдерживаемая настройка повторения. Если вы сохраните эту запись, существующая настройка повторения будет удалена/изменена."</string>
     <string name="details_entry_could_not_be_loaded">"Эта запись была либо удалена в фоновом режиме, либо не может быть загружена."</string>
     <string name="details_attachment_beta_info">"* Синхронизация вложений является экспериментальной функцией. Мы настоятельно рекомендуем использовать только небольшие вложения (до 100 КБ), так как большие могут привести к длительному времени синхронизации и неожиданному поведению."</string>
     <string name="details_unchanged_part_of_series">"Эта запись является частью серии. Эта запись скопирует все изменения, внесенные в серию."</string>
@@ -622,9 +610,6 @@
     <string name="opacity">"Непрозрачность"</string>
     <string name="general">"Общее"</string>
     <string name="list_collapse">"Свернуть"</string>
-    <string name="edit_recur_second">"секунд(ы)"</string>
-    <string name="edit_recur_minute">"мин."</string>
-    <string name="edit_recur_hour">"час."</string>
     <string name="filter_group_sort">"Группировка/Сортировка"</string>
     <string name="widget_list_configuration_widget_background">"Фон виджета"</string>
     <string name="widget_list_configuration_entries_background">"Фон записей"</string>
