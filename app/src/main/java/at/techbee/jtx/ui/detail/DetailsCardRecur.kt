@@ -107,7 +107,7 @@ fun DetailsCardRecur(
     var until by rememberSaveable { mutableStateOf(icalObject.getRecur()?.until) }
     val weekDayList = remember { icalObject.getRecur()?.dayList?.toMutableStateList() ?: mutableStateListOf() }
     val monthDayList = remember { icalObject.getRecur()?.monthDayList?.toMutableStateList() ?: mutableStateListOf() }
-    val setPosList = remember { icalObject.getRecur()?.setPosList?.toMutableStateList() ?: mutableStateListOf() }
+    //val setPosList = remember { icalObject.getRecur()?.setPosList?.toMutableStateList() ?: mutableStateListOf() }
     val monthList = remember { icalObject.getRecur()?.monthList?.toMutableStateList() ?: mutableStateListOf() }
 
     var frequencyExpanded by rememberSaveable { mutableStateOf(false) }
@@ -115,7 +115,7 @@ fun DetailsCardRecur(
     var weekDayListExpanded by rememberSaveable { mutableStateOf(false) }
     var monthDayListExpanded by rememberSaveable { mutableStateOf(false) }
     var monthListExpanded by rememberSaveable { mutableStateOf(false) }
-    var posListExpanded by rememberSaveable { mutableStateOf(false) }
+    var weekDayWithOffsetListExpanded by rememberSaveable { mutableStateOf(false) }
     var endAfterExpaneded by rememberSaveable { mutableStateOf(false) }
     var endsExpanded by rememberSaveable { mutableStateOf(false) }
     var showDatepicker by rememberSaveable { mutableStateOf(false) }
@@ -143,7 +143,7 @@ fun DetailsCardRecur(
                 if(weekDayList.isNotEmpty()) {    // there might be a dayList also for DAILY recurrences coming from Thunderbird!
                     val newDayList = WeekDayList().apply {
                         this.addAll(weekDayList)
-                        if(!weekDayList.contains(dtstartWeekday))
+                        if(weekDayList.none { it.day == dtstartWeekday?.day })
                             weekDayList.add(dtstartWeekday)
                     }
                     dayList(newDayList)
@@ -160,13 +160,8 @@ fun DetailsCardRecur(
                     }
                     monthList(newMonthList)
                 }
-                if(setPosList.isNotEmpty()) {
-                    val newSetPosList = NumberList().apply {
-                        this.addAll(setPosList)
-                    }
-                    setPosList(newSetPosList)
-                }
             }.build()
+            //Log.d("RRULE", updatedRRule.toString())
             return updatedRRule
         }
     }
@@ -254,7 +249,6 @@ fun DetailsCardRecur(
                                         monthDayList.clear()
                                         weekDayList.clear()
                                         monthList.clear()
-                                        setPosList.clear()
                                         onRecurUpdated(buildRRule())
                                         frequencyExpanded = false
                                     },
@@ -273,8 +267,8 @@ fun DetailsCardRecur(
                                         monthList.clear()
                                         if(monthList.isEmpty())
                                             monthList.add(Month.valueOf(1))
-                                        if(weekDayList.isEmpty())
-                                            weekDayList.add(WeekDay.MO)
+                                        weekDayList.clear()
+                                        weekDayList.add(WeekDay(dtstartWeekday, 1))
                                         onRecurUpdated(buildRRule())
                                         frequencyExpanded = false
                                     },
@@ -290,7 +284,6 @@ fun DetailsCardRecur(
                                         if(interval == null)
                                             interval = 1
                                         weekDayList.clear()
-                                        setPosList.clear()
                                         if(monthList.isEmpty())
                                             monthList.add(Month.valueOf(1))
                                         if(monthDayList.isEmpty())
@@ -309,8 +302,8 @@ fun DetailsCardRecur(
                                             count = 1
                                         if(interval == null)
                                             interval = 1
-                                        if(weekDayList.isEmpty())
-                                            weekDayList.add(WeekDay.MO)
+                                        weekDayList.clear()
+                                        weekDayList.add(WeekDay(dtstartWeekday, 1))
                                         monthDayList.clear()
                                         monthList.clear()
                                         onRecurUpdated(buildRRule())
@@ -331,7 +324,6 @@ fun DetailsCardRecur(
                                             monthDayList.add(1)
                                         monthList.clear()
                                         weekDayList.clear()
-                                        setPosList.clear()
                                         onRecurUpdated(buildRRule())
                                         frequencyExpanded = false
                                     },
@@ -346,11 +338,10 @@ fun DetailsCardRecur(
                                             count = 1
                                         if(interval == null)
                                             interval = 1
-                                        setPosList.clear()
                                         monthList.clear()
                                         monthDayList.clear()
-                                        if(weekDayList.isEmpty())
-                                            weekDayList.add(WeekDay.MO)
+                                        weekDayList.clear()
+                                        weekDayList.add(dtstartWeekday)
                                         onRecurUpdated(buildRRule())
                                         frequencyExpanded = false
                                     },
@@ -368,7 +359,6 @@ fun DetailsCardRecur(
                                         weekDayList.clear()
                                         monthDayList.clear()
                                         monthList.clear()
-                                        setPosList.clear()
                                         onRecurUpdated(buildRRule())
                                         frequencyExpanded = false
                                     },
@@ -385,36 +375,53 @@ fun DetailsCardRecur(
                         enabled = isEditMode && icalObject.recurid == null,
                         label = {
                             Text(
-                                if(frequency == Frequency.YEARLY)
-                                    when (interval) {
+                                when(frequency) {
+                                    Frequency.YEARLY -> when (interval) {
                                         null, 1 -> stringResource(R.string.recur_every_year)
                                         2 -> stringResource(R.string.recur_every_other_year)
-                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_year, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        in 3..Int.MAX_VALUE -> stringResource(
+                                            R.string.recur_every_x_year,
+                                            DateTimeUtils.getLocalizedOrdinalFor(interval ?: 1)
+                                        )
+
                                         else -> interval.toString()
                                     }
-                                else if (frequency == Frequency.MONTHLY)
-                                    when (interval) {
+
+                                    Frequency.MONTHLY -> when (interval) {
                                         null, 1 -> stringResource(R.string.recur_every_month)
                                         2 -> stringResource(R.string.recur_every_other_month)
-                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_month, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        in 3..Int.MAX_VALUE -> stringResource(
+                                            R.string.recur_every_x_month,
+                                            DateTimeUtils.getLocalizedOrdinalFor(interval ?: 1)
+                                        )
+
                                         else -> interval.toString()
                                     }
-                                else if (frequency == Frequency.WEEKLY)
-                                    when (interval) {
+
+                                    Frequency.WEEKLY -> when (interval) {
                                         null, 1 -> stringResource(R.string.recur_every_week)
                                         2 -> stringResource(R.string.recur_every_other_week)
-                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_week, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        in 3..Int.MAX_VALUE -> stringResource(
+                                            R.string.recur_every_x_week,
+                                            DateTimeUtils.getLocalizedOrdinalFor(interval ?: 1)
+                                        )
+
                                         else -> interval.toString()
                                     }
-                                else if (frequency == Frequency.DAILY)
-                                    when (interval) {
+
+                                    Frequency.DAILY -> when (interval) {
                                         null, 1 -> stringResource(R.string.recur_every_day)
                                         2 -> stringResource(R.string.recur_every_other_day)
-                                        in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_day, DateTimeUtils.getLocalizedOrdinalFor(interval?:1))
+                                        in 3..Int.MAX_VALUE -> stringResource(
+                                            R.string.recur_every_x_day,
+                                            DateTimeUtils.getLocalizedOrdinalFor(interval ?: 1)
+                                        )
+
                                         else -> interval.toString()
                                     }
-                                else
-                                    interval.toString()
+
+                                    else -> interval.toString()
+                                }
                             )
 
                             DropdownMenu(
@@ -436,36 +443,49 @@ fun DetailsCardRecur(
                                             onRecurUpdated(buildRRule())
                                         },
                                         text = { Text(
-                                            if(frequency == Frequency.YEARLY)
-                                                when (number) {
+                                            when(frequency) {
+                                                Frequency.YEARLY -> when (number) {
                                                     1 -> stringResource(R.string.recur_every_year)
                                                     2 -> stringResource(R.string.recur_every_other_year)
-                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_year, DateTimeUtils.getLocalizedOrdinalFor(number))
+                                                    in 3..Int.MAX_VALUE -> stringResource(
+                                                        R.string.recur_every_x_year,
+                                                        DateTimeUtils.getLocalizedOrdinalFor(number)
+                                                    )
+
                                                     else -> interval.toString()
                                                 }
-                                            else if (frequency == Frequency.MONTHLY)
-                                                when (number) {
-                                                    1 -> stringResource(R.string.recur_every_month)
-                                                    2 -> stringResource(R.string.recur_every_other_month)
-                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_month, DateTimeUtils.getLocalizedOrdinalFor(number))
-                                                    else -> interval.toString()
-                                                }
-                                            else if (frequency == Frequency.WEEKLY)
-                                                when (number) {
-                                                    1 -> stringResource(R.string.recur_every_week)
-                                                    2 -> stringResource(R.string.recur_every_other_week)
-                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_week, DateTimeUtils.getLocalizedOrdinalFor(number))
-                                                    else -> interval.toString()
-                                                }
-                                            else if (frequency == Frequency.DAILY)
-                                                when (number) {
-                                                    1 -> stringResource(R.string.recur_every_day)
-                                                    2 -> stringResource(R.string.recur_every_other_day)
-                                                    in 3..Int.MAX_VALUE -> stringResource(R.string.recur_every_x_day, DateTimeUtils.getLocalizedOrdinalFor(number))
-                                                    else -> interval.toString()
-                                                }
-                                            else
-                                                number.toString()
+                                                Frequency.MONTHLY -> when (number) {
+                                                        1 -> stringResource(R.string.recur_every_month)
+                                                        2 -> stringResource(R.string.recur_every_other_month)
+                                                        in 3..Int.MAX_VALUE -> stringResource(
+                                                            R.string.recur_every_x_month,
+                                                            DateTimeUtils.getLocalizedOrdinalFor(number)
+                                                        )
+
+                                                        else -> interval.toString()
+                                                    }
+                                                Frequency.WEEKLY -> when (number) {
+                                                        1 -> stringResource(R.string.recur_every_week)
+                                                        2 -> stringResource(R.string.recur_every_other_week)
+                                                        in 3..Int.MAX_VALUE -> stringResource(
+                                                            R.string.recur_every_x_week,
+                                                            DateTimeUtils.getLocalizedOrdinalFor(number)
+                                                        )
+
+                                                        else -> interval.toString()
+                                                    }
+                                                Frequency.DAILY -> when (number) {
+                                                        1 -> stringResource(R.string.recur_every_day)
+                                                        2 -> stringResource(R.string.recur_every_other_day)
+                                                        in 3..Int.MAX_VALUE -> stringResource(
+                                                            R.string.recur_every_x_day,
+                                                            DateTimeUtils.getLocalizedOrdinalFor(number)
+                                                        )
+
+                                                        else -> interval.toString()
+                                                    }
+                                                else -> number.toString()
+                                            }
                                         )}
                                     )
                                 }
@@ -541,51 +561,7 @@ fun DetailsCardRecur(
                                 )
                             }
 
-                            // posList can only be used in combination with weekDayList and only if one weekday is selected
-                            if(weekDayList.isNotEmpty()) {
-                                AssistChip(
-                                    onClick = { posListExpanded = true },
-                                    enabled = isEditMode && icalObject.recurid == null && weekDayList.size == 1,
-                                    label = {
-                                        Text(
-                                            if (setPosList.isEmpty())
-                                                DateTimeUtils.getLocalizedOrdinalFor(1)
-                                            else if (setPosList.first() == -1)
-                                                context.getString(R.string.recur_last_weekday)
-                                            else
-                                                DateTimeUtils.getLocalizedOrdinalFor(setPosList.first())
-                                        )
-
-                                        DropdownMenu(
-                                            expanded = posListExpanded,
-                                            onDismissRequest = { posListExpanded = false }
-                                        ) {
-
-                                            for (setPos in listOf(1, 2, 3, 4, 5, -1)) {
-                                                DropdownMenuItem(
-                                                    onClick = {
-                                                        setPosList.clear()
-                                                        if (setPos != 1)    // if it's 0, then we only clear
-                                                            setPosList.add(setPos)
-                                                        posListExpanded = false
-                                                        onRecurUpdated(buildRRule())
-                                                    },
-                                                    text = {
-                                                        Text(
-                                                            text = if (setPos == -1)
-                                                                context.getString(R.string.recur_last_weekday)
-                                                            else
-                                                                DateTimeUtils.getLocalizedOrdinalFor(setPos),
-                                                        )
-                                                    }
-                                                )
-                                            }
-                                        }
-                                    }
-                                )
-                            }
-
-                            if(weekDayList.isNotEmpty()) {
+                            if(weekDayList.isNotEmpty() && frequency == Frequency.WEEKLY) {
                                 AssistChip(
                                     onClick = { weekDayListExpanded = true },
                                     enabled = isEditMode && icalObject.recurid == null,
@@ -609,12 +585,14 @@ fun DetailsCardRecur(
                                             weekdays.forEach { weekday ->
                                                 DropdownMenuItem(
                                                     onClick = {
-                                                        if (weekDayList.contains(weekday) && weekDayList.size > 1)
+                                                        if (weekDayList.contains(weekday))
                                                             weekDayList.remove(weekday)
                                                         else
                                                             weekDayList.add(weekday)
-                                                        if(weekDayList.size > 1)
-                                                            setPosList.clear()
+
+                                                        if(weekDayList.isEmpty())
+                                                            weekDayList.add(dtstartWeekday)
+
                                                         onRecurUpdated(buildRRule())
                                                     },
                                                     text = {
@@ -625,10 +603,92 @@ fun DetailsCardRecur(
                                                             ) ?: "",
                                                             isSelected = weekDayList.contains(weekday),
                                                             onCheckedChange = {
-                                                                if (weekDayList.contains(weekday) && weekDayList.size > 1)
+                                                                if (weekDayList.contains(weekday))
                                                                     weekDayList.remove(weekday)
                                                                 else
                                                                     weekDayList.add(weekday)
+
+                                                                if(weekDayList.isEmpty())
+                                                                    weekDayList.add(dtstartWeekday)
+
+                                                                onRecurUpdated(buildRRule())
+                                                            }
+                                                        )
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+
+                            if(weekDayList.isNotEmpty() && (frequency == Frequency.MONTHLY || frequency == Frequency.YEARLY)) {
+                                AssistChip(
+                                    onClick = { weekDayWithOffsetListExpanded = true },
+                                    enabled = isEditMode && icalObject.recurid == null,
+                                    label = {
+                                        Text(
+                                            weekDayList.joinToString(
+                                                separator = ", ",
+                                                transform = { weekDayWithOffset ->
+                                                    if (weekDayWithOffset.offset == -1)
+                                                        (context.getString(R.string.recur_last_weekday) + " " + WeekDay(weekDayWithOffset.day.name).asDayOfWeek()
+                                                            ?.getDisplayName(
+                                                                java.time.format.TextStyle.FULL_STANDALONE,
+                                                                Locale.getDefault()
+                                                            ))
+                                                    else
+                                                        (DateTimeUtils.getLocalizedOrdinalFor(weekDayWithOffset.offset) + " " + WeekDay(weekDayWithOffset.day.name).asDayOfWeek()
+                                                            ?.getDisplayName(
+                                                                java.time.format.TextStyle.FULL_STANDALONE,
+                                                                Locale.getDefault()
+                                                            ))
+                                                }
+                                            )
+                                        )
+
+                                        DropdownMenu(
+                                            expanded = weekDayWithOffsetListExpanded,
+                                            onDismissRequest = { weekDayWithOffsetListExpanded = false }
+                                        ) {
+
+                                            for (weekDayWithOffset in listOf(WeekDay(dtstartWeekday, 1), WeekDay(dtstartWeekday, 2), WeekDay(dtstartWeekday, 3), WeekDay(dtstartWeekday, 4), WeekDay(dtstartWeekday, 5), WeekDay(dtstartWeekday, -1))) {
+                                                DropdownMenuItem(
+                                                    onClick = {
+                                                        if(weekDayList.contains(weekDayWithOffset))
+                                                            weekDayList.remove(weekDayWithOffset)
+                                                        else
+                                                            weekDayList.add(weekDayWithOffset)
+
+                                                        if(weekDayList.isEmpty())
+                                                            weekDayList.add(WeekDay(dtstartWeekday, 1))
+
+                                                        onRecurUpdated(buildRRule())
+                                                    },
+                                                    text = {
+                                                        CheckboxWithText(
+                                                            text = if (weekDayWithOffset.offset == -1)
+                                                                (context.getString(R.string.recur_last_weekday) + " " + WeekDay(weekDayWithOffset.day.name).asDayOfWeek()
+                                                                    ?.getDisplayName(
+                                                                        java.time.format.TextStyle.FULL_STANDALONE,
+                                                                        Locale.getDefault()
+                                                                    ))
+                                                            else
+                                                                (DateTimeUtils.getLocalizedOrdinalFor(weekDayWithOffset.offset) + " " + WeekDay(weekDayWithOffset.day.name).asDayOfWeek()
+                                                                    ?.getDisplayName(
+                                                                        java.time.format.TextStyle.FULL_STANDALONE,
+                                                                        Locale.getDefault()
+                                                                    )),
+                                                            isSelected = weekDayList.contains(weekDayWithOffset),
+                                                            onCheckedChange = {
+                                                                if(weekDayList.contains(weekDayWithOffset))
+                                                                    weekDayList.remove(weekDayWithOffset)
+                                                                else
+                                                                    weekDayList.add(weekDayWithOffset)
+
+                                                                if(weekDayList.isEmpty())
+                                                                    weekDayList.add(WeekDay(dtstartWeekday, 1))
+
                                                                 onRecurUpdated(buildRRule())
                                                             }
                                                         )
