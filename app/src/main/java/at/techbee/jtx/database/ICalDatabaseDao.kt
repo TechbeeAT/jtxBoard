@@ -159,7 +159,7 @@ interface ICalDatabaseDao {
 
     /**
      * Retrieve an list of all Collections with the data necessary for the notification channel
-     * This includes the [collectionId], [displayName] and [accountName] of the collection
+     * This includes the collectionId, displayName and accountName of the collection
      * @return a list of [ICalCollectionNotificationChannelInfo]
      */
     @Query("select $COLUMN_COLLECTION_ID, $COLUMN_COLLECTION_DISPLAYNAME, $COLUMN_COLLECTION_ACCOUNT_NAME from $TABLE_NAME_COLLECTION ORDER BY $COLUMN_COLLECTION_ACCOUNT_TYPE = 'LOCAL' DESC, $COLUMN_COLLECTION_ACCOUNT_NAME ASC")
@@ -274,7 +274,7 @@ interface ICalDatabaseDao {
      * Retrieve the UID of an [ICalObject] as LiveData
      *
      * @param id The id of the [ICalObject] in the DB
-     * @return the [UID]
+     * @return the UID
      */
     @Query("SELECT $COLUMN_UID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ID = :id")
     fun getICalObjectUID(id: Long): LiveData<String?>
@@ -1183,8 +1183,11 @@ interface ICalDatabaseDao {
             val currentItem = getICalObjectById(iCalObjectId) ?: return@forEach
             currentItem.status = newStatus.status
             currentItem.xstatus = newXStatus?.xstatus
+            if(newStatus == Status.NO_STATUS)
+                currentItem.percent = null
             if(settingKeepStatusProgressCompletedInSync) {
                 when(newStatus) {
+                    Status.NEEDS_ACTION -> currentItem.setUpdatedProgress(null, true)
                     Status.IN_PROCESS -> currentItem.setUpdatedProgress(if(currentItem.percent !in 1..99) 1 else currentItem.percent, true)
                     Status.COMPLETED -> currentItem.setUpdatedProgress(100, true)
                     else -> { }
