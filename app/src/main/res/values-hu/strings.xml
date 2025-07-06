@@ -104,12 +104,6 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Alfeladat gyors hozzáadása"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Aljegyzet gyors hozzáadása"</string>
     <string name="edit_attachment_add_link_dialog">"Melléklethivatkozás hozzáadása"</string>
-    <string name="edit_recur_repeat_every_x">"Ismétlés"</string>
-    <string name="edit_recur_on_weekday">" "</string>
-    <string name="edit_recur_on_the_x_day_of_month">" "</string>
-    <string name="edit_recur_x_day_of_the_month">"hónap napja"</string>
-    <string name="edit_recur_LAST_day_of_the_month">"utolsó"</string>
-    <string name="edit_recur_x_times">"alkalommal"</string>
     <string name="edit_recur_toast_requires_start_date">"Az ismétlés beállításához előbb adjon meg kezdési dátumot!"</string>
     <string name="edit_datepicker_dialog_select_date">"Dátum kiválasztása"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Dátumtartomány kiválasztása"</string>
@@ -245,10 +239,9 @@
     <string name="priority_4_medium_high">"4 - Közepesen magas"</string>
     <string name="priority_5_medium">"5 - Közepes"</string>
     <string name="priority_6_medium_low">"6 - Közepesen alacsony"</string>
-    <string name="edit_recur_day">"nap"</string>
-    <string name="edit_recur_week">"hét"</string>
-    <string name="edit_recur_month">"hónap"</string>
-    <string name="edit_recur_year">"év"</string>
+    <string name="recur_ends_never">"vég nélkül"</string>
+    <string name="recur_ends_on">"befejezés"</string>
+    <string name="recur_ends_after">"ismétlés"</string>
     <string name="attachment_export_saved_successfully">"Sikeresen elmentve"</string>
     <string name="attachment_export_error_error_occurred">"Hiba történt a kiválasztott fájl mentésekor!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Távoli gyűjtemény hozzáadása (%1$s)"</string>
@@ -333,9 +326,6 @@
     <string name="notification_done">"Kész"</string>
     <string name="notification_add_1h">"+ 1 óra"</string>
     <string name="notification_add_1d">"+1 nap"</string>
-    <string name="recur_ends_never">"vég nélkül"</string>
-    <string name="recur_ends_on">"befejezés"</string>
-    <string name="recur_ends_after">"ismétlés"</string>
     <string name="list_toast_export_success">"Lista sikeresen exportálva"</string>
     <string name="list_toast_export_error">"Hiba a lista exportálása során"</string>
     <string name="collections_toast_export_success">"Gyűjtemények exportálása sikeres"</string>
@@ -445,8 +435,6 @@ Köszönjük!"</string>
     <string name="details_show_hide_elements">Paraméterek megjelenítése/elrejtése</string>
     <string name="details_attendees_processing_info">"Figyelem! Egyes szerverek automatikusan értesíthetik a résztvevőket, például iMIP-üzenetek küldésével."</string>
     <string name="details_toast_entry_deleted">"A bejegyzés elvetve/törölve"</string>
-    <string name="details_recur_unknown_rrule_dialog_title">"Nem támogatott ismétlési szabály!"</string>
-    <string name="details_recur_unknown_rrule_dialog_message">"Ismeretlen vagy nem támogatott ismétlődési szabályt észleltek. Ha folytatja, a meglévő ismétlődési szabály törlésre/felülírásra kerül."</string>
     <string name="details_entry_could_not_be_loaded">"A bejegyzést törölték a háttérben vagy nem lehetett betölteni."</string>
     <string name="details_attachment_beta_info">"* A mellékletek szinkronizálása kísérleti funkció. Erősen javasoljuk, hogy csak kis méretű csatolmányokat használjon (legfeljebb 100 KB), mivel a nagyobbak hosszú szinkronizálási időt és váratlan viselkedést eredményezhetnek."</string>
     <string name="details_unchanged_part_of_series">"Ez a bejegyzés egy sorozat része. Ez a bejegyzés tükrözi a sorozaton történő változtatásokat."</string>
@@ -628,9 +616,6 @@ Köszönjük!"</string>
     <string name="opacity">"Áttetszőség"</string>
     <string name="general">"Általános"</string>
     <string name="list_collapse">"Összecsukás"</string>
-    <string name="edit_recur_second">"másodpercenként"</string>
-    <string name="edit_recur_minute">"percenként"</string>
-    <string name="edit_recur_hour">"óránként"</string>
     <string name="filter_group_sort">"Csoportosítás/rendezés"</string>
     <string name="widget_list_configuration_widget_background">"Modul háttere"</string>
     <string name="widget_list_configuration_entries_background">"Bejegyzések háttere"</string>
