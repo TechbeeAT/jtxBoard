@@ -154,7 +154,7 @@ class MainActivity2 : AppCompatActivity() {
 
             //TODO: Remove in future
             val legacyAlarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_LEGACY_ALARMS, NotificationManagerCompat.IMPORTANCE_MAX)
-                .setName(context.getString(R.string.notification_channel_alarms_name))
+                .setName("Alarms (legacy only, will be removed soon)")
                 .setLightsEnabled(true)
                 .build()
             notificationChannels.add(legacyAlarmChannel)
