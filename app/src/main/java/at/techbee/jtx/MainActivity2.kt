@@ -77,6 +77,7 @@ import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.getParcelableExtraCompat
 import at.techbee.jtx.widgets.ListWidget
 import at.techbee.jtx.widgets.ListWidgetConfig
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
@@ -149,15 +150,16 @@ class MainActivity2 : AppCompatActivity() {
                 if(!collectionNotificationChannels.map { it.collectionId.toString() }.contains(notificationChannelId)
                     && notificationChannelId != NOTIFICATION_CHANNEL_GEOFENCES) {
                     notificationManager.deleteNotificationChannel(notificationChannelId)
+
+                    // only for legacy handling, remove in future!!!
+                    if(notificationChannelId == NOTIFICATION_CHANNEL_LEGACY_ALARMS) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            NotificationPublisher.restoreAlarms(context)
+                            NotificationPublisher.scheduleNextNotifications(context)
+                        }
+                    }
                 }
             }
-
-            //TODO: Remove in future
-            val legacyAlarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_LEGACY_ALARMS, NotificationManagerCompat.IMPORTANCE_MAX)
-                .setName("Alarms (legacy only, will be removed soon)")
-                .setLightsEnabled(true)
-                .build()
-            notificationChannels.add(legacyAlarmChannel)
 
             val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_MAX)
                 .setName(context.getString(R.string.notification_channel_geofences_name))
