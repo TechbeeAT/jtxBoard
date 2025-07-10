@@ -109,6 +109,7 @@ class MainActivity2 : AppCompatActivity() {
 
     companion object {
         const val NOTIFICATION_CHANNEL_GROUP_ALARMS = "ALARMS_GROUP"
+        const val NOTIFICATION_CHANNEL_LEGACY_ALARMS = "REMINDER_DUE"
         const val NOTIFICATION_CHANNEL_GEOFENCES = "NOTIFICATION_CHANNEL_GEOFENCES"
 
         const val INTENT_ACTION_ADD_JOURNAL = "addJournal"
@@ -144,12 +145,19 @@ class MainActivity2 : AppCompatActivity() {
                 )
             }
             // remove old channels that don't exist anymore
-            notificationManager.notificationChannelsCompat.map { it.id }.forEach {
-                if(!collectionNotificationChannels.map { it.collectionId.toString() }.contains(it)
-                    && it != NOTIFICATION_CHANNEL_GEOFENCES) {
-                    notificationManager.deleteNotificationChannel(it.toString())
+            notificationManager.notificationChannelsCompat.map { it.id }.forEach { notificationChannelId ->
+                if(!collectionNotificationChannels.map { it.collectionId.toString() }.contains(notificationChannelId)
+                    && notificationChannelId != NOTIFICATION_CHANNEL_GEOFENCES) {
+                    notificationManager.deleteNotificationChannel(notificationChannelId)
                 }
             }
+
+            //TODO: Remove in future
+            val legacyAlarmChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_LEGACY_ALARMS, NotificationManagerCompat.IMPORTANCE_MAX)
+                .setName(context.getString(R.string.notification_channel_alarms_name))
+                .setLightsEnabled(true)
+                .build()
+            notificationChannels.add(legacyAlarmChannel)
 
             val geofenceChannel = NotificationChannelCompat.Builder(NOTIFICATION_CHANNEL_GEOFENCES, NotificationManagerCompat.IMPORTANCE_MAX)
                 .setName(context.getString(R.string.notification_channel_geofences_name))
