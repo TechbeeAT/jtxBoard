@@ -171,35 +171,27 @@ object DateTimeUtils {
 
     fun timestampAsFilenameAppendix(): String = convertLongToYYYYMMDDString(System.currentTimeMillis(),null)
 
-    fun getLocalizedOrdinal(from: Int, to: Int, includeEmpty: Boolean): Array<String> {
 
-        val ordinalValues: MutableList<String> = mutableListOf()
-        if (includeEmpty)
-            ordinalValues.add("-")
-
-        for (i in from..to) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val formatter = MessageFormat("{0,ordinal}", Locale.getDefault())
-                ordinalValues.add(formatter.format(arrayOf(i)))
-            } else {
-                when (i) {
-                    1 -> ordinalValues.add("1st")
-                    2 -> ordinalValues.add("2nd")
-                    3 -> ordinalValues.add("3rd")
-                    else -> ordinalValues.add("${i}th")
-                }
-
-            }
-        }
-        return ordinalValues.toTypedArray()
-    }
-
+    /**
+     * Returns the localized ordinal string for a given number.
+     *
+     * For API levels >= N, it uses [MessageFormat] to get the localized ordinal string.
+     * For lower API levels, it falls back to a predefined set of English ordinal strings (1st, 2nd, 3rd, Nth).
+     *
+     * @param number The number for which to get the ordinal string.
+     * @return The localized ordinal string for the given number.
+     */
     fun getLocalizedOrdinalFor(number: Int): String {
          return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val formatter = MessageFormat("{0,ordinal}", Locale.getDefault())
                 formatter.format(arrayOf(number))
             } else {
-                number.toString()
+                 when (number) {
+                     1 -> "1st"
+                     2 -> "2nd"
+                     3 -> "3rd"
+                     else -> "${number}th"
+                 }
             }
     }
 
