@@ -63,7 +63,7 @@ jtx Board uses/requests the following permissions:
 - READ_SYNC_STATS is used to show a progress bar when a synchronization through DAVx5 is currently in progress
 - INTERNET is used to retrieve the list of contributors for translations (Crowdin.com), code (GitHub.com) and release notes (GitHub.com)
 - VIBRATE gives you haptic feedback when moving an entry on the Kanban-Board
-- POST_NOTIFICATIONS let's you receive the notifications when an alarm is due
+- POST_NOTIFICATIONS lets you receive the notifications when an alarm is due
 - ACCESS_COARSE_LOCATION & ACCESS_FINE_LOCATION can move the map to your current location, can set the current location (latitude, longitude) for an entry
 - SCHEDULE_EXACT_ALARM & USE_EXACT_ALARM used to show a notification when an alarm is due
 - RECEIVE_BOOT_COMPLETED used to restore notifications and geofences after restart
