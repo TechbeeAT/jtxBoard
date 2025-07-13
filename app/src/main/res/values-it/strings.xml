@@ -247,10 +247,10 @@
     <string name="recur_daily">"Giornaliero"</string>
     <string name="recur_every_year">"Ogni anno"</string>
     <string name="recur_every_other_year">"Ogni 2 anni"</string>
-    <string name="recur_every_x_year">"Ogni %1$d anno"</string>
+    <string name="recur_every_x_year">"Ogni %1$s anno"</string>
     <string name="recur_every_month">"Ogni mese"</string>
     <string name="recur_every_other_month">"Ogni 2 mesi"</string>
-    <string name="recur_every_x_month">"Ogni %1$d mese"</string>
+    <string name="recur_every_x_month">"Ogni %1$s mese"</string>
     <string name="recur_every_week">"Ogni settimana"</string>
     <string name="recur_every_other_week">"Ogni 2 settimane"</string>
     <string name="recur_every_x_week">"Ogni %1$s settimana"</string>
@@ -258,9 +258,14 @@
     <string name="recur_every_other_day">"Ogni due giorni"</string>
     <string name="recur_every_x_day">"Ogni %1$s giorno"</string>
     <string name="recur_last_weekday">"Ultimo"</string>
+    <string name="recur_no_recurrence">"Nessuna ricorrenza"</string>
     <string name="recur_ends_never">"finisce mai"</string>
     <string name="recur_ends_on">"termina il"</string>
     <string name="recur_ends_after">"termina dopo"</string>
+    <string name="recur_x_occurrences">"%1$d ricorrenza/e"</string>
+    <string name="recur_xth_day_of_the_month">"%1$s giorno del mese"</string>
+    <string name="recur_xth_last_day_of_the_month">"%1$s ultimo giorno del mese"</string>
+    <string name="recur_last_day_of_the_month">"Ultimo giorno del mese"</string>
     <string name="attachment_export_saved_successfully">"Salvato con successo"</string>
     <string name="attachment_export_error_error_occurred">"Si è verificato un errore durante il salvataggio del file selezionato!"</string>
     <string name="menu_collections_add_remote_to_sync_app">"Aggiungi Raccolta remota (%1$s)"</string>
