@@ -73,12 +73,22 @@
     <string name="task">"Завдання"</string>
     <string name="category">"Категорія"</string>
     <string name="location">"Місцезнаходження"</string>
+    <string name="summary">"Назва"</string>
+    <string name="description">"Опис"</string>
+    <string name="filter">"Фільтр"</string>
+    <string name="categories">"Категорії"</string>
+    <string name="notification_done">"Виконано"</string>
     <string name="notification_add_1h">"+ 1 година"</string>
     <string name="notification_add_1d">"+ 1 день"</string>
     <string name="settings_select_theme">"Обрати тему"</string>
     <string name="settings_select_theme_dark">"Темна"</string>
     <string name="settings_select_theme_light">"Світла"</string>
     <!-- Buy Pro fragment -->
+    <string name="buypro_success_thankyou">"Щиро дякую!"</string>
+    <string name="settings_modules_enable_journals">"Журнали"</string>
+    <string name="settings_modules_enable_notes">"Нотатки"</string>
+    <string name="settings_modules_enable_tasks">"Завдання"</string>
+    <string name="date">"Дата"</string>
     <string name="edit_comment">"Редагувати коментар"</string>
     <!-- alarms -->
     <string name="dialog_revert_changes_title">"Скасувати зміни?"</string>
