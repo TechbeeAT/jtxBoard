@@ -27,9 +27,11 @@
     <string name="navigation_drawer_close">"Закрити навігаційну панель"</string>
     <string name="navigation_drawer_board">"Дошка"</string>
     <string name="navigation_drawer_synchronization">"Синхронізація"</string>
+    <string name="navigation_drawer_about">"Про застосунок / Ліцензія"</string>
     <string name="navigation_drawer_settings">"Налаштування"</string>
     <string name="navigation_drawer_external_links">"Зовнішні посилання"</string>
     <string name="navigation_drawer_website">"Сайт"</string>
+    <string name="navigation_drawer_support">"Підтримка"</string>
     <string name="navigation_drawer_donate">"Пожертвувати"</string>
     <string name="navigation_drawer_privacy_policy">"Політика конфіденційності"</string>
     <!-- fragment_ical_list -->
@@ -39,14 +41,24 @@
     <string name="list_tabitem_todos">"Завдання"</string>
     <string name="list_expand">"Розгорнути"</string>
     <!-- fragment_ical_view -->
+    <string name="view_fragment_audio_permission">"Дозвіл застосунку"</string>
+    <string name="view_add_audio_note">"Додати аудіо"</string>
     <!-- fragment_ical_edit -->
+    <string name="edit_comment_helper">"Додати коментар"</string>
     <string name="edit_attachment_button_text">"Додати вкладення"</string>
+    <string name="edit_dialog_sure_to_delete_title">"Видалити \"%1$s\"?"</string>
+    <string name="edit_fragment_app_permission">"Дозвіл застосунку"</string>
     <!-- fragment_about -->
+    <string name="about_tabitem_translations">"Переклад"</string>
     <!-- menus -->
     <!-- Shortcuts -->
+    <string name="shortcut_addJournal_longLabel">"Додати журнал"</string>
+    <string name="shortcut_addNote_longLabel">"Додати нотатку"</string>
+    <string name="shortcut_addTodo_longLabel">"Додати завдання"</string>
     <!-- Settings fragment -->
     <!-- Sync fragment -->
     <string name="sync_congratulations">"Вітання! :-)"</string>
+    <string name="sync_download_sync_app">"Завантажити %1$s"</string>
     <!-- Donate fragment -->
     <string name="donate_thank_you">"Дякую!"</string>
     <!-- sync content provider -->
@@ -54,7 +66,13 @@
     <!-- alarms -->
     <!-- fragment_collections -->
     <!-- Fuzzy -->
+    <string name="color">"Колір"</string>
     <string name="priority_0_no_priority">"Без пріорітету"</string>
+    <string name="journal">"Журнал"</string>
+    <string name="note">"Нотатка"</string>
+    <string name="task">"Завдання"</string>
+    <string name="category">"Категорія"</string>
+    <string name="location">"Місцезнаходження"</string>
     <string name="notification_add_1h">"+ 1 година"</string>
     <string name="notification_add_1d">"+ 1 день"</string>
     <string name="settings_select_theme">"Обрати тему"</string>
