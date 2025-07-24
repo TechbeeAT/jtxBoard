@@ -39,6 +39,7 @@
     <string name="classification_public">"Genel"</string>
     <string name="classification_private">"Özel"</string>
     <string name="classification_confidential">"Gizli"</string>
+    <string name="attendee_role_chair">"Başkan"</string>
     <string name="attendee_role_required_participant">"Katılımcı gerekli"</string>
     <string name="attendee_role_optional_participant">"Katılımcı isteğe bağlı"</string>
     <string name="attendee_role_non_participant">"Katılımcı olmayan / Bilgi"</string>
@@ -63,6 +64,7 @@
     <string name="list_due_tomorrow">"Yarın biten"</string>
     <string name="list_due_within_7_days">"7 gün içinde biten"</string>
     <string name="list_due_inXhours">"%d saat içinde bitiyor"</string>
+    <string name="list_due_on_weekday">"Son tarih %s"</string>
     <string name="list_start_past">"Geçmişte başlamış"</string>
     <string name="list_start_shortly">"Yakında başlayan"</string>
     <string name="list_start_tomorrow">"Yarın başlayan"</string>
