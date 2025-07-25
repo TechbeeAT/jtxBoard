@@ -1,0 +1,9 @@
+- Refactored interface for recurring entries for more flexibility
+- Notification channels for alarms are now set for each collection
+- New option to switch between Google Maps and Open Street Maps
+- Fixes unexpected sort order when entries with and without time are present for the same day
+- UI improvements in week view
+- Status and extended status are now merged in filters
+- Fixes problem when using "none" option in combination with category filters in widget
+- Minor fixes
+- Version updates
