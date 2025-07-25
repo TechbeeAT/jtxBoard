@@ -67,7 +67,10 @@
     <string name="list_due_on_weekday">"Son tarih %s"</string>
     <string name="list_start_past">"Geçmişte başlamış"</string>
     <string name="list_start_shortly">"Yakında başlayan"</string>
+    <string name="list_start_today">"Planlanan başlangıç bugün"</string>
     <string name="list_start_tomorrow">"Yarın başlayan"</string>
+    <string name="list_start_inXhours">"Planlanan başlangıç %d saat içinde"</string>
+    <string name="list_start_on_weekday">"Planlanan başlangıç %s günü"</string>
     <string name="list_tabitem_journals">"Günlük"</string>
     <string name="list_tabitem_notes">"Notlar"</string>
     <string name="list_tabitem_todos">"Görevler"</string>
@@ -76,10 +79,16 @@
     <string name="list_dialog_delete_selected_message">Bu eylem seçilen tüm girişleri (%1$d) siler. Devam etmek istediğinizden emin misiniz? Bu işlem geri alınamaz!</string>
     <string name="list_quickadd_dialog_summary_description_hint">"Özet/Açıklama"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"İlk satır özet, geri kalanı açıklama olarak yorumlanır. Etiketler kategori (örn. #kategori) olarak yorumlanır."</string>
+    <string name="list_item_recurring">"Tekrarlayan girdi"</string>
+    <string name="list_item_edited_recurring">"Tekrarlayan girdi düzenlendi"</string>
+    <string name="list_scroll_to_top">"Başa kaydır"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Uygulama izni"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board'un ses kaydetmek veya konuşmayı metne dönüştürme işlevlerini kullanmak için izne ihtiyacı var. Lütfen bu özelliği kullanma iznini verin."</string>
+    <string name="view_reccurrence_note_is_exception">"Bu öğe, tekrarlayan girdinin dışındadır."</string>
     <string name="view_feedback_linked_notes">"Geri besleme / Not bağla"</string>
+    <string name="view_subtask_of">"Şunun alt görevi"</string>
+    <string name="view_linked_note_of">"Şunun bağlantılı notu"</string>
     <string name="view_add_audio_note">"Ses ekle"</string>
     <string name="view_created_text">"Oluşturuldu: %1$s"</string>
     <string name="view_last_modified_text">"Son değişiklik: %1$s"</string>
@@ -95,6 +104,7 @@
     <string name="detail_top_app_bar_quick_add_subtask">"Hızlı alt görev ekle"</string>
     <string name="detail_top_app_bar_quick_add_subnote">"Hızlı alt not ekle"</string>
     <string name="edit_attachment_add_link_dialog">"Hızlı ek ilişimi ekle"</string>
+    <string name="edit_recur_toast_requires_start_date">"Tekrarlama için bir başlangıç tarihi gereklidir!"</string>
     <string name="edit_datepicker_dialog_select_date">"Tarih seç"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Tarih aralığı seç"</string>
     <string name="edit_datepicker_dialog_add_time">"Saat ekle"</string>
