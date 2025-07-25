@@ -749,7 +749,7 @@ data class ICalObject(
                         finalString += context.getString(R.string.list_start_tomorrow)
                         finalString += getTimeAndTimezone()
                     }
-                    ChronoUnit.DAYS.between(localNow, localStart) <= 7 -> {
+                    ChronoUnit.DAYS.between(localNow, localStart) < 6 -> {
                         finalString += context.getString(R.string.list_start_on_weekday, localStart.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
                         finalString += getTimeAndTimezone()
                     }
@@ -814,7 +814,7 @@ data class ICalObject(
                     finalString += context.getString(R.string.list_due_tomorrow)
                     finalString += getTimeAndTimezone()
                 }
-                ChronoUnit.DAYS.between(localNow, localDue) <= 7 -> {
+                ChronoUnit.DAYS.between(localNow, localDue) < 6 -> {
                     finalString += context.getString(R.string.list_due_on_weekday, localDue.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()))
                     finalString += getTimeAndTimezone()
                 }
