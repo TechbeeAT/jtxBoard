@@ -239,6 +239,12 @@
     <string name="priority_4_medium_high">"4 - Mitjana-alta"</string>
     <string name="priority_5_medium">"5 - Mitjana"</string>
     <string name="priority_6_medium_low">"6 - Mitjana-baixa"</string>
+    <string name="recur_yearly_by_day">"Anualment per dia"</string>
+    <string name="recur_yearly_by_date">"Anualment per data"</string>
+    <string name="recur_monthly_by_day">"Mensualment per dia"</string>
+    <string name="recur_monthly_by_date">"Mensualment per data"</string>
+    <string name="recur_weekly">"Setmanalment"</string>
+    <string name="recur_daily">"Diàriament"</string>
     <string name="recur_ends_never">"no acaba mai"</string>
     <string name="recur_ends_on">"acaba el"</string>
     <string name="recur_ends_after">"acaba després de"</string>
