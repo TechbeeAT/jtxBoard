@@ -33,14 +33,10 @@ import at.techbee.jtx.database.COLUMN_CREATED
 import at.techbee.jtx.database.COLUMN_DELETED
 import at.techbee.jtx.database.COLUMN_DESCRIPTION
 import at.techbee.jtx.database.COLUMN_DIRTY
-import at.techbee.jtx.database.COLUMN_DTEND
-import at.techbee.jtx.database.COLUMN_DTEND_TIMEZONE
-import at.techbee.jtx.database.COLUMN_DTSTAMP
 import at.techbee.jtx.database.COLUMN_DTSTART
 import at.techbee.jtx.database.COLUMN_DTSTART_TIMEZONE
 import at.techbee.jtx.database.COLUMN_DUE
 import at.techbee.jtx.database.COLUMN_DUE_TIMEZONE
-import at.techbee.jtx.database.COLUMN_DURATION
 import at.techbee.jtx.database.COLUMN_EXTENDED_STATUS
 import at.techbee.jtx.database.COLUMN_GEO_LAT
 import at.techbee.jtx.database.COLUMN_GEO_LONG
@@ -121,8 +117,8 @@ const val CONCAT_DELIMITER = "|||"
             "main_icalobject.$COLUMN_CONTACT, " +
             "main_icalobject.$COLUMN_DTSTART, " +
             "main_icalobject.$COLUMN_DTSTART_TIMEZONE, " +
-            "main_icalobject.$COLUMN_DTEND, " +
-            "main_icalobject.$COLUMN_DTEND_TIMEZONE, " +
+            //"main_icalobject.$COLUMN_DTEND, " +
+            //"main_icalobject.$COLUMN_DTEND_TIMEZONE, " +
             "main_icalobject.$COLUMN_STATUS, " +
             "main_icalobject.$COLUMN_EXTENDED_STATUS, " +
             "main_icalobject.$COLUMN_CLASSIFICATION, " +
@@ -132,9 +128,9 @@ const val CONCAT_DELIMITER = "|||"
             "main_icalobject.$COLUMN_DUE_TIMEZONE, " +
             "main_icalobject.$COLUMN_COMPLETED, " +
             "main_icalobject.$COLUMN_COMPLETED_TIMEZONE, " +
-            "main_icalobject.$COLUMN_DURATION, " +
+            //"main_icalobject.$COLUMN_DURATION, " +
             "main_icalobject.$COLUMN_CREATED, " +
-            "main_icalobject.$COLUMN_DTSTAMP, " +
+            //"main_icalobject.$COLUMN_DTSTAMP, " +
             "main_icalobject.$COLUMN_LAST_MODIFIED, " +
             "main_icalobject.$COLUMN_SEQUENCE, " +
             "main_icalobject.$COLUMN_UID, " +
@@ -190,8 +186,8 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_DTSTART) var dtstart: Long?,
     @ColumnInfo(name = COLUMN_DTSTART_TIMEZONE) var dtstartTimezone: String?,
 
-    @ColumnInfo(name = COLUMN_DTEND) var dtend: Long?,
-    @ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String?,
+    //@ColumnInfo(name = COLUMN_DTEND) var dtend: Long?,
+    //@ColumnInfo(name = COLUMN_DTEND_TIMEZONE) var dtendTimezone: String?,
 
     @ColumnInfo(name = COLUMN_STATUS) var status: String?,
     @ColumnInfo(name = COLUMN_EXTENDED_STATUS) var xstatus: String?,
@@ -204,10 +200,10 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_DUE_TIMEZONE) var dueTimezone: String?,
     @ColumnInfo(name = COLUMN_COMPLETED) var completed: Long?,
     @ColumnInfo(name = COLUMN_COMPLETED_TIMEZONE) var completedTimezone: String?,
-    @ColumnInfo(name = COLUMN_DURATION) var duration: String?,
+    //@ColumnInfo(name = COLUMN_DURATION) var duration: String?,
 
     @ColumnInfo(name = COLUMN_CREATED) var created: Long,
-    @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long,
+    //@ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long,
     @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long,
     @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long,
     @ColumnInfo(index = true, name = COLUMN_UID) var uid: String?,
@@ -266,8 +262,8 @@ data class ICal4List(
                 contact = null,
                 dtstart = System.currentTimeMillis(),
                 dtstartTimezone = null,
-                dtend = null,
-                dtendTimezone = null,
+                //dtend = null,
+                //dtendTimezone = null,
                 status = Status.DRAFT.status,
                 xstatus = null,
                 classification = Classification.CONFIDENTIAL.classification,
@@ -277,9 +273,9 @@ data class ICal4List(
                 dueTimezone = null,
                 completed = null,
                 completedTimezone = null,
-                duration = null,
+                //duration = null,
                 created = System.currentTimeMillis(),
-                dtstamp = System.currentTimeMillis(),
+                //dtstamp = System.currentTimeMillis(),
                 lastModified = System.currentTimeMillis(),
                 sequence = 0,
                 uid = UUID.randomUUID().toString(),
