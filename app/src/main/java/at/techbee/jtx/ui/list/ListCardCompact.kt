@@ -116,18 +116,20 @@ fun ListCardCompact(
 
                 dragHandle()
 
-                IconButton(
-                    onClick = {
-                        isSubtasksExpanded = !isSubtasksExpanded
-                        onExpandedChanged(iCalObject.id, isSubtasksExpanded)
-                    },
-                    enabled = subtasks.isNotEmpty()
-                ) {
-                    Crossfade(isSubtasksExpanded) {
-                        if (it)
-                            Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_collapse))
-                        else
-                            Icon(Icons.AutoMirrored.Outlined.ArrowRight, stringResource(R.string.list_expand))
+                if(!isSubtasksExpandedDefault) {
+                    IconButton(
+                        onClick = {
+                            isSubtasksExpanded = !isSubtasksExpanded
+                            onExpandedChanged(iCalObject.id, isSubtasksExpanded)
+                        },
+                        enabled = subtasks.isNotEmpty()
+                    ) {
+                        Crossfade(isSubtasksExpanded) {
+                            if (it)
+                                Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_collapse))
+                            else
+                                Icon(Icons.AutoMirrored.Outlined.ArrowRight, stringResource(R.string.list_expand))
+                        }
                     }
                 }
 
