@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import at.techbee.jtx.R
 
 enum class SwitchSetting(
@@ -64,7 +65,7 @@ enum class SwitchSetting(
         key = "settings_auto_expand_subtasks",
         icon = { Icon(Icons.Outlined.TaskAlt, contentDescription = null, modifier = Modifier.padding(16.dp)) },
         title = R.string.settings_default_expand_subtasks,
-        default = false
+        default = true
     ),
     SETTING_AUTO_EXPAND_SUBNOTES(
         key = "settings_auto_expand_subnotes",
@@ -181,7 +182,7 @@ enum class SwitchSetting(
         subtitle = R.string.settings_accessibility_mode_sub,
         default = false
     );
-    fun saveSetting(newSwitchValue: Boolean, prefs: SharedPreferences) = prefs.edit().putBoolean(key, newSwitchValue).apply()
+    fun saveSetting(newSwitchValue: Boolean, prefs: SharedPreferences) = prefs.edit { putBoolean(key, newSwitchValue) }
 
     fun getSetting(prefs: SharedPreferences) = prefs.getBoolean(key, default)
 }

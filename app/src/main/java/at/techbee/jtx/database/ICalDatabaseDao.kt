@@ -662,6 +662,9 @@ interface ICalDatabaseDao {
         isAttachmentsExpanded: Boolean
     )
 
+    @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SUBTASKS_EXPANDED = :isSubtasksExpanded WHERE $COLUMN_ID = :id")
+    suspend fun updateExpandedSubtasks(id: Long, isSubtasksExpanded: Boolean)
+
     @Query("UPDATE $TABLE_NAME_ICALOBJECT SET $COLUMN_SORT_INDEX = :index WHERE $COLUMN_ID = :id")
     suspend fun updateOrder(id: Long, index: Int?)
 

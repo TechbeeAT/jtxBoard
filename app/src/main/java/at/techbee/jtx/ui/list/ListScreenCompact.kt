@@ -87,12 +87,14 @@ fun ListScreenCompact(
     player: MediaPlayer?,
     isListDragAndDropEnabled: Boolean,
     isSubtaskDragAndDropEnabled: Boolean,
+    isSubtasksExpandedDefault: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onSaveListSettings: () -> Unit,
-    onUpdateSortOrder: (List<ICal4List>) -> Unit
-) {
+    onUpdateSortOrder: (List<ICal4List>) -> Unit,
+    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean) -> Unit
+    ) {
 
     val context = LocalContext.current
     val subtasks by subtasksLive.observeAsState(emptyList())
@@ -192,6 +194,7 @@ fun ListScreenCompact(
                             selected = selectedEntries,
                             player = player,
                             isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
+                            isSubtasksExpandedDefault = isSubtasksExpandedDefault,
                             dragHandle = {
                                 if(isListDragAndDropEnabled)
                                     DragHandleLazy(this)
@@ -222,7 +225,8 @@ fun ListScreenCompact(
                             onProgressChanged = onProgressChanged,
                             onClick = onClick,
                             onLongClick = onLongClick,
-                            onUpdateSortOrder = onUpdateSortOrder
+                            onUpdateSortOrder = onUpdateSortOrder,
+                            onExpandedChanged = onExpandedChanged
                         )
                     }
 
@@ -313,11 +317,13 @@ fun ListScreenCompact_TODO() {
             player = null,
             isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
+            isSubtasksExpandedDefault = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSaveListSettings = { },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onExpandedChanged = { _, _ -> }
         )
     }
 }
@@ -378,11 +384,13 @@ fun ListScreenCompact_JOURNAL() {
             player = null,
             isListDragAndDropEnabled = true,
             isSubtaskDragAndDropEnabled = true,
+            isSubtasksExpandedDefault = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onSaveListSettings = { },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onExpandedChanged = { _, _ -> }
         )
     }
 }

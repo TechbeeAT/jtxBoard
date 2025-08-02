@@ -422,6 +422,15 @@ open class ListViewModel(application: Application, val module: Module) : Android
     }
 
     /**
+     * Updates the expanded status of subtasks in the DB
+     */
+    fun updateExpandedSubtasks(icalObjectId: Long, isSubtasksExpanded: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            databaseDao.updateExpandedSubtasks(icalObjectId, isSubtasksExpanded)
+        }
+    }
+
+    /**
      * Deletes all tasks that are marked as done.
      * Subtasks are deleted if their parent is marked as done independent of their status.
      */
