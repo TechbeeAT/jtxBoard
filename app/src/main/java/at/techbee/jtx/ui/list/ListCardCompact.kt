@@ -9,6 +9,8 @@
 package at.techbee.jtx.ui.list
 
 import android.media.MediaPlayer
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -18,6 +20,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowRight
+import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.DragHandle
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,18 +32,24 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.techbee.jtx.R
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.Module
@@ -67,12 +77,19 @@ fun ListCardCompact(
     player: MediaPlayer?,
     isSubtaskDragAndDropEnabled: Boolean,
     modifier: Modifier = Modifier,
+    isSubtasksExpandedDefault: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onUpdateSortOrder: (List<ICal4List>) -> Unit,
+    onExpandedChanged: (itemId: Long, isSubtasksExpanded: Boolean) -> Unit,
     dragHandle:@Composable () -> Unit = { }
 ) {
+
+    var isSubtasksExpanded by remember {
+        mutableStateOf(iCalObject.isSubtasksExpanded ?: isSubtasksExpandedDefault
+        )
+    }
 
     Card(
         colors = CardDefaults.cardColors(
@@ -98,6 +115,21 @@ fun ListCardCompact(
             ) {
 
                 dragHandle()
+
+                IconButton(
+                    onClick = {
+                        isSubtasksExpanded = !isSubtasksExpanded
+                        onExpandedChanged(iCalObject.id, isSubtasksExpanded)
+                    },
+                    enabled = subtasks.isNotEmpty()
+                ) {
+                    Crossfade(isSubtasksExpanded) {
+                        if (it)
+                            Icon(Icons.Outlined.ArrowDropDown, stringResource(R.string.list_collapse))
+                        else
+                            Icon(Icons.AutoMirrored.Outlined.ArrowRight, stringResource(R.string.list_expand))
+                    }
+                }
 
                 Column(
                     verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.Top),
@@ -146,39 +178,41 @@ fun ListCardCompact(
                 }
             }
 
-            ReorderableColumn(
-                list = subtasks,
-                onSettle = { fromIndex, toIndex ->
-                    val reordered = subtasks.toMutableList().apply {
-                        add(toIndex, removeAt(fromIndex))
+            AnimatedVisibility(isSubtasksExpanded) {
+                ReorderableColumn(
+                    list = subtasks,
+                    onSettle = { fromIndex, toIndex ->
+                        val reordered = subtasks.toMutableList().apply {
+                            add(toIndex, removeAt(fromIndex))
+                        }
+                        onUpdateSortOrder(reordered)
+                    },
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                ) { _, subtask, _ ->
+                    key(subtask.id) {
+
+                        SubtaskCardCompact(
+                            subtask = subtask,
+                            selected = selected.contains(subtask.id),
+                            onProgressChanged = onProgressChanged,
+                            dragHandle = { if (isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
+                            modifier = Modifier
+                                .clip(jtxCardCornerShape)
+                                .combinedClickable(
+                                    onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
+                                    onLongClick = {
+                                        if (!subtask.isReadOnly)
+                                            onLongClick(subtask.id, subtasks)
+                                    }
+                                )
+                        )
+
+                        if (subtask.id != subtasks.last().id)
+                            HorizontalDivider(modifier = Modifier.alpha(0.25f))
                     }
-                    onUpdateSortOrder(reordered)
-                },
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) { _, subtask, _ ->
-                key(subtask.id) {
-
-                    SubtaskCardCompact(
-                        subtask = subtask,
-                        selected = selected.contains(subtask.id),
-                        onProgressChanged = onProgressChanged,
-                        dragHandle = { if(isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
-                        modifier = Modifier
-                            .clip(jtxCardCornerShape)
-                            .combinedClickable(
-                                onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
-                                onLongClick = {
-                                    if (!subtask.isReadOnly)
-                                        onLongClick(subtask.id, subtasks)
-                                }
-                            )
-                    )
-
-                    if (subtask.id != subtasks.last().id)
-                        HorizontalDivider(modifier = Modifier.alpha(0.25f))
                 }
             }
         }
@@ -204,10 +238,12 @@ fun ListCardCompact_JOURNAL() {
             selected = emptyList(),
             player = null,
             isSubtaskDragAndDropEnabled = true,
+            isSubtasksExpandedDefault = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
             onUpdateSortOrder = { },
+            onExpandedChanged = { _, _ -> },
             dragHandle = { IconButton(onClick = {  }) {
                 Icon(Icons.Outlined.DragHandle, null)
             } }
@@ -235,10 +271,12 @@ fun ListCardCompact_JOURNAL2() {
             selected = emptyList(),
             player = null,
             isSubtaskDragAndDropEnabled = true,
+            isSubtasksExpandedDefault = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onExpandedChanged = { _, _ -> }
         )
     }
 }
@@ -264,10 +302,12 @@ fun ListCardCompact_NOTE() {
             selected = emptyList(),
             player = null,
             isSubtaskDragAndDropEnabled = true,
+            isSubtasksExpandedDefault = false,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onExpandedChanged = { _, _ -> }
         )
     }
 }
@@ -297,10 +337,12 @@ fun ListCardCompact_TODO() {
             selected = emptyList(),
             player = null,
             isSubtaskDragAndDropEnabled = true,
+            isSubtasksExpandedDefault = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onExpandedChanged = { _, _ -> }
         )
     }
 }
@@ -344,10 +386,12 @@ fun ListCardCompact_TODO_only_summary() {
             selected = listOf(icalobject.id),
             player = null,
             isSubtaskDragAndDropEnabled = true,
+            isSubtasksExpandedDefault = true,
             onProgressChanged = { _, _ -> },
             onClick = { _, _, _ -> },
             onLongClick = { _, _ -> },
-            onUpdateSortOrder = { }
+            onUpdateSortOrder = { },
+            onExpandedChanged = { _, _ -> }
         )
     }
 }

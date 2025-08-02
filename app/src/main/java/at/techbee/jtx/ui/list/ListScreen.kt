@@ -156,11 +156,15 @@ fun ListScreen(
                 player = listViewModel.mediaPlayer,
                 isListDragAndDropEnabled = listViewModel.listSettings.orderBy.value == OrderBy.DRAG_AND_DROP || listViewModel.listSettings.orderBy2.value == OrderBy.DRAG_AND_DROP,
                 isSubtaskDragAndDropEnabled = listViewModel.listSettings.subtasksOrderBy.value == OrderBy.DRAG_AND_DROP,
+                isSubtasksExpandedDefault = settingsStateHolder.settingAutoExpandSubtasks.value,
                 onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                 onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
                 onProgressChanged = { itemId, newPercent -> processOnProgressChanged(itemId, newPercent) },
                 onSaveListSettings = { listViewModel.saveListSettings() },
-                onUpdateSortOrder = { listViewModel.updateSortOrder(it) }
+                onUpdateSortOrder = { listViewModel.updateSortOrder(it) },
+                onExpandedChanged = { itemId: Long, isSubtasksExpanded: Boolean ->
+                    listViewModel.updateExpandedSubtasks(itemId, isSubtasksExpanded)
+                },
             )
         }
         ViewMode.KANBAN -> {
