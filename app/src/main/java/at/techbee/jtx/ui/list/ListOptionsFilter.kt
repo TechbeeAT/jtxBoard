@@ -30,6 +30,7 @@ import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -638,6 +639,22 @@ fun ListOptionsFilter(
                 )
             }
 
+            listSettings.searchCategories.filter { !allCategories.contains(it) }.forEach { category ->
+                // filter criteria that is not in the categories list anymore
+                FilterChip(
+                    selected = listSettings.searchCategories.contains(category),
+                    onClick = {
+                        if (listSettings.searchCategories.contains(category))
+                            listSettings.searchCategories.remove(category)
+                        else
+                            listSettings.searchCategories.add(category)
+                        onListSettingsChanged()
+                    },
+                    label = { Text(category) },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = MaterialTheme.colorScheme.errorContainer, selectedLabelColor = MaterialTheme.colorScheme.onErrorContainer)
+                )
+            }
+
             if (allCategories.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                     Text(
@@ -690,6 +707,22 @@ fun ListOptionsFilter(
                 )
             }
 
+            listSettings.searchAccount.filter { !allAccounts.contains(it) }.forEach { account ->
+                // filter criteria that is not in the collection list anymore
+                FilterChip(
+                    selected = listSettings.searchAccount.contains(account),
+                    onClick = {
+                        if (listSettings.searchAccount.contains(account))
+                            listSettings.searchAccount.remove(account)
+                        else
+                            listSettings.searchAccount.add(account)
+                        onListSettingsChanged()
+                    },
+                    label = { Text(account) },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = MaterialTheme.colorScheme.errorContainer, selectedLabelColor = MaterialTheme.colorScheme.onErrorContainer)
+                )
+            }
+
             if (allAccounts.size > maxEntries) {
                 TextButton(onClick = { maxEntries = Int.MAX_VALUE }) {
                     Text(
@@ -739,6 +772,22 @@ fun ListOptionsFilter(
                         onListSettingsChanged()
                     },
                     label = { Text(collection) }
+                )
+            }
+
+            listSettings.searchCollection.filter { !allCollectionsNames.contains(it) }.forEach { collection ->
+                // filter criteria that is not in the collection list anymore
+                FilterChip(
+                    selected = listSettings.searchCollection.contains(collection),
+                    onClick = {
+                        if (listSettings.searchCollection.contains(collection))
+                            listSettings.searchCollection.remove(collection)
+                        else
+                            listSettings.searchCollection.add(collection)
+                        onListSettingsChanged()
+                    },
+                    label = { Text(collection) },
+                    colors = FilterChipDefaults.filterChipColors(selectedContainerColor = MaterialTheme.colorScheme.errorContainer, selectedLabelColor = MaterialTheme.colorScheme.onErrorContainer)
                 )
             }
 
@@ -960,6 +1009,22 @@ fun ListOptionsFilter(
                             onListSettingsChanged()
                         },
                         label = { Text(resource) }
+                    )
+                }
+
+                listSettings.searchResources.filter { !allResources.contains(it) }.forEach { resource ->
+                    // filter criteria that is not in the categories list anymore
+                    FilterChip(
+                        selected = listSettings.searchResources.contains(resource),
+                        onClick = {
+                            if (listSettings.searchResources.contains(resource))
+                                listSettings.searchResources.remove(resource)
+                            else
+                                listSettings.searchResources.add(resource)
+                            onListSettingsChanged()
+                        },
+                        label = { Text(resource) },
+                        colors = FilterChipDefaults.filterChipColors(selectedContainerColor = MaterialTheme.colorScheme.errorContainer, selectedLabelColor = MaterialTheme.colorScheme.onErrorContainer)
                     )
                 }
 
