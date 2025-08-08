@@ -55,6 +55,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -92,6 +93,7 @@ fun DetailsCardAttendees(
     val context = LocalContext.current
     // preview would break if rememberPermissionState is used for preview, so we set it to null only for preview!
     val contactsPermissionState = if (!LocalInspectionMode.current) rememberPermissionState(permission = Manifest.permission.READ_CONTACTS) else null
+    var showPermissionRequestDialog by rememberSaveable { mutableStateOf(false) }
 
     val searchAttendees = remember { mutableStateListOf<Attendee>() }
 
@@ -100,6 +102,15 @@ fun DetailsCardAttendees(
 
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
+
+    if(showPermissionRequestDialog)
+        RequestPermissionDialog(
+            text = stringResource(id = R.string.edit_fragment_app_permission_message),
+            onConfirm = {
+                showPermissionRequestDialog = false
+                contactsPermissionState?.launchPermissionRequest()
+            }
+        )
 
     ElevatedCard(modifier = modifier) {
         Column(
@@ -263,6 +274,10 @@ fun DetailsCardAttendees(
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(0.dp, Color.Transparent)
+                            .onFocusChanged { focusState ->
+                                if(focusState.isFocused && contactsPermissionState?.status?.shouldShowRationale == false && !contactsPermissionState.status.isGranted)    // second part = permission is NOT permanently denied!
+                                    showPermissionRequestDialog = true
+                            }
                             .bringIntoViewRequester(bringIntoViewRequester),
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
@@ -275,28 +290,19 @@ fun DetailsCardAttendees(
                             onAttendeesUpdated()
                             newAttendee = ""
                             coroutineScope.launch { bringIntoViewRequester.bringIntoView() }
-                        })
+                        }),
                     )
                 }
             }
 
-            Crossfade(isEditMode, label = "crossfade_attendee_info") {
-                if(it) {
-                    Text(
-                        text = stringResource(id = R.string.details_attendees_processing_info),
-                        style = MaterialTheme.typography.bodySmall,
-                        fontStyle = FontStyle.Italic
-                    )
-                }
+            AnimatedVisibility (isEditMode) {
+                Text(
+                    text = stringResource(id = R.string.details_attendees_processing_info),
+                    style = MaterialTheme.typography.bodySmall,
+                    fontStyle = FontStyle.Italic
+                )
             }
         }
-    }
-
-    if(contactsPermissionState?.status?.shouldShowRationale == false && !contactsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
-        RequestPermissionDialog(
-            text = stringResource(id = R.string.edit_fragment_app_permission_message),
-            onConfirm = { contactsPermissionState.launchPermissionRequest() }
-        )
     }
 }
 

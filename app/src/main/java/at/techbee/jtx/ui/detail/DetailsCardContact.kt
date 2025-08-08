@@ -10,7 +10,6 @@ package at.techbee.jtx.ui.detail
 
 import android.Manifest
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -46,6 +45,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
@@ -56,6 +56,7 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import at.techbee.jtx.R
 import at.techbee.jtx.database.properties.Attendee
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
@@ -89,9 +90,19 @@ fun DetailsCardContact(
     val bringIntoViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
     val searchContacts = remember { mutableStateListOf<Attendee>() }
+    var showRequestPermissionDialog by rememberSaveable { mutableStateOf(false) }
 
     val foundTelephoneNumber = UiUtil.extractTelephoneNumbers(contact)
     val foundEmail = UiUtil.extractEmailAddresses(contact)
+
+    if(showRequestPermissionDialog)
+        RequestPermissionDialog(
+            text = stringResource(id = R.string.edit_fragment_app_permission_message),
+            onConfirm = {
+                showRequestPermissionDialog = false
+                contactsPermissionState?.launchPermissionRequest()
+            }
+        )
 
     ElevatedCard(modifier = modifier) {
     Column(
@@ -116,10 +127,10 @@ fun DetailsCardContact(
                             )
                         }
 
-                        foundTelephoneNumber.firstOrNull()?.let {
+                        foundTelephoneNumber.firstOrNull()?.let { foundFirstNumber ->
                             IconButton(onClick = {
                                 val intent = Intent(Intent.ACTION_DIAL).apply {
-                                    data = Uri.parse("tel:$it")
+                                    data = "tel:$foundFirstNumber".toUri()
                                 }
                                 if (intent.resolveActivity(context.packageManager) != null) {
                                     context.startActivity(intent)
@@ -127,21 +138,21 @@ fun DetailsCardContact(
                             }) {
                                 Icon(Icons.Outlined.Call, stringResource(
                                     id = R.string.call_contact,
-                                    it
+                                    foundFirstNumber
                                 ))
                             }
                         }
 
-                        foundEmail.firstOrNull()?.let {
+                        foundEmail.firstOrNull()?.let { foundFirstEmail ->
                             IconButton(onClick = {
                                 val intent = Intent(Intent.ACTION_SEND)
                                 intent.type = "message/rfc822"
-                                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(it))
+                                intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(foundFirstEmail))
                                 context.startActivity(intent)
                             }) {
                                 Icon(Icons.Outlined.Mail, stringResource(
                                     id = R.string.email_contact,
-                                    it
+                                    foundFirstEmail
                                 ))
                             }
                         }
@@ -213,18 +224,15 @@ fun DetailsCardContact(
                                 .fillMaxWidth()
                                 .border(0.dp, Color.Transparent)
                                 .bringIntoViewRequester(bringIntoViewRequester)
+                                .onFocusChanged { focusState ->
+                                    if(focusState.isFocused && contactsPermissionState?.status?.shouldShowRationale == false && !contactsPermissionState.status.isGranted)    // second part = permission is NOT permanently denied!
+                                        showRequestPermissionDialog = true
+                                }
                         )
                     }
                 }
             }
         }
-    }
-
-    if(contactsPermissionState?.status?.shouldShowRationale == false && !contactsPermissionState.status.isGranted) {   // second part = permission is NOT permanently denied!
-        RequestPermissionDialog(
-            text = stringResource(id = R.string.edit_fragment_app_permission_message),
-            onConfirm = { contactsPermissionState.launchPermissionRequest() }
-        )
     }
 }
 
