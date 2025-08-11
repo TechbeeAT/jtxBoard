@@ -128,7 +128,7 @@
     <string name="dialog_delete_done_message">"Attention: Subtasks are deleted independent of their status if their parent is marked as done. This operation cannot be undone!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Are you sure you want to delete \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Are you sure you want to discard this entry? This entry will not be saved."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"The Due date cannot be before the Start date."</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"The Due date cannot be on or before the Start date."</string>
     <string name="edit_fragment_app_permission">"App permission"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board can suggest Attendee data based on your contacts as input values for your entries. Read Permissions on your contacts is needed to enable this feature."</string>
     <!-- fragment_about -->
