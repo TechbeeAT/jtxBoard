@@ -117,7 +117,7 @@
     <string name="dialog_delete_done_message">"Figyelem! Az alfeladatok státuszuktól függetlenül törlődnek, ha a szülőfeladatuk késznek van jelölve. Ez a művelet nem vonható vissza!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Biztosan törölni szeretné a következőt: \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Biztos, hogy el akarja vetni ezt a bejegyzést? A bejegyzés nem kerül elmentésre."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"A határidő nem lehet korábbi a kezdési dátumnál."</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"A Határidő nem lehet azonos vagy korábbi, mint a Kezdési idő."</string>
     <string name="edit_fragment_app_permission">"Alkalmazásengedély"</string>
     <string name="edit_fragment_app_permission_message">"A jtx Board javaslatokat tehet résztvevők adataira a Névjegyzék alapján. A funkció használatához adja meg az olvasási jogot a Névjegyzékhez."</string>
     <!-- fragment_about -->
