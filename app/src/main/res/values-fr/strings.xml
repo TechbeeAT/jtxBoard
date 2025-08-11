@@ -539,7 +539,7 @@ Merci !"</string>
     <string name="settings_accessibility_mode_sub">"Assurer une taille de police minimale pour les petits élements"</string>
     <string name="settings_fullscreen_alarms_toast">"Veuillez autoriser les notifications en plein écran dans les paramètres du système."</string>
     <string name="settings_sync_on_start">"Synchroniser au démarrage de l'appli"</string>
-    <string name="settings_sync_on_pull_refresh">"Synchroniser lors du tirage au sort"</string>
+    <string name="settings_sync_on_pull_refresh">"Synchroniser lorsqu'on tire vers le bas"</string>
     <string name="sync_button_go_to_collections">"Aller aux collections"</string>
     <string name="buypro_snackbar_please_purchase_pro">"Veuillez acheter jtx Board Pro pour activer cette fonction."</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>

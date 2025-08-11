@@ -126,14 +126,14 @@ object UiUtil {
         val addresses = mutableSetOf<String>()
         if(searchString.length < 2)
             return addresses
+        val escapedSearchString = searchString.replace("'","''")
 
-        val cr = context.contentResolver
         val projection = arrayOf(
             ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
         )
         val order = ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS
-        val filter = ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS + " LIKE '%$searchString%'"
-        cr.query(
+        val filter = ContactsContract.CommonDataKinds.StructuredPostal.FORMATTED_ADDRESS + " LIKE '%$escapedSearchString%'"
+        context.contentResolver.query(
             ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_URI,
             projection,
             filter,
