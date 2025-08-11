@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Chú ý: Nhiệm vụ con sẽ bị xóa độc lập với trạng thái của chúng nếu nhiệm vụ gốc của chúng được đánh dấu là hoàn thành. Thao tác này không thể hoàn tác!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Bạn có chắc chắn muốn xóa \"%1$s\" không?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Bạn có chắc chắn muốn loại bỏ mục này? Mục nhập này sẽ không được lưu."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Ngày đến hạn không được trước ngày bắt đầu."</string>
     <string name="edit_fragment_app_permission">"Quyền truy cập ứng dụng"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board có thể đề xuất dữ liệu Người tham gia dựa trên danh bạ của bạn cho các mục nhập của bạn. Cần có quyền truy cập danh bạ của bạn để bật tính năng này."</string>
     <!-- fragment_about -->
