@@ -89,7 +89,6 @@
     <string name="edit_dialog_sure_to_discard_title">"舍弃此条目？"</string>
     <string name="edit_dialog_sure_to_delete_message">"确定要删除“%1$s”吗？"</string>
     <string name="edit_dialog_sure_to_discard_message">"确定要舍弃此条目吗？此操作无法撤销。"</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"截止日期不能早于开始日期。"</string>
     <string name="edit_fragment_app_permission">"應用程式權限"</string>
     <string name="edit_fragment_app_permission_message">"在输入参与者时，jtx Board可以根据您的联系人给出建议值。启用此功能，需要授予其读取联系人的权限。
 在輸入與會者時，jtx Board 可以根據你的聯絡人給出建議。啟用此功能，需要授予期讀取聯絡人的權限。"</string>
