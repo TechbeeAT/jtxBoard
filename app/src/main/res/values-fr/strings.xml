@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Attention : Les sous-tâches sont supprimées indépendamment de leur statut si leur parent est marqué comme terminé. Cette opération ne peut pas être annulée !"</string>
     <string name="edit_dialog_sure_to_delete_message">"Êtes-vous sûr de vouloir supprimer \"%1$s\" ?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Êtes-vous sûr de vouloir supprimer cette entrée ? Cette entrée ne sera pas enregistrée."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La date d'échéance ne peut pas être antérieure à la date de début."</string>
     <string name="edit_fragment_app_permission">"Autorisation de l'application"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board peut suggérer des données sur les participants basées sur vos contacts comme valeurs d'entrée pour vos entrées. Des droits de lecture sur vos contacts sont nécessaires pour activer cette fonctionnalité."</string>
     <!-- fragment_about -->
