@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Uwaga: Podzadania są usuwane niezależnie od statusu ich wykonania, jeżeli zadanie główne, którego są częścią zostanie oznaczone jako ukończone. Tej operacji nie można cofnąć!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Czy jesteś pewny, że chcesz usunąć \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Czy na pewno chcesz porzucić ten wpis? Nie zostanie on zapisany."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Data zakończenia nie może być wcześniejsza niż data rozpoczęcia."</string>
     <string name="edit_fragment_app_permission">"Uprawnienia aplikacji"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board może sugerować dane uczestników korzystając z Twoich kontaktów jako wartości wejściowych dla Twoich wpisów. Aby włączyć tę funkcję, potrzebne są uprawnienia do odczytu kontaktów."</string>
     <!-- fragment_about -->
