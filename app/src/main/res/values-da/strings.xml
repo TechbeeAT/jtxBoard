@@ -62,7 +62,6 @@
     <string name="dialog_delete_done_message">"OBS: Underopgaver slettes uafhængigt af deres status, hvis deres forælder er markeret som udført. Denne handling kan ikke fortrydes!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Er du sikker på, at du vil slette \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Er du sikker på, at du vil kassere denne post? Denne post vil ikke blive gemt."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Forfaldsdatoen kan ikke være før startdatoen."</string>
     <string name="edit_fragment_app_permission">"App-tilladelser"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board kan foreslå Deltager-data baseret på dine kontakter som input-værdier for dine indtastninger. Læsetilladelse for dine kontakter er nødvendig for at aktivere denne funktion."</string>
     <!-- fragment_about -->
