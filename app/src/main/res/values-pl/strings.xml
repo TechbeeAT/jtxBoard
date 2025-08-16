@@ -337,7 +337,7 @@
     <string name="filter_no_category">Bez kategorii</string>
     <string name="filter_no_resource">Bez zasobów</string>
     <string name="filter_subtasks_order_by">Uporządkuj podzadania wg</string>
-    <string name="filter_subnotes_order_by">Uporządkuj dowiązane notatki wg</string>
+    <string name="filter_subnotes_order_by">Uporządkuj podpięte notatki wg</string>
     <string name="order_by_drag_and_drop">"Przeciągnij i upuść"</string>
     <string name="filter_no_filter">"Bez filtra"</string>
     <string name="filter_options_more_entries">"Więcej (%1$d)"</string>
@@ -369,7 +369,7 @@
     <string name="settings_export_error">"Wystąpił błąd podczas eksportowania ustawień"</string>
     <string name="more">"Więcej"</string>
     <string name="navigation_drawer_buypro">"Kup Pro"</string>
-    <string name="settings_select_theme">"Wybierz motyw"</string>
+    <string name="settings_select_theme">"Wybierz wygląd"</string>
     <string name="settings_select_theme_dark">"Ciemny"</string>
     <string name="settings_select_theme_light">"Jasny"</string>
     <string name="settings_select_theme_system">"Domyślny systemowy"</string>
@@ -541,7 +541,7 @@ Dziękujemy!"</string>
     <string name="settings_link_progress_to_subtasks">"Podepnij postęp do podzadań"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Synchronizuj stan, postęp oraz stopień ukończenia"</string>
     <string name="settings_attention_experimental_feature">"Uwaga: może jeszcze nie działać właściwie"</string>
-    <string name="settings_create_with_current_location">"Utwórz nowe wpisy w bieżącym położeniu"</string>
+    <string name="settings_create_with_current_location">"Nowe wpisy twórz z podpiętym położeniem"</string>
     <string name="settings_create_with_current_location_sub">"Proszę udzielić dostępu do swojego położenia podczas korzystania z tej aplikacji, aby korzystać z tej funkcji."</string>
     <string name="settings_sticky_alarms">"Przyklejone alarmy"</string>
     <string name="settings_sticky_alarms_sub">"Powiadamiaj do czasu wykonania lub odroczenia"</string>
@@ -568,7 +568,7 @@ Dziękujemy!"</string>
     <string name="filter_special">"Filtry szczególne"</string>
     <string name="filter_presets">"Filtry z nastaw"</string>
     <string name="filter_presets_edit_info">"Proszę dodać/zaktualizować/usunąć nastawy filtrów z menu filtrów w widoku listy."</string>
-    <string name="filter_any">"Dowolny"</string>
+    <string name="filter_any">"Dowolne"</string>
     <string name="filter_all">"Wszystkie"</string>
     <string name="filter_none">"Brak"</string>
     <string name="filter_date_from_to">"Data: %1$s - %2$s"</string>
