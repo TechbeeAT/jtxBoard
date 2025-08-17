@@ -58,6 +58,7 @@ import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredListSetting
 import at.techbee.jtx.database.locals.StoredListSettingData
 import at.techbee.jtx.ui.reusable.dialogs.DateRangePickerDialog
+import at.techbee.jtx.ui.reusable.dialogs.DayRangePickerDialog
 import at.techbee.jtx.ui.reusable.dialogs.DeleteFilterPresetDialog
 import at.techbee.jtx.ui.reusable.dialogs.SaveListSettingsPresetDialog
 import at.techbee.jtx.ui.reusable.elements.FilterSection
@@ -93,6 +94,11 @@ fun ListOptionsFilter(
     var showFilterDateRangeStartDialog by rememberSaveable { mutableStateOf(false) }
     var showFilterDateRangeDueDialog by rememberSaveable { mutableStateOf(false) }
     var showFilterDateRangeCompletedDialog by rememberSaveable { mutableStateOf(false) }
+
+    var showFilterDayRangeStartDialog by rememberSaveable { mutableStateOf(false) }
+    var showFilterDayRangeDueDialog by rememberSaveable { mutableStateOf(false) }
+    var showFilterDayRangeCompletedDialog by rememberSaveable { mutableStateOf(false) }
+
 
     if (showSaveListSettingsPresetDialog) {
         val currentListSettingData = StoredListSettingData.fromListSettings(listSettings)
@@ -150,6 +156,51 @@ fun ListOptionsFilter(
             },
             onDismiss = {
                 showFilterDateRangeCompletedDialog = false
+            }
+        )
+    }
+
+    if (showFilterDayRangeStartDialog) {
+        DayRangePickerDialog (
+            dayRangeStart = listSettings.filterStartDayRangeStart.intValue,
+            dayRangeEnd = listSettings.filterStartDayRangeEnd.intValue,
+            onConfirm = { start, end ->
+                listSettings.filterStartDayRangeStart.intValue = start
+                listSettings.filterStartDayRangeEnd.intValue = end
+                onListSettingsChanged()
+            },
+            onDismiss = {
+                showFilterDayRangeStartDialog = false
+            }
+        )
+    }
+
+    if (showFilterDayRangeDueDialog) {
+        DayRangePickerDialog (
+            dayRangeStart = listSettings.filterDueDayRangeStart.intValue,
+            dayRangeEnd = listSettings.filterDueDayRangeEnd.intValue,
+            onConfirm = { start, end ->
+                listSettings.filterDueDayRangeStart.intValue = start
+                listSettings.filterDueDayRangeEnd.intValue = end
+                onListSettingsChanged()
+            },
+            onDismiss = {
+                showFilterDayRangeDueDialog = false
+            }
+        )
+    }
+
+    if (showFilterDayRangeCompletedDialog) {
+        DayRangePickerDialog (
+            dayRangeStart = listSettings.filterCompletedDayRangeStart.intValue,
+            dayRangeEnd = listSettings.filterCompletedDayRangeEnd.intValue,
+            onConfirm = { start, end ->
+                listSettings.filterCompletedDayRangeStart.intValue = start
+                listSettings.filterCompletedDayRangeEnd.intValue = end
+                onListSettingsChanged()
+            },
+            onDismiss = {
+                showFilterDayRangeCompletedDialog = false
             }
         )
     }
@@ -306,6 +357,8 @@ fun ListOptionsFilter(
                     listSettings.isFilterStartFuture.value = false
                     listSettings.filterStartRangeStart.value = null
                     listSettings.filterStartRangeEnd.value = null
+                    listSettings.filterStartDayRangeStart.intValue = 0
+                    listSettings.filterStartDayRangeEnd.intValue = 0
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
@@ -320,6 +373,8 @@ fun ListOptionsFilter(
                     listSettings.isFilterStartFuture.value = !listSettings.isFilterStartFuture.value
                     listSettings.filterStartRangeStart.value = null
                     listSettings.filterStartRangeEnd.value = null
+                    listSettings.filterStartDayRangeStart.intValue = 0
+                    listSettings.filterStartDayRangeEnd.intValue = 0
                     onListSettingsChanged()
                 })
             {
@@ -409,6 +464,22 @@ fun ListOptionsFilter(
                         Text(text)
                     }
                 )
+
+                FilterChip(
+                    selected = listSettings.filterStartDayRangeStart.intValue != 0 || listSettings.filterStartDayRangeEnd.intValue != 0,
+                    onClick = {
+                        showFilterDayRangeStartDialog = true
+                    },
+                    label = {
+                        val dayFrom = listSettings.filterStartDayRangeStart.intValue.takeIf { it != 0 || listSettings.filterStartDayRangeEnd.intValue != 0  } ?: "…"
+                        val dayTo = listSettings.filterStartDayRangeEnd.intValue.takeIf { it != 0 || listSettings.filterStartDayRangeStart.intValue != 0  } ?: "…"
+                        val text = stringResource(
+                            id = if (module == Module.TODO) R.string.filter_started_within_days_from_to else R.string.filter_date_within_days_from_to,
+                            dayFrom, dayTo
+                        )
+                        Text(text)
+                    }
+                )
             }
         }
 
@@ -427,6 +498,8 @@ fun ListOptionsFilter(
                     listSettings.isFilterNoDueDateSet.value = false
                     listSettings.filterDueRangeStart.value = null
                     listSettings.filterDueRangeEnd.value = null
+                    listSettings.filterDueDayRangeStart.intValue = 0
+                    listSettings.filterDueDayRangeEnd.intValue = 0
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
@@ -441,6 +514,8 @@ fun ListOptionsFilter(
                         !listSettings.isFilterNoDueDateSet.value
                     listSettings.filterDueRangeStart.value = null
                     listSettings.filterDueRangeEnd.value = null
+                    listSettings.filterDueDayRangeStart.intValue = 0
+                    listSettings.filterDueDayRangeEnd.intValue = 0
                     onListSettingsChanged()
                 })
             {
@@ -522,6 +597,22 @@ fun ListOptionsFilter(
                         Text(text)
                     }
                 )
+
+                FilterChip(
+                    selected = listSettings.filterDueDayRangeStart.intValue != 0 || listSettings.filterDueDayRangeEnd.intValue != 0,
+                    onClick = {
+                        showFilterDayRangeDueDialog = true
+                    },
+                    label = {
+                        val dayFrom = listSettings.filterDueDayRangeStart.intValue.takeIf { it != 0 || listSettings.filterDueDayRangeEnd.intValue != 0  } ?: "…"
+                        val dayTo = listSettings.filterDueDayRangeEnd.intValue.takeIf { it != 0 || listSettings.filterDueDayRangeStart.intValue != 0  } ?: "…"
+                        val text = stringResource(
+                            id = R.string.filter_due_within_days_from_to,
+                            dayFrom, dayTo
+                        )
+                        Text(text)
+                    }
+                )
             }
         }
 
@@ -534,6 +625,8 @@ fun ListOptionsFilter(
                     listSettings.isFilterNoCompletedDateSet.value = false
                     listSettings.filterCompletedRangeStart.value = null
                     listSettings.filterCompletedRangeEnd.value = null
+                    listSettings.filterCompletedDayRangeStart.intValue = 0
+                    listSettings.filterCompletedDayRangeEnd.intValue = 0
                     onListSettingsChanged()
                 },
                 onInvertSelection = {
@@ -541,6 +634,8 @@ fun ListOptionsFilter(
                         !listSettings.isFilterNoCompletedDateSet.value
                     listSettings.filterCompletedRangeStart.value = null
                     listSettings.filterCompletedRangeEnd.value = null
+                    listSettings.filterCompletedDayRangeStart.intValue = 0
+                    listSettings.filterCompletedDayRangeEnd.intValue = 0
                     onListSettingsChanged()
                 })
             {
@@ -578,6 +673,22 @@ fun ListOptionsFilter(
                             id = R.string.filter_completed_from_to,
                             completedFrom,
                             completedTo
+                        )
+                        Text(text)
+                    }
+                )
+
+                FilterChip(
+                    selected = listSettings.filterCompletedDayRangeStart.intValue != 0 || listSettings.filterCompletedDayRangeEnd.intValue != 0,
+                    onClick = {
+                        showFilterDayRangeCompletedDialog = true
+                    },
+                    label = {
+                        val dayFrom = listSettings.filterCompletedDayRangeStart.intValue.takeIf { it != 0 || listSettings.filterCompletedDayRangeEnd.intValue != 0  } ?: "…"
+                        val dayTo = listSettings.filterCompletedDayRangeEnd.intValue.takeIf { it != 0 || listSettings.filterCompletedDayRangeStart.intValue != 0  } ?: "…"
+                        val text = stringResource(
+                            id = R.string.filter_completed_within_days_from_to,
+                            dayFrom, dayTo
                         )
                         Text(text)
                     }

@@ -11,17 +11,19 @@ package at.techbee.jtx.ui.list
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.edit
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.widgets.ListWidgetConfig
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 enum class CheckboxPosition { START, END, OFF }
@@ -73,6 +75,13 @@ class ListSettings {
     var filterDueRangeEnd: MutableState<Long?> = mutableStateOf(null)
     var filterCompletedRangeStart: MutableState<Long?> = mutableStateOf(null)
     var filterCompletedRangeEnd: MutableState<Long?> = mutableStateOf(null)
+
+    var filterStartDayRangeStart: MutableIntState = mutableIntStateOf(0)
+    var filterStartDayRangeEnd: MutableIntState = mutableIntStateOf(0)
+    var filterDueDayRangeStart: MutableIntState = mutableIntStateOf(0)
+    var filterDueDayRangeEnd: MutableIntState = mutableIntStateOf(0)
+    var filterCompletedDayRangeStart: MutableIntState = mutableIntStateOf(0)
+    var filterCompletedDayRangeEnd: MutableIntState = mutableIntStateOf(0)
 
     var searchText: MutableState<String?> = mutableStateOf(null)        // search text is not saved!
     var newEntryText: MutableState<String> = mutableStateOf("")    // newEntryText is not saved!
@@ -144,6 +153,13 @@ class ListSettings {
         private const val PREFS_FILTER_COMPLETED_RANGE_START = "prefsFilterCompletedRangeStart"
         private const val PREFS_FILTER_COMPLETED_RANGE_END = "prefsFilterCompletedRangeEnd"
 
+        private const val PREFS_FILTER_START_DAY_RANGE_START = "prefsFilterStartDayRangeStart"
+        private const val PREFS_FILTER_START_DAY_RANGE_END = "prefsFilterStartDayRangeEnd"
+        private const val PREFS_FILTER_DUE_DAY_RANGE_START = "prefsFilterDueDayRangeStart"
+        private const val PREFS_FILTER_DUE_DAY_RANGE_END = "prefsFilterDueDayRangeEnd"
+        private const val PREFS_FILTER_COMPLETED_DAY_RANGE_START = "prefsFilterCompletedDayRangeStart"
+        private const val PREFS_FILTER_COMPLETED_DAY_RANGE_END = "prefsFilterCompletedDayRangeEnd"
+
         private const val PREFS_VIEWMODE = "prefsViewmodeList"
         private const val PREFS_LAST_COLLECTION = "prefsLastUsedCollection"
         private const val PREFS_FLAT_VIEW = "prefsFlatView"
@@ -202,11 +218,18 @@ class ListSettings {
             filterCompletedRangeStart.value = prefs.getLong(PREFS_FILTER_COMPLETED_RANGE_START, 0L).takeIf { it != 0L }
             filterCompletedRangeEnd.value = prefs.getLong(PREFS_FILTER_COMPLETED_RANGE_END, 0L).takeIf { it != 0L }
 
+            filterStartDayRangeStart.intValue = prefs.getInt(PREFS_FILTER_START_DAY_RANGE_START, 0)
+            filterStartDayRangeEnd.intValue = prefs.getInt(PREFS_FILTER_START_DAY_RANGE_END, 0)
+            filterDueDayRangeStart.intValue = prefs.getInt(PREFS_FILTER_DUE_DAY_RANGE_START, 0)
+            filterDueDayRangeEnd.intValue = prefs.getInt(PREFS_FILTER_DUE_DAY_RANGE_END, 0)
+            filterCompletedDayRangeStart.intValue = prefs.getInt(PREFS_FILTER_COMPLETED_DAY_RANGE_START, 0)
+            filterCompletedDayRangeEnd.intValue = prefs.getInt(PREFS_FILTER_COMPLETED_DAY_RANGE_END, 0)
+
             //searchOrganizers =
             searchCategories.addAll(prefs.getStringSet(PREFS_CATEGORIES, emptySet())?.toList() ?: emptyList())
-            searchCategoriesAnyAllNone.value = prefs.getString(PREFS_CATEGORIES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: AnyAllNone.ANY
+            searchCategoriesAnyAllNone.value = prefs.getString(PREFS_CATEGORIES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(_: Exception) { null } } ?: AnyAllNone.ANY
             searchResources.addAll(prefs.getStringSet(PREFS_RESOURCES, emptySet())?.toList() ?: emptyList())
-            searchResourcesAnyAllNone.value = prefs.getString(PREFS_RESOURCES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: AnyAllNone.ANY
+            searchResourcesAnyAllNone.value = prefs.getString(PREFS_RESOURCES_ANYALLNONE, null)?.let { try { AnyAllNone.valueOf(it) } catch(_: Exception) { null } } ?: AnyAllNone.ANY
             searchStatus.addAll(Status.getListFromStringList(prefs.getStringSet(PREFS_STATUS, null)))
             searchXStatus.addAll(prefs.getStringSet(PREFS_EXTENDED_STATUS, emptySet())?.toList() ?: emptyList())
             searchClassification.addAll(Classification.getListFromStringList(prefs.getStringSet(PREFS_CLASSIFICATION, null)))
@@ -214,19 +237,19 @@ class ListSettings {
             searchCollection.addAll(prefs.getStringSet(PREFS_COLLECTION, emptySet())?.toList() ?: emptyList())
             searchAccount.addAll(prefs.getStringSet(PREFS_ACCOUNT, emptySet())?.toList() ?: emptyList())
 
-            orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DRAG_AND_DROP
-            sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
-            orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.SUMMARY
-            sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
-            groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } }
+            orderBy.value = prefs.getString(PREFS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(_: Exception) { null } } ?: OrderBy.DRAG_AND_DROP
+            sortOrder.value = prefs.getString(PREFS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(_: Exception) { null } } ?: SortOrder.ASC
+            orderBy2.value = prefs.getString(PREFS_ORDERBY2, null)?.let { try { OrderBy.valueOf(it) } catch(_: Exception) { null } } ?: OrderBy.SUMMARY
+            sortOrder2.value = prefs.getString(PREFS_SORTORDER2, null)?.let { try { SortOrder.valueOf(it) } catch(_: Exception) { null } } ?: SortOrder.ASC
+            groupBy.value = prefs.getString(PREFS_GROUPBY, null)?.let { try { GroupBy.valueOf(it) } catch(_: Exception) { null } }
             showOnlySearchMatchingSubentries.value = prefs.getBoolean(PREFS_SHOW_ONLY_SEARCH_MATCHING_SUBENTRIES, false)
 
-            subtasksOrderBy.value = prefs.getString(PREFS_SUBTASKS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DRAG_AND_DROP
-            subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
-            subnotesOrderBy.value = prefs.getString(PREFS_SUBNOTES_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: OrderBy.DRAG_AND_DROP
-            subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: SortOrder.ASC
+            subtasksOrderBy.value = prefs.getString(PREFS_SUBTASKS_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(_: Exception) { null } } ?: OrderBy.DRAG_AND_DROP
+            subtasksSortOrder.value = prefs.getString(PREFS_SUBTASKS_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(_: Exception) { null } } ?: SortOrder.ASC
+            subnotesOrderBy.value = prefs.getString(PREFS_SUBNOTES_ORDERBY, null)?.let { try { OrderBy.valueOf(it) } catch(_: Exception) { null } } ?: OrderBy.DRAG_AND_DROP
+            subnotesSortOrder.value = prefs.getString(PREFS_SUBNOTES_SORTORDER, null)?.let { try { SortOrder.valueOf(it) } catch(_: Exception) { null } } ?: SortOrder.ASC
 
-            viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(e: java.lang.IllegalArgumentException) { null } } ?: ViewMode.LIST
+            viewMode.value = prefs.getString(PREFS_VIEWMODE, ViewMode.LIST.name)?.let { try { ViewMode.valueOf(it) } catch(_: Exception) { null } } ?: ViewMode.LIST
             flatView.value = prefs.getBoolean(PREFS_FLAT_VIEW, false)
             markdownEnabled.value = prefs.getBoolean(PREFS_MARKDOWN_ENABLED, false)
 
@@ -243,7 +266,7 @@ class ListSettings {
             showOneRecurEntryInFuture.value = prefs.getBoolean(PREFS_SHOW_ONE_RECUR_ENTRY_IN_FUTURE, false)
 
             topAppBarCollectionId.value = prefs.getLong(PREFS_TOPAPPBAR_COLLECTION_ID, 0L)
-            topAppBarMode.value = try { ListTopAppBarMode.valueOf(prefs.getString(PREFS_TOPAPPBAR_MODE, null)?:ListTopAppBarMode.SEARCH.name) } catch (e: IllegalArgumentException) { ListTopAppBarMode.SEARCH }
+            topAppBarMode.value = try { ListTopAppBarMode.valueOf(prefs.getString(PREFS_TOPAPPBAR_MODE, null)?:ListTopAppBarMode.SEARCH.name) } catch (_: Exception) { ListTopAppBarMode.SEARCH }
 
         }
 
@@ -272,6 +295,13 @@ class ListSettings {
             filterDueRangeEnd.value = listWidgetConfig.filterDueRangeEnd
             filterCompletedRangeStart.value = listWidgetConfig.filterCompletedRangeStart
             filterCompletedRangeEnd.value = listWidgetConfig.filterCompletedRangeEnd
+
+            filterStartDayRangeStart.intValue = listWidgetConfig.filterStartDayRangeStart
+            filterStartDayRangeEnd.intValue = listWidgetConfig.filterStartDayRangeEnd
+            filterDueDayRangeStart.intValue = listWidgetConfig.filterDueDayRangeStart
+            filterDueDayRangeEnd.intValue = listWidgetConfig.filterDueDayRangeEnd
+            filterCompletedDayRangeStart.intValue = listWidgetConfig.filterCompletedDayRangeStart
+            filterCompletedDayRangeEnd.intValue = listWidgetConfig.filterCompletedDayRangeEnd
 
             searchCategories.addAll(listWidgetConfig.searchCategories)
             searchCategoriesAnyAllNone.value = listWidgetConfig.searchCategoriesAnyAllNone
@@ -313,7 +343,7 @@ class ListSettings {
     }
 
     fun saveToPrefs(prefs: SharedPreferences) {
-        prefs.edit().apply {
+        prefs.edit {
             putBoolean(PREFS_FILTER_OVERDUE, isFilterOverdue.value)
             putBoolean(PREFS_FILTER_DUE_TODAY, isFilterDueToday.value)
             putBoolean(PREFS_FILTER_DUE_TOMORROW, isFilterDueTomorrow.value)
@@ -332,23 +362,36 @@ class ListSettings {
             putBoolean(PREFS_FILTER_NO_RESOURCE_SET, isFilterNoResourceSet.value)
 
             filterStartRangeStart.value?.let {
-                putLong(PREFS_FILTER_START_RANGE_START, it)  }
+                putLong(PREFS_FILTER_START_RANGE_START, it)
+            }
                 ?: remove(PREFS_FILTER_START_RANGE_START)
             filterStartRangeEnd.value?.let {
-                putLong(PREFS_FILTER_START_RANGE_END, it)  }
+                putLong(PREFS_FILTER_START_RANGE_END, it)
+            }
                 ?: remove(PREFS_FILTER_START_RANGE_END)
             filterDueRangeStart.value?.let {
-                putLong(PREFS_FILTER_DUE_RANGE_START, it)  }
+                putLong(PREFS_FILTER_DUE_RANGE_START, it)
+            }
                 ?: remove(PREFS_FILTER_DUE_RANGE_START)
             filterDueRangeEnd.value?.let {
-                putLong(PREFS_FILTER_DUE_RANGE_END, it)  }
+                putLong(PREFS_FILTER_DUE_RANGE_END, it)
+            }
                 ?: remove(PREFS_FILTER_DUE_RANGE_END)
             filterCompletedRangeStart.value?.let {
-                putLong(PREFS_FILTER_COMPLETED_RANGE_START, it)  }
+                putLong(PREFS_FILTER_COMPLETED_RANGE_START, it)
+            }
                 ?: remove(PREFS_FILTER_COMPLETED_RANGE_START)
             filterCompletedRangeEnd.value?.let {
-                putLong(PREFS_FILTER_COMPLETED_RANGE_END, it)  }
+                putLong(PREFS_FILTER_COMPLETED_RANGE_END, it)
+            }
                 ?: remove(PREFS_FILTER_COMPLETED_RANGE_END)
+
+            putInt(PREFS_FILTER_START_DAY_RANGE_START, filterStartDayRangeStart.intValue)
+            putInt(PREFS_FILTER_START_DAY_RANGE_END, filterStartDayRangeEnd.intValue)
+            putInt(PREFS_FILTER_DUE_DAY_RANGE_START, filterDueDayRangeStart.intValue)
+            putInt(PREFS_FILTER_DUE_DAY_RANGE_END, filterDueDayRangeEnd.intValue)
+            putInt(PREFS_FILTER_COMPLETED_DAY_RANGE_START, filterCompletedDayRangeStart.intValue)
+            putInt(PREFS_FILTER_COMPLETED_DAY_RANGE_END, filterCompletedDayRangeEnd.intValue)
 
             putString(PREFS_ORDERBY, orderBy.value.name)
             putString(PREFS_SORTORDER, sortOrder.value.name)
@@ -390,7 +433,7 @@ class ListSettings {
 
             putLong(PREFS_TOPAPPBAR_COLLECTION_ID, topAppBarCollectionId.value)
             putString(PREFS_TOPAPPBAR_MODE, topAppBarMode.value.name)
-        }.apply()
+        }
     }
 
     fun reset() {
@@ -429,10 +472,17 @@ class ListSettings {
         filterDueRangeEnd.value = null
         filterCompletedRangeStart.value = null
         filterCompletedRangeEnd.value = null
+
+        filterStartDayRangeStart.intValue = 0
+        filterStartDayRangeEnd.intValue = 0
+        filterDueDayRangeStart.intValue = 0
+        filterDueDayRangeEnd.intValue = 0
+        filterCompletedDayRangeStart.intValue = 0
+        filterCompletedDayRangeEnd.intValue = 0
     }
 
     fun getLastUsedCollectionId(prefs: SharedPreferences) = prefs.getLong(PREFS_LAST_COLLECTION, 0L)
-    fun saveLastUsedCollectionId(prefs: SharedPreferences, collectionId: Long) = prefs.edit()?.putLong(PREFS_LAST_COLLECTION, collectionId)?.apply()
+    fun saveLastUsedCollectionId(prefs: SharedPreferences, collectionId: Long) = prefs.edit {putLong(PREFS_LAST_COLLECTION, collectionId) }
 
     fun isFilterActive() =
         searchCategories.isNotEmpty()
@@ -467,4 +517,7 @@ class ListSettings {
                 || filterDueRangeEnd.value != null
                 || filterCompletedRangeStart.value != null
                 || filterCompletedRangeEnd.value != null
+                || (filterStartDayRangeStart.intValue != 0 && filterStartDayRangeEnd.intValue != 0)
+                || (filterDueDayRangeStart.intValue != 0 && filterDueDayRangeEnd.intValue != 0)
+                || (filterCompletedDayRangeStart.intValue != 0 && filterCompletedDayRangeEnd.intValue != 0)
 }
