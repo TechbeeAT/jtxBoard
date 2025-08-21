@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"ਧਿਆਨ ਦਿਓ: ਉਪ-ਕਾਰਜ ਆਪਣੀ ਸਥਿਤੀ ਤੋਂ ਸੁਤੰਤਰ ਤੌਰ 'ਤੇ ਮਿਟਾ ਦਿੱਤੇ ਜਾਂਦੇ ਹਨ ਜੇਕਰ ਉਹਨਾਂ ਦੇ ਪਿੱਤਰ ਕਾਰਜ ਦੀ ਕੀਤੇ ਵਜੋਂ ਨਿਸ਼ਾਨਦੇਹੀ ਕਰ ਦਿੱਤੀ ਗਈ ਹੋਵੇ। ਇਸ ਕਾਰਵਾਈ ਨੂੰ ਅਣਕੀਤਾ ਨਹੀਂ ਕੀਤਾ ਜਾ ਸਕਦਾ!"</string>
     <string name="edit_dialog_sure_to_delete_message">"ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ \"%1$s\" ਨੂੰ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?"</string>
     <string name="edit_dialog_sure_to_discard_message">"ਕੀ ਤੁਸੀਂ ਯਕੀਨੀ ਤੌਰ 'ਤੇ ਇਸ ਐਂਟਰੀ ਨੂੰ ਰੱਦ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ? ਇਹ ਐਂਟਰੀ ਸੁਰੱਖਿਅਤ ਨਹੀਂ ਕੀਤੀ ਜਾਵੇਗੀ।"</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"ਨਿਯਤ ਮਿਤੀ ਸ਼ੁਰੂਆਤੀ ਮਿਤੀ ਤੋਂ ਪਹਿਲਾਂ ਨਹੀਂ ਹੋ ਸਕਦੀ।"</string>
     <string name="edit_fragment_app_permission">"ਐਪ ਦੀ ਇਜਾਜ਼ਤ"</string>
     <!-- fragment_about -->
     <!-- menus -->

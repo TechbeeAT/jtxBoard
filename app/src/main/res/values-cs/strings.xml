@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Upozornění: Dílčí úkoly jsou odstraněny nezávisle na jejich stavu, pokud je jejich nadřízená položka označena jako dokončená. Tuto operaci nelze vrátit zpět!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Opravdu chcete odstranit „%1$s“?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Opravdu chcete zahodit tento záznam? Tento záznam nebude uložen."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Datum termínu nemůže být před datem zahájení."</string>
     <string name="edit_fragment_app_permission">"Oprávnění aplikace"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board může navrhnout údaje o účastnících na základě vašich kontaktů jako vstupní hodnoty pro vaše záznamy. Pro povolení této funkce je nutné mít u kontaktů oprávnění ke čtení."</string>
     <!-- fragment_about -->

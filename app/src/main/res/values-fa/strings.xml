@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"توجه: کارهای فرعی بدون توجه به وضعیت‌شان حذف می‌شوند اگر کار اصلی به‌عنوان انجام‌شده علامت‌گذاری شود. این عملیات قابل بازگشت نیست!"</string>
     <string name="edit_dialog_sure_to_delete_message">"مطمئنی می‌خوای \"%1$s\" رو حذف کنی؟"</string>
     <string name="edit_dialog_sure_to_discard_message">"آیا مطمئنید که می‌خواید این ورودی را نادیده بگیرید؟ این ورودی نگه‌داری نمی‌شود."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"تاریخ سررسید نباید قبل از تاریخ شروع باشد."</string>
     <string name="edit_fragment_app_permission">"مجوز برنامه"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board می‌تواند داده‌های شرکت‌کنندگان را بر اساس مخاطبان شما به‌عنوان ورودی پیشنهاد دهد. دسترسی به مخاطبان برای فعال‌سازی این ویژگی لازم است."</string>
     <!-- fragment_about -->

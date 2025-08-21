@@ -342,6 +342,12 @@ data class ICal4List(
             filterDueRangeEnd: Long? = null,
             filterCompletedRangeStart: Long? = null,
             filterCompletedRangeEnd: Long? = null,
+            filterStartDayRangeStart: Int = 0,
+            filterStartDayRangeEnd: Int = 0,
+            filterDueDayRangeStart: Int = 0,
+            filterDueDayRangeEnd: Int = 0,
+            filterCompletedDayRangeStart: Int = 0,
+            filterCompletedDayRangeEnd: Int = 0,
             isFilterNoCategorySet: Boolean = false,
             isFilterNoResourceSet: Boolean = false,
             searchText: String? = null,
@@ -503,7 +509,15 @@ data class ICal4List(
             if(filterDueRangeStart != null || filterDueRangeEnd != null)
                 queryString += " AND ($COLUMN_DUE BETWEEN ${filterDueRangeStart?:Long.MIN_VALUE} AND ${filterDueRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
             if(filterCompletedRangeStart != null || filterCompletedRangeEnd != null)
-                queryString += " AND ($COLUMN_DTSTART BETWEEN ${filterCompletedRangeStart?:Long.MIN_VALUE} AND ${filterCompletedRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
+                queryString += " AND ($COLUMN_COMPLETED BETWEEN ${filterCompletedRangeStart?:Long.MIN_VALUE} AND ${filterCompletedRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
+
+            // DAY RANGE
+            if(filterStartDayRangeStart != 0 || filterStartDayRangeEnd != 0)
+                queryString += " AND ($COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong() + filterStartDayRangeStart.days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (filterStartDayRangeEnd+1).days.inWholeMilliseconds - 1})"
+            if(filterDueDayRangeStart != 0 || filterDueDayRangeEnd != 0)
+                queryString += " AND ($COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong() + filterDueDayRangeStart.days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (filterDueDayRangeEnd+1).days.inWholeMilliseconds - 1})"
+            if(filterCompletedDayRangeStart != 0 || filterCompletedDayRangeEnd != 0)
+                queryString += " AND ($COLUMN_COMPLETED BETWEEN ${DateTimeUtils.getTodayAsLong() + filterCompletedDayRangeStart.days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (filterCompletedDayRangeEnd+1).days.inWholeMilliseconds - 1})"
 
             //CLASSIFICATION
             if (searchClassification.isNotEmpty()) {

@@ -1,0 +1,5 @@
+- In the compact view subtasks can now be collapsed and expanded (if the option "Expand subtasks in list" is disabled). ATTENTION: So far this option was disabled. If you want to ALWAYS display subtasks, please make sure to enable the option in the settings to keep the view as it was.
+- Fixed overlapping keyboard on Android 16
+- Fixed crash when location contains single quotes
+- Minor improvements
+- Version updates

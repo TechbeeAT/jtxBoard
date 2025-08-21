@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Achtung: Unteraufgaben werden unabhängig von ihrem Status gelöscht, wenn ihr übergeordneter Eintrag als erledigt markiert ist. Dieser Vorgang kann nicht rückgängig gemacht werden!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Sind Sie sicher, dass Sie \"%1$s\" löschen wollen?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Sind Sie sicher, dass Sie diesen Eintrag verwerfen wollen? Der Eintrag wird nicht gespeichert."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Das Fälligkeitsdatum kann nicht vor dem Startdatum sein."</string>
     <string name="edit_fragment_app_permission">"App Berechtigungen"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board kann Teilnehmer basierend auf Ihren Telefonbuch-Kontakten vorschlagen. Die Lese-Berechtigung für Kontakte ist hierfür erforderlich."</string>
     <!-- fragment_about -->
