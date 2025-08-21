@@ -36,7 +36,7 @@ try {
 
 android {
     namespace = "at.techbee.jtx"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "at.techbee.jtx"
         minSdk = 23

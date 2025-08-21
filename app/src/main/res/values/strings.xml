@@ -118,6 +118,10 @@
     <string name="edit_recur_toast_requires_start_date">"Recurrence requires a start-date to be set!"</string>
     <string name="edit_datepicker_dialog_select_date">"Select date"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Select date range"</string>
+    <string name="edit_day_range_picker_dialog_select_day_range">"Select day range"</string>
+    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"Date within"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"and"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"day(s)"</string>
     <string name="edit_datepicker_dialog_add_time">"Add time"</string>
     <string name="edit_datepicker_dialog_edit_time">"Edit time"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Add timezone"</string>
@@ -595,6 +599,10 @@ Thank you!"</string>
     <string name="filter_started_from_to">"Start(ed): %1$s - %2$s"</string>
     <string name="filter_due_from_to">"Due: %1$s - %2$s"</string>
     <string name="filter_completed_from_to">"Completed: %1$s - %2$s"</string>
+    <string name="filter_date_within_days_from_to">"Date within %1$s and %2$s days"</string>
+    <string name="filter_started_within_days_from_to">"Start(ed) within %1$s and %2$s days"</string>
+    <string name="filter_due_within_days_from_to">"Due within %1$s and %2$s days"</string>
+    <string name="filter_completed_within_days_from_to">"Completed within %1$s and %2$s days"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date in past"</string>
     <string name="list_date_today">"Today"</string>
