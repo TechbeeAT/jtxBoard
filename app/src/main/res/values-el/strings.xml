@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Προσοχή: Οι υποεργασίες διαγράφονται ανεξάρτητα από την κατάστασή τους αν η κύρια τους έχει επισημανθεί ως έχει. Αυτή η λειτουργία δεν μπορεί να αναιρεθεί!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Είστε βέβαιοι ότι θέλετε να διαγράψετε το \"%1$s\";"</string>
     <string name="edit_dialog_sure_to_discard_message">"Είστε βέβαιοι ότι θέλετε να διαγράψετε αυτή την καταχώριση; Αυτή η καταχώρηση δεν θα αποθηκευτεί."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Η ημερομηνία λήξης δεν μπορεί να είναι πριν από την ημερομηνία έναρξης."</string>
     <string name="edit_fragment_app_permission">"Άδεια εφαρμογής"</string>
     <string name="edit_fragment_app_permission_message">"Η εφαρμογή jtx Board μπορεί να προτείνει δεδομένα συμμετεχόντων με βάση τις επαφές σας ως τιμές εισόδου για τις καταχωρίσεις σας. Απαιτείται να παρέχετε δικαιώματα ανάγνωσης στις επαφές σας για να ενεργοποιηθεί αυτή η δυνατότητα."</string>
     <!-- fragment_about -->

@@ -116,7 +116,6 @@
     <string name="dialog_delete_done_title">"Tamamlanan tüm görevler silinsin mi?"</string>
     <string name="edit_dialog_sure_to_delete_message">"\"%1$s\" dosyasını silmek istediğinizden emin misiniz?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Bu girişi yok saymak istediğinizden emin misiniz? Bu giriş kaydedilmeyecek."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Bitiş tarihi, başlangıç ​​tarihinden önce olamaz."</string>
     <string name="edit_fragment_app_permission">"Uygulama izni"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board, girişleriniz için giriş değerleri olarak kişilerinize dayalı Katılımcı verilerini önerebilir. Bu özelliğin etkinleştirilmesi için kişilerinizi okuma izini vermeniz gereklidir."</string>
     <!-- fragment_about -->

@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Observera: Underaktiviteter tas bort oberoende av deras status om deras överordnade markeras som klara. Den här åtgärden kan inte ångras!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Vill du verkligen radera \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Är du säker på att du vill kasta denna post? Denna post kommer inte att sparas."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Förfallodatumet kan inte vara före startdatumet."</string>
     <string name="edit_fragment_app_permission">"Appbehörighet"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board kan föreslå Deltagar-data baserat på dina kontakter som indatavärden för dina poster. Läsbehörighet för dina kontakter behövs för att aktivera den här funktionen."</string>
     <!-- fragment_about -->

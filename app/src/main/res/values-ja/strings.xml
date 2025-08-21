@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"注意: 親が完了としてマークされている場合、サブ ToDo はステータスに関係なく削除されます。この操作は元に戻せません！"</string>
     <string name="edit_dialog_sure_to_delete_message">"本当に「%1$s」を削除しますか？"</string>
     <string name="edit_dialog_sure_to_discard_message">"本当にこのエントリーを破棄しますか？ 破棄を選択すると保存されません。"</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"着手より前の日時を締め切りに設定することはできません。"</string>
     <string name="edit_fragment_app_permission">"アプリの権限"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board はあなたの連絡先に基づいて参加者の候補を提示できます。この機能を有効にするには、連絡先の読み取りの権限が必要です。"</string>
     <!-- fragment_about -->
