@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"注意：如果父任务被标记为已完成，则其子任务不论状态如何都将被删除。此操作不能撤销！"</string>
     <string name="edit_dialog_sure_to_delete_message">"确定要删除“%1$s”？"</string>
     <string name="edit_dialog_sure_to_discard_message">"确定要舍弃此条目？此操作无法撤销。"</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"截止日期不能早于开始日期。"</string>
     <string name="edit_fragment_app_permission">"应用权限"</string>
     <string name="edit_fragment_app_permission_message">"在输入参与者时，jtx Board可以根据您的联系人给出建议值。启用此功能，需要授予其读取联系人的权限。"</string>
     <!-- fragment_about -->

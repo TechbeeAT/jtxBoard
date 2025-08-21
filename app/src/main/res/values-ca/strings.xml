@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Atenció: les sub-tasques s'eliminen independentment del seu estat si es marca la tasca superior com a completada. Aquesta operació no es pot desfer!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Segur que vols eliminar \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Segur que vols descartar aquesta entrada? No es desarà."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La data d'expiració no pot ser abans de la d'inici."</string>
     <string name="edit_fragment_app_permission">"Permís d'aplicació"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board pot sugerir dades d'assistents basant-se en els teus contactes. És necessari que dones permisos de lectura a l'aplicació per a que aquesta funció s'habilite."</string>
     <!-- fragment_about -->

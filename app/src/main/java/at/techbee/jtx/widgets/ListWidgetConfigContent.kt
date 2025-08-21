@@ -281,6 +281,13 @@ fun ListWidgetConfigContent(
                                     filterCompletedRangeStart = listSettings.filterCompletedRangeStart.value
                                     filterCompletedRangeEnd = listSettings.filterCompletedRangeEnd.value
 
+                                    filterStartDayRangeStart = listSettings.filterStartDayRangeStart.intValue
+                                    filterStartDayRangeEnd = listSettings.filterStartDayRangeEnd.intValue
+                                    filterDueDayRangeStart = listSettings.filterDueDayRangeStart.intValue
+                                    filterDueDayRangeEnd = listSettings.filterDueDayRangeEnd.intValue
+                                    filterCompletedDayRangeStart = listSettings.filterCompletedDayRangeStart.intValue
+                                    filterCompletedDayRangeEnd = listSettings.filterCompletedDayRangeEnd.intValue
+
                                     isFilterNoCategorySet = listSettings.isFilterNoCategorySet.value
                                     isFilterNoResourceSet = listSettings.isFilterNoResourceSet.value
                                 }
@@ -366,6 +373,13 @@ data class ListWidgetConfig(
     var filterDueRangeEnd: Long? = null,
     var filterCompletedRangeStart: Long? = null,
     var filterCompletedRangeEnd: Long? = null,
+
+    var filterStartDayRangeStart: Int = 0,
+    var filterStartDayRangeEnd: Int = 0,
+    var filterDueDayRangeStart: Int = 0,
+    var filterDueDayRangeEnd: Int = 0,
+    var filterCompletedDayRangeStart: Int = 0,
+    var filterCompletedDayRangeEnd: Int = 0,
 
     var isFilterNoCategorySet: Boolean = false,
     var isFilterNoResourceSet: Boolean = false,

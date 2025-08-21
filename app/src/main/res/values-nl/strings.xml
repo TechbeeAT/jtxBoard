@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Let op: Subtaken worden verwijderd onafhankelijk van hun status als hun bovenliggende element is gemarkeerd. Deze bewerking kan niet ongedaan worden gemaakt!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Weet je zeker dat je \"%1$s\" wilt verwijderen?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Weet je zeker dat je dit item wilt verwerpen? Dit item wordt niet opgeslagen."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"De einddatum kan niet voor de begindatum liggen."</string>
     <string name="edit_fragment_app_permission">"App-machtigingen"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board kan deelnemer-gegevens op basis van uw contacten voorstellen. Leesrechten op je contacten is nodig om deze functie in te schakelen."</string>
     <!-- fragment_about -->

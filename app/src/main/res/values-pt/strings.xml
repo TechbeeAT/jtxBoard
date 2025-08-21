@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Atenção: Subtarefas são excluídas independentemente do seu estado se a tarefa principal for marcada como completa. Esta operação não pode ser desfeita!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Você tem certeza de que quer deletar \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Tem certeza de que quer excluir este registo? Este registo não vai ser salvo."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"A data de término não pode ser anterior à data de início."</string>
     <string name="edit_fragment_app_permission">"Permissão da aplicação"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board pode sugerir dados de participantes com base nos seus contactos como valores de entrada para os seus registos. Permissão para ler os seus contactos é necessário para ativar esse recurso."</string>
     <!-- fragment_about -->

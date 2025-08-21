@@ -117,7 +117,6 @@
     <string name="dialog_delete_done_message">"Внимание: Подзадачи удаляются независимо от их статуса, если родительская задача отмечена как выполненная. Эту операцию нельзя отменить!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Вы уверены, что хотите удалить \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Вы уверены, что хотите сбросить эту запись? Запись не будет сохранена."</string>
-    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"Дата завершения не может предшествовать дате начала."</string>
     <string name="edit_fragment_app_permission">"Разрешения приложения"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board может предлагать данные об участниках на основе ваших контактов в качестве входных значений для ваших записей. Для включения этой функции необходимо разрешение на чтение ваших контактов."</string>
     <!-- fragment_about -->

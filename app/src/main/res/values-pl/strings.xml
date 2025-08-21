@@ -30,7 +30,7 @@
     <string name="default_local_account_name">"Lokalne"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="journal_status_draft">"Szkic"</string>
-    <string name="journal_status_final">"Zakończony"</string>
+    <string name="journal_status_final">"Zakończone"</string>
     <string name="journal_status_cancelled">"Anulowane"</string>
     <string name="todo_status_needsaction">"Wymaga działania"</string>
     <string name="todo_status_completed">"Ukończone"</string>
@@ -86,7 +86,7 @@
     <string name="view_fragment_audio_permission">"Uprawnienie Aplikacji"</string>
     <string name="view_fragment_audio_permission_message">"jtx Board potrzebuje uprawnienia do nagrywania audio lub do korzystania z funkcji mowa-tekst. Proszę udzielić pozwolenia, by korzystać z tej funkcji."</string>
     <string name="view_reccurrence_note_is_exception">"Ten element jest wyjątkiem dla wpisu cyklicznego."</string>
-    <string name="view_feedback_linked_notes">"Odzew / Podpięte notatki"</string>
+    <string name="view_feedback_linked_notes">"Ocena / Podpięte notatki"</string>
     <string name="view_subtask_of">"Podzadanie"</string>
     <string name="view_linked_note_of">"Powiązane notatki"</string>
     <string name="view_add_audio_note">"Dodaj dźwięk"</string>
@@ -152,7 +152,7 @@
     <string name="settings_app">"Ustawienia aplikacji"</string>
     <string name="settings_select_mimetype_for_audio">"Wybierz typ MIME dla notatek dźwiękowych"</string>
     <!-- Sync fragment -->
-    <string name="sync_with_sync_app_heading">"Synchronizuj z %1$s"</string>
+    <string name="sync_with_sync_app_heading">"Zsynchronizuj z %1$s"</string>
     <string name="sync_basic_info">"jtx Board nie zapewnia synchronizacji serwera, ale obsługuje synchronizację za pośrednictwem DAVx⁵. Ta metoda pozwala na korzystanie z wybranego przez Ciebie serwera CalDAV, aby przechowywać, tworzyć kopię zapasową i synchronizować dane."</string>
     <string name="sync_ksync_basic_info">"kSync jest aplikacją bazującą na DAVx⁵ stworzoną przez Infomaniak, szczególnie dla ich usług. Podczas gdy DAVx⁵ jest otwarty dla dowolnego kompatybilnego serwera CalDAV, kSync pozwala tylko na synchronizację kont Infomaniak."</string>
     <string name="sync_manageddavx5_basic_info">"Managed DAVx⁵ udostępnia funkcje DAVx⁵ organizacjom i posiada dodatkowe funkcje dla przedsiębiorstw, takie jak masowy deployment, branding firmy i ustawienia prekonfigurowalne."</string>
@@ -305,7 +305,7 @@
     <string name="filter">"Filtr"</string>
     <string name="visibility">"Widoczność"</string>
     <string name="order">"Kolejność"</string>
-    <string name="sync_now">"Synchornizuj teraz"</string>
+    <string name="sync_now">"Zsynchronizuj teraz"</string>
     <string name="due">"Zakończenie"</string>
     <string name="completed">"Ukończone"</string>
     <string name="started">"Rozpoczęcie"</string>
@@ -337,7 +337,7 @@
     <string name="filter_no_category">Bez kategorii</string>
     <string name="filter_no_resource">Bez zasobów</string>
     <string name="filter_subtasks_order_by">Uporządkuj podzadania wg</string>
-    <string name="filter_subnotes_order_by">Uporządkuj dowiązane notatki wg</string>
+    <string name="filter_subnotes_order_by">Uporządkuj podpięte notatki wg</string>
     <string name="order_by_drag_and_drop">"Przeciągnij i upuść"</string>
     <string name="filter_no_filter">"Bez filtra"</string>
     <string name="filter_options_more_entries">"Więcej (%1$d)"</string>
@@ -369,7 +369,7 @@
     <string name="settings_export_error">"Wystąpił błąd podczas eksportowania ustawień"</string>
     <string name="more">"Więcej"</string>
     <string name="navigation_drawer_buypro">"Kup Pro"</string>
-    <string name="settings_select_theme">"Wybierz motyw"</string>
+    <string name="settings_select_theme">"Wybierz wygląd"</string>
     <string name="settings_select_theme_dark">"Ciemny"</string>
     <string name="settings_select_theme_light">"Jasny"</string>
     <string name="settings_select_theme_system">"Domyślny systemowy"</string>
@@ -541,7 +541,7 @@ Dziękujemy!"</string>
     <string name="settings_link_progress_to_subtasks">"Podepnij postęp do podzadań"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Synchronizuj stan, postęp oraz stopień ukończenia"</string>
     <string name="settings_attention_experimental_feature">"Uwaga: może jeszcze nie działać właściwie"</string>
-    <string name="settings_create_with_current_location">"Utwórz nowe wpisy w bieżącym położeniu"</string>
+    <string name="settings_create_with_current_location">"Nowe wpisy twórz z podpiętym położeniem"</string>
     <string name="settings_create_with_current_location_sub">"Proszę udzielić dostępu do swojego położenia podczas korzystania z tej aplikacji, aby korzystać z tej funkcji."</string>
     <string name="settings_sticky_alarms">"Przyklejone alarmy"</string>
     <string name="settings_sticky_alarms_sub">"Powiadamiaj do czasu wykonania lub odroczenia"</string>
@@ -568,7 +568,7 @@ Dziękujemy!"</string>
     <string name="filter_special">"Filtry szczególne"</string>
     <string name="filter_presets">"Filtry z nastaw"</string>
     <string name="filter_presets_edit_info">"Proszę dodać/zaktualizować/usunąć nastawy filtrów z menu filtrów w widoku listy."</string>
-    <string name="filter_any">"Dowolny"</string>
+    <string name="filter_any">"Dowolne"</string>
     <string name="filter_all">"Wszystkie"</string>
     <string name="filter_none">"Brak"</string>
     <string name="filter_date_from_to">"Data: %1$s - %2$s"</string>
