@@ -490,25 +490,27 @@ fun ListCard(
                 ) { _, subtask, _ ->
                     key(subtask.id) {
 
-                        SubtaskCard(
-                            subtask = subtask,
-                            selected = selected.contains(subtask.id),
-                            showProgress = settingShowProgressSubtasks,
-                            onProgressChanged = onProgressChanged,
-                            onDeleteClicked = { },   // no edit possible here
-                            onUnlinkClicked = { },
-                            sliderIncrement = progressIncrement,
-                            dragHandle = { if(isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
-                            modifier = Modifier
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
-                                    onLongClick = {
-                                        if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(subtask.id, subtasks)
-                                    }
-                                )
-                        )
+                        ReorderableItem {
+                            SubtaskCard(
+                                subtask = subtask,
+                                selected = selected.contains(subtask.id),
+                                showProgress = settingShowProgressSubtasks,
+                                onProgressChanged = onProgressChanged,
+                                onDeleteClicked = { },   // no edit possible here
+                                onUnlinkClicked = { },
+                                sliderIncrement = progressIncrement,
+                                dragHandle = { if (isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
+                                modifier = Modifier
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
+                                        onLongClick = {
+                                            if (!subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                                onLongClick(subtask.id, subtasks)
+                                        }
+                                    )
+                            )
+                        }
                     }
                 }
             }
@@ -529,25 +531,26 @@ fun ListCard(
                 ) { _, subnote, _ ->
                     key(subnote.id) {
 
-
-                        SubnoteCard(
-                            subnote = subnote,
-                            selected = selected.contains(subnote.id),
-                            player = player,
-                            modifier = Modifier
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = { onClick(subnote.id, subnotes, subnote.isReadOnly) },
-                                    onLongClick = {
-                                        if (!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            onLongClick(subnote.id, subnotes)
-                                    },
-                                ),
-                            dragHandle = { if(isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
-                            isEditMode = false, //no editing here
-                            onDeleteClicked = { }, //no editing here
-                            onUnlinkClicked = { }, //no editing here
-                        )
+                        ReorderableItem {
+                            SubnoteCard(
+                                subnote = subnote,
+                                selected = selected.contains(subnote.id),
+                                player = player,
+                                modifier = Modifier
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = { onClick(subnote.id, subnotes, subnote.isReadOnly) },
+                                        onLongClick = {
+                                            if (!subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                                onLongClick(subnote.id, subnotes)
+                                        },
+                                    ),
+                                dragHandle = { if (isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
+                                isEditMode = false, //no editing here
+                                onDeleteClicked = { }, //no editing here
+                                onUnlinkClicked = { }, //no editing here
+                            )
+                        }
                     }
                 }
             }

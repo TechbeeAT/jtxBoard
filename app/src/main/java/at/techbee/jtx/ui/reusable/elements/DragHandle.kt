@@ -8,10 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import sh.calvin.reorderable.ReorderableCollectionItemScope
-import sh.calvin.reorderable.ReorderableScope
+import sh.calvin.reorderable.ReorderableListItemScope
 
 @Composable
-fun DragHandle(scope: ReorderableScope) {
+fun DragHandle(scope: ReorderableListItemScope) {
     IconButton(
         modifier = with(scope) { Modifier.draggableHandle() },
         onClick = { }
