@@ -107,6 +107,9 @@
     <string name="edit_recur_toast_requires_start_date">"La récurrence nécessite qu'une date de début soit fixée !"</string>
     <string name="edit_datepicker_dialog_select_date">"Sélectionner la date"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Sélectionner une plage de dates"</string>
+    <string name="edit_day_range_picker_dialog_select_day_range">"Sélectionner une plage de dates"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"et"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"jour(s)"</string>
     <string name="edit_datepicker_dialog_add_time">"Ajouter une heure"</string>
     <string name="edit_datepicker_dialog_edit_time">"Modifier l'heure"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Ajouter un fuseau horaire"</string>
@@ -563,6 +566,10 @@ Merci !"</string>
     <string name="filter_started_from_to">"Début : %1$s - %2$s"</string>
     <string name="filter_due_from_to">"Échéance : %1$s - %2$s"</string>
     <string name="filter_completed_from_to">"Complété : %1$s - %2$s"</string>
+    <string name="filter_date_within_days_from_to">"Date comprise entre %1$s et %2$s jours"</string>
+    <string name="filter_started_within_days_from_to">"Début(ée) entre %1$s et %2$s jours"</string>
+    <string name="filter_due_within_days_from_to">"Échue entre %1$s et %2$s jours"</string>
+    <string name="filter_completed_within_days_from_to">"Terminée entre %1$s et %2$s jours"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Date dans le passé"</string>
     <string name="list_date_today">"Aujourd'hui"</string>
