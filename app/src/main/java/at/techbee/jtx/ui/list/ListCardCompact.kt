@@ -196,21 +196,23 @@ fun ListCardCompact(
                 ) { _, subtask, _ ->
                     key(subtask.id) {
 
-                        SubtaskCardCompact(
-                            subtask = subtask,
-                            selected = selected.contains(subtask.id),
-                            onProgressChanged = onProgressChanged,
-                            dragHandle = { if (isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
-                            modifier = Modifier
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
-                                    onLongClick = {
-                                        if (!subtask.isReadOnly)
-                                            onLongClick(subtask.id, subtasks)
-                                    }
-                                )
-                        )
+                        ReorderableItem {
+                            SubtaskCardCompact(
+                                subtask = subtask,
+                                selected = selected.contains(subtask.id),
+                                onProgressChanged = onProgressChanged,
+                                dragHandle = { if (isSubtaskDragAndDropEnabled) DragHandle(scope = this) },
+                                modifier = Modifier
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = { onClick(subtask.id, subtasks, subtask.isReadOnly) },
+                                        onLongClick = {
+                                            if (!subtask.isReadOnly)
+                                                onLongClick(subtask.id, subtasks)
+                                        }
+                                    )
+                            )
+                        }
 
                         if (subtask.id != subtasks.last().id)
                             HorizontalDivider(modifier = Modifier.alpha(0.25f))

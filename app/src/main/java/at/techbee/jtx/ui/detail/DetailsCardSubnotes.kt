@@ -196,28 +196,30 @@ fun DetailsCardSubnotes(
                             )
                         }
 
-                        SubnoteCard(
-                            subnote = subnote,
-                            selected = false,
-                            isEditMode = isEditMode.value,
-                            onDeleteClicked = { onSubnoteDeleted(subnote.id) },
-                            onUnlinkClicked = { onUnlinkSubEntry(subnote.id) },
-                            player = player,
-                            dragHandle = { if(isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
-                            modifier = Modifier
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = {
-                                        if (!isEditMode.value)
-                                            goToDetail(subnote.id, false, subnotes.map { it.id })
-                                        else showEditSubnoteDialog = true
-                                    },
-                                    onLongClick = {
-                                        if (!isEditMode.value && !subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            goToDetail(subnote.id, true, subnotes.map { it.id })
-                                    }
-                                )
-                        )
+                        ReorderableItem {
+                            SubnoteCard(
+                                subnote = subnote,
+                                selected = false,
+                                isEditMode = isEditMode.value,
+                                onDeleteClicked = { onSubnoteDeleted(subnote.id) },
+                                onUnlinkClicked = { onUnlinkSubEntry(subnote.id) },
+                                player = player,
+                                dragHandle = { if (isSubnoteDragAndDropEnabled) DragHandle(scope = this) },
+                                modifier = Modifier
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = {
+                                            if (!isEditMode.value)
+                                                goToDetail(subnote.id, false, subnotes.map { it.id })
+                                            else showEditSubnoteDialog = true
+                                        },
+                                        onLongClick = {
+                                            if (!isEditMode.value && !subnote.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                                goToDetail(subnote.id, true, subnotes.map { it.id })
+                                        }
+                                    )
+                            )
+                        }
                     }
                 }
             }

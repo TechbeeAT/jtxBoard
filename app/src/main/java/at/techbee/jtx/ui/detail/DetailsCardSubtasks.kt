@@ -170,31 +170,33 @@ fun DetailsCardSubtasks(
                             )
                         }
 
-                        SubtaskCard(
-                            subtask = subtask,
-                            selected = false,
-                            isEditMode = isEditMode.value,
-                            showProgress = showSlider,
-                            sliderIncrement = sliderIncrement,
-                            onProgressChanged = onProgressChanged,
-                            onDeleteClicked = { onSubtaskDeleted(subtask.id) },
-                            onUnlinkClicked = { onUnlinkSubEntry(subtask.id) },
-                            dragHandle = { if(isSubtaskDragAndDropEnabled) DragHandle(this) },
-                            modifier = Modifier
-                                .clip(jtxCardCornerShape)
-                                .combinedClickable(
-                                    onClick = {
-                                        if (!isEditMode.value)
-                                            goToDetail(subtask.id, false, subtasks.map { it.id })
-                                        else
-                                            showEditSubtaskDialog = true
-                                    },
-                                    onLongClick = {
-                                        if (!isEditMode.value && !subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
-                                            goToDetail(subtask.id, true, subtasks.map { it.id })
-                                    }
-                                )
-                        )
+                        ReorderableItem {
+                            SubtaskCard(
+                                subtask = subtask,
+                                selected = false,
+                                isEditMode = isEditMode.value,
+                                showProgress = showSlider,
+                                sliderIncrement = sliderIncrement,
+                                onProgressChanged = onProgressChanged,
+                                onDeleteClicked = { onSubtaskDeleted(subtask.id) },
+                                onUnlinkClicked = { onUnlinkSubEntry(subtask.id) },
+                                dragHandle = { if (isSubtaskDragAndDropEnabled) DragHandle(this) },
+                                modifier = Modifier
+                                    .clip(jtxCardCornerShape)
+                                    .combinedClickable(
+                                        onClick = {
+                                            if (!isEditMode.value)
+                                                goToDetail(subtask.id, false, subtasks.map { it.id })
+                                            else
+                                                showEditSubtaskDialog = true
+                                        },
+                                        onLongClick = {
+                                            if (!isEditMode.value && !subtask.isReadOnly && BillingManager.getInstance().isProPurchased.value == true)
+                                                goToDetail(subtask.id, true, subtasks.map { it.id })
+                                        }
+                                    )
+                            )
+                        }
                     }
                 }
             }

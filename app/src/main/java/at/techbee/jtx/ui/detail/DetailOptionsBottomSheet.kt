@@ -171,43 +171,46 @@ fun DetailOptionsBottomSheet(
 
                             key(setting.ordinal) {
 
-                                ElevatedAssistChip(
-                                    onClick = { },
-                                    enabled = when (setting) {
-                                        DetailsScreenSection.COLLECTION -> true
-                                        DetailsScreenSection.DATES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
-                                        DetailsScreenSection.SUMMARYDESCRIPTION -> true
-                                        DetailsScreenSection.PROGRESS -> module == Module.TODO
-                                        DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false
-                                        DetailsScreenSection.CATEGORIES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false
-                                        DetailsScreenSection.PARENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false
-                                        DetailsScreenSection.SUBTASKS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false
-                                        DetailsScreenSection.SUBNOTES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] != false
-                                        DetailsScreenSection.RESOURCES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] != false
-                                        DetailsScreenSection.ATTENDEES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] != false
-                                        DetailsScreenSection.CONTACT -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] != false
-                                        DetailsScreenSection.URL -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] != false
-                                        DetailsScreenSection.LOCATION -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] != false
-                                        DetailsScreenSection.COMMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] != false
-                                        DetailsScreenSection.ATTACHMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] != false
-                                        DetailsScreenSection.ALARMS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] != false
-                                        DetailsScreenSection.RECURRENCE -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] != false
-                                    },
-                                    label = {
-                                        Text(
-                                            text = stringResource(id = setting.stringRes),
-                                            modifier = Modifier
-                                                .heightIn(min = 48.dp)
-                                                .wrapContentHeight(align = Alignment.CenterVertically)
-                                        )
-                                    },
-                                    leadingIcon = {
-                                        DragHandle(this)
-                                    },
-                                    modifier = Modifier
-                                        .padding(end = 4.dp)
-                                        .fillMaxWidth()
-                                )
+                                ReorderableItem {
+
+                                    ElevatedAssistChip(
+                                        onClick = { },
+                                        enabled = when (setting) {
+                                            DetailsScreenSection.COLLECTION -> true
+                                            DetailsScreenSection.DATES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DTSTART] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_DUE] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMPLETED] != false
+                                            DetailsScreenSection.SUMMARYDESCRIPTION -> true
+                                            DetailsScreenSection.PROGRESS -> module == Module.TODO
+                                            DetailsScreenSection.STATUSCLASSIFICATIONPRIORITY -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_STATUS] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_CLASSIFICATION] != false || detailSettings.detailSetting[DetailSettingsOption.ENABLE_PRIORITY] != false
+                                            DetailsScreenSection.CATEGORIES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CATEGORIES] != false
+                                            DetailsScreenSection.PARENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_PARENTS] != false
+                                            DetailsScreenSection.SUBTASKS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false
+                                            DetailsScreenSection.SUBNOTES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] != false
+                                            DetailsScreenSection.RESOURCES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RESOURCES] != false
+                                            DetailsScreenSection.ATTENDEES -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTENDEES] != false
+                                            DetailsScreenSection.CONTACT -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_CONTACT] != false
+                                            DetailsScreenSection.URL -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_URL] != false
+                                            DetailsScreenSection.LOCATION -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_LOCATION] != false
+                                            DetailsScreenSection.COMMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_COMMENTS] != false
+                                            DetailsScreenSection.ATTACHMENTS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ATTACHMENTS] != false
+                                            DetailsScreenSection.ALARMS -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_ALARMS] != false
+                                            DetailsScreenSection.RECURRENCE -> detailSettings.detailSetting[DetailSettingsOption.ENABLE_RECURRENCE] != false
+                                        },
+                                        label = {
+                                            Text(
+                                                text = stringResource(id = setting.stringRes),
+                                                modifier = Modifier
+                                                    .heightIn(min = 48.dp)
+                                                    .wrapContentHeight(align = Alignment.CenterVertically)
+                                            )
+                                        },
+                                        leadingIcon = {
+                                            DragHandle(this)
+                                        },
+                                        modifier = Modifier
+                                            .padding(end = 4.dp)
+                                            .fillMaxWidth()
+                                    )
+                                }
                             }
                         }
 
