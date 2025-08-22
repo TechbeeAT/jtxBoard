@@ -107,6 +107,10 @@
     <string name="edit_recur_toast_requires_start_date">"Wiederholungen benötigen ein Start-Datum!"</string>
     <string name="edit_datepicker_dialog_select_date">"Datum auswählen"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Zeitraum auswählen"</string>
+    <string name="edit_day_range_picker_dialog_select_day_range">"Zeitraum auswählen"</string>
+    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"Datum innerhalb von"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"und"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"Tag(en)"</string>
     <string name="edit_datepicker_dialog_add_time">"Zeit hinzufügen"</string>
     <string name="edit_datepicker_dialog_edit_time">"Zeit bearbeiten"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Zeitzone hinzufügen"</string>
@@ -575,6 +579,10 @@ Danke!"</string>
     <string name="filter_started_from_to">"Start: %1$s - %2$s"</string>
     <string name="filter_due_from_to">"Fällig: %1$s - %2$s"</string>
     <string name="filter_completed_from_to">"Fertiggestellt: %1$s - %2$s"</string>
+    <string name="filter_date_within_days_from_to">"Datum innerhalb von %1$s und %2$s Tagen"</string>
+    <string name="filter_started_within_days_from_to">"Start innerhalb von %1$s und %2$s Tagen"</string>
+    <string name="filter_due_within_days_from_to">"Fällig innerhalb von %1$s und %2$s Tagen"</string>
+    <string name="filter_completed_within_days_from_to">"Abgeschlossen innerhalb von %1$s und %2$s Tagen"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum in Vergangenheit"</string>
     <string name="list_date_today">"Heute"</string>
