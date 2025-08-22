@@ -82,7 +82,7 @@ data class ICal4ListRel(
                 OrderBy.PROGRESS -> compareBy { it.iCal4List.percent ?: 0 }
                 OrderBy.ACCOUNT -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.accountName ?: "" }
                 OrderBy.COLLECTION -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.collectionDisplayName ?: "" }
-                OrderBy.DRAG_AND_DROP -> compareBy(nullsLast()) { it.iCal4List.sortIndex}
+                OrderBy.DRAG_AND_DROP -> compareBy { it.iCal4List.sortIndex}
                 OrderBy.CATEGORIES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.categories.firstOrNull()?.text } // Handle null categories and case-insensitive
                 OrderBy.RESOURCES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.resources.firstOrNull()?.text } // Handle null resources and case-insensitive
             }
@@ -93,7 +93,11 @@ data class ICal4ListRel(
             // first apply a proper sort order, then group
 
             //var comparator: Comparator<ICal4ListRel>  = compareBy { it.iCal4List.module }
-            var comparator: Comparator<ICal4ListRel>  = compareBy { it.iCal4List.status == Status.COMPLETED.name || it.iCal4List.status == Status.CANCELLED.name || it.iCal4List.percent == 100 || it.iCal4List.completed != null  }
+            var comparator: Comparator<ICal4ListRel>  =
+                if(orderBy == OrderBy.DRAG_AND_DROP)
+                    compareBy { null }        // We keep the order for drag and drop, but for others we sort copmleted entries last
+                else
+                    compareBy { it.iCal4List.status == Status.COMPLETED.name || it.iCal4List.status == Status.CANCELLED.name || it.iCal4List.percent == 100 || it.iCal4List.completed != null  }
             if(orderBy != null && sortOrder == SortOrder.ASC)
                 comparator = comparator.then(getComparator(orderBy, module))
             else if(orderBy != null && sortOrder == SortOrder.DESC)
