@@ -251,7 +251,7 @@
     <string name="recur_daily">"Καθημερινά"</string>
     <string name="recur_every_year">"Κάθε χρόνο"</string>
     <string name="recur_every_other_year">"Κάθε επόμενο έτος"</string>
-    <string name="recur_every_x_year">"Κάθε %1$d έτος"</string>
+    <string name="recur_every_x_year">"Κάθε %1$s έτος"</string>
     <string name="recur_every_month">"Κάθε μήνα"</string>
     <string name="recur_every_other_month">"Κάθε άλλο μήνα"</string>
     <string name="recur_every_x_month">"Κάθε %1$d μήνα"</string>
