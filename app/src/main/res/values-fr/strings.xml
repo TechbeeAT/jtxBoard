@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board sync journaux, notes et tâches"</string>
+    <string name="app_permission_label">"jtx Synchronisation du tableau Journaux, notes et tâches"</string>
     <string name="app_permission_desc">"synchroniser le contenu de jtx Board avec d'autres applications comme DAVx⁵."</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
