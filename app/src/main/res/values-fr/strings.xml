@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Synchronisation du tableau Journaux, notes et tâches"</string>
-    <string name="app_permission_desc">"synchroniser le contenu de jtx Board avec d'autres applications comme DAVx⁵."</string>
+    <string name="app_permission_label">"Synchronisation du tableau jtx, Journaux, Notes &amp; et Tâches"</string>
+    <string name="app_permission_desc">"Synchroniser le contenu du tableau de bord jtx avec d'autres applications comme DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Sauver"</string>
@@ -59,7 +59,7 @@
     <string name="navigation_drawer_privacy_policy">"Politique de confidentialité"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"En retard"</string>
-    <string name="list_due_shortly">"Echéance proche"</string>
+    <string name="list_due_shortly">"Échéance proche"</string>
     <string name="list_due_today">"Échéance aujourd'hui"</string>
     <string name="list_due_tomorrow">"Échéance demain"</string>
     <string name="list_due_within_7_days">"Échéance dans les 7 prochains jours"</string>
@@ -94,7 +94,7 @@
     <string name="view_last_modified_text">"Dernière modification : %1$s"</string>
     <string name="view_due">"À faire"</string>
     <string name="view_completed">"Accompli"</string>
-    <string name="view_started">"Début"</string>
+    <string name="view_started">"Début(é)"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_comment_helper">"Ajouter un commentaire"</string>
     <string name="edit_attachment_button_text">"Ajouter une pièce jointe"</string>
@@ -108,6 +108,7 @@
     <string name="edit_datepicker_dialog_select_date">"Sélectionner la date"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Sélectionner une plage de dates"</string>
     <string name="edit_day_range_picker_dialog_select_day_range">"Sélectionner une plage de dates"</string>
+    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"Période concernée"</string>
     <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"et"</string>
     <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"jour(s)"</string>
     <string name="edit_datepicker_dialog_add_time">"Ajouter une heure"</string>
@@ -116,7 +117,7 @@
     <string name="edit_datepicker_dialog_edit_timezone">"Modifier le fuseau horaire"</string>
     <string name="edit_dialog_sure_to_delete_title">"Supprimer \"%1$s\" ?"</string>
     <string name="edit_dialog_sure_to_discard_title">"Rejeter cette entrée ?"</string>
-    <string name="dialog_delete_done_title">"Supprimer toutes les tâches terminées?"</string>
+    <string name="dialog_delete_done_title">"Supprimer toutes les tâches terminées ?"</string>
     <string name="dialog_delete_done_message">"Attention : Les sous-tâches sont supprimées indépendamment de leur statut si leur parent est marqué comme terminé. Cette opération ne peut pas être annulée !"</string>
     <string name="edit_dialog_sure_to_delete_message">"Êtes-vous sûr de vouloir supprimer \"%1$s\" ?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Êtes-vous sûr de vouloir supprimer cette entrée ? Cette entrée ne sera pas enregistrée."</string>
@@ -130,7 +131,7 @@
     <string name="about_special_thanks">"Remerciements"</string>
     <string name="about_app_version">"Version : %1$s (%2$d)"</string>
     <string name="about_app_codename">"Nom de code : %1$s"</string>
-    <string name="about_app_terms">"Conditions générales"</string>
+    <string name="about_app_terms">"Termes &amp; et conditions"</string>
     <string name="about_thanks_ffg">"Un grand merci à la FFG pour sa confiance et son soutien financier dans la réalisation de ce projet."</string>
     <!-- menus -->
     <string name="menu_list_gotodate">"Aller à la date"</string>
@@ -169,7 +170,7 @@
     <string name="sync_button_add_account_in_sync_app">"Ajouter un compte dans %1$s"</string>
     <string name="sync_toast_intent_open_sync_app_failed">"Impossible d'ouvrir %1$s, veuillez ouvrir l'application manuellement."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_developer_note">"Hey, je m'appelle Patrick, je suis le développer de jtx Board. J'investis beaucoup de temps et d'efforts dans cette application que je vous propose gratuitement. Si vous aimez mon application, veuillez m'envoyer un peu d'amour et faîtes un petit don !"</string>
+    <string name="donate_header_developer_note">"Bonjour, je m'appelle Patrick, je suis le développeur de jtx Board. Je consacre beaucoup de temps et d'efforts à cette application que je vous propose gratuitement. Si vous appréciez mon application, merci de me soutenir en faisant un petit don !"</string>
     <string name="donate_thank_you">"Merci !"</string>
     <string name="donate_donate_with">"Faites un don avec"</string>
     <string name="donate_other_donation_methods">"Si vous souhaitez utiliser une autre méthode de don, veuillez consulter notre site web :"</string>
@@ -242,6 +243,10 @@
     <string name="priority_4_medium_high">"4 - Moyennement élevé"</string>
     <string name="priority_5_medium">"5 - Moyen"</string>
     <string name="priority_6_medium_low">"6 - Moyennement bas"</string>
+    <string name="recur_yearly_by_day">"Annuellement, par jour"</string>
+    <string name="recur_yearly_by_date">"Annuellement, par date"</string>
+    <string name="recur_monthly_by_day">"Mensuelle par jour"</string>
+    <string name="recur_monthly_by_date">"Mensuelle par date"</string>
     <string name="recur_weekly">"Hebdomadaire"</string>
     <string name="recur_daily">"Quotidien"</string>
     <string name="recur_every_year">"Chaque année"</string>
@@ -249,13 +254,17 @@
     <string name="recur_every_month">"Tous les mois"</string>
     <string name="recur_every_x_month">"Tous les %1$s mois"</string>
     <string name="recur_every_week">"Toutes les semaines"</string>
+    <string name="recur_every_x_week">"Chaque %1$s semaine"</string>
     <string name="recur_every_day">"Tous les jours"</string>
     <string name="recur_every_x_day">"Tous les %1$s jours"</string>
+    <string name="recur_last_weekday">"Dernier"</string>
     <string name="recur_no_recurrence">"Pas de répétition"</string>
     <string name="recur_ends_never">"ne se termine jamais"</string>
     <string name="recur_ends_on">"se termine le"</string>
     <string name="recur_ends_after">"se termine après"</string>
     <string name="recur_x_occurrences">"%1$d occurence(s)"</string>
+    <string name="recur_xth_day_of_the_month">"%1$s Jour du mois"</string>
+    <string name="recur_xth_last_day_of_the_month">"%1$s Dernier jour du mois"</string>
     <string name="recur_last_day_of_the_month">"Dernier jour du mois"</string>
     <string name="attachment_export_saved_successfully">"Sauvegarde réussie"</string>
     <string name="attachment_export_error_error_occurred">"Une erreur est survenue lors de l'enregistrement du fichier !"</string>
