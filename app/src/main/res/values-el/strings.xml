@@ -254,13 +254,13 @@
     <string name="recur_every_x_year">"Κάθε %1$s έτος"</string>
     <string name="recur_every_month">"Κάθε μήνα"</string>
     <string name="recur_every_other_month">"Κάθε άλλο μήνα"</string>
-    <string name="recur_every_x_month">"Κάθε %1$d μήνα"</string>
+    <string name="recur_every_x_month">"Κάθε %1$s μήνα"</string>
     <string name="recur_every_week">"Εβδομαδιαία"</string>
     <string name="recur_every_other_week">"Κάθε άλλη εβδομάδα"</string>
-    <string name="recur_every_x_week">"Κάθε %1$d εβδομάδα"</string>
+    <string name="recur_every_x_week">"Κάθε %1$s εβδομάδα"</string>
     <string name="recur_every_day">"Κάθε ημέρα"</string>
     <string name="recur_every_other_day">"Κάθε επόμενη ημέρα"</string>
-    <string name="recur_every_x_day">"Κάθε %1$d ημέρα"</string>
+    <string name="recur_every_x_day">"Κάθε %1$s ημέρα"</string>
     <string name="recur_last_weekday">"Τελευταία"</string>
     <string name="recur_no_recurrence">"Χωρίς επανάληψη"</string>
     <string name="recur_ends_never">"Χωρίς λήξη"</string>
