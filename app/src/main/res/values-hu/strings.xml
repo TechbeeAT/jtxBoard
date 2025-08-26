@@ -107,6 +107,10 @@
     <string name="edit_recur_toast_requires_start_date">"Az ismétlés beállításához előbb adjon meg kezdési dátumot!"</string>
     <string name="edit_datepicker_dialog_select_date">"Dátum kiválasztása"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Dátumtartomány kiválasztása"</string>
+    <string name="edit_day_range_picker_dialog_select_day_range">"Naptartomány kiválasztása"</string>
+    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"Dátum"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"és"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"nap között"</string>
     <string name="edit_datepicker_dialog_add_time">"Idő hozzáadása"</string>
     <string name="edit_datepicker_dialog_edit_time">"Idő szerkesztése"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Időzóna hozzáadása"</string>
@@ -576,6 +580,10 @@ Köszönjük!"</string>
     <string name="filter_started_from_to">"Kezdés %1$s és %2$s között"</string>
     <string name="filter_due_from_to">"Határidő %1$s és %2$s között"</string>
     <string name="filter_completed_from_to">"Befejezve %1$s és %2$s között"</string>
+    <string name="filter_date_within_days_from_to">"Dátum %1$s és %2$s között"</string>
+    <string name="filter_started_within_days_from_to">"Kezdés %1$s és %2$s nap között"</string>
+    <string name="filter_due_within_days_from_to">"Határidő %1$s és %2$s nap között"</string>
+    <string name="filter_completed_within_days_from_to">"Befejezve %1$s és %2$s nap között"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Múltbéli kezdés"</string>
     <string name="list_date_today">"Ma"</string>
