@@ -107,6 +107,8 @@
     <string name="edit_recur_toast_requires_start_date">"La ricorrenza richiede una data di inizio!"</string>
     <string name="edit_datepicker_dialog_select_date">"Seleziona la data"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Seleziona periodo"</string>
+    <string name="edit_day_range_picker_dialog_select_day_range">"Seleziona l'intervallo di giorni"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"e"</string>
     <string name="edit_datepicker_dialog_add_time">"Aggiungi orario"</string>
     <string name="edit_datepicker_dialog_edit_time">"Modifica orario"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Aggiungi fuso orario"</string>
