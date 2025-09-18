@@ -1,0 +1,4 @@
+- New option to filter by days before and after today
+- Improved drag & drop handling
+- Android target is now Android 16
+- Version updates
