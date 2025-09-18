@@ -58,7 +58,6 @@ class SettingsStateHolder(val context: Context) {
     var settingProtectBiometric = mutableStateOf(DropdownSetting.SETTING_PROTECT_BIOMETRIC.getSetting(prefs))
     var settingDisplayTimezone = mutableStateOf(DropdownSetting.SETTING_DISPLAY_TIMEZONE.getSetting(prefs))
 
-
     var settingSetDefaultCurrentLocationJournals = mutableStateOf(SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
     var settingSetDefaultCurrentLocationNotes = mutableStateOf(SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
     var settingSetDefaultCurrentLocationTasks = mutableStateOf(SwitchSetting.SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
@@ -68,6 +67,11 @@ class SettingsStateHolder(val context: Context) {
 
     var settingSyncOnStart = mutableStateOf(SwitchSetting.SETTING_SYNC_ON_START.getSetting(prefs))
     var settingSyncOnPullRefresh = mutableStateOf(SwitchSetting.SETTING_SYNC_ON_PULL_REFRESH.getSetting(prefs))
+
+    var settingJournalsDefaultClassification = mutableStateOf(DropdownSetting.SETTING_JOURNALS_DEFAULT_CLASSIFICATION.getSetting(prefs))
+    var settingNotesDefaultClassification = mutableStateOf(DropdownSetting.SETTING_NOTES_DEFAULT_CLASSIFICATION.getSetting(prefs))
+    var settingTasksDefaultClassification = mutableStateOf(DropdownSetting.SETTING_TASKS_DEFAULT_CLASSIFICATION.getSetting(prefs))
+
 
     //invisible settings
     var proInfoShown = mutableStateOf(prefs.getBoolean(SETTINGS_PRO_INFO_SHOWN, false))

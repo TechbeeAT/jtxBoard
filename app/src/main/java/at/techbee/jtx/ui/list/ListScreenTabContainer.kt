@@ -83,6 +83,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.ICalObject
@@ -375,6 +376,11 @@ fun ListScreenTabContainer(
             defaultDueDateSettingOption = settingsStateHolder.settingDefaultDueDate.value,
             defaultDueTime = settingsStateHolder.settingDefaultDueTime.value,
             defaultDueTimezone = settingsStateHolder.settingDefaultDueTimezone.value,
+            defaultClassification = when(module) {
+                Module.JOURNAL -> Classification.entries.find { it.name == settingsStateHolder.settingJournalsDefaultClassification.value.key } ?: Classification.NO_CLASSIFICATION
+                Module.NOTE -> Classification.entries.find { it.name == settingsStateHolder.settingNotesDefaultClassification.value.key } ?: Classification.NO_CLASSIFICATION
+                Module.TODO -> Classification.entries.find { it.name == settingsStateHolder.settingTasksDefaultClassification.value.key } ?: Classification.NO_CLASSIFICATION
+            }
         )
         val mergedCategories = mutableListOf<Category>()
         categories.forEach {

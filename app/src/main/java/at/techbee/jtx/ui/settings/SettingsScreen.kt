@@ -285,12 +285,22 @@ fun SettingsScreen(
                             settingsStateHolder.settingSetDefaultCurrentLocationJournals.value = settingOption
                             SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(settingOption, settingsStateHolder.prefs)
                         }
+                        map[DropdownSetting.SETTING_JOURNALS_DEFAULT_CLASSIFICATION.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: DropdownSetting.SETTING_JOURNALS_DEFAULT_CLASSIFICATION.default
+                            settingsStateHolder.settingJournalsDefaultClassification.value = settingOption
+                            DropdownSetting.SETTING_JOURNALS_DEFAULT_CLASSIFICATION.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
 
                         //Notes Settings
                         map[SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.key].let setting@ { setting ->
                             val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.default
                             settingsStateHolder.settingSetDefaultCurrentLocationNotes.value = settingOption
                             SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[DropdownSetting.SETTING_NOTES_DEFAULT_CLASSIFICATION.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: DropdownSetting.SETTING_NOTES_DEFAULT_CLASSIFICATION.default
+                            settingsStateHolder.settingNotesDefaultClassification.value = settingOption
+                            DropdownSetting.SETTING_NOTES_DEFAULT_CLASSIFICATION.saveSetting(settingOption, settingsStateHolder.prefs)
                         }
 
                         //Task Settings
@@ -332,6 +342,11 @@ fun SettingsScreen(
                             val settingOption = setting?.toBooleanStrictOrNull() ?: SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.default
                             settingsStateHolder.settingSetDefaultCurrentLocationTasks.value = settingOption
                             SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(settingOption, settingsStateHolder.prefs)
+                        }
+                        map[DropdownSetting.SETTING_TASKS_DEFAULT_CLASSIFICATION.key].let setting@ { setting ->
+                            val settingOption = DropdownSettingOption.fromKey(setting)?: DropdownSetting.SETTING_TASKS_DEFAULT_CLASSIFICATION.default
+                            settingsStateHolder.settingTasksDefaultClassification.value = settingOption
+                            DropdownSetting.SETTING_TASKS_DEFAULT_CLASSIFICATION.saveSetting(settingOption, settingsStateHolder.prefs)
                         }
 
                         //Task Settings (status/progress)
@@ -732,7 +747,16 @@ fun SettingsScreen(
                                 SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(checked, settingsStateHolder.prefs)
                                 if(checked && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
                                     locationPermissionState.launchMultiplePermissionRequest()
-                            })
+                            }
+                        )
+                        DropdownSettingElement(
+                            setting = DropdownSetting.SETTING_JOURNALS_DEFAULT_CLASSIFICATION,
+                            selected = settingsStateHolder.settingJournalsDefaultClassification.value,
+                            onSelectionChanged = { selection ->
+                                settingsStateHolder.settingJournalsDefaultClassification.value = selection
+                                DropdownSetting.SETTING_JOURNALS_DEFAULT_CLASSIFICATION.saveSetting(selection, settingsStateHolder.prefs)
+                            }
+                        )
                     }
 
                     ExpandableSettingsSection(
@@ -749,7 +773,16 @@ fun SettingsScreen(
                                 SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.saveSetting(checked, settingsStateHolder.prefs)
                                 if(checked && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
                                     locationPermissionState.launchMultiplePermissionRequest()
-                            })
+                            }
+                        )
+                        DropdownSettingElement(
+                            setting = DropdownSetting.SETTING_NOTES_DEFAULT_CLASSIFICATION,
+                            selected = settingsStateHolder.settingNotesDefaultClassification.value,
+                            onSelectionChanged = { selection ->
+                                settingsStateHolder.settingNotesDefaultClassification.value = selection
+                                DropdownSetting.SETTING_NOTES_DEFAULT_CLASSIFICATION.saveSetting(selection, settingsStateHolder.prefs)
+                            }
+                        )
                     }
 
                     ExpandableSettingsSection(
@@ -845,6 +878,15 @@ fun SettingsScreen(
                                 SETTING_TASKS_SET_DEFAULT_CURRENT_LOCATION.saveSetting(checked, settingsStateHolder.prefs)
                                 if(checked && locationPermissionState?.permissions?.all { it.status.shouldShowRationale } == false && locationPermissionState.permissions.none { it.status.isGranted })
                                     locationPermissionState.launchMultiplePermissionRequest()
+                            }
+                        )
+
+                        DropdownSettingElement(
+                            setting = DropdownSetting.SETTING_TASKS_DEFAULT_CLASSIFICATION,
+                            selected = settingsStateHolder.settingTasksDefaultClassification.value,
+                            onSelectionChanged = { selection ->
+                                settingsStateHolder.settingTasksDefaultClassification.value = selection
+                                DropdownSetting.SETTING_TASKS_DEFAULT_CLASSIFICATION.saveSetting(selection, settingsStateHolder.prefs)
                             }
                         )
                     }

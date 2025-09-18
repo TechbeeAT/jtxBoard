@@ -11,6 +11,7 @@ package at.techbee.jtx.ui.settings
 import android.util.Log
 import androidx.annotation.StringRes
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Classification
 
 enum class DropdownSettingOption(
     val key: String,
@@ -71,7 +72,13 @@ enum class DropdownSettingOption(
     FONT_MONTSERRAT_ALTERNATES("font_montserrat_alternates", R.string.font_montserrat_alternates),
 
     MAP_GOOGLE_MAPS("map_google_maps", R.string.map_google_maps),
-    MAP_OSM("map_osm", R.string.map_osm)
+    MAP_OSM("map_osm", R.string.map_osm),
+
+    CLASSIFICATION_NO_CLASSIFICATION(Classification.NO_CLASSIFICATION.name, Classification.NO_CLASSIFICATION.stringResource),
+    CLASSIFICATION_PUBLIC(Classification.PUBLIC.name, Classification.PUBLIC.stringResource),
+    CLASSIFICATION_PRIVATE(Classification.PRIVATE.name, Classification.PRIVATE.stringResource),
+    CLASSIFICATION_CONFIDENTIAL(Classification.CONFIDENTIAL.name, Classification.CONFIDENTIAL.stringResource)
+
     ;
 
     fun getProgressStepKeyAsInt(): Int {
