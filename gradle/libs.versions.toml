@@ -4,7 +4,7 @@
 amazonAppstoreSdk = "3.0.8"
 android-agp = "8.12.2"
 android-desugaring = "2.1.5"
-androidx-activityCompose = "1.10.1"
+androidx-activityCompose = "1.11.0"
 androidx-appcompat = "1.7.1"
 androidx-arch = "2.2.0"
 androidx-core = "1.17.0"
