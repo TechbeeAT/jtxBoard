@@ -414,7 +414,7 @@ fun ListScreenTabContainer(
                 referenceDate = newICalObject.due!!,
                 referenceTimezone = newICalObject.dueTimezone
             )
-        } else if(settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_START && newICalObject.dtstart != null) {
+        } else if(module == Module.TODO && settingsStateHolder.settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ON_START && newICalObject.dtstart != null) {
             Alarm.createDisplayAlarm(
                 dur = (0).minutes,
                 alarmRelativeTo = null,
