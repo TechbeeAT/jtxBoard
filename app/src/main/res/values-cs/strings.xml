@@ -382,6 +382,7 @@
     <string name="settings_timezone_display_original">"Zobrazit čas v původním časovém pásmu"</string>
     <string name="settings_timezone_display_local_and_original">"Zobrazit čas v místním a původním časovém pásmu (pouze v podrobném zobrazení)"</string>
     <string name="settings_font">"Písmo"</string>
+    <string name="settings_default_classification">"Výchozí klasifikace"</string>
     <string name="donate_dialog_title">"Líbí se vám jtx Board?"</string>
     <string name="donate_dialog_message">"Vývoj aplikace je složité téma a vývoj, údržba a podpora je náročná práce. Pokud se vám tato aplikace líbí a pokud chcete zajistit její neustálý vývoj, zvažte prosím příspěvek :-)
 Děkujeme vám!"</string>
