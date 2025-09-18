@@ -17,6 +17,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import at.techbee.jtx.MainActivity2
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
 import at.techbee.jtx.database.ICalDatabase
@@ -153,7 +154,8 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
         defaultStartTimezone: String?,
         defaultDueDateSettingOption: DropdownSettingOption,
         defaultDueTime: LocalTime?,
-        defaultDueTimezone: String?
+        defaultDueTimezone: String?,
+        defaultClassification: Classification
     ) {
         isProcessing.postValue(true)
         viewModelScope.launch(Dispatchers.IO) {
@@ -168,7 +170,8 @@ class CollectionsViewModel(application: Application) : AndroidViewModel(applicat
                     defaultStartTimezone,
                     defaultDueDateSettingOption,
                     defaultDueTime,
-                    defaultDueTimezone
+                    defaultDueTimezone,
+                    defaultClassification
                 )
             )
             if(collection.accountType != LOCAL_ACCOUNT_TYPE)

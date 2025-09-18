@@ -40,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.R
+import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.ICalCollection
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.locals.StoredListSettingData
@@ -152,7 +153,12 @@ fun CollectionsScreen(
                         defaultStartTimezone = settingsStateHolder.settingDefaultStartTimezone.value,
                         defaultDueDateSettingOption = settingsStateHolder.settingDefaultDueDate.value,
                         defaultDueTime = settingsStateHolder.settingDefaultDueTime.value,
-                        defaultDueTimezone = settingsStateHolder.settingDefaultDueTimezone.value
+                        defaultDueTimezone = settingsStateHolder.settingDefaultDueTimezone.value,
+                        defaultClassification = when(importModule) {
+                            Module.JOURNAL -> Classification.entries.find { classification -> classification.name == settingsStateHolder.settingJournalsDefaultClassification.value.key } ?: Classification.NO_CLASSIFICATION
+                            null, Module.NOTE -> Classification.entries.find { classification -> classification.name == settingsStateHolder.settingNotesDefaultClassification.value.key } ?: Classification.NO_CLASSIFICATION
+                            Module.TODO -> Classification.entries.find { classification -> classification.name == settingsStateHolder.settingTasksDefaultClassification.value.key } ?: Classification.NO_CLASSIFICATION
+                        }
                     )
                     it.close()
                 }

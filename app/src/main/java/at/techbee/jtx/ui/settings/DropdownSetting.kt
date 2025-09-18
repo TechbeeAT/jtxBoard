@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.FormatPaint
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Public
+import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.content.edit
@@ -53,7 +54,7 @@ enum class DropdownSetting(
         options = mutableListOf<DropdownSettingOption>().apply {
             add(DropdownSettingOption.AUDIO_FORMAT_3GPP)
             add(DropdownSettingOption.AUDIO_FORMAT_AAC)
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                 add(DropdownSettingOption.AUDIO_FORMAT_OGG)
             add(DropdownSettingOption.AUDIO_FORMAT_MP4)
 
@@ -72,7 +73,7 @@ enum class DropdownSetting(
             DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_15MIN,
             DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_5MIN,
             DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_MIN
-            ),
+        ),
         default = DropdownSettingOption.DEFAULT_JOURNALS_DATE_CURRENT_DAY
     ),
 
@@ -176,11 +177,49 @@ enum class DropdownSetting(
         key = "setting_maps_provider",
         icon = Icons.Outlined.Map,
         title = R.string.settings_maps_provider,
-        options = if(BuildFlavor.getCurrent() == BuildFlavor.GPLAY)
+        options = if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY)
             listOf(DropdownSettingOption.MAP_GOOGLE_MAPS, DropdownSettingOption.MAP_OSM)
-                    else
-                        listOf(DropdownSettingOption.MAP_OSM),
-        default = if(BuildFlavor.getCurrent() == BuildFlavor.GPLAY) DropdownSettingOption.MAP_GOOGLE_MAPS else DropdownSettingOption.MAP_OSM
+        else
+            listOf(DropdownSettingOption.MAP_OSM),
+        default = if (BuildFlavor.getCurrent() == BuildFlavor.GPLAY) DropdownSettingOption.MAP_GOOGLE_MAPS else DropdownSettingOption.MAP_OSM
+    ),
+    SETTING_JOURNALS_DEFAULT_CLASSIFICATION(
+        key = "setting_journals_default_classification",
+        icon = Icons.Outlined.Shield,
+        title = R.string.settings_default_classification,
+        options = listOf(
+            DropdownSettingOption.CLASSIFICATION_NO_CLASSIFICATION,
+            DropdownSettingOption.CLASSIFICATION_PUBLIC,
+            DropdownSettingOption.CLASSIFICATION_PRIVATE,
+            DropdownSettingOption.CLASSIFICATION_CONFIDENTIAL
+        ),
+        default = DropdownSettingOption.CLASSIFICATION_NO_CLASSIFICATION
+    ),
+
+    SETTING_NOTES_DEFAULT_CLASSIFICATION(
+        key = "setting_notes_default_classification",
+        icon = Icons.Outlined.Shield,
+        title = R.string.settings_default_classification,
+        options = listOf(
+            DropdownSettingOption.CLASSIFICATION_NO_CLASSIFICATION,
+            DropdownSettingOption.CLASSIFICATION_PUBLIC,
+            DropdownSettingOption.CLASSIFICATION_PRIVATE,
+            DropdownSettingOption.CLASSIFICATION_CONFIDENTIAL
+        ),
+        default = DropdownSettingOption.CLASSIFICATION_NO_CLASSIFICATION
+    ),
+
+    SETTING_TASKS_DEFAULT_CLASSIFICATION(
+        key = "setting_tasks_default_classification_tasks",
+        icon = Icons.Outlined.Shield,
+        title = R.string.settings_default_classification,
+        options = listOf(
+            DropdownSettingOption.CLASSIFICATION_NO_CLASSIFICATION,
+            DropdownSettingOption.CLASSIFICATION_PUBLIC,
+            DropdownSettingOption.CLASSIFICATION_PRIVATE,
+            DropdownSettingOption.CLASSIFICATION_CONFIDENTIAL
+        ),
+        default = DropdownSettingOption.CLASSIFICATION_NO_CLASSIFICATION
     )
     ;
 

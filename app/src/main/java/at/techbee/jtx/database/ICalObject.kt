@@ -607,7 +607,8 @@ data class ICalObject(
             defaultStartTimezone: String?,
             defaultDueDateSettingOption: DropdownSettingOption,
             defaultDueTime: LocalTime?,
-            defaultDueTimezone: String?
+            defaultDueTimezone: String?,
+            defaultClassification: Classification
         ): ICalObject {
             val iCalObject = when(module) {
                 Module.JOURNAL -> createJournal()
@@ -621,6 +622,7 @@ data class ICalObject(
                 iCalObject.setDefaultStartDateFromSettings(defaultStartDateSettingOption, defaultStartTime, defaultStartTimezone)
                 iCalObject.setDefaultDueDateFromSettings(defaultDueDateSettingOption, defaultDueTime, defaultDueTimezone)
             }
+            iCalObject.classification = defaultClassification.classification
             iCalObject.parseSummaryAndDescription(text)
             iCalObject.parseURL(text)
             iCalObject.parseLatLng(text)

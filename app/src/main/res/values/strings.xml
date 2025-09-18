@@ -402,6 +402,7 @@
     <string name="settings_timezone_display_local_and_original">"Show time in local and in original timezone (detail view only)"</string>
     <string name="settings_font">"Font"</string>
     <string name="settings_maps_provider">"Maps provider"</string>
+    <string name="settings_default_classification">"Default classification"</string>
     <string name="donate_dialog_title">"Do you like jtx Board?"</string>
     <string name="donate_dialog_message">"The development of an app is a complex topic and development, maintenance and support is hard work. If you like this app and if you would like to ensure continuous development, please consider a donation :-)
 Thank you!"</string>
