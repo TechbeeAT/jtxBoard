@@ -384,6 +384,7 @@
     <string name="settings_timezone_display_local_and_original">"Afficher l'heure en local et dans le fuseau horaire d'origine (vue détaillée seulement)"</string>
     <string name="settings_font">"Police"</string>
     <string name="settings_maps_provider">"Fournisseur de cartes"</string>
+    <string name="settings_default_classification">"Classification par défaut"</string>
     <string name="donate_dialog_title">"Vous aimez jtx Board?"</string>
     <string name="donate_dialog_message">"Le développement d'une application est complexe et la maintenance et le support sont des tâches difficiles. Si vous aimez cette application et si vous souhaitez en assurer le développement continu, pensez à faire un don :-)
 Merci !"</string>
