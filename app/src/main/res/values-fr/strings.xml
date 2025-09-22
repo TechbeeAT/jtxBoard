@@ -250,12 +250,16 @@
     <string name="recur_weekly">"Hebdomadaire"</string>
     <string name="recur_daily">"Quotidien"</string>
     <string name="recur_every_year">"Chaque année"</string>
+    <string name="recur_every_other_year">"Tous les deux ans"</string>
     <string name="recur_every_x_year">"Tous les %1$s ans"</string>
     <string name="recur_every_month">"Tous les mois"</string>
+    <string name="recur_every_other_month">"Tous les deux mois"</string>
     <string name="recur_every_x_month">"Tous les %1$s mois"</string>
     <string name="recur_every_week">"Toutes les semaines"</string>
+    <string name="recur_every_other_week">"Toutes les deux semaines"</string>
     <string name="recur_every_x_week">"Chaque %1$s semaine"</string>
     <string name="recur_every_day">"Tous les jours"</string>
+    <string name="recur_every_other_day">"Tous les deux jours"</string>
     <string name="recur_every_x_day">"Tous les %1$s jours"</string>
     <string name="recur_last_weekday">"Dernier"</string>
     <string name="recur_no_recurrence">"Pas de répétition"</string>
