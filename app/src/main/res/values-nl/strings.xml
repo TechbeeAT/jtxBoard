@@ -92,9 +92,9 @@
     <string name="view_add_audio_note">"Audio toevoegen"</string>
     <string name="view_created_text">"Aangemaakt: %1$s"</string>
     <string name="view_last_modified_text">"Laatst gewijzigd: %1$s"</string>
-    <string name="view_due">"Vervalt"</string>
+    <string name="view_due">"Vervalt op"</string>
     <string name="view_completed">"Voltooid"</string>
-    <string name="view_started">"Gestart"</string>
+    <string name="view_started">"Start op"</string>
     <!-- fragment_ical_edit -->
     <string name="edit_comment_helper">"Voeg opmerking toe"</string>
     <string name="edit_attachment_button_text">"Bijlage toevoegen"</string>
@@ -237,12 +237,12 @@
     <string name="selected_color">"Geselecteerde kleur"</string>
     <string name="system_colors">"Systeemkleuren"</string>
     <string name="priority_0_no_priority">"Geen prioriteit"</string>
-    <string name="priority_1_highest">"1 - Hoogste"</string>
-    <string name="priority_2_higher">"2 - Hoger"</string>
-    <string name="priority_3_high">"3 - Hoog"</string>
-    <string name="priority_4_medium_high">"4 - Middel hoog"</string>
-    <string name="priority_5_medium">"5 - Gemiddeld"</string>
-    <string name="priority_6_medium_low">"6 - Gemiddeld laag"</string>
+    <string name="priority_1_highest">"1: Hoogst"</string>
+    <string name="priority_2_higher">"2: Hoog"</string>
+    <string name="priority_3_high">"3: Hoog"</string>
+    <string name="priority_4_medium_high">"4: Normaal"</string>
+    <string name="priority_5_medium">"5: Normaal"</string>
+    <string name="priority_6_medium_low">"6: Normaal"</string>
     <string name="recur_yearly_by_day">"Jaarlijks, per dag"</string>
     <string name="recur_yearly_by_date">"Jaarlijks op datum"</string>
     <string name="recur_monthly_by_day">"Maandelijks, per dag"</string>
@@ -318,9 +318,9 @@
     <string name="categories">"Categorieën"</string>
     <string name="subtasks">"Subtaken"</string>
     <string name="linked_parents">"Gelinkte ouders"</string>
-    <string name="priority_7_low">"7 - Laag"</string>
-    <string name="priority_8_lower">"8 - Lager"</string>
-    <string name="priority_9_lowest">"9 - Laagst"</string>
+    <string name="priority_7_low">"7: Laag"</string>
+    <string name="priority_8_lower">"8: Laag"</string>
+    <string name="priority_9_lowest">"9: Laagst"</string>
     <string name="list_due_future">"Vervalt in de toekomst"</string>
     <string name="view_share_part_of_series">"Dit item is onderdeel van een serie."</string>
     <string name="view_share_repeats">"Dit item herhaalt elke"</string>
