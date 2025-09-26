@@ -220,7 +220,7 @@ fun DetailsCardRecur(
 
                     AssistChip(
                         onClick = { frequencyExpanded = true },
-                        enabled = isEditMode && icalObject.recurid == null,
+                        enabled = isEditMode && icalObject.recurid == null && icalObject.dtstart != null,
                         label = {
                             Text(
                                 when {

@@ -359,6 +359,8 @@ fun DetailScreenContent(
                         onDtstartChanged = { datetime, timezone ->
                             iCalObject.dtstart = datetime
                             iCalObject.dtstartTimezone = timezone
+                            if(iCalObject.dtstart == null && iCalObject.rrule != null)
+                                iCalObject.rrule = null
                             updateAlarms()
                             changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
                         },
