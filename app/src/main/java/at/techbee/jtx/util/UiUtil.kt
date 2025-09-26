@@ -86,6 +86,8 @@ object UiUtil {
      */
     fun getLocalContacts(context: Context, searchString: String): List<Attendee> {
 
+        val escapedSearchString = searchString.replace("'","''")
+
         val allContacts = mutableSetOf<Attendee>()
 
         val cr = context.contentResolver
@@ -95,8 +97,8 @@ object UiUtil {
             ContactsContract.CommonDataKinds.Email.DATA
         )
         val order = ContactsContract.Contacts.DISPLAY_NAME
-        val filter = ContactsContract.CommonDataKinds.Email.DATA + " LIKE '%$searchString%' " +
-                "OR " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%$searchString%'"
+        val filter = ContactsContract.CommonDataKinds.Email.DATA + " LIKE '%$escapedSearchString%' " +
+                "OR " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%$escapedSearchString%'"
         cr.query(
             ContactsContract.CommonDataKinds.Contactables.CONTENT_URI,
             projection,
