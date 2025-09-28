@@ -107,6 +107,10 @@
     <string name="edit_recur_toast_requires_start_date">"Powtarzanie wymaga ustawienia daty rozpoczęcia!"</string>
     <string name="edit_datepicker_dialog_select_date">"Wybierz datę"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Wybierz zakres dat"</string>
+    <string name="edit_day_range_picker_dialog_select_day_range">"Wybierz zakres dni"</string>
+    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"Data w"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"oraz"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"dzień/dni"</string>
     <string name="edit_datepicker_dialog_add_time">"Dodaj czas"</string>
     <string name="edit_datepicker_dialog_edit_time">"Edytuj czas"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Dodaj strefę czasową"</string>
@@ -384,6 +388,7 @@
     <string name="settings_timezone_display_local_and_original">"Pokaż czas w lokalnej i pierwotnej strefie czasowej (tylko w widoku szczegółowym)"</string>
     <string name="settings_font">"Czcionka"</string>
     <string name="settings_maps_provider">"Dostawca map"</string>
+    <string name="settings_default_classification">"Domyślna klasyfikacja"</string>
     <string name="donate_dialog_title">"Lubisz jtx Board?"</string>
     <string name="donate_dialog_message">"Rozwój aplikacji jest złożonym tematem, a rozwój, utrzymanie i wsparcie to ciężka praca. Jeśli podoba ci się ta aplikacja i jeśli chcesz zapewnić jej ciągły rozwój, rozważ darowiznę :-)
 Dziękujemy!"</string>
@@ -575,6 +580,10 @@ Dziękujemy!"</string>
     <string name="filter_started_from_to">"Początek: %1$s - %2$s"</string>
     <string name="filter_due_from_to">"Zakończenie: %1$s - %2$s"</string>
     <string name="filter_completed_from_to">"Ukończenie: %1$s - %2$s"</string>
+    <string name="filter_date_within_days_from_to">"Data między %1$s a %2$s dniem"</string>
+    <string name="filter_started_within_days_from_to">"Rozpoczęcie między %1$s a %2$s dniem"</string>
+    <string name="filter_due_within_days_from_to">"Zakończenie między %1$s a %2$s dniem"</string>
+    <string name="filter_completed_within_days_from_to">"Ukończenie między %1$s a %2$s dniem"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data w przeszłości"</string>
     <string name="list_date_today">"Dziś"</string>
