@@ -580,7 +580,10 @@ Dziękujemy!"</string>
     <string name="filter_started_from_to">"Początek: %1$s - %2$s"</string>
     <string name="filter_due_from_to">"Zakończenie: %1$s - %2$s"</string>
     <string name="filter_completed_from_to">"Ukończenie: %1$s - %2$s"</string>
-    <string name="filter_date_within_days_from_to">"Data między %1$s a %2$s dniami"</string>
+    <string name="filter_date_within_days_from_to">"Data między %1$s a %2$s dniem"</string>
+    <string name="filter_started_within_days_from_to">"Rozpoczęcie między %1$s a %2$s dniem"</string>
+    <string name="filter_due_within_days_from_to">"Zakończenie między %1$s a %2$s dniem"</string>
+    <string name="filter_completed_within_days_from_to">"Ukończenie między %1$s a %2$s dniem"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data w przeszłości"</string>
     <string name="list_date_today">"Dziś"</string>
