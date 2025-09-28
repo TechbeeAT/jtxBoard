@@ -24,6 +24,9 @@ Note: DAVx5 is an independent app and must be acquired separately.
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/de/packages/at.techbee.jtx/)
 
+The official jtx Board APKs provided on [GitHub Releases](https://github.com/TechbeeAT/jtxBoard/releases) are currently signed with a key with this SHA-256 hash:
+```8C:52:4F:E3:CF:6C:48:27:0D:A0:2A:F3:CD:9C:89:90:38:D7:B0:0D:2E:8C:9F:C1:C4:E2:6B:F3:2E:E8:69:70```
+
 ---
 
 
