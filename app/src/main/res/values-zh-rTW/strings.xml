@@ -6,15 +6,26 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"儲存"</string>
+    <string name="update">"更新"</string>
     <string name="cancel">"取消"</string>
     <string name="ok">"確定"</string>
     <string name="delete">"删除"</string>
     <string name="discard">"捨棄"</string>
+    <string name="dismiss">"關閉"</string>
+    <string name="open">"開啟"</string>
     <string name="cont">"繼續"</string>
     <string name="website">"網站"</string>
+    <string name="latitude">"緯度"</string>
+    <string name="longitude">"經度"</string>
+    <string name="unlink">"取消連結"</string>
+    <string name="off">"關閉"</string>
+    <string name="location_permission_denied">"位置權限被拒絕"</string>
+    <string name="permissions">"權限"</string>
+    <string name="current_location">"當前位置"</string>
     <string name="toolbar_text_add_journal">"新增日誌"</string>
     <string name="toolbar_text_add_note">"新增筆記"</string>
     <string name="toolbar_text_add_task">"新增任務"</string>
+    <string name="toast_sync_requested">"已請求同步"</string>
     <string name="default_local_collection_name">"位置"</string>
     <string name="default_local_account_name">"位置"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -36,6 +47,7 @@
     <string name="navigation_drawer_open">"開啟側邊選單"</string>
     <string name="navigation_drawer_close">"關閉側邊選單"</string>
     <string name="navigation_drawer_board">"白板"</string>
+    <string name="navigation_drawer_synchronization">"同步"</string>
     <string name="navigation_drawer_about">"關於 / 授權"</string>
     <string name="navigation_drawer_subtitle">"日誌 、筆記和任務"</string>
     <string name="navigation_drawer_settings">"設定"</string>
@@ -47,25 +59,36 @@
     <string name="navigation_drawer_privacy_policy">"隱私政策"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"已過期"</string>
+    <string name="list_due_shortly">"即將到期"</string>
     <string name="list_due_today">"今日到期"</string>
     <string name="list_due_tomorrow">"明日到期"</string>
+    <string name="list_due_within_7_days">"7 天內到期"</string>
     <string name="list_due_inXhours">"%d小時後到期"</string>
+    <string name="list_due_on_weekday">"到期於 %s"</string>
     <string name="list_start_past">"从过去开始"</string>
+    <string name="list_start_shortly">"即將開始"</string>
     <string name="list_start_today">"计划从今天开始"</string>
     <string name="list_start_tomorrow">"明天开始"</string>
     <string name="list_start_inXhours">"计划%d 小时后开始"</string>
+    <string name="list_start_on_weekday">"計劃開始於 %s"</string>
     <string name="list_tabitem_journals">"日誌"</string>
     <string name="list_tabitem_notes">"筆記"</string>
     <string name="list_tabitem_todos">"任務"</string>
     <string name="list_expand">"展開"</string>
+    <string name="list_dialog_delete_selected_title">刪除所選項目？</string>
+    <string name="list_dialog_delete_selected_message">此操作將刪除所有選取的項目（%1$d）。確定要繼續嗎？此操作無法復原！</string>
     <string name="list_quickadd_dialog_summary_description_hint">"摘要/说明"</string>
     <string name="list_quickadd_dialog_summary_description_helper">"第一行被提取为摘要，其余当做为说明。hashtags被提取为类别（例如#category）。"</string>
     <string name="list_item_recurring">"常用条目"</string>
+    <string name="list_item_edited_recurring">"已編輯的重複項目"</string>
+    <string name="list_scroll_to_top">"捲動至頂部"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"應用程式權限"</string>
     <string name="view_fragment_audio_permission_message">"为了录音或使用语音到文字功能，jtx Board需要相应的权限。请授权使用这些权限。"</string>
     <string name="view_reccurrence_note_is_exception">"相对于常见条目，此项目比较少见。"</string>
     <string name="view_feedback_linked_notes">"反馈/链接笔记"</string>
+    <string name="view_subtask_of">"子任務隸屬於"</string>
+    <string name="view_linked_note_of">"關聯備註隸屬於"</string>
     <string name="view_add_audio_note">"添加音频"</string>
     <string name="view_created_text">"创建于：%1$s"</string>
     <string name="view_last_modified_text">"上次修改：%1$s"</string>
@@ -78,15 +101,24 @@
     <string name="edit_take_picture_button_text">"拍照"</string>
     <string name="edit_add_link_button_text">"新增附件連結"</string>
     <string name="edit_subtasks_add_helper">"添加子任务"</string>
+    <string name="detail_top_app_bar_quick_add_subtask">"快速新增子任務"</string>
+    <string name="detail_top_app_bar_quick_add_subnote">"快速新增子備註"</string>
     <string name="edit_attachment_add_link_dialog">"添加附件连接"</string>
     <string name="edit_recur_toast_requires_start_date">"重复出现需要设置开始日期！"</string>
     <string name="edit_datepicker_dialog_select_date">"选择日期"</string>
+    <string name="edit_date_range_picker_dialog_select_date_range">"選擇日期範圍"</string>
+    <string name="edit_day_range_picker_dialog_select_day_range">"選取天數範圍"</string>
+    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"日期範圍內"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"與"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"天"</string>
     <string name="edit_datepicker_dialog_add_time">"添加時間"</string>
     <string name="edit_datepicker_dialog_edit_time">"修改時間"</string>
     <string name="edit_datepicker_dialog_add_timezone">"添加時區"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"修改時區"</string>
     <string name="edit_dialog_sure_to_delete_title">"删除“%1$s”吗？"</string>
     <string name="edit_dialog_sure_to_discard_title">"舍弃此条目？"</string>
+    <string name="dialog_delete_done_title">"要刪除所有已完成的任務嗎？"</string>
+    <string name="dialog_delete_done_message">"注意：子任務若父任務標記為完成，將不論狀態一併刪除。此操作無法復原！"</string>
     <string name="edit_dialog_sure_to_delete_message">"确定要删除“%1$s”吗？"</string>
     <string name="edit_dialog_sure_to_discard_message">"确定要舍弃此条目吗？此操作无法撤销。"</string>
     <string name="edit_fragment_app_permission">"應用程式權限"</string>
@@ -127,6 +159,7 @@
     <string name="donate_other_donation_methods">"如您想使用其他捐贈方式，請訪問我們的網站："</string>
     <string name="attachment_error_no_app_found_to_open_file_or_uri">"找不到可開啟此文件或網址的應用程式。"</string>
     <string name="toast_item_is_now_recu_exception">"定期项目现在是例外。"</string>
+    <string name="toast_done_tasks_deleted">"已刪除完成的任務（%d）。"</string>
     <!-- sync content provider -->
     <string name="about_translations_thanks_to">"感謝"</string>
     <string name="about_translations_basic_info">"jtx Board 是一款開源應用程式，感謝開源社群的參與和貢獻。在此，我們想展示社群成員在翻譯方面所做的努力。"</string>
@@ -134,7 +167,7 @@
     <string name="list_welcome_entry_journal_summary">"恭喜，這是您的首篇日誌 :-)"</string>
     <string name="list_welcome_entry_journal_description">"日志可用于在特定日期撰写笔记。草案、会议记录和日记等需要使用此功能。编辑此条目，可添加类别、与会者、附件等等……此为示例条目，您可随时删除！"</string>
     <string name="list_welcome_entry_note_summary">"恭喜，這是您的首篇筆記 :-)"</string>
-    <string name="list_welcome_entry_note_description">"笔记即传统的笔记，不必指定撰写日期。类似日志，笔记也可以添加附件、参与者以及更多内容。还有，您还可以将子任务添加到任何条目，而不论它是日志、笔记还是任务！"</string>
+    <string name="list_welcome_entry_note_description">"筆記是傳統筆記，並不綁定特定日期。和日誌一樣，在編輯或新增項目時，您可以加入附件、參與者等。此外，您也可以在任何項目中新增子任務，不論是日誌、筆記或任務！"</string>
     <string name="list_welcome_entry_todo_summary">"恭喜，這是您的首篇任務 :-)"</string>
     <string name="list_welcome_entry_todo_description">"除了日志和笔记之外，任务还可以有计划的开始日期、到期日期和完成日期。完成后可以查看它们，也可以设置进度。编辑此条目可以查看出所有选项：-）"</string>
     <string name="list_welcome_category">"#第一步"</string>
@@ -148,6 +181,7 @@
     <string name="reset">"重設"</string>
     <string name="apply">"套用"</string>
     <string name="collection">"收藏"</string>
+    <string name="link_selected_as_subtask_note">"子任務／筆記"</string>
     <string name="navigation_drawer_collections">"收藏"</string>
     <!-- alarms -->
     <string name="alarms_date_time">"日期/時間"</string>
@@ -230,6 +264,7 @@
     <string name="view_share_part_of_series">"此条目是系列的一部分。"</string>
     <string name="view_share_repeats">"此条目重复，每"</string>
     <string name="collections_dialog_move_title">"从“%1$s”移动所有条目到"</string>
+    <string name="collection_dialog_move_info">"請注意：僅可選取可寫入的集合，以及支援相同元件（日誌、筆記、任務）的集合。"</string>
     <string name="menu_collections_popup_move_entries">"移动条目"</string>
     <string name="list_no_dates_set">"未设置日期"</string>
     <string name="filter_order_by">"排序"</string>
@@ -237,6 +272,7 @@
     <string name="filter_desc">"降冪"</string>
     <string name="filter_created">"建立"</string>
     <string name="filter_last_modified">"最後修改"</string>
+    <string name="filter_subtasks_order_by">子任務排序依據</string>
     <string name="collections_snackbar_select_collection_for_ics_import">"请单击要添加条目的合集！"</string>
     <string name="collections_snackbar_x_items_added">"%1$d已添加，%2$d已跳过。（重复条目的独占实例。）"</string>
     <string name="menu_collection_popup_import_from_ics">"从.ics导入"</string>
@@ -289,7 +325,9 @@
     <string name="invalid_url_message">"請輸入有效的 URL"</string>
     <string name="list_quickadd_dialog_sr_start">"開始語音辨識"</string>
     <string name="list_quickadd_dialog_sr_listening">"聽取中 …"</string>
+    <string name="list_update_entries_dialog_new_parent_info">"選擇要將所選項目連結為子任務／關聯筆記的父項目。"</string>
     <string name="details_show_all_options">"顯示所有選項"</string>
+    <string name="details_series_attention_subentries">"注意：系列元素會鏡像系列中的子任務與關聯筆記。若您只想變更單一系列元素的子任務與關聯筆記，請先將其與系列解除連結。"</string>
     <string name="edit_comment">"編輯評論"</string>
     <string name="edit_subnote_add_helper">"新增子筆記"</string>
     <string name="edit_subtask">"編輯子任務"</string>
@@ -303,7 +341,17 @@
     <string name="collections_account_delete_dialog_title">"刪除 \"%1$s\" ?"</string>
     <string name="dialog_unsaved_changes_title">"儲存變更?"</string>
     <string name="dialog_revert_changes_title">"還原變更?"</string>
+    <string name="dialog_revert_changes_message2">"注意：子任務與子筆記為獨立項目，無法還原。"</string>
+    <string name="dialog_detach_from_series_text_all">"解除所有元素將刪除該系列，並使各個實例成為獨立項目，可擁有自己的子任務或關聯筆記。但將不再與原系列或其他實例有連結。要繼續嗎？"</string>
+    <string name="dialog_detach_from_series_text_single">"將此元素從系列中解除後，您可以擁有獨立的子任務或關聯筆記，但將不再與原系列有連結。要繼續嗎？"</string>
     <string name="settings_tasks">"任務設定"</string>
+    <string name="settings_tasks_status_progress">"任務設定（狀態／進度）"</string>
+    <string name="settings_default_start_date">"為任務設定預設開始日期"</string>
+    <string name="settings_default_start_timezone">"為任務設定預設開始時區"</string>
+    <string name="settings_default_due_date">"為任務設定預設到期日期"</string>
+    <string name="settings_default_due_timezone">"為任務設定預設到期時區"</string>
+    <string name="settings_default_start_time">"為任務設定預設開始時間"</string>
+    <string name="settings_default_due_time">"為任務設定預設到期時間"</string>
     <string name="settings_default_date_none">"無"</string>
     <string name="settings_default_date_same_day">"當天"</string>
     <string name="settings_default_date_next_day">"一天後"</string>
@@ -319,10 +367,12 @@
     <string name="settings_progress_step_20">"每次遞增20 (5個步驟)"</string>
     <string name="settings_progress_step_25">"每次遞增25 (4個步驟)"</string>
     <string name="settings_progress_step_50">"每次遞增50 (4個步驟)"</string>
+    <string name="settings_link_progress_to_subtasks">"將進度連結至子任務"</string>
     <string name="buypro_initial_dialog_title">"jtx Board Pro"</string>
     <string name="close">"關閉"</string>
     <string name="menu_view_copy_to_clipboard">"複製到剪貼簿"</string>
     <string name="menu_view_copy_to_clipboard_copied">"已複製"</string>
+    <string name="menu_view_convert_to_task">"轉換為任務"</string>
     <string name="settings_select_language">"選擇語言"</string>
     <string name="settings_select_language_system">"系統預設"</string>
     <string name="filter_special">"特殊過濾"</string>
@@ -336,6 +386,7 @@
     <string name="list_start_date_tomorrow">"明天開始"</string>
     <string name="list_start_date_future">"未來開始"</string>
     <string name="list_hide_completed_tasks">"隱藏已完成的任務"</string>
+    <string name="settings_auto_alarm_sub">"開啟後將自動建立鬧鐘。選擇「僅在到期時」則不會建立鬧鐘，但在任務到期時仍會收到通知。"</string>
     <!-- Strings for values in properties of an ICalObject -->
     <string name="open_in_browser">"在瀏覽器中開啟"</string>
     <string name="menu_view_markdown_formatting">"Markdown 格式"</string>
@@ -362,4 +413,7 @@
     <string name="markdown_horizontal_ruler">"分隔線"</string>
     <string name="markdown_unordered_list">"清單/列表"</string>
     <string name="markdown_code">"程式碼"</string>
+    <string name="extended_statuses_for_tasks">"… 用於任務"</string>
+    <string name="dialog_create_multiple_subtasks">批量建立子任務</string>
+    <string name="dialog_detected_multiple_subtasks">文字可能包含多個子任務。是否要建立 %d 個子任務？</string>
 </resources>
