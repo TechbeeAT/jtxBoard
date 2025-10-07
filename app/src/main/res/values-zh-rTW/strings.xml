@@ -143,7 +143,7 @@
     <string name="menu_view_copy_as_todo">"複製為待辦"</string>
     <string name="menu_view_copy_as_note">"複製為筆記"</string>
     <string name="menu_view_copy_item">"建立複本"</string>
-    <string name="notification_channel_alarms_name">"鬧鐘"</string>
+    <string name="notification_channel_alarms_name">"提醒"</string>
     <string name="notification_channel_geofences_name">"地理圍欄"</string>
     <!-- Shortcuts -->
     <string name="shortcut_addJournal_longLabel">"新增日誌"</string>
@@ -296,7 +296,7 @@
     <string name="relatedto">"關聯到"</string>
     <string name="comments">"註釋"</string>
     <string name="attachments">"附件"</string>
-    <string name="alarms">"鬧鐘"</string>
+    <string name="alarms">"提醒"</string>
     <string name="recurrence">"重複"</string>
     <string name="recurrence_exceptions">"例外"</string>
     <string name="recurrence_additions">"附加項"</string>
@@ -479,10 +479,10 @@
     <string name="edit_subnote_add_helper">"新增子筆記"</string>
     <string name="edit_subtask">"編輯子任務"</string>
     <string name="edit_subnote">"編輯子筆記"</string>
-    <string name="edit_fragment_app_notification_permission_message">"jtx Board 會在鬧鐘到期時顯示通知。請授予通知權限以使用此功能。"</string>
+    <string name="edit_fragment_app_notification_permission_message">"jtx Board 會在提醒到期時顯示通知。請授予通知權限以使用此功能。"</string>
     <string name="edit_fragment_app_coarse_location_permission_message">"jtx Board 可以使用你的所在位置，讓地圖自動縮放至你的定位。若要使用此功能，請授予粗略定位權限。"</string>
     <!-- alarms -->
-    <string name="alarms_alarm">"鬧鐘"</string>
+    <string name="alarms_alarm">"提醒"</string>
     <string name="alarms_before">"之前"</string>
     <string name="alarms_after">"之後"</string>
     <string name="alarms_start">"開始"</string>
@@ -518,7 +518,7 @@
     <string name="menu_list_viewmode_kanban">"看板檢視"</string>
     <string name="menu_list_viewmode_week">"週檢視"</string>
     <string name="settings_tasks">"任務設定"</string>
-    <string name="settings_alarms">"鬧鐘設定"</string>
+    <string name="settings_alarms">"提醒設定"</string>
     <string name="settings_tasks_status_progress">"任務設定（狀態／進度）"</string>
     <string name="settings_sync">"同步設定"</string>
     <string name="settings_default_start_date">"為任務設定預設開始日期"</string>
@@ -543,16 +543,16 @@
     <string name="settings_progress_step_25">"每次遞增25 (4個步驟)"</string>
     <string name="settings_progress_step_50">"每次遞增50 (4個步驟)"</string>
     <string name="settings_progress_step">"設定進度滑桿的步進值"</string>
-    <string name="settings_disable_alarms_for_readonly">"為唯讀合集停用鬧鐘"</string>
+    <string name="settings_disable_alarms_for_readonly">"為唯讀合集停用提醒"</string>
     <string name="settings_link_progress_to_subtasks">"將進度連結至子任務"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"保持狀態、進度與完成項目同步"</string>
     <string name="settings_attention_experimental_feature">"注意：這是一項實驗性功能"</string>
     <string name="settings_create_with_current_location">"以目前位置建立新項目"</string>
     <string name="settings_create_with_current_location_sub">"請在使用此應用程式時授予定位權限，以使用此功能。"</string>
-    <string name="settings_sticky_alarms">"固定鬧鐘"</string>
+    <string name="settings_sticky_alarms">"固定提醒"</string>
     <string name="settings_sticky_alarms_sub">"保留通知直到完成或延後"</string>
-    <string name="settings_fullscreen_alarms">"全螢幕鬧鐘"</string>
-    <string name="settings_fullscreen_alarms_sub">"當裝置鎖定時，以全螢幕顯示鬧鐘"</string>
+    <string name="settings_fullscreen_alarms">"全螢幕提醒"</string>
+    <string name="settings_fullscreen_alarms_sub">"當裝置鎖定時，以全螢幕顯示提醒"</string>
     <string name="settings_accessibility_mode">"無障礙模式"</string>
     <string name="settings_accessibility_mode_sub">"確保小型元素的最小字體大小"</string>
     <string name="settings_fullscreen_alarms_toast">"請在系統設定中授予全螢幕通知權限。"</string>
@@ -602,10 +602,10 @@
     <string name="collections_biometric_protected_entries_locked_title">已鎖定受生物辨識保護的項目</string>
     <string name="collections_biometric_protected_entries_locked_subtitle">請驗證身分後再試一次</string>
     <string name="list_biometric_protected_entries_unlocked">受生物辨識保護的項目已解鎖</string>
-    <string name="settings_auto_alarm">"自動鬧鐘"</string>
+    <string name="settings_auto_alarm">"自動提醒"</string>
     <string name="alarms_always_ondue">"永遠在到期時啟用"</string>
     <string name="alarms_always_on_save">"儲存時一律啟用（實驗性功能）"</string>
-    <string name="settings_auto_alarm_sub">"開啟後將自動建立鬧鐘。選擇「僅在到期時」則不會建立鬧鐘，但在任務到期時仍會收到通知。"</string>
+    <string name="settings_auto_alarm_sub">"開啟後將自動建立提醒。選擇「僅在到期時」則不會建立提醒，但在任務到期時仍會收到通知。"</string>
     <string name="settings_protect_biometric">"以生物辨識保護項目"</string>
     <string name="settings_protect_biometric_sub">"此功能會隱藏所選項目，直到以生物辨識解鎖為止，但不會在背景中加密或解密資料。"</string>
     <!-- Strings for values in properties of an ICalObject -->
@@ -698,7 +698,7 @@
     <string name="geofence_missing_permission_info">"jtx Board 需要存取背景位置與傳送通知的權限。請將定位權限更新為「始終允許」，並授予通知權限，以便在抵達地理圍欄時收到通知！"</string>
     <string name="geofence_request_permission_dialog_message">"jtx Board 可在你接近指定座標時通知你。請將定位權限設為「始終允許」，並授予通知權限以使用此功能。"</string>
     <string name="geofence_notification_summary">"地理圍欄已啟用"</string>
-    <string name="exact_alarm_permission_dialog_message">"jtx Board 需要排程精準鬧鐘的權限，否則鬧鐘通知可能會延遲。請授予此權限以使用此功能。"</string>
+    <string name="exact_alarm_permission_dialog_message">"jtx Board 需要排程精準提醒的權限，否則提醒通知可能會延遲。請授予此權限以使用此功能。"</string>
     <string name="call_contact">"致電 %1$s"</string>
     <string name="email_contact">"電子郵件 %1$s"</string>
     <string name="dialog_create_multiple_subtasks">批量建立子任務</string>
