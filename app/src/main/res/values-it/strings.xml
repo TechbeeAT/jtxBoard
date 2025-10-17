@@ -108,7 +108,9 @@
     <string name="edit_datepicker_dialog_select_date">"Seleziona la data"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Seleziona periodo"</string>
     <string name="edit_day_range_picker_dialog_select_day_range">"Seleziona l'intervallo di giorni"</string>
+    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"Data entro"</string>
     <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"e"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"giorno(i)"</string>
     <string name="edit_datepicker_dialog_add_time">"Aggiungi orario"</string>
     <string name="edit_datepicker_dialog_edit_time">"Modifica orario"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Aggiungi fuso orario"</string>
@@ -119,6 +121,7 @@
     <string name="dialog_delete_done_message">"Attenzione: le sottoattività vengono eliminate indipendentemente dal loro stato se l'attività principale è contrassegnata come eseguita. Questa operazione non può essere annullata!"</string>
     <string name="edit_dialog_sure_to_delete_message">"Sei sicuro di voler eliminare \"%1$s\"?"</string>
     <string name="edit_dialog_sure_to_discard_message">"Sei sicuro di voler scartare questa voce? Questa voce non verrà salvata."</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"La data di scadenza deve essere successiva alla data di inizio."</string>
     <string name="edit_fragment_app_permission">"Autorizzazione app"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board può suggerire i dati dei partecipanti in base ai tuoi contatti per le tue voci. Le autorizzazioni di lettura sui tuoi contatti sono necessarie per abilitare questa funzione."</string>
     <!-- fragment_about -->
@@ -384,6 +387,8 @@
     <string name="settings_timezone_display_original">"Mostra l'ora nel fuso orario originale"</string>
     <string name="settings_timezone_display_local_and_original">"Mostra l'orario nel fuso orario locale e nel fuso orario originale (solo vista dettagli)"</string>
     <string name="settings_font">"Font"</string>
+    <string name="settings_maps_provider">"Fornitore di mappe"</string>
+    <string name="settings_default_classification">"Classificazione predefinita"</string>
     <string name="donate_dialog_title">"Ti piace JTX Board?"</string>
     <string name="donate_dialog_message">"Lo sviluppo di un'applicazione è un argomento complesso e lo sviluppo, la manutenzione e il supporto sono un duro lavoro. Se vi piace questa applicazione e se volete garantirne lo sviluppo continuo, considerate una donazione :-)
 Grazie!"</string>
@@ -506,6 +511,8 @@ Grazie!"</string>
     <string name="dialog_edit_stored_resource_title">"Aggiungi/modifica preimpostazione risorsa"</string>
     <string name="dialog_edit_stored_status_title">"Aggiungi/modifica preimpostato di stato"</string>
     <string name="dialog_add_audio_entry_title">"Aggiungi voce audio"</string>
+    <string name="dialog_delete_obsolete_collections_title">"Eliminare le raccolte di account mancanti?"</string>
+    <string name="dialog_delete_obsolete_collections_message">"Gli account delle seguenti raccolte non possono più essere trovati. Vuoi eliminarli?"</string>
     <string name="menu_list_viewmode_compact">"Vista compatta"</string>
     <string name="menu_list_viewmode_kanban">"Vista Kanban"</string>
     <string name="menu_list_viewmode_week">"Vista per settimana"</string>
@@ -573,6 +580,10 @@ Grazie!"</string>
     <string name="filter_started_from_to">"Inizi(at)o: %1$s - %2$s"</string>
     <string name="filter_due_from_to">"Scadenza: %1$s - %2$s"</string>
     <string name="filter_completed_from_to">"Completato: %1$s - %2$s"</string>
+    <string name="filter_date_within_days_from_to">"Data tra %1$s e %2$s giorni"</string>
+    <string name="filter_started_within_days_from_to">"Inizia(to) tra %1$s e %2$s giorni"</string>
+    <string name="filter_due_within_days_from_to">"Scade tra %1$s e %2$s giorni"</string>
+    <string name="filter_completed_within_days_from_to">"Completato entro %1$s e %2$s giorni"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Data nel passato"</string>
     <string name="list_date_today">"Oggi"</string>
