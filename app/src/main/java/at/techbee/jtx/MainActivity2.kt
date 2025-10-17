@@ -344,6 +344,9 @@ class MainActivity2 : AppCompatActivity() {
                             Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
                             //Log.e("MainActivity2", e.stackTraceToString())
                         }
+                    } else if(intent?.data?.scheme == "content" && intent?.data?.host == "at.techbee.jtx") {
+                        globalStateHolder.icalObject2Open.value = intent?.data?.getQueryParameter(JtxContract.JtxICalObject.ID)?.toLongOrNull()
+                        intent.data = null
                     }
                 }
                 Intent.ACTION_SEND -> {
