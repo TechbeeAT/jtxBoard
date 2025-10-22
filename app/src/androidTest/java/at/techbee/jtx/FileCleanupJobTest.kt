@@ -10,31 +10,32 @@ package at.techbee.jtx
 
 import android.content.Context
 import android.util.Log
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.Configuration
-import androidx.work.Constraints
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
+import androidx.work.ListenableWorker
 import androidx.work.testing.SynchronousExecutor
+import androidx.work.testing.TestListenableWorkerBuilder
 import androidx.work.testing.WorkManagerTestInitHelper
+import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.concurrent.Executor
 
 @RunWith(AndroidJUnit4::class)
 @SmallTest
 class FileCleanupJobTest {
 
     private lateinit var context: Context
+    private lateinit var executor: Executor
 
     @Before
     fun setUp() {
-        context = InstrumentationRegistry.getInstrumentation().targetContext
+        context = ApplicationProvider.getApplicationContext()
         val config = Configuration.Builder()
             .setMinimumLoggingLevel(Log.DEBUG)
             .setExecutor(SynchronousExecutor())
@@ -45,24 +46,12 @@ class FileCleanupJobTest {
     @Test
     fun cleanup_test() {
 
-        val constraints = Constraints.Builder()
-            .setRequiresDeviceIdle(true)
-            .setRequiresBatteryNotLow(true)
-            .build()
-        val request = OneTimeWorkRequestBuilder<FileCleanupJob>()
-            .setConstraints(constraints)
-            .build()
+        val worker = TestListenableWorkerBuilder<FileCleanupJob>(context).build()
 
-        val workManager = WorkManager.getInstance(context)
-        val testDriver = WorkManagerTestInitHelper.getTestDriver(context)
-        // enqueue
-        workManager.enqueue(request).result.get()
-        // tell the testing framework that all constraints are met.
-        testDriver?.setAllConstraintsMet(request.id)
-        val workInfo = workManager.getWorkInfoById(request.id).get()
-
-        assertTrue(workInfo?.state in listOf(WorkInfo.State.RUNNING, WorkInfo.State.SUCCEEDED))
-
+        runBlocking {
+            val result = worker.doWork()
+            assertTrue(result is ListenableWorker.Result.Success)
+        }
     }
 
     @After
