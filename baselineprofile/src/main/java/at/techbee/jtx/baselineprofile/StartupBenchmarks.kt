@@ -35,6 +35,7 @@ import org.junit.runner.RunWith
  * and the [instrumentation arguments documentation](https://d.android.com/topic/performance/benchmarking/macrobenchmark-instrumentation-args).
  **/
 
+const val BENCHMARK_TAG_DIALOG_OK = "benchmark:DialogOk"
 const val BENCHMARK_TAG_LISTCARD = "benchmark:ListCard"
 const val BENCHMARK_TAG_DETAILSUMMARY = "benchmark:DetailSummary"
 
@@ -68,6 +69,8 @@ class StartupBenchmarks {
             },
             measureBlock = {
                 startActivityAndWait()
+                val okButton = device.findObject(By.res(BENCHMARK_TAG_DIALOG_OK))
+                okButton?.click()
                 device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
                 device.findObject(By.res(BENCHMARK_TAG_LISTCARD)).click()
                 device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)

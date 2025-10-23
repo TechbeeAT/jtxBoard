@@ -56,6 +56,8 @@ class BaselineProfileGenerator {
             // Start default activity for your app
             pressHome()
             startActivityAndWait()
+            val okButton = device.findObject(By.res(BENCHMARK_TAG_DIALOG_OK))
+            okButton?.click()
             device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
             device.findObject(By.res(BENCHMARK_TAG_LISTCARD)).click()
             device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)

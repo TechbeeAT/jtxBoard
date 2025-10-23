@@ -13,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
@@ -32,7 +34,8 @@ fun OSERequestDonationDialog(
             TextButton(
                 onClick = {
                     onOK()
-                }
+                },
+                modifier = Modifier.testTag("benchmark:DialogOk")
             ) {
                 Text(stringResource(id = R.string.ok))
             }
