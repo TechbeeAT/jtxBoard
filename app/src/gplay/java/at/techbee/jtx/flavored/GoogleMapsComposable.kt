@@ -26,6 +26,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.MapsInitializer
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
@@ -45,6 +46,7 @@ fun GoogleMapsComposable(
 ) {
 
     val context = LocalContext.current
+    MapsInitializer.initialize(context)
     var location by remember { mutableStateOf(initialLocation ?: "") }
     val marker = rememberUpdatedMarkerState(LatLng(initialGeoLat?:0.0, initialGeoLong?:0.0))
     val locationPermissionState = if(!LocalInspectionMode.current) rememberMultiplePermissionsState(
