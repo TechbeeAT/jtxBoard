@@ -47,7 +47,7 @@ room = "2.8.3"
 volley = "1.2.1"
 
 # gplay and managed build variants
-android-billing = "8.0.0"
+android-billing = "8.1.0"
 android-review = "2.0.2"
 espressoCore = "3.7.0"
 uiautomator = "2.3.0"
