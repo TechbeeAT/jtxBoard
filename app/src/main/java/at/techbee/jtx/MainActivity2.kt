@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.UriMatcher
 import android.net.Uri
 import android.os.Bundle
 import android.view.Window
@@ -42,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import at.techbee.jtx.contract.JtxContract
 import at.techbee.jtx.database.ICalDatabase
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.locals.StoredListSettingData
@@ -344,6 +346,12 @@ class MainActivity2 : AppCompatActivity() {
                             Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
                             //Log.e("MainActivity2", e.stackTraceToString())
                         }
+                    } else if(
+                        UriMatcher(UriMatcher.NO_MATCH).apply {
+                            addURI(JtxContract.JtxICalObject.VIEW_INTENT_HOST, JtxContract.JtxICalObject.CONTENT_URI_PATH + "/#", 0)
+                        }.match(intent?.data) == 0) {
+                        globalStateHolder.icalObject2Open.value = intent?.data?.lastPathSegment?.toLongOrNull()
+                        intent.data = null
                     }
                 }
                 Intent.ACTION_SEND -> {
