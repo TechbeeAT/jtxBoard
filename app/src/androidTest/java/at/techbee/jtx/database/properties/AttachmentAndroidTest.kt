@@ -10,10 +10,7 @@ package at.techbee.jtx.database.properties
 
 import android.content.ContentValues
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import org.junit.Assert.*
-
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class AttachmentAndroidTest {
@@ -57,18 +54,5 @@ class AttachmentAndroidTest {
         val dir = Attachment.getAttachmentDirectory(context)
 
         assertEquals("/data/user/0/${context.packageName}/files/attachments", dir.toString())
-    }
-
-    @Test
-    fun scheduleCleanupJobTest() {
-
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        Attachment.scheduleCleanupJob(context)
-
-        val workManager = WorkManager.getInstance(context)
-        val workInfo = workManager.getWorkInfosForUniqueWork("fileCleanupWorkRequest").get()
-
-        //check if the Work was enqueued
-        assertEquals(workInfo.firstOrNull()?.state, WorkInfo.State.ENQUEUED)
     }
 }

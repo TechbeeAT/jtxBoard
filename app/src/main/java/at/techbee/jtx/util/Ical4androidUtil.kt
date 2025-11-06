@@ -13,20 +13,25 @@ import android.content.ContentProviderClient
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
-import at.bitfire.ical4android.*
-import at.bitfire.ical4android.util.MiscUtils.toValues
+import at.bitfire.ical4android.JtxCollection
+import at.bitfire.ical4android.JtxCollectionFactory
+import at.bitfire.ical4android.JtxICalObject
+import at.bitfire.ical4android.JtxICalObjectFactory
+import at.bitfire.synctools.storage.toContentValues
 import at.techbee.jtx.contract.JtxContract
 import at.techbee.jtx.contract.JtxContract.asSyncAdapter
 import net.fortuna.ical4j.data.CalendarOutputter
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.component.VJournal
 import net.fortuna.ical4j.model.component.VToDo
+import net.fortuna.ical4j.model.property.ProdId
 import net.fortuna.ical4j.model.property.Version
 import java.io.OutputStream
 import java.io.Reader
 
 object Ical4androidUtil {
 
+    private val prodId = ProdId("+//IDN techbee.at//jtx Board")
 
     /**
      * @param [account] to look up
@@ -36,7 +41,7 @@ object Ical4androidUtil {
      */
     fun getICSFormatForCollectionFromProvider(account: Account, context: Context?, collectionId: Long): String? {
         val collection = getCollection(account, context, collectionId) ?: return null
-        return collection.getICSForCollection()
+        return collection.getICSForCollection(prodId)
     }
 
 
@@ -61,7 +66,7 @@ object Ical4androidUtil {
 
         val ical = Calendar()
         ical.properties += Version.VERSION_2_0
-        ical.properties += ICalendar.prodId
+        ical.properties +=  prodId
 
         iCalObjectIds.forEach { iCalObjectId ->
             val uri = JtxContract.JtxICalObject.CONTENT_URI
@@ -75,8 +80,8 @@ object Ical4androidUtil {
 
                 while (cursor.moveToNext()) {
                     val jtxIcalObject = JtxICalObject(collection)
-                    jtxIcalObject.populateFromContentValues(cursor.toValues())
-                    val singleICS = jtxIcalObject.getICalendarFormat()
+                    jtxIcalObject.populateFromContentValues(cursor.toContentValues())
+                    val singleICS = jtxIcalObject.getICalendarFormat(prodId)
                     singleICS?.components?.forEach { component ->
                         if(component is VToDo || component is VJournal)
                             ical.components += component
@@ -85,7 +90,7 @@ object Ical4androidUtil {
             }
         }
 
-        Ical4Android.checkThreadContextClassLoader()
+        //Ical4Android.checkThreadContextClassLoader()
         try {
             CalendarOutputter(false).output(ical, os)
         } catch (e: Exception) {
