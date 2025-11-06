@@ -11,6 +11,7 @@ package at.techbee.jtx.contract
 import android.accounts.Account
 import android.net.Uri
 import android.provider.BaseColumns
+import androidx.core.net.toUri
 import at.techbee.jtx.contract.JtxContract.JtxAlarm.ACTION
 import at.techbee.jtx.contract.JtxContract.JtxAlarm.TRIGGER_RELATIVE_TO
 import at.techbee.jtx.contract.JtxContract.JtxAlarm.TRIGGER_TIME
@@ -60,7 +61,7 @@ object JtxContract {
     const val AUTHORITY = "at.techbee.jtx.provider"
 
     /** The version of this SyncContentProviderContract */
-    const val VERSION = 8
+    const val VERSION = 9
 
     /** Constructs an Uri for the Jtx Sync Adapter with the given Account
      * @param [account] The account that should be appended to the Base Uri
@@ -195,10 +196,21 @@ object JtxContract {
         /** The name of the the content URI for IcalObjects.
          * This is a general purpose table containing general columns
          * for Journals, Notes and Todos */
-        private const val CONTENT_URI_PATH = "icalobject"
+        const val CONTENT_URI_PATH = "icalobject"
 
         /** The content uri of the ICalObject table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
+
+        /** The host under which an Intent can be called to open an ICalObject */
+        const val VIEW_INTENT_HOST = "at.techbee.jtx"
+
+        /* The Intent Uri to open an ICalObject, append the ICalObjectId as lastPathSegment to open a specific entry */
+        val VIEW_INTENT_URI: Uri by lazy { "content://$VIEW_INTENT_HOST/$CONTENT_URI_PATH".toUri() }
+
+        /* Convenience function to directly build the content URI to view a specific ICalObject in jtx Board by its ID */
+        fun getViewIntentUriFor(iCalObjectId: Long) = Uri.withAppendedPath(VIEW_INTENT_URI, iCalObjectId.toString())
+
+
 
         /** Constant to define all day values (for dtstart, due, completed timezone fields */
         const val TZ_ALLDAY = "ALLDAY"
@@ -644,7 +656,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "attendee"
 
         /** The content uri of the Attendee table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
 
         /** The name of the ID column.
@@ -815,7 +827,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "category"
 
         /** The content uri of the Category table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
 
         /** The name of the ID column for categories.
@@ -865,7 +877,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "comment"
 
         /** The content uri of the Comment table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
 
         /** The name of the ID column for comments.
@@ -923,7 +935,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "organizer"
 
         /** The content uri of the Organizer table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
 
         /** The name of the ID column for the organizer.
@@ -1003,7 +1015,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "relatedto"
 
         /** The content uri of the relatedto table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
 
         /** The name of the ID column for the related-to.
@@ -1071,7 +1083,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "resource"
 
         /** The content uri of the resources table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
 
         /** The name of the ID column for resources.
@@ -1122,7 +1134,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "collection"
 
         /** The content uri of the collections table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
         /**
          * Account type used for testing. This account type must be used for integrated testing.
@@ -1245,7 +1257,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "attachment"
 
         /** The content uri of the resources table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
 
         /** The name of the ID column for attachments.
@@ -1309,7 +1321,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "alarm"
 
         /** The content uri of the resources table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
 
         /** The name of the ID column for attachments.
@@ -1455,7 +1467,7 @@ object JtxContract {
         private const val CONTENT_URI_PATH = "unknown"
 
         /** The content uri of the resources table */
-        val CONTENT_URI: Uri by lazy { Uri.parse("content://$AUTHORITY/$CONTENT_URI_PATH") }
+        val CONTENT_URI: Uri by lazy { "content://$AUTHORITY/$CONTENT_URI_PATH".toUri() }
 
 
         /** The name of the ID column for attachments.

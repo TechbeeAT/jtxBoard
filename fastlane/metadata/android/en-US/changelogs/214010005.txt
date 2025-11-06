@@ -1,0 +1,3 @@
+- Default classification can now be configured in settings
+- Bugfixes
+- Version updates
