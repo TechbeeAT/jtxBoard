@@ -538,6 +538,14 @@ data class ICalObject(
 
 
     companion object {
+        private const val WINDOW_SECONDLY = 1 / 24 / 60
+        private const val WINDOW_MINUTELY = 1 / 24
+        private const val WINDOW_HOURLY = 1
+        private const val WINDOW_DAILY = 14
+        private const val WINDOW_WEEKLY = 30
+        private const val WINDOW_MONTHLY = 365
+        private const val WINDOW_YEARLY = 730
+        private const val WINDOW_DEFAULT = 30
 
         const val TZ_ALLDAY = "ALLDAY"
 
@@ -1106,26 +1114,26 @@ data class ICalObject(
 
             val from = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
                 when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
-                    Frequency.SECONDLY -> it - (1).hours.inWholeMilliseconds
-                    Frequency.MINUTELY -> it - (1).days.inWholeMilliseconds
-                    Frequency.HOURLY -> it - (30).days.inWholeMilliseconds
-                    Frequency.DAILY -> it - (365).days.inWholeMilliseconds
-                    Frequency.WEEKLY -> it - (365).days.inWholeMilliseconds
-                    Frequency.MONTHLY -> it - (3650).days.inWholeMilliseconds
-                    Frequency.YEARLY -> it - (36500).days.inWholeMilliseconds
-                    else -> it - (365).days.inWholeMilliseconds
+                    Frequency.SECONDLY -> it - (WINDOW_SECONDLY).hours.inWholeMilliseconds
+                    Frequency.MINUTELY -> it - (WINDOW_MINUTELY).days.inWholeMilliseconds
+                    Frequency.HOURLY -> it - (WINDOW_HOURLY).days.inWholeMilliseconds
+                    Frequency.DAILY -> it - (WINDOW_DAILY).days.inWholeMilliseconds
+                    Frequency.WEEKLY -> it - (WINDOW_WEEKLY).days.inWholeMilliseconds
+                    Frequency.MONTHLY -> it - (WINDOW_MONTHLY).days.inWholeMilliseconds
+                    Frequency.YEARLY -> it - (WINDOW_YEARLY).days.inWholeMilliseconds
+                    else -> it - (WINDOW_DEFAULT).days.inWholeMilliseconds
                 }
             })
             val to = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
                 when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
-                    Frequency.SECONDLY -> it + (1).hours.inWholeMilliseconds
-                    Frequency.MINUTELY -> it + (1).days.inWholeMilliseconds
-                    Frequency.HOURLY -> it + (30).days.inWholeMilliseconds
-                    Frequency.DAILY -> it + (365).days.inWholeMilliseconds
-                    Frequency.WEEKLY -> it + (365).days.inWholeMilliseconds
-                    Frequency.MONTHLY -> it + (3650).days.inWholeMilliseconds
-                    Frequency.YEARLY -> it + (36500).days.inWholeMilliseconds
-                    else -> it + (365).days.inWholeMilliseconds
+                    Frequency.SECONDLY -> it + (WINDOW_SECONDLY).hours.inWholeMilliseconds
+                    Frequency.MINUTELY -> it + (WINDOW_MINUTELY).days.inWholeMilliseconds
+                    Frequency.HOURLY -> it + (WINDOW_HOURLY).days.inWholeMilliseconds
+                    Frequency.DAILY -> it + (WINDOW_DAILY).days.inWholeMilliseconds
+                    Frequency.WEEKLY -> it + (WINDOW_WEEKLY).days.inWholeMilliseconds
+                    Frequency.MONTHLY -> it + (WINDOW_MONTHLY).days.inWholeMilliseconds
+                    Frequency.YEARLY -> it + (WINDOW_YEARLY).days.inWholeMilliseconds
+                    else -> it + (WINDOW_DEFAULT).days.inWholeMilliseconds
                 }
             })
             val period = Period(from, to)
