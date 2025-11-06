@@ -41,8 +41,8 @@ android {
         applicationId = "at.techbee.jtx"
         minSdk = 23
         targetSdk = 36
-        versionCode = 214010005
-        versionName = "2.14.01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode = 214020001
+        versionName = "2.14.02-alpha01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField("String", "versionCodename", "\"If you can't love yourself, how in the hell are you gonna love sombody else? \uD83C\uDF08\"")
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
