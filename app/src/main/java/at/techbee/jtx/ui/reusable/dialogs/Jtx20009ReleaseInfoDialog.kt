@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import at.techbee.jtx.R
-import com.arnyminerz.markdowntext.MarkdownText
+import com.mikepenz.markdown.m3.Markdown
 
 
 @Composable
@@ -39,7 +39,7 @@ fun Jtx20009ReleaseInfoDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
-                MarkdownText("Dear fellow jtx Board users," + System.lineSeparator() + System.lineSeparator() +
+                Markdown("Dear fellow jtx Board users," + System.lineSeparator() + System.lineSeparator() +
                         "your jtx Board has been updated to version 2.0.9!" + System.lineSeparator() + System.lineSeparator() +
                         "In this version settings have been moved to other places:" + System.lineSeparator() +
                         "- The new flat view option in the list replaces the setting to show subtasks of journals and notes in tasklist" + System.lineSeparator() +

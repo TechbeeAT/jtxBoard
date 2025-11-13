@@ -42,7 +42,8 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
-import com.arnyminerz.markdowntext.MarkdownText
+import at.techbee.jtx.util.UiUtil.ellipsize
+import com.mikepenz.markdown.m3.Markdown
 
 
 @Composable
@@ -141,19 +142,9 @@ fun ListCardGrid(
             }
 
             if (iCalObject.description?.isNotBlank() == true) {
-                if(markdownEnabled)
-                    MarkdownText(
-                        markdown = iCalObject.description?.trim() ?: "",
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis,
-                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
-                        onClick = {
-                            onClick(
-                                iCalObject.id,
-                                iCalObjectList,
-                                iCalObject.isReadOnly
-                            )
-                        },
+                if(markdownEnabled && iCalObject.status != Status.CANCELLED.status)
+                    Markdown(
+                        content = iCalObject.description?.trim()?.ellipsize(150) ?: "",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)

@@ -35,6 +35,7 @@ libphonenumber = "9.0.18"
 mapsCompose = "6.12.1"
 markdowntext = "1.3.2"
 mikepenz-aboutLibraries = "13.1.0"
+mikepenz-markdown = "0.38.1"
 mockitoCore = "5.20.0"
 osmdroidAndroid = "6.1.20"
 playServicesLocation = "21.3.0"
@@ -97,6 +98,9 @@ libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", vers
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 markdowntext = { module = "com.arnyminerz.markdowntext:markdowntext", version.ref = "markdowntext" }
 mikepenz-aboutLibraries = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "mikepenz-aboutLibraries" }
+mikepenz-multiplatform-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "mikepenz-markdown"}
+mikepenz-multiplatform-markdown-renderer-coil3 = { module = "com.mikepenz:multiplatform-markdown-renderer-coil3", version.ref = "mikepenz-markdown"}
+mikepenz-multiplatform-markdown-renderer-code = { module = "com.mikepenz:multiplatform-markdown-renderer-code", version.ref = "mikepenz-markdown" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }

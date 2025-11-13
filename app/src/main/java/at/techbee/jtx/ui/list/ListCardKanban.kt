@@ -39,7 +39,8 @@ import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
-import com.arnyminerz.markdowntext.MarkdownText
+import at.techbee.jtx.util.UiUtil.ellipsize
+import com.mikepenz.markdown.m3.Markdown
 
 
 @Composable
@@ -111,20 +112,8 @@ fun ListCardKanban(
                 )
 
             if (iCalObject.description?.isNotBlank() == true) {
-                if(markdownEnabled)
-                    MarkdownText(
-                        markdown = iCalObject.description?.trim() ?: "",
-                        maxLines = 4,
-                        textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
-                        onClick = {
-                            onClick(
-                                iCalObject.id,
-                                iCalObjectList,
-                                iCalObject.isReadOnly
-                            )
-                        },
-                        overflow = TextOverflow.Ellipsis
-                    )
+                if(markdownEnabled && iCalObject.status != Status.CANCELLED.status)
+                    Markdown(content = iCalObject.description?.trim()?.ellipsize(100) ?: "",)
                 else
                     Text(
                         text = iCalObject.description?.trim() ?: "",

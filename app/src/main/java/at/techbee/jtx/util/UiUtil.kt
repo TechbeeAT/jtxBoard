@@ -24,6 +24,14 @@ import java.util.regex.Matcher
 
 object UiUtil {
 
+    fun String.ellipsize(maxCharacters: Int): String {
+        return if (this.length > maxCharacters) {
+            this.take(maxCharacters) + "..."
+        } else {
+            this
+        }
+    }
+
     fun isValidURL(urlString: String?): Boolean {
         return PatternsCompat.WEB_URL.matcher(urlString.toString()).matches()
     }
