@@ -30,7 +30,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -57,7 +56,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -65,7 +63,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -96,7 +93,8 @@ import at.techbee.jtx.ui.detail.models.DetailsScreenSection
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.DateTimeUtils
-import com.arnyminerz.markdowntext.MarkdownText
+import com.mikepenz.markdown.coil3.Coil3ImageTransformerImpl
+import com.mikepenz.markdown.m3.Markdown
 import kotlinx.coroutines.delay
 import org.apache.commons.lang3.StringUtils
 import kotlin.time.Duration
@@ -410,19 +408,12 @@ fun DetailScreenContent(
 
                                 if (description.text.isNotBlank()) {
                                     if (detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false)
-                                        MarkdownText(
-                                            markdown = description.text.trim(),
+                                        Markdown(
+                                            content = description.text.trim(),
+                                            imageTransformer = Coil3ImageTransformerImpl,
                                             modifier = Modifier
                                                 .fillMaxWidth()
-                                                .padding(8.dp),
-                                            style = TextStyle(
-                                                textDirection = TextDirection.Content,
-                                                fontFamily = LocalTextStyle.current.fontFamily
-                                                ),
-                                            onClick = {
-                                                if (collection?.readonly == false)
-                                                    isEditMode.value = true
-                                            }
+                                                .padding(8.dp)
                                         )
                                     else
                                         Text(

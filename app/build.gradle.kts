@@ -224,8 +224,10 @@ dependencies {
 
     // third-party libs
     implementation(libs.mikepenz.aboutLibraries)
+    implementation(libs.mikepenz.multiplatform.markdown.renderer.m3)
+    implementation(libs.mikepenz.multiplatform.markdown.renderer.coil3)
+    implementation(libs.mikepenz.multiplatform.markdown.renderer.code)
     implementation(libs.colorpicker.compose)  // Compose Color Picker
-    implementation(libs.markdowntext) // Markdown support
     implementation(libs.osmdroid.android) //Open Street Maps
     implementation (libs.calendar.compose)
     implementation (libs.reorderable)

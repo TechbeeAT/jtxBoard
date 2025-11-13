@@ -9,6 +9,7 @@
 package at.techbee.jtx.util
 
 import androidx.compose.ui.graphics.Color
+import at.techbee.jtx.util.UiUtil.ellipsize
 import at.techbee.jtx.util.UiUtil.getAttachmentSizeString
 import at.techbee.jtx.util.UiUtil.isDarkColor
 import at.techbee.jtx.util.UiUtil.isValidEmail
@@ -25,6 +26,8 @@ class UiUtilTest {
     @Test fun isValidURL2() = assertTrue(isValidURL("www.orf.at"))
     @Test fun isValidURL3() = assertTrue(isValidURL("orf.at"))
 
+    @Test fun ellipsizeNone() = assertEquals("12345", "12345".ellipsize(10))
+    @Test fun ellipsize() = assertEquals("12345...", "1234567890".ellipsize(5))
 
     @Test
     fun extractLinks() {
