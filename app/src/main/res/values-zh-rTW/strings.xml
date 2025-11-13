@@ -115,12 +115,12 @@
     <string name="edit_datepicker_dialog_edit_time">"修改時間"</string>
     <string name="edit_datepicker_dialog_add_timezone">"添加時區"</string>
     <string name="edit_datepicker_dialog_edit_timezone">"修改時區"</string>
-    <string name="edit_dialog_sure_to_delete_title">"删除“%1$s”吗？"</string>
-    <string name="edit_dialog_sure_to_discard_title">"舍弃此条目？"</string>
+    <string name="edit_dialog_sure_to_delete_title">"刪除「%1$s」？"</string>
+    <string name="edit_dialog_sure_to_discard_title">"捨棄此項目？"</string>
     <string name="dialog_delete_done_title">"要刪除所有已完成的任務嗎？"</string>
     <string name="dialog_delete_done_message">"注意：子任務若父任務標記為完成，將不論狀態一併刪除。此操作無法復原！"</string>
     <string name="edit_dialog_sure_to_delete_message">"确定要删除“%1$s”吗？"</string>
-    <string name="edit_dialog_sure_to_discard_message">"确定要舍弃此条目吗？此操作无法撤销。"</string>
+    <string name="edit_dialog_sure_to_discard_message">"你確定要捨棄此項目嗎？此項目將不會被儲存。"</string>
     <string name="edit_validation_errors_dialog_due_date_before_dtstart">"到期日不能早於或等於開始日期"</string>
     <string name="edit_fragment_app_permission">"應用程式權限"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board 可根據你的聯絡人資料，為項目提供參與者建議。需授予讀取聯絡人權限才能啟用此功能。"</string>
@@ -181,7 +181,7 @@
     <string name="about_translations_thanks_to">"感謝"</string>
     <string name="about_translations_basic_info">"jtx Board 是一款開源應用程式，感謝開源社群的參與和貢獻。在此，我們想展示社群成員在翻譯方面所做的努力。"</string>
     <string name="about_translations_contribution_info">"如果您想要編輯／新增翻譯或為此應用程式添加新語言，歡迎加入翻譯平台 Crowdin 上的 jtx Board 專案："</string>
-    <string name="about_translations_contribution_button">"加入 Crowdin.com"</string>
+    <string name="about_translations_contribution_button">"在 Crowdin.com 加入"</string>
     <string name="list_welcome_entry_journal_summary">"恭喜，這是您的首篇日誌 :-)"</string>
     <string name="list_welcome_entry_journal_description">"日誌可用來記錄特定日期的筆記。此功能可用於會議記錄、會議紀要、日記等用途。當你編輯此項目時，將會看到新增分類、參與者、附件等選項。你可隨時刪除此項目！"</string>
     <string name="list_welcome_entry_note_summary">"恭喜，這是您的首篇筆記 :-)"</string>
@@ -224,7 +224,7 @@
     <string name="collections_journals_num">"日誌：%1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_notes_num">"筆記：%1$s"</string>
-    <string name="collections_tasks_num">"任务：%1$s"</string>
+    <string name="collections_tasks_num">"任務：%1$s"</string>
     <string name="collections_info">"合集就像是包含檔案的資料夾，由多個項目組成。您可以透過選單建立新的本機集合，或在安裝了同步應用程式（例如 DAVx⁵）的情況下，設定新的遠端集合進行同步。"</string>
     <string name="collections_collection_menu">"合集選單"</string>
     <string name="collections_dialog_add_local_collection_title">"新增本地合集"</string>
@@ -236,7 +236,7 @@
     <string name="color">"顏色"</string>
     <string name="selected_color">"已選取顏色"</string>
     <string name="system_colors">"系統顏色"</string>
-    <string name="priority_0_no_priority">"无优先级"</string>
+    <string name="priority_0_no_priority">"無優先順序"</string>
     <string name="priority_1_highest">"1 - 最高"</string>
     <string name="priority_2_higher">"2 - 較高"</string>
     <string name="priority_3_high">"3 - 高"</string>
@@ -266,7 +266,7 @@
     <string name="recur_ends_never">"永不結束"</string>
     <string name="recur_ends_on">"結束於"</string>
     <string name="recur_ends_after">"於結束後"</string>
-    <string name="recur_x_occurrences">"%1$d 次發生"</string>
+    <string name="recur_x_occurrences">"發生 %1$d 次"</string>
     <string name="recur_xth_day_of_the_month">"每月的第 %1$s 天"</string>
     <string name="recur_xth_last_day_of_the_month">"本月的最後 %1$s 天"</string>
     <string name="recur_last_day_of_the_month">"本月的最後一天"</string>
@@ -358,7 +358,7 @@
     <string name="list_toast_export_error">"清單匯出失敗"</string>
     <string name="collections_toast_export_success">"合集已成功匯出"</string>
     <string name="collections_toast_export_error">"匯出合集時發生錯誤"</string>
-    <string name="menu_collections_export_all">"全部导出"</string>
+    <string name="menu_collections_export_all">"全部匯出"</string>
     <string name="menu_presets_export_presets">"匯出預設"</string>
     <string name="menu_presets_import_presets">"匯入預設"</string>
     <string name="presets_imported">"預設已匯入"</string>
