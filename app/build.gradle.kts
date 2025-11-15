@@ -196,7 +196,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.annotation)
     implementation(libs.volley) // Volley for simple network requests
-    implementation (libs.coil.compose)  // image loading from web
+    implementation(libs.coil3.compose)   // image loading
+    implementation(libs.coil3.network.okhttp)   // image loading from web
     implementation (libs.androidx.biometric.ktx)
     implementation (libs.androidx.profileinstaller)
     implementation (libs.libphonenumber)
@@ -227,6 +228,7 @@ dependencies {
     implementation(libs.mikepenz.multiplatform.markdown.renderer.m3)
     implementation(libs.mikepenz.multiplatform.markdown.renderer.coil3)
     implementation(libs.mikepenz.multiplatform.markdown.renderer.code)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.colorpicker.compose)  // Compose Color Picker
     implementation(libs.osmdroid.android) //Open Street Maps
     implementation (libs.calendar.compose)

@@ -78,6 +78,7 @@ import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.ui.theme.jtxCardCornerShape
 import at.techbee.jtx.util.UiUtil.ellipsize
+import com.mikepenz.markdown.coil3.Coil3ImageTransformerImpl
 import com.mikepenz.markdown.m3.Markdown
 import sh.calvin.reorderable.ReorderableColumn
 
@@ -152,6 +153,7 @@ fun ListCard(
         return if(markdownEnabled && iCalObject.status != Status.CANCELLED.status)
             Markdown(
                 content = iCalObject.description?.trim()?.ellipsize(300) ?: "",
+                imageTransformer = Coil3ImageTransformerImpl,
                 modifier = Modifier.fillMaxWidth()
             )
         else

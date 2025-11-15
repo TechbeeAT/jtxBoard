@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
 import at.techbee.jtx.ui.theme.Typography
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 
 
 @Composable
