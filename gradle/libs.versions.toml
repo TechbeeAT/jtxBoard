@@ -43,7 +43,7 @@ profileinstaller = "1.4.1"
 reorderable = "3.0.0"
 synctools = "9c48db4d61"
 uiTextGoogleFonts = "1.9.4"
-room = "2.8.3"
+room = "2.8.4"
 volley = "1.2.1"
 ktor = "3.2.3"
 
