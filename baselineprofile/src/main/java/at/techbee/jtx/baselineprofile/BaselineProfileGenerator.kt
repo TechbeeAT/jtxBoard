@@ -61,6 +61,9 @@ class BaselineProfileGenerator {
             device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
             device.findObject(By.res(BENCHMARK_TAG_LISTCARD)).click()
             device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)
+            device.findObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)).click()
+            device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY_EDITTEXT)), 30_000)
+            device.findObject(By.res(BENCHMARK_TAG_DETAILSUMMARY_EDITTEXT)).click()
 
             // Check UiAutomator documentation for more information how to interact with the app.
             // https://d.android.com/training/testing/other-components/ui-automator

@@ -38,7 +38,7 @@ import org.junit.runner.RunWith
 const val BENCHMARK_TAG_DIALOG_OK = "benchmark:DialogOk"
 const val BENCHMARK_TAG_LISTCARD = "benchmark:ListCard"
 const val BENCHMARK_TAG_DETAILSUMMARY = "benchmark:DetailSummary"
-
+const val BENCHMARK_TAG_DETAILSUMMARY_EDITTEXT = "benchmark:DetailSummaryCardEdit"
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
