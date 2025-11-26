@@ -33,7 +33,7 @@ jobs:
       matrix:
         api-level: [ 34 ]
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: true
       - uses: actions/setup-java@v5
