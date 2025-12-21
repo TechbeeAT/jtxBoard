@@ -30,7 +30,7 @@ kotlin = "2.3.0"
 kotlinx-coroutines = "1.10.2"
 kotlinxSerializationJson = "1.9.0"
 # see https://github.com/google/ksp/releases for version numbers
-ksp = "2.3.3"
+ksp = "2.3.4"
 libphonenumber = "9.0.20"
 mapsCompose = "6.12.2"
 mikepenz-aboutLibraries = "13.1.0"
