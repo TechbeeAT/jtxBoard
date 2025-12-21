@@ -66,7 +66,7 @@
     <string name="list_due_inXhours">"Vervalt in %d uur"</string>
     <string name="list_due_on_weekday">"Vervalt op %s"</string>
     <string name="list_start_past">"Start in verleden"</string>
-    <string name="list_start_shortly">"Binnenkort beginnen"</string>
+    <string name="list_start_shortly">"Begint binnenkort"</string>
     <string name="list_start_today">"Start vandaag gepland"</string>
     <string name="list_start_tomorrow">"Start morgen"</string>
     <string name="list_start_inXhours">"Start in %d uur"</string>

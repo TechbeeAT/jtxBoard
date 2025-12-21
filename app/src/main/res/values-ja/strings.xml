@@ -621,7 +621,7 @@
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"注意: 現在、ウィジェットでサポートされている階層は 1 つだけです。下位のエントリーを見るには、フラット表示を使用してください。"</string>
     <string name="widget_list_maximum_entries_reached">"ウィジェットのエントリーの最大数に到達しました (%1$d)。"</string>
     <string name="widget_list_compat_updating_widget_notification">"ウィジェットの更新中"</string>
-    <string name="widget_list_default_categories">"ウィジェットで新規作成するエントリーのデフォルトのカテゴリーを設定する"</string>
+    <string name="widget_list_default_categories">"ウィジェットから新規エントリのデフォルトカテゴリを設定する"</string>
     <string name="opacity">"不透明度"</string>
     <string name="general">"一般"</string>
     <string name="list_collapse">"閉じる"</string>
