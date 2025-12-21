@@ -48,7 +48,7 @@ volley = "1.2.1"
 ktor = "3.3.3"
 
 # gplay and managed build variants
-android-billing = "8.1.0"
+android-billing = "8.2.1"
 android-review = "2.0.2"
 espressoCore = "3.7.0"
 uiautomator = "2.3.0"
