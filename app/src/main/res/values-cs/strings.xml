@@ -38,7 +38,7 @@
     <string name="todo_status_cancelled">"Zrušeno"</string>
     <string name="classification_public">"Veřejný"</string>
     <string name="classification_private">"Soukromý"</string>
-    <string name="classification_confidential">"Tajný"</string>
+    <string name="classification_confidential">"Důvěrný"</string>
     <string name="attendee_role_chair">"Předseda"</string>
     <string name="attendee_role_required_participant">"Povinný účastník"</string>
     <string name="attendee_role_optional_participant">"Volitelný účastník"</string>
@@ -126,7 +126,7 @@
     <string name="about_special_thanks">"Zvláštní poděkování"</string>
     <string name="about_app_version">"Verze: %1$s (%2$d)"</string>
     <string name="about_app_codename">"Kódový název: %1$s"</string>
-    <string name="about_app_terms">"Podmínky a ujednání"</string>
+    <string name="about_app_terms">"Podmínky užití"</string>
     <string name="about_thanks_ffg">"Zvláštní poděkování patří FFG za jejich důvěru a finanční podporu při realizaci tohoto projektu."</string>
     <!-- menus -->
     <string name="menu_list_gotodate">"Přejít na datum"</string>
@@ -152,8 +152,8 @@
     <string name="settings_select_mimetype_for_audio">"Vybrat Mimetype pro zvukové poznámky"</string>
     <!-- Sync fragment -->
     <string name="sync_with_sync_app_heading">"Synchronizovat s %1$s"</string>
-    <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale podporuje synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožňuje používat vámi vybraný jakýkoliv server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat."</string>
-    <string name="sync_ksync_basic_info">"kSync je aplikace založená na DAVx⁵ vyvinutá Infomaniak zejména pro jejich služby. Zatímco DAVx⁵ je otevřen libovolnému kompatibilnímu serveru CalDAV, kSync umožňuje synchronizaci pouze pro účty Infomaniak."</string>
+    <string name="sync_basic_info">"jtx Board sám o sobě neposkytuje synchronizaci se serverem, ale podporuje synchronizaci prostřednictvím DAVx⁵. Tato metoda vám umožňuje používat jakýkoliv vámi vybraný server kompatibilní s CalDAV k ukládání, zálohování a synchronizaci dat."</string>
+    <string name="sync_ksync_basic_info">"kSync je aplikace založená na DAVx⁵ vyvinutá společností Infomaniak zejména pro jejich služby. Zatímco DAVx⁵ je otevřen libovolnému kompatibilnímu serveru CalDAV, kSync umožňuje synchronizaci pouze pro účty Infomaniak."</string>
     <string name="sync_manageddavx5_basic_info">"Spravované DAVx⁵ zpřístupňuje funkce DAVx⁵ organizacím a přichází s dalšími podnikovými funkcemi, jako je hromadné nasazení, firemní značka a přednastavitelné nastavení."</string>
     <string name="sync_congratulations">"Gratulujeme! :-)"</string>
     <string name="sync_sync_app_installed_but_no_collections_found">"Na vašem telefonu jsme rozpoznali %1$s."</string>
@@ -165,7 +165,7 @@
     <string name="sync_button_add_account_in_sync_app">"Přidat účet v %1$s"</string>
     <string name="sync_toast_intent_open_sync_app_failed">"Nepodařilo se otevřít %1$s, otevřete aplikaci ručně."</string>
     <!-- Donate fragment -->
-    <string name="donate_header_developer_note">"Ahoj, jsem Patrick, vývojář jtx Board. Této aplikaci, kterou vám nabízím zdarma, věnuji spoustu času a úsilí. Pokud se vám moje aplikace líbí, pošlete mi prosím lásku a věnujte malý příspěvek!"</string>
+    <string name="donate_header_developer_note">"Ahoj, jsem Patrick, vývojář jtx Board. Této aplikaci, kterou vám nabízím zdarma, věnuji spoustu času a úsilí. Pokud se vám moje aplikace líbí, podpořte mě prosím a věnujte malý příspěvek!"</string>
     <string name="donate_thank_you">"Děkujeme!"</string>
     <string name="donate_donate_with">"Darovat přes"</string>
     <string name="donate_other_donation_methods">"Pokud byste chtěli zvážit jiný způsob darování, podívejte se na naše webové stránky:"</string>
@@ -185,7 +185,7 @@
     <string name="list_welcome_entry_todo_description">"Úkoly mohou mít navíc oproti deníkům a poznámkám také plánované datum zahájení, termínu a dokončení. Lze je zaškrtávat, kdy jsou hotové, nebo lze nastavit jejich průběh. Upravte tento záznam a vyzkoušejte všechny možnosti :-)"</string>
     <string name="list_welcome_category">"#PrvniKroky"</string>
     <string name="save_and_edit">"Uložit a upravit"</string>
-    <string name="save_and_new">"Uložit a nový"</string>
+    <string name="save_and_new">"Uložit a zadat další"</string>
     <string name="save_and_close">"Uložit a zavřít"</string>
     <string name="list_quickadd_add_audio_attachment">"Nahrát zvukovou přílohu"</string>
     <!-- Permissions -->
@@ -233,11 +233,11 @@
     <string name="system_colors">"Systémové barvy"</string>
     <string name="priority_0_no_priority">"Bez priority"</string>
     <string name="priority_1_highest">"1 - Nejvyšší"</string>
-    <string name="priority_2_higher">"2 - Vyšší"</string>
+    <string name="priority_2_higher">"2 - Velmi vysoká"</string>
     <string name="priority_3_high">"3 - Vysoká"</string>
-    <string name="priority_4_medium_high">"4 - Středně vysoká"</string>
+    <string name="priority_4_medium_high">"4 - Spíše vysoká"</string>
     <string name="priority_5_medium">"5 - Střední"</string>
-    <string name="priority_6_medium_low">"6 - Středně nízká"</string>
+    <string name="priority_6_medium_low">"6 - Spíše nízká"</string>
     <string name="recur_yearly_by_day">"Ročně podle dne"</string>
     <string name="recur_yearly_by_date">"Ročně podle data"</string>
     <string name="recur_monthly_by_day">"Měsíčně podle dne"</string>
@@ -314,7 +314,7 @@
     <string name="subtasks">"Dílčí úkoly"</string>
     <string name="linked_parents">"Propojené nadřazené položky"</string>
     <string name="priority_7_low">"7 - Nízká"</string>
-    <string name="priority_8_lower">"8 - Nižší"</string>
+    <string name="priority_8_lower">"8 - Velmi nízká"</string>
     <string name="priority_9_lowest">"9 - Nejnižší"</string>
     <string name="list_due_future">"Termín v budoucnosti"</string>
     <string name="view_share_part_of_series">"Tento záznam je součástí série."</string>
@@ -323,12 +323,12 @@
     <string name="collection_dialog_move_info">"Upozornění: Lze vybrat pouze zapisovatelné sbírky a sbírky s podporou stejných komponent (Deníky, Poznámky, Úkoly)."</string>
     <string name="menu_collections_popup_move_entries">"Přesunout záznamy"</string>
     <string name="setting_no_time">"Žádný čas"</string>
-    <string name="list_no_dates_set">"Nejsou nastavena žádná data"</string>
+    <string name="list_no_dates_set">"Položky bez určeného času"</string>
     <string name="list_without_start_date">"Bez data začátku"</string>
     <string name="list_without_due_date">"Bez data termínu"</string>
     <string name="list_without_completed_date">"Bez data dokončení"</string>
     <string name="list_show_only_search_matching_subentries">"Zobrazit pouze dílčí záznamy odpovídající vyhledávání"</string>
-    <string name="filter_order_by">"Objednal"</string>
+    <string name="filter_order_by">"Řadit dle"</string>
     <string name="filter_asc">"Vzestupně"</string>
     <string name="filter_desc">"Sestupně"</string>
     <string name="filter_created">"Vytvořeno"</string>
@@ -451,7 +451,7 @@ Děkujeme vám!"</string>
     <string name="details_link_existing_subentry_dialog_title">"Propojit dílčí záznamy"</string>
     <string name="details_link_existing_parent_dialog_title">"Propojit nadřazené položky"</string>
     <string name="details_link_existing_subentry_dialog_info">"Vyberte dílčí záznamy, které by měly být propojeny."</string>
-    <string name="details_link_existing_parent_dialog_info">"Zvolte nadřezenou záznam, který by měla být propojen."</string>
+    <string name="details_link_existing_parent_dialog_info">"Zvolte nadřazený záznam, který by měl být propojen."</string>
     <string name="details_app_bar_behaviour">"Chování panelu aplikace"</string>
     <string name="details_show_all_options">"Zobrazit všechny volby"</string>
     <string name="details_show_hide_elements">Zobrazit/skrýt prvky</string>
@@ -505,6 +505,8 @@ Děkujeme vám!"</string>
     <string name="dialog_edit_stored_resource_title">"Přidat nebo upravit předvolbu zdroje"</string>
     <string name="dialog_edit_stored_status_title">"Přidat nebo upravit předvolbu stavu"</string>
     <string name="dialog_add_audio_entry_title">"Přidat zvukový záznam"</string>
+    <string name="dialog_delete_obsolete_collections_title">"Smazat sbírky neexistujících účtů?"</string>
+    <string name="dialog_delete_obsolete_collections_message">"Účty následujících sbírek nelze nalézt. Smazat sbírky?"</string>
     <string name="menu_list_viewmode_compact">"Kompaktní zobrazení"</string>
     <string name="menu_list_viewmode_kanban">"Zobrazení Kanban"</string>
     <string name="menu_list_viewmode_week">"Týdenní přehled"</string>
@@ -572,6 +574,9 @@ Děkujeme vám!"</string>
     <string name="filter_started_from_to">"Zahájeno: %1$s - %2$s"</string>
     <string name="filter_due_from_to">"Termín: %1$s - %2$s"</string>
     <string name="filter_completed_from_to">"Dokončeno: %1$s - %2$s"</string>
+    <string name="filter_started_within_days_from_to">"Zahájeno mezi %1$s a %2$s dny"</string>
+    <string name="filter_due_within_days_from_to">"Termín mezi %1$s a %2$s dny"</string>
+    <string name="filter_completed_within_days_from_to">"Dokončeno mezi %1$s a %2$s dny"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"Datum v minulosti"</string>
     <string name="list_date_today">"Dnes"</string>
@@ -604,7 +609,7 @@ Děkujeme vám!"</string>
     <string name="list_start_without">"Bez data začátku"</string>
     <string name="list_due_without">"Bez data termínu"</string>
     <string name="list_snackbar_no_collection">"Přidejte prosím místní sbírku nebo synchronizujte vzdálenou sbírku, která tento modul podporuje."</string>
-    <string name="filter_second_order_by">"Pak seřadit podle"</string>
+    <string name="filter_second_order_by">"Dále řadit dle"</string>
     <string name="filter_group_by">"Seskupit podle"</string>
     <string name="filter_group_by_info">"Seskupování je dostupné pro seznam a kompaktní zobrazení"</string>
     <string name="filter_save_as_preset">"Uložit jako předvolbu"</string>
