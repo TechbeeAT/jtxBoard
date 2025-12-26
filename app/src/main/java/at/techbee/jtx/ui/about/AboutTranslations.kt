@@ -75,7 +75,7 @@ fun AboutTranslations(
                 context.startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
-                        "https://crowdin.com/project/jtx-board/invite?h=a8fd45e2dfea25534eda503b441476ea1545967".toUri()
+                        "https://crowdin.com/project/jtx-board/invite?h=434911feb7d0ad94591adbcde358a8752648672".toUri()
                     )
                 )
             }) {
