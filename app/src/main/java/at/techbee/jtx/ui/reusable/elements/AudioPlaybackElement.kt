@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import at.techbee.jtx.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -79,6 +80,8 @@ fun AudioPlaybackElement(
         modifier = modifier
     ) {
 
+        val toastAudioErrorText = stringResource(id = R.string.audio_error_toast)
+
         SmallFloatingActionButton(
             onClick = {
                 try {
@@ -99,7 +102,7 @@ fun AudioPlaybackElement(
                 } catch (e: Exception) {
                     Toast.makeText(
                         context,
-                        context.getText(R.string.audio_error_toast),
+                        toastAudioErrorText,
                         Toast.LENGTH_LONG
                     ).show()
                     Log.w(
@@ -144,7 +147,7 @@ fun SubnoteCardPreview() {
     MaterialTheme {
 
         AudioPlaybackElement(
-            uri = Uri.parse("www.orf.at"),
+            uri = "www.orf.at".toUri(),
             player = null,
             modifier = Modifier.fillMaxWidth()
         )
