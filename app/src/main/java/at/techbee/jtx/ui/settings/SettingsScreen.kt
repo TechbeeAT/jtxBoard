@@ -154,6 +154,14 @@ fun SettingsScreen(
     ) else null
 
 
+    val toastMessageSettingsExported = stringResource(R.string.settings_exported)
+    val toastMessageSettingsExportError = stringResource(R.string.settings_export_error)
+    val toastMessageSettingsImported = stringResource(R.string.settings_imported)
+    val toastMessageSettingsImportInvalidFile = stringResource(R.string.presets_import_invalid_file)
+    val biometricPromptTitle = stringResource(R.string.settings_protect_biometric)
+    val biometricPromptSubtitle = stringResource(R.string.settings_protect_biometric_info_on_settings_unlock)
+    val biometricPromptCancel = stringResource(R.string.cancel)
+
     // Launcher to export settings in a file
     val launcherExportSettings = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/json")
@@ -175,9 +183,9 @@ fun SettingsScreen(
                     objectOutputStream.close()
                 }
             }
-            toastMessage = context.getString(R.string.settings_exported)
+            toastMessage = toastMessageSettingsExported
         } catch (_: IOException) {
-            toastMessage= context.getString(R.string.settings_export_error)
+            toastMessage= toastMessageSettingsExportError
         }
     }
 
@@ -414,10 +422,10 @@ fun SettingsScreen(
                         }
 
                     }
-                    toastMessage = context.getString(R.string.settings_imported)
+                    toastMessage = toastMessageSettingsImported
                 }
             } catch (_: Exception) {
-                toastMessage = context.getString(R.string.presets_import_invalid_file)
+                toastMessage = toastMessageSettingsImportInvalidFile
             }
         }
     }
@@ -619,9 +627,9 @@ fun SettingsScreen(
 
                                     if(!globalStateHolder.isAuthenticated.value) {
                                         val promptInfo: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
-                                            .setTitle(context.getString(R.string.settings_protect_biometric))
-                                            .setSubtitle(context.getString(R.string.settings_protect_biometric_info_on_settings_unlock))
-                                            .setNegativeButtonText(context.getString(R.string.cancel))
+                                            .setTitle(biometricPromptTitle)
+                                            .setSubtitle(biometricPromptSubtitle)
+                                            .setNegativeButtonText(biometricPromptCancel)
                                             .build()
                                         globalStateHolder.biometricPrompt?.authenticate(promptInfo)
                                         pendingSettingProtectiometric = selection

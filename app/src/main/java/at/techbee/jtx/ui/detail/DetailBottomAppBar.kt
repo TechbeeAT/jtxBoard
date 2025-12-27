@@ -365,13 +365,14 @@ fun DetailBottomAppBar(
             }
         },
         floatingActionButton = {
-            // TODO(b/228588827): Replace with Secondary FAB when available.
+            val sanckbarBuyproRemoteEntriesBlockedText = stringResource(id = R.string.buypro_snackbar_remote_entries_blocked)
+
             FloatingActionButton(
                 onClick = {
                     if (!isProActionAvailable)
                         Toast.makeText(
                             context,
-                            context.getText(R.string.buypro_snackbar_remote_entries_blocked),
+                            sanckbarBuyproRemoteEntriesBlockedText,
                             Toast.LENGTH_LONG
                         ).show()
                     else if (!collection.readonly)
