@@ -141,17 +141,18 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center
         )
 
+        val paypalUrl = stringResource(id = R.string.link_paypal)
         TextButton(onClick = {
             context.startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    context.getString(R.string.link_paypal).toUri()
+                    paypalUrl.toUri()
                 )
             )
         }) {
             Image(
                 painter = painterResource(id = R.drawable.paypal),
-                contentDescription = null,
+                contentDescription = paypalUrl,
                 modifier = Modifier
                     .size(200.dp, 100.dp)
             )
@@ -165,10 +166,11 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
             textAlign = TextAlign.Center
         )
 
+        val contributeUrl = stringResource(id = R.string.link_jtx_contribute)
         TextButton(
             content = {
                 Text(
-                    text = stringResource(id = R.string.link_jtx_donate),
+                    text = contributeUrl,
                     style = Typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -179,7 +181,7 @@ fun DonateScreenContent(modifier: Modifier = Modifier) {
                 context.startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
-                        context.getString(R.string.link_jtx_donate).toUri()
+                        contributeUrl.toUri()
                     )
                 )
             }
