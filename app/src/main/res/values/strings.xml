@@ -429,7 +429,7 @@ Thank you!"</string>
     <string name="settings_default_expand_attachments">"Expand attachments in list by default"</string>
     <string name="settings_default_expand_parents">"Expand parents in list by default"</string>
     <string name="link_paypal" translatable="false">"https://www.paypal.com/donate?hosted_button_id=8BVX7PUVVTCWY"</string>
-    <string name="link_jtx_donate" translatable="false">"https://jtx.techbee.at/contribute"</string>
+    <string name="link_jtx_contribute" translatable="false">"https://jtx.techbee.at/contribute"</string>
     <string name="sorry">"Sorry"</string>
     <string name="back">"Back"</string>
     <string name="details">"Details"</string>

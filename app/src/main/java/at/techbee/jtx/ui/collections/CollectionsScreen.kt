@@ -133,6 +133,7 @@ fun CollectionsScreen(
         )
     }
 
+    val collectionsToastXItemsAdded = stringResource(R.string.collections_toast_x_items_added, resultImportTxtFilepaths.size)
     LaunchedEffect(resultImportTxtFilepaths, importCollection, importModule) {
         // import from file uri
         if(importModule == null) {
@@ -165,7 +166,7 @@ fun CollectionsScreen(
             }
             Toast.makeText(
                 context,
-                context.getString(R.string.collections_toast_x_items_added, resultImportTxtFilepaths.size),
+                collectionsToastXItemsAdded,
                 Toast.LENGTH_LONG
             ).show()
             importCollection = null
@@ -198,11 +199,12 @@ fun CollectionsScreen(
 
     // show result
     val insertResult by collectionsViewModel.resultInsertedFromICS.observeAsState()
+    val snackbarTextXItemsAdded = stringResource(id = R.string.collections_snackbar_x_items_added, insertResult?.first?:0, insertResult?.second?:0)
     LaunchedEffect(insertResult) {
         insertResult?.let {
             Toast.makeText(
                 context,
-                context.getString(R.string.collections_snackbar_x_items_added, it.first, it.second),
+                snackbarTextXItemsAdded,
                 Toast.LENGTH_LONG
             ).show()
             snackbarHostState.currentSnackbarData?.dismiss()
@@ -219,10 +221,13 @@ fun CollectionsScreen(
             onDismiss = { showCollectionsAddDialog = false }
         )
 
+    val biometricPromptTitle = stringResource(id = R.string.collections_biometric_protected_entries_locked_title)
+    val biometricPromptSubtitle = stringResource(id = R.string.collections_biometric_protected_entries_locked_subtitle)
+    val biometricPromptCancel = stringResource(id = R.string.cancel)
     val biometricPromptInfo: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
-        .setTitle(context.getString(R.string.collections_biometric_protected_entries_locked_title))
-        .setSubtitle(context.getString(R.string.collections_biometric_protected_entries_locked_subtitle))
-        .setNegativeButtonText(context.getString(R.string.cancel))
+        .setTitle(biometricPromptTitle)
+        .setSubtitle(biometricPromptSubtitle)
+        .setNegativeButtonText(biometricPromptCancel)
         .build()
 
     Scaffold(

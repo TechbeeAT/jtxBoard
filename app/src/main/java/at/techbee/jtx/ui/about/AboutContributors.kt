@@ -91,9 +91,11 @@ fun AboutContributors(
         }
 
         item {
+            val ffgUrl = stringResource(R.string.link_ffg)
+
             ElevatedCard(
                 onClick = {
-                    context.startActivity(Intent(Intent.ACTION_VIEW, context.getString(R.string.link_ffg).toUri()))
+                    context.startActivity(Intent(Intent.ACTION_VIEW, ffgUrl.toUri()))
                 },
                 modifier = Modifier.padding(top = 8.dp)
             ) {
@@ -111,7 +113,7 @@ fun AboutContributors(
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = stringResource(id = R.string.link_ffg),
+                    text = ffgUrl,
                     style = Typography.titleMedium,
                     modifier = Modifier
                         .fillMaxWidth()

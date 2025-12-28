@@ -96,11 +96,12 @@ fun CollectionsSpinner(
                     includeVJOURNAL?.let { if (!it || (it && !collection.supportsVJOURNAL)) return@forEach }
                     includeVTODO?.let { if (!it || (it && !collection.supportsVTODO)) return@forEach }
 
+                    val buyProInfoText = stringResource(R.string.collections_dialog_buypro_info)
                     DropdownMenuItem(
                         onClick = {
                             if(collection.accountType != ICalCollection.LOCAL_ACCOUNT_TYPE && !isProPurchased) {
                                 expanded = false
-                                Toast.makeText(context, context.getString(R.string.collections_dialog_buypro_info), Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, buyProInfoText, Toast.LENGTH_LONG).show()
                             } else {
                                 selected = collection
                                 expanded = false

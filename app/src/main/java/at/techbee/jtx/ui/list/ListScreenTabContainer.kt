@@ -203,6 +203,8 @@ fun ListScreenTabContainer(
         }
     }
 
+    val toastMessageListExported = stringResource(R.string.list_toast_export_success)
+    val toastMessageListExportError = stringResource(R.string.list_toast_export_error)
     val launcherExportToCSV = rememberLauncherForActivityResult(CreateDocument("text/csv")) {
         it?.let { uri ->
             //isProcessing.postValue(true)
@@ -217,9 +219,9 @@ fun ListScreenTabContainer(
                         //Log.d("CSV", csvData.joinToString(separator = System.lineSeparator()))
                         outputStream.write(csvData.joinToString(separator = System.lineSeparator()).toByteArray())
                     }
-                    listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_success)
+                    listViewModel.toastMessage.value = toastMessageListExported
                 } catch (_: IOException) {
-                    listViewModel.toastMessage.value = context.getString(R.string.list_toast_export_error)
+                    listViewModel.toastMessage.value = toastMessageListExportError
                 }
             }
         }
@@ -688,6 +690,12 @@ fun ListScreenTabContainer(
                             || (listViewModel.module == Module.NOTE && collection.supportsVJOURNAL)
                             || (listViewModel.module == Module.TODO && collection.supportsVTODO)
                 }) {
+
+                    val biometricPromptTitle = stringResource(R.string.settings_protect_biometric)
+                    val biometricPromptSubtitle = stringResource(R.string.settings_protect_biometric_info_on_unlock)
+                    val biometricPromptCancel = stringResource(R.string.cancel)
+
+
                 ListBottomAppBar(
                     module = listViewModel.module,
                     iCal4ListRel = iCal4ListRel,
@@ -748,9 +756,9 @@ fun ListScreenTabContainer(
                             globalStateHolder.isAuthenticated.value = false
                         } else {
                             val promptInfo: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
-                                .setTitle(context.getString(R.string.settings_protect_biometric))
-                                .setSubtitle(context.getString(R.string.settings_protect_biometric_info_on_unlock))
-                                .setNegativeButtonText(context.getString(R.string.cancel))
+                                .setTitle(biometricPromptTitle)
+                                .setSubtitle(biometricPromptSubtitle)
+                                .setNegativeButtonText(biometricPromptCancel)
                                 .build()
                             globalStateHolder.biometricPrompt?.authenticate(promptInfo)
                         }

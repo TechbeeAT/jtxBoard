@@ -73,6 +73,11 @@ fun PresetsScreen(
     val extendedStatuses by database.getStoredStatuses().observeAsState(emptyList())
     val storedListSettings by database.getStoredListSettings(modules = listOf(Module.JOURNAL.name, Module.NOTE.name, Module.TODO.name)).observeAsState(emptyList())
 
+    val toastMessagePresetsSaved = stringResource(id = R.string.presets_saved)
+    val toastMessagePresetsExportError = stringResource(id = R.string.presets_export_error)
+    val toastMessagePresetsImported = stringResource(id = R.string.presets_imported)
+    val toastMessagePresetsImportInvalidFile = stringResource(id = R.string.presets_import_invalid_file)
+
     val launcherExportPresets = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/json")
     ) { exportPresetsFilepath ->
@@ -92,10 +97,10 @@ fun PresetsScreen(
                 context.contentResolver?.openOutputStream(exportPresetsFilepath)?.use { outputStream ->
                     outputStream.write(presetDataJson.toByteArray())
                 }
-                context.getString(R.string.presets_saved)
+                toastMessage = toastMessagePresetsSaved
             }
         } catch (_: IOException) {
-            toastMessage= context.getString(R.string.presets_export_error)
+            toastMessage= toastMessagePresetsExportError
         }
     }
 
@@ -108,7 +113,7 @@ fun PresetsScreen(
             val presetData = try {
                 Json.decodeFromString<PresetData>(presetDataJson)
             } catch (_: Exception) {
-                toastMessage = context.getString(R.string.presets_import_invalid_file)
+                toastMessage = toastMessagePresetsImportInvalidFile
                 return@rememberLauncherForActivityResult
             }
             Log.d("presetDataJsonImport", presetDataJson)
@@ -123,7 +128,7 @@ fun PresetsScreen(
                         it.id = 0L
                     database.upsertStoredListSetting(it)
                 }
-                toastMessage = context.getString(R.string.presets_imported)
+                toastMessage = toastMessagePresetsImported
             }
         }
     }

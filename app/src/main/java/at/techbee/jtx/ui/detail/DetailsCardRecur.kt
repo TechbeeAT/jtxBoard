@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.detail
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -75,6 +76,7 @@ import java.util.Locale
 import kotlin.math.absoluteValue
 
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DetailsCardRecur(
