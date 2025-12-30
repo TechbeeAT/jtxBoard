@@ -579,6 +579,8 @@
     <string name="filter_completed_from_to">"完了: %1$s - %2$s"</string>
     <string name="filter_date_within_days_from_to">"%1$s から %2$s 日までの日付"</string>
     <string name="filter_started_within_days_from_to">"%1$s から %2$s 日に開始"</string>
+    <string name="filter_due_within_days_from_to">"%1$s から %2$s 日に締め切り"</string>
+    <string name="filter_completed_within_days_from_to">"%1$s から %2$s 日に完了"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>
     <string name="list_date_today">"今日"</string>
