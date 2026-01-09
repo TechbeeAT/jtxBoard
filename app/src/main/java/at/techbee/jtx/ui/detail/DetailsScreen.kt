@@ -413,6 +413,8 @@ fun DetailsScreen(
                                     )
                                 }
                             )
+
+                            val copiedToClipboardToastMessage = stringResource(id = R.string.menu_view_copy_to_clipboard_copied)
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(id = R.string.menu_view_copy_to_clipboard)) },
                                 onClick = {
@@ -427,7 +429,7 @@ fun DetailsScreen(
                                                 val clipboardManager = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                                                 clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
                                                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)            // Only show a toast for Android 12 and lower.
-                                                    detailViewModel.toastMessage.value = context.getString(R.string.menu_view_copy_to_clipboard_copied)
+                                                    detailViewModel.toastMessage.value = copiedToClipboardToastMessage
                                             }
                                     }
                                     menuExpanded.value = false

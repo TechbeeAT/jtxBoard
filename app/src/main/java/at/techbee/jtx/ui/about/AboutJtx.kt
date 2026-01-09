@@ -106,10 +106,12 @@ fun AboutJtx(modifier: Modifier = Modifier) {
                 modifier = Modifier.padding(top = 12.dp),
                 style = Typography.titleMedium,
             )
+
+            val jtxTermsUrl = stringResource(id = R.string.link_jtx_terms)
             TextButton(
                 content = {
                     Text(
-                        text = stringResource(id = R.string.link_jtx_terms),
+                        text = jtxTermsUrl,
                         style = Typography.bodyLarge,
                     )
                 },
@@ -117,7 +119,7 @@ fun AboutJtx(modifier: Modifier = Modifier) {
                     context.startActivity(
                         Intent(
                             Intent.ACTION_VIEW,
-                            context.getString(R.string.link_jtx_terms).toUri()
+                            jtxTermsUrl.toUri()
                         )
                     )
                 }

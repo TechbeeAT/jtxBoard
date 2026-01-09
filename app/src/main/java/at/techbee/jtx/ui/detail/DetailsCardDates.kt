@@ -63,6 +63,8 @@ fun DetailsCardDates(
     var completed by remember { mutableStateOf(icalObject.completed) }
     var completedTimezone by remember { mutableStateOf(icalObject.completedTimezone) }
 
+    val validationErrorToastText = stringResource(id = R.string.edit_validation_errors_dialog_due_date_before_dtstart)
+
     ElevatedCard(modifier = modifier) {
         Column(
             modifier = Modifier.fillMaxWidth().padding(if(isEditMode) 4.dp else 0.dp),
@@ -76,7 +78,7 @@ fun DetailsCardDates(
                     isEditMode = isEditMode,
                     onDateTimeChanged = { datetime, timezone ->
                         if((due ?: Long.MAX_VALUE) <= (datetime ?: Long.MIN_VALUE)) {
-                            Toast.makeText(context, context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart), Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, validationErrorToastText, Toast.LENGTH_LONG).show()
                         } else {
                             dtstart = datetime
                             dtstartTimezone = timezone
@@ -120,7 +122,7 @@ fun DetailsCardDates(
                         if((datetime ?: Long.MAX_VALUE) <= (dtstart ?: Long.MIN_VALUE)) {
                             Toast.makeText(
                                 context,
-                                context.getText(R.string.edit_validation_errors_dialog_due_date_before_dtstart),
+                                validationErrorToastText,
                                 Toast.LENGTH_LONG
                             ).show()
                         } else {

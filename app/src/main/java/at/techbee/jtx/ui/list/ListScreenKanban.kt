@@ -8,6 +8,7 @@
 
 package at.techbee.jtx.ui.list
 
+import android.annotation.SuppressLint
 import android.content.Context.VIBRATOR_MANAGER_SERVICE
 import android.content.Context.VIBRATOR_SERVICE
 import android.media.MediaPlayer
@@ -66,6 +67,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
+@SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ListScreenKanban(
