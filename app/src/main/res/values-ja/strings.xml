@@ -107,6 +107,10 @@
     <string name="edit_recur_toast_requires_start_date">"繰り返すには着手日を設定してください！"</string>
     <string name="edit_datepicker_dialog_select_date">"日付を選択"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"日付の範囲を選択"</string>
+    <string name="edit_day_range_picker_dialog_select_day_range">"日付の範囲を選択"</string>
+    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"次の範囲を表示:"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"から"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"日まで"</string>
     <string name="edit_datepicker_dialog_add_time">"時刻を追加"</string>
     <string name="edit_datepicker_dialog_edit_time">"時刻を編集"</string>
     <string name="edit_datepicker_dialog_add_timezone">"タイムゾーンを追加"</string>
@@ -117,6 +121,7 @@
     <string name="dialog_delete_done_message">"注意: 親が完了としてマークされている場合、サブ ToDo はステータスに関係なく削除されます。この操作は元に戻せません！"</string>
     <string name="edit_dialog_sure_to_delete_message">"本当に「%1$s」を削除しますか？"</string>
     <string name="edit_dialog_sure_to_discard_message">"本当にこのエントリーを破棄しますか？ 破棄を選択すると保存されません。"</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"着手以前の日時は締め切りに設定できません。"</string>
     <string name="edit_fragment_app_permission">"アプリの権限"</string>
     <string name="edit_fragment_app_permission_message">"jtx Board はあなたの連絡先に基づいて参加者の候補を提示できます。この機能を有効にするには、連絡先の読み取りの権限が必要です。"</string>
     <!-- fragment_about -->
@@ -262,6 +267,9 @@
     <string name="recur_ends_on">"終了する日時"</string>
     <string name="recur_ends_after">"終了までの回数"</string>
     <string name="recur_x_occurrences">"%1$d 回"</string>
+    <string name="recur_xth_day_of_the_month">"月の %1$s 日目"</string>
+    <string name="recur_xth_last_day_of_the_month">"月末から %1$s 日目"</string>
+    <string name="recur_last_day_of_the_month">"月の末日"</string>
     <string name="attachment_export_saved_successfully">"保存しました"</string>
     <string name="attachment_export_error_error_occurred">"選択したファイルの保存中にエラーが発生しました！"</string>
     <string name="menu_collections_add_remote_to_sync_app">"リモートのコレクションを追加 (%1$s)"</string>
@@ -356,6 +364,12 @@
     <string name="presets_import_invalid_file">"無効なファイルです"</string>
     <string name="presets_saved">"プリセットが保存されました"</string>
     <string name="presets_export_error">"プリセットの保存中にエラーが発生しました！"</string>
+    <string name="settings_export_settings">"設定をエクスポート"</string>
+    <string name="settings_import_settings">"設定をインポート"</string>
+    <string name="settings_imported">"設定をインポートしました"</string>
+    <string name="settings_import_invalid_file">"無効なファイルです"</string>
+    <string name="settings_exported">"設定をエクスポートしました"</string>
+    <string name="settings_export_error">"設定のエクスポート中にエラーが発生しました"</string>
     <string name="more">"詳細"</string>
     <string name="navigation_drawer_buypro">"プロ版を購入"</string>
     <string name="settings_select_theme">"テーマを選択"</string>
@@ -372,6 +386,8 @@
     <string name="settings_timezone_display_original">"元のタイムゾーンで時間を表示"</string>
     <string name="settings_timezone_display_local_and_original">"現地時間および元のタイムゾーンで時間を表示 (詳細表示のみ)"</string>
     <string name="settings_font">"フォント"</string>
+    <string name="settings_maps_provider">"地図プロバイダー"</string>
+    <string name="settings_default_classification">"既定の公開設定"</string>
     <string name="donate_dialog_title">"jtx Board を気に入っていただけましたか？"</string>
     <string name="donate_dialog_message">"アプリの開発は複雑で、開発・メンテナンス・サポートは大変な仕事です。このアプリを気に入り、継続的な開発をご支援いただける場合は、寄付をご検討ください :-)
 ありがとうございます！"</string>
@@ -561,6 +577,10 @@
     <string name="filter_started_from_to">"着手: %1$s - %2$s"</string>
     <string name="filter_due_from_to">"締切: %1$s - %2$s"</string>
     <string name="filter_completed_from_to">"完了: %1$s - %2$s"</string>
+    <string name="filter_date_within_days_from_to">"%1$s から %2$s 日までの日付"</string>
+    <string name="filter_started_within_days_from_to">"%1$s から %2$s 日に開始"</string>
+    <string name="filter_due_within_days_from_to">"%1$s から %2$s 日に締め切り"</string>
+    <string name="filter_completed_within_days_from_to">"%1$s から %2$s 日に完了"</string>
     <!-- fragment_ical_list -->
     <string name="list_date_start_in_past">"過去の日付"</string>
     <string name="list_date_today">"今日"</string>
