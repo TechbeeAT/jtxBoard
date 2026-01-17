@@ -1,22 +1,26 @@
-import com.android.build.api.dsl.ManagedVirtualDevice
 
 plugins {
     alias(libs.plugins.android.test)
-    alias(libs.plugins.kotlin.android)
+    //alias(libs.plugins.kotlin.android)
     alias(libs.plugins.baselineprofile)
 }
 
+
+/*
+kotlin {
+    jvmToolchain(21) // Or your desired consistent JVM version
+}
+
+ */
+
+
 android {
     namespace = "at.techbee.jtx.baselineprofile"
-    compileSdk = 35
-
-    kotlin {
-        jvmToolchain(21) // Or your desired consistent JVM version
-    }
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,11 +37,15 @@ android {
     // This code creates the gradle managed device used to generate baseline profiles.
     // To use GMD please invoke generation through the command line:
     // ./gradlew :app:generateBaselineProfile
-    testOptions.managedDevices.devices {
-        create<ManagedVirtualDevice>("pixel6Api34") {
-            device = "Pixel 6"
-            apiLevel = 34
-            systemImageSource = "google"
+    testOptions {
+        managedDevices {
+            localDevices {
+                create("pixel6Api34") {
+                    device = "Pixel 6"
+                    apiLevel = 34
+                    systemImageSource = "google"
+                }
+            }
         }
     }
 }

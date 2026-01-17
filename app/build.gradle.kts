@@ -13,6 +13,7 @@ import java.util.Properties
 
 
 plugins {
+    alias(libs.plugins.mikepenz.aboutLibraries)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.android)
@@ -20,8 +21,11 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.baselineprofile)
-    alias(libs.plugins.mikepenz.aboutLibraries)
     //alias(libs.plugins.huawei.agconnect)
+}
+
+kotlin {
+    jvmToolchain(21)
 }
 
 // Creates a variable called keystorePropertiesFile, and initializes it to the keystore.properties file.
@@ -41,8 +45,8 @@ android {
         applicationId = "at.techbee.jtx"
         minSdk = 23
         targetSdk = 36
-        versionCode = 215010001
-        versionName = "2.15.01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode = 215010002
+        versionName = "2.15.01-alpha02"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField("String", "versionCodename", "\"Love knows no borders \uD83C\uDF08\"")
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
@@ -62,10 +66,6 @@ android {
         buildConfigField("String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: keystoreProperties["crowdin.apikey"]?.toString()) + "\"")
         //buildConfigField("String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GH_CONTRIBUTORS_API_KEY") ?: providers.gradleProperty("githubcontributors.apikey") ) + "\"")
         resValue("string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: keystoreProperties["google.geo.apikey"]?.toString() ?: "")
-    }
-
-    kotlin {
-        jvmToolchain(21) // Or your desired consistent JVM version
     }
 
     compileOptions {
@@ -116,7 +116,7 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
+                getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
             isShrinkResources = true
