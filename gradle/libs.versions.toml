@@ -28,7 +28,7 @@ glance = "1.1.1"
 #huawei-iap = "6.10.0.300"
 kotlin = "2.3.0"
 kotlinx-coroutines = "1.10.2"
-kotlinxSerializationJson = "1.9.0"
+kotlinxSerializationJson = "1.10.0"
 # see https://github.com/google/ksp/releases for version numbers
 ksp = "2.3.4"
 libphonenumber = "9.0.22"
