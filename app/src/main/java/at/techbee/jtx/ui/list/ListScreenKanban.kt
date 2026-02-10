@@ -96,7 +96,7 @@ fun ListScreenKanban(
     val groupedList = list.groupBy {
         when {
             kanbanColumnsXStatus.isNotEmpty() -> it.iCal4List.xstatus
-            kanbanColumnsCategory.isNotEmpty() -> it.categories.firstOrNull()?.text
+            kanbanColumnsCategory.isNotEmpty() -> it.categories.minByOrNull { it.text }?.text  // minByOrNull does sort by text and then takes the first entry
             else -> {   // this covers also kanbanColumnsStatus.isNotEmpty() and the fallback for default kanbanColumns based on the status
                 if (it.iCal4List.status.isNullOrEmpty()) {
                     when {
