@@ -45,7 +45,7 @@ synctools = "9c48db4d61"
 uiTextGoogleFonts = "1.10.1"
 room = "2.8.4"
 volley = "1.2.1"
-ktor = "3.3.3"
+ktor = "3.4.0"
 
 # gplay and managed build variants
 android-billing = "8.3.0"
