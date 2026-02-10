@@ -83,8 +83,8 @@ data class ICal4ListRel(
                 OrderBy.ACCOUNT -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.accountName ?: "" }
                 OrderBy.COLLECTION -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.collectionDisplayName ?: "" }
                 OrderBy.DRAG_AND_DROP -> compareBy { it.iCal4List.sortIndex}
-                OrderBy.CATEGORIES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.categories.firstOrNull()?.text } // Handle null categories and case-insensitive
-                OrderBy.RESOURCES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.resources.firstOrNull()?.text } // Handle null resources and case-insensitive
+                OrderBy.CATEGORIES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.categories.sortedBy { it.text }.joinToString(separator = ",") } // Handle null categories and case-insensitive
+                OrderBy.RESOURCES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.resources.sortedBy { it.text }.joinToString(separator = ",") } // Handle null resources and case-insensitive
             }
         }
 
@@ -118,7 +118,7 @@ data class ICal4ListRel(
 
                     sortedList.forEach { sortedEntry ->
                         if (sortedEntry.categories.isNotEmpty()) {
-                            sortedEntry.categories.forEach { category ->
+                            sortedEntry.categories.sortedBy { it.text }.forEach { category ->
                                 if (this.containsKey(category.text))
                                     this[category.text]?.add(sortedEntry)
                                 else
@@ -159,8 +159,6 @@ data class ICal4ListRel(
                     else
                         compareBy { it.uppercase() }
                 )
-                //GroupBy.CATEGORY -> sortedList.groupBy { if(it.categories.isEmpty()) context.getString(R.string.filter_no_category) else it.categories.joinToString(separator = ", ") { category -> category.text } }.toSortedMap()
-                //GroupBy.RESOURCE -> sortedList.groupBy { if(it.resources.isEmpty()) context.getString(R.string.filter_no_resource) else it.resources.joinToString(separator = ", ") { resource -> resource.text?:"" } }.toSortedMap()
                 GroupBy.STATUS -> sortedList.groupBy {
                     Status.entries.find { status -> status.status == it.iCal4List.status }?.stringResource?.let { stringRes -> context.getString(stringRes) } ?: it.iCal4List.status ?: ""
                 }

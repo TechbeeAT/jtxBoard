@@ -209,8 +209,8 @@ fun ListScreenList(
                         ListCard(
                             iCalObject = iCal4ListRelObject.iCal4List,
                             iCalObjectList = groupedList.flatMap { it.value }.map { it.iCal4List },
-                            categories = iCal4ListRelObject.categories,
-                            resources = iCal4ListRelObject.resources,
+                            categories = iCal4ListRelObject.categories.sortedBy { it.text },
+                            resources = iCal4ListRelObject.resources.sortedBy { it.text },
                             subtasks = currentSubtasks,
                             subnotes = currentSubnotes,
                             parents = currentParents,
