@@ -5,10 +5,18 @@
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <!-- Strings for values in properties of an ICalObject -->
+    <string name="attendee_role_chair">"التبرع"</string>
     <!-- Navigation Drawer -->
+    <string name="navigation_drawer_donate">"التبرع"</string>
     <!-- fragment_ical_list -->
+    <string name="list_start_tomorrow">"تبدأ غدًا"</string>
     <!-- fragment_ical_view -->
     <!-- fragment_ical_edit -->
+    <string name="edit_datepicker_dialog_add_time">"أضف وقت"</string>
+    <string name="edit_datepicker_dialog_add_timezone">"أضف منطقة زمنية"</string>
+    <string name="edit_datepicker_dialog_edit_timezone">"حرر المنطقة الزمنية"</string>
+    <string name="dialog_delete_done_title">"حذف جميع المهام المنجزة؟"</string>
+    <string name="edit_validation_errors_dialog_due_date_before_dtstart">"......"</string>
     <!-- fragment_about -->
     <!-- menus -->
     <!-- Shortcuts -->
@@ -20,6 +28,7 @@
     <!-- alarms -->
     <string name="alarms_date_time">"日期/时间"</string>
     <string name="alarms_duration">"持续时长"</string>
+    <string name="alarms_after_due">"بعد الموعد"</string>
     <!-- fragment_collections -->
     <!-- Fuzzy -->
     <!-- Buy Pro fragment -->
