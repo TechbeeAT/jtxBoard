@@ -241,13 +241,9 @@ fun DetailsCardAttendees(
                         value = newAttendee,
                         leadingIcon = { Icon(Icons.Outlined.Group, headline) },
                         trailingIcon = {
-                            if (newAttendee.isNotEmpty()) {
+                            if (newAttendee.isNotEmpty() && UiUtil.isValidEmail(newAttendee)) {
                                 IconButton(onClick = {
-                                    val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee))
-                                        Attendee(caladdress = "mailto:$newAttendee")
-                                    else
-                                        Attendee(cn = newAttendee)
-                                    attendees.add(newAttendeeObject)
+                                    attendees.add(Attendee(caladdress = "mailto:$newAttendee"))
                                     onAttendeesUpdated()
                                     newAttendee = ""
                                 }) {
@@ -270,7 +266,7 @@ fun DetailsCardAttendees(
                                 bringIntoViewRequester.bringIntoView()
                             }
                         },
-                        isError = newAttendee.isNotEmpty(),
+                        isError = newAttendee.isNotEmpty() && !UiUtil.isValidEmail(newAttendee),
                         modifier = Modifier
                             .fillMaxWidth()
                             .border(0.dp, Color.Transparent)
@@ -282,11 +278,10 @@ fun DetailsCardAttendees(
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             //if(newAttendee.value.isNotEmpty() && attendees.value.none { existing -> existing.getDisplayString() == newAttendee.value } )
-                            val newAttendeeObject = if(UiUtil.isValidEmail(newAttendee))
-                                Attendee(caladdress = "mailto:$newAttendee")
-                            else
-                                Attendee(cn = newAttendee)
-                            attendees.add(newAttendeeObject)
+                            if(!UiUtil.isValidEmail(newAttendee))
+                                return@KeyboardActions
+
+                            attendees.add(Attendee(caladdress = "mailto:$newAttendee"))
                             onAttendeesUpdated()
                             newAttendee = ""
                             coroutineScope.launch { bringIntoViewRequester.bringIntoView() }

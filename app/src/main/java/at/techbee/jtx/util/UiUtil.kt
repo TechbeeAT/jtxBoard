@@ -105,8 +105,9 @@ object UiUtil {
             ContactsContract.CommonDataKinds.Email.DATA
         )
         val order = ContactsContract.Contacts.DISPLAY_NAME
-        val filter = ContactsContract.CommonDataKinds.Email.DATA + " LIKE '%$escapedSearchString%' " +
-                "OR " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%$escapedSearchString%'"
+        val filter = "(" + ContactsContract.CommonDataKinds.Email.DATA + " LIKE '%$escapedSearchString%' " +
+                "OR " + ContactsContract.Contacts.DISPLAY_NAME + " LIKE '%$escapedSearchString%'" + ") " +
+                "AND " + ContactsContract.CommonDataKinds.Email.DATA + " IS NOT NULL"
         cr.query(
             ContactsContract.CommonDataKinds.Contactables.CONTENT_URI,
             projection,
