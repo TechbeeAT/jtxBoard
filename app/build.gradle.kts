@@ -39,11 +39,11 @@ android {
     compileSdk = 36
     defaultConfig {
         applicationId = "at.techbee.jtx"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 36
-        versionCode = 215010001
-        versionName = "2.15.01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
-        buildConfigField("String", "versionCodename", "\"Love knows no borders \uD83C\uDF08\"")
+        versionCode = 216000001
+        versionName = "2.16.00-alpha01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        buildConfigField("String", "versionCodename", "\"Be kind. \uD83C\uDF08\"")
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -116,7 +116,7 @@ android {
         getByName("release") {
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android.txt"),
+                getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
             isShrinkResources = true

@@ -394,9 +394,13 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
             scrollOnceId.postValue(newId)
 
+            val triggerInPastButNotDone = (alarm?.triggerTime?:0L) <= System.currentTimeMillis()
+                        && icalObject.percent != 100
+                        && icalObject.status != Status.COMPLETED.status
+
             // trigger alarm immediately if setting is active
             if (icalObject.getModuleFromString() == Module.TODO
-                && SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE)
+                && (triggerInPastButNotDone || SettingsStateHolder(_application).settingAutoAlarm.value == DropdownSettingOption.AUTO_ALARM_ALWAYS_ON_SAVE))
                 NotificationPublisher.triggerImmediateAlarm(icalObject, _application)
 
             if (editAfterSaving)
