@@ -114,7 +114,7 @@ fun DetailsCardComments(
                     modifier = Modifier
                         .fillMaxWidth()
                         .border(0.dp, Color.Transparent),
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Unspecified, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
                         comments.add(Comment(text = newComment))
                         onCommentsUpdated()

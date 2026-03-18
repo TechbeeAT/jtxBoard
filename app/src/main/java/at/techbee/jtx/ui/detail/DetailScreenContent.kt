@@ -445,7 +445,7 @@ fun DetailScreenContent(
                                     label = { Text(stringResource(id = R.string.summary)) },
                                     keyboardOptions = KeyboardOptions(
                                         capitalization = KeyboardCapitalization.Sentences,
-                                        keyboardType = KeyboardType.Text,
+                                        keyboardType = KeyboardType.Unspecified,
                                         imeAction = ImeAction.Default
                                     ),
                                     modifier = Modifier
@@ -504,7 +504,7 @@ fun DetailScreenContent(
                                     label = { Text(stringResource(id = R.string.description)) },
                                     keyboardOptions = KeyboardOptions(
                                         capitalization = KeyboardCapitalization.Sentences,
-                                        keyboardType = KeyboardType.Text,
+                                        keyboardType = KeyboardType.Unspecified,
                                         imeAction = ImeAction.Default
                                     ),
                                     minLines = 3,

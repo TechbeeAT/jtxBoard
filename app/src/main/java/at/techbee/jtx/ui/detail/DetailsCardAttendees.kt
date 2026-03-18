@@ -275,7 +275,7 @@ fun DetailsCardAttendees(
                                     showPermissionRequestDialog = true
                             }
                             .bringIntoViewRequester(bringIntoViewRequester),
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Email, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             //if(newAttendee.value.isNotEmpty() && attendees.value.none { existing -> existing.getDisplayString() == newAttendee.value } )
                             if(!UiUtil.isValidEmail(newAttendee))

@@ -219,7 +219,7 @@ fun DetailsCardContact(
                                         searchContacts.addAll(UiUtil.getLocalContacts(context, newValue))
                                 }
                             },
-                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Unspecified, imeAction = ImeAction.Done),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .border(0.dp, Color.Transparent)
