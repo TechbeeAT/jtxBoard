@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -254,7 +254,7 @@ class MainActivity2 : AppCompatActivity() {
                         .semantics {
                             testTagsAsResourceId = true
                         }
-                        .imePadding(),
+                        .safeContentPadding(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     CompositionLocalProvider(
