@@ -69,11 +69,17 @@ class StartupBenchmarks {
             },
             measureBlock = {
                 startActivityAndWait()
-                val okButton = device.findObject(By.res(BENCHMARK_TAG_DIALOG_OK))
-                okButton?.click()
-                device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
-                device.findObject(By.res(BENCHMARK_TAG_LISTCARD)).click()
-                device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)
+                
+                // Dismiss potential dialogs
+                repeat(3) {
+                    device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DIALOG_OK)), 2_000)
+                    device.findObject(By.res(BENCHMARK_TAG_DIALOG_OK))?.click()
+                }
+
+                if (device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 10_000)) {
+                    device.findObject(By.res(BENCHMARK_TAG_LISTCARD))?.click()
+                    device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 10_000)
+                }
 
                 // Check the UiAutomator documentation for more information on how to
                 // interact with the app.

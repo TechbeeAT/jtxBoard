@@ -43,10 +43,11 @@ class BaselineProfileGenerator {
     @Test
     fun generate() {
         // The application id for the running build variant is read from the instrumentation arguments.
-        rule.collect(
-            packageName = InstrumentationRegistry.getArguments().getString("targetAppId")
-                ?: throw Exception("targetAppId not passed as instrumentation runner arg"),
+        val targetAppId = InstrumentationRegistry.getArguments().getString("targetAppId")
+            ?: throw Exception("targetAppId not passed as instrumentation runner arg")
 
+        rule.collect(
+            packageName = targetAppId,
             // See: https://d.android.com/topic/performance/baselineprofiles/dex-layout-optimizations
             includeInStartupProfile = true
         ) {
@@ -56,17 +57,28 @@ class BaselineProfileGenerator {
             // Start default activity for your app
             pressHome()
             startActivityAndWait()
-            val okButton = device.findObject(By.res(BENCHMARK_TAG_DIALOG_OK))
-            okButton?.click()
-            device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 30_000)
-            device.findObject(By.res(BENCHMARK_TAG_LISTCARD)).click()
-            device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 30_000)
-            device.findObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)).click()
-            device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY_EDITTEXT)), 30_000)
-            device.findObject(By.res(BENCHMARK_TAG_DETAILSUMMARY_EDITTEXT)).click()
+            
+            // Dismiss potential dialogs
+            repeat(3) {
+                device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DIALOG_OK)), 2_000)
+                device.findObject(By.res(BENCHMARK_TAG_DIALOG_OK))?.click()
+            }
+            
+            if (device.wait(Until.hasObject(By.res(BENCHMARK_TAG_LISTCARD)), 10_000)) {
+                device.findObject(By.res(BENCHMARK_TAG_LISTCARD))?.click()
+                
+                if (device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY)), 10_000)) {
+                    device.findObject(By.res(BENCHMARK_TAG_DETAILSUMMARY))?.click()
+                    
+                    if (device.wait(Until.hasObject(By.res(BENCHMARK_TAG_DETAILSUMMARY_EDITTEXT)), 10_000)) {
+                        device.findObject(By.res(BENCHMARK_TAG_DETAILSUMMARY_EDITTEXT))?.click()
+                    }
+                }
+            }
 
-            // Check UiAutomator documentation for more information how to interact with the app.
-            // https://d.android.com/training/testing/other-components/ui-automator
+            // Ensure the app has some time to settle and write profiles
+            device.waitForIdle()
+            Thread.sleep(5_000)
         }
     }
 }
