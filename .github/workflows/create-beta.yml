@@ -17,7 +17,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - uses: gradle/actions/setup-gradle@v5
+      - uses: gradle/actions/setup-gradle@v6
 
       - name: Prepare keystore
         run: echo ${{ secrets.android_keystore_base64 }} | base64 -d >$GITHUB_WORKSPACE/keystore.jks
