@@ -90,6 +90,7 @@ import at.techbee.jtx.database.relations.ICalEntity
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.detail.models.DetailsScreenSection
+import at.techbee.jtx.ui.reusable.components.InteractiveMarkdown
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.DateTimeUtils
@@ -408,9 +409,13 @@ fun DetailScreenContent(
 
                                 if (description.text.isNotBlank()) {
                                     if (detailSettings.detailSetting[DetailSettingsOption.ENABLE_MARKDOWN] != false)
-                                        Markdown(
+                                        InteractiveMarkdown(
                                             content = description.text.trim(),
-                                            imageTransformer = Coil3ImageTransformerImpl,
+                                            onContentChange = { updatedContent ->
+                                                description = TextFieldValue(updatedContent)
+                                                iCalObject.description = updatedContent.ifEmpty { null }
+                                                changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED
+                                            },
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .padding(8.dp)
@@ -1050,7 +1055,7 @@ fun DetailScreenContent_JOURNAL() {
             goBack = { },
             unlinkFromSeries = { _, _, _ -> },
             onUnlinkSubEntry = { _, _ ->  },
-            goToFilteredList = { }, 
+            goToFilteredList = { },
             onShowLinkExistingDialog = { _, _ -> },
             onUpdateSortOrder = { },
             alarmSetting = DropdownSettingOption.AUTO_ALARM_ON_START
