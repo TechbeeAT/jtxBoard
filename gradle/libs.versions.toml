@@ -53,7 +53,7 @@ android-review = "2.0.2"
 espressoCore = "3.7.0"
 uiautomator = "2.3.0"
 benchmarkMacroJunit4 = "1.4.1"
-baselineprofile = "1.5.0-alpha04"
+baselineprofile = "1.5.0-alpha05"
 
 [libraries]
 amazon-appstore-sdk = { module = "com.amazon.device:amazon-appstore-sdk", version.ref = "amazonAppstoreSdk" }
