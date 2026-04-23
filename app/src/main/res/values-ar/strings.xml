@@ -267,7 +267,7 @@
     <string name="recur_ends_on">"ينتهي في"</string>
     <string name="recur_ends_after">"ينتهي بعد"</string>
     <string name="recur_x_occurrences">"%1$d تكرار"</string>
-    <string name="recur_xth_day_of_the_month">""</string>
+    <string name="recur_xth_day_of_the_month">"%1$s يوم من الشهر"</string>
     <string name="recur_xth_last_day_of_the_month">"%1$s آخر يوم من الشهر"</string>
     <string name="recur_last_day_of_the_month">"اليوم الأخير من الشهر"</string>
     <string name="attachment_export_saved_successfully">"نحج الحفظ"</string>
