@@ -9,7 +9,6 @@
 package at.techbee.jtx.util
 
 import android.icu.text.MessageFormat
-import android.os.Build
 import android.util.Log
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import java.time.DateTimeException
@@ -175,24 +174,14 @@ object DateTimeUtils {
     /**
      * Returns the localized ordinal string for a given number.
      *
-     * For API levels >= N, it uses [MessageFormat] to get the localized ordinal string.
-     * For lower API levels, it falls back to a predefined set of English ordinal strings (1st, 2nd, 3rd, Nth).
+     * Uses [MessageFormat] to get the localized ordinal string.
      *
      * @param number The number for which to get the ordinal string.
      * @return The localized ordinal string for the given number.
      */
     fun getLocalizedOrdinalFor(number: Int): String {
-         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                val formatter = MessageFormat("{0,ordinal}", Locale.getDefault())
-                formatter.format(arrayOf(number))
-            } else {
-                 when (number) {
-                     1 -> "1st"
-                     2 -> "2nd"
-                     3 -> "3rd"
-                     else -> "${number}th"
-                 }
-            }
+         val formatter = MessageFormat("{0,ordinal}", Locale.getDefault())
+         return formatter.format(arrayOf(number))
     }
 
 
