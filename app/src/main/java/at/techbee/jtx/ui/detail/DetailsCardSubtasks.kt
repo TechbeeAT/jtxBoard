@@ -134,7 +134,7 @@ fun DetailsCardSubtasks(
                         .fillMaxWidth()
                         .border(0.dp, Color.Transparent)
                         .padding(bottom = 8.dp),
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Unspecified, imeAction = ImeAction.Done),
                     keyboardActions = KeyboardActions(onDone = {
                         if (newSubtaskText.isNotEmpty()) {
                             onSubtaskAdded(newSubtaskText)

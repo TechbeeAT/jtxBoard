@@ -205,7 +205,7 @@ fun DetailsCardResources(
                         },
                         isError = newResource.isNotEmpty(),
                         modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Unspecified, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             addResource()
                         })

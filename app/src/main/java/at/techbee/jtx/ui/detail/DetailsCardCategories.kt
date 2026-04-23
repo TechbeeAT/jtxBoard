@@ -208,7 +208,7 @@ fun DetailsCardCategories(
                         isError = newCategory.isNotEmpty(),
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences,
-                            keyboardType = KeyboardType.Text,
+                            keyboardType = KeyboardType.Unspecified,
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(onDone = {

@@ -357,7 +357,7 @@ fun DetailsCardLocation(
                                     location = newLocation
                                     onLocationUpdated(newLocation, geoLat, geoLong)
                                 },
-                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Text, imeAction = ImeAction.Done),
+                                keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, keyboardType = KeyboardType.Unspecified, imeAction = ImeAction.Done),
                                 modifier = Modifier.weight(1f)
                             )
                             IconButton(onClick = { showLocationPickerDialog = true }) {

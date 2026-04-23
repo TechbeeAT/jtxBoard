@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.Window
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -190,6 +191,7 @@ class MainActivity2 : AppCompatActivity() {
         // hides the ugly action bar that was before hidden through the Theme XML
         window.requestFeature(Window.FEATURE_ACTION_BAR)
         supportActionBar?.hide()
+        enableEdgeToEdge()
 
         globalStateHolder = GlobalStateHolder(this)
         settingsStateHolder = SettingsStateHolder(this)

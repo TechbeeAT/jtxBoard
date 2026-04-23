@@ -156,7 +156,7 @@ fun DetailsCardSubnotes(
                             .padding(bottom = 8.dp),
                         keyboardOptions = KeyboardOptions(
                             capitalization = KeyboardCapitalization.Sentences,
-                            keyboardType = KeyboardType.Text,
+                            keyboardType = KeyboardType.Unspecified,
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(onDone = {
