@@ -254,13 +254,13 @@
     <string name="recur_every_x_year">"كل سنة %1$s"</string>
     <string name="recur_every_month">"كل شهر"</string>
     <string name="recur_every_other_month">"مرة كل شهرين"</string>
-    <string name="recur_every_x_month">"كل %1$d شهر"</string>
+    <string name="recur_every_x_month">"كل %1$s شهر"</string>
     <string name="recur_every_week">"كل اسبوع   "</string>
     <string name="recur_every_other_week">"كل أسبوعين"</string>
-    <string name="recur_every_x_week">"كل %1$d أسبوع"</string>
+    <string name="recur_every_x_week">"كل %1$s أسبوع"</string>
     <string name="recur_every_day">"كل يوم"</string>
     <string name="recur_every_other_day">"كل يومين"</string>
-    <string name="recur_every_x_day">"كل %1$d يوم"</string>
+    <string name="recur_every_x_day">"كل %1$s يوم"</string>
     <string name="recur_last_weekday">"الأخير"</string>
     <string name="recur_no_recurrence">"لا يوجد تكرار"</string>
     <string name="recur_ends_never">"لا يتنهي"</string>
