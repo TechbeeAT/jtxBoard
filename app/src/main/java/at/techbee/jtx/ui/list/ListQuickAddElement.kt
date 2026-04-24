@@ -62,6 +62,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontStyle
@@ -83,7 +84,6 @@ import at.techbee.jtx.ui.reusable.cards.AttachmentCard
 import at.techbee.jtx.ui.reusable.dialogs.RequestPermissionDialog
 import at.techbee.jtx.ui.reusable.elements.AudioRecordElement
 import at.techbee.jtx.ui.reusable.elements.CollectionsSpinner
-import java.util.Locale
 
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -154,7 +154,7 @@ fun ListQuickAddElement(
     var srListening by remember { mutableStateOf(false) }
     val srIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
         putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        putExtra(RecognizerIntent.EXTRA_LANGUAGE, LocalLocale.current.platformLocale)
         putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
     }
 
