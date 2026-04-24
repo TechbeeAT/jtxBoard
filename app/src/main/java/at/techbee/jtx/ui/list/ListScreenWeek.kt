@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -67,7 +68,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
-import java.util.Locale
 
 
 @Composable
@@ -170,7 +170,7 @@ fun MonthAndWeekCalendarTitle(
              */
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = currentMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault()) + " '" + currentMonth.year.toString().substring(2),  //currentMonth.displayText(),
+                text = currentMonth.month.getDisplayName(TextStyle.FULL, LocalLocale.current.platformLocale) + " '" + currentMonth.year.toString().substring(2),  //currentMonth.displayText(),
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
@@ -218,7 +218,7 @@ fun Day(
         ) {
 
             Text(
-                text = day.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
+                text = day.dayOfWeek.getDisplayName(TextStyle.SHORT, LocalLocale.current.platformLocale),
                 textAlign = TextAlign.Center,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Medium,
