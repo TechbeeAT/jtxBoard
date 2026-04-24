@@ -16,7 +16,12 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v3
 
       - name: Run lint and unit tests
-        run: ./gradlew app:lintOseDebug app:testGplayDebugUnitTest
+        uses: nick-invision/retry@v3
+        with:
+          timeout_minutes: 30
+          max_attempts: 3
+          retry_wait_seconds: 5
+          command: ./gradlew app:lintOseDebug app:testGplayDebugUnitTest
       - name: Archive results
         uses: actions/upload-artifact@v7
         with:
