@@ -42,6 +42,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -543,7 +544,7 @@ fun DetailsCardRecur(
                                                     text = {
 
                                                         CheckboxWithText(
-                                                            text = month.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, Locale.getDefault()),
+                                                            text = month.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, LocalLocale.current.platformLocale),
                                                             isSelected = monthList.contains(Month(month.value)),
                                                             onCheckedChange = {
                                                                 val ical4jmonth = Month(month.value)
@@ -673,13 +674,13 @@ fun DetailsCardRecur(
                                                                 (context.getString(R.string.recur_last_weekday) + " " + WeekDay(weekDayWithOffset.day.name).asDayOfWeek()
                                                                     ?.getDisplayName(
                                                                         java.time.format.TextStyle.FULL_STANDALONE,
-                                                                        Locale.getDefault()
+                                                                        LocalLocale.current.platformLocale
                                                                     ))
                                                             else
                                                                 (DateTimeUtils.getLocalizedOrdinalFor(weekDayWithOffset.offset) + " " + WeekDay(weekDayWithOffset.day.name).asDayOfWeek()
                                                                     ?.getDisplayName(
                                                                         java.time.format.TextStyle.FULL_STANDALONE,
-                                                                        Locale.getDefault()
+                                                                        LocalLocale.current.platformLocale
                                                                     )),
                                                             isSelected = weekDayList.contains(weekDayWithOffset),
                                                             onCheckedChange = {
