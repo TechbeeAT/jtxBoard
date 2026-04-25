@@ -2,7 +2,6 @@ name: Build Test APK
 on:
   pull_request:
   push:
-    branches: [ '**' ]
     branches-ignore:
       - 'dependabot/**'
       - 'l10n_develop'
