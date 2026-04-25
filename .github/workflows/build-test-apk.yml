@@ -3,11 +3,15 @@ on:
   pull_request:
   push:
     branches: [ '**' ]
+    branches-ignore:
+      - 'dependabot/**'
+      - 'l10n_develop'
 
 jobs:
   build:
     name: Build OSE Debug APK
     runs-on: ubuntu-latest
+    if: github.actor != 'patrickunterwegs'
     steps:
       - uses: actions/checkout@v4
         with:
