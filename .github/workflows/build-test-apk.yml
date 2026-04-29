@@ -26,7 +26,7 @@ jobs:
         run: ./gradlew assembleOseDebug
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: jtxboard-ose-debug-apk
           path: app/build/outputs/apk/ose/debug/*.apk
