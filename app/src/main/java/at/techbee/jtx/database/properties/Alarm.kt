@@ -305,7 +305,7 @@ data class Alarm(
                     setFullScreenIntent(fullScreenPendingIntent, true)
                 }
                 priority = NotificationCompat.PRIORITY_MAX
-                setCategory(NotificationCompat.CATEGORY_ALARM)     //  CATEGORY_REMINDER might also be an alternative
+                setCategory(NotificationCompat.CATEGORY_REMINDER)
                 if (isSticky) {
                     setAutoCancel(false)
                     setOngoing(true)
