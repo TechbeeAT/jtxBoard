@@ -14,7 +14,7 @@ jobs:
           java-version: 21
           cache: gradle
       - name: Setup Gradle
-        uses: gradle/actions/wrapper-validation@v4
+        uses: gradle/actions/wrapper-validation@v6
 
       - name: Run lint and unit tests
         run: ./gradlew app:lintOseDebug app:testGplayDebugUnitTest
