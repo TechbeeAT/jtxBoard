@@ -94,8 +94,6 @@ import at.techbee.jtx.ui.reusable.components.InteractiveMarkdown
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.util.DateTimeUtils
-import com.mikepenz.markdown.coil3.Coil3ImageTransformerImpl
-import com.mikepenz.markdown.m3.Markdown
 import kotlinx.coroutines.delay
 import org.apache.commons.lang3.StringUtils
 import kotlin.time.Duration
