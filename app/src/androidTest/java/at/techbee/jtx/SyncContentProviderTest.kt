@@ -820,33 +820,33 @@ class SyncContentProviderTest {
 
         // insert 2 icalobjects
         val parentCV = ContentValues().apply {
-            put(at.techbee.jtx.JtxContract.JtxICalObject.SUMMARY, "summary")
-            put(at.techbee.jtx.JtxContract.JtxICalObject.COMPONENT, at.techbee.jtx.JtxContract.JtxICalObject.Component.VJOURNAL.name)
-            put(at.techbee.jtx.JtxContract.JtxICalObject.UID, "AAA")
-            put(at.techbee.jtx.JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+            put(JtxContract.JtxICalObject.SUMMARY, "summary")
+            put(JtxContract.JtxICalObject.COMPONENT, JtxContract.JtxICalObject.Component.VJOURNAL.name)
+            put(JtxContract.JtxICalObject.UID, "AAA")
+            put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
         }
-        mContentResolver?.insert(at.techbee.jtx.JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), parentCV)
+        mContentResolver?.insert(JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), parentCV)
         val childCV = ContentValues().apply {
-            put(at.techbee.jtx.JtxContract.JtxICalObject.SUMMARY, "summary")
-            put(at.techbee.jtx.JtxContract.JtxICalObject.COMPONENT, at.techbee.jtx.JtxContract.JtxICalObject.Component.VJOURNAL.name)
-            put(at.techbee.jtx.JtxContract.JtxICalObject.UID, "BBB")
-            put(at.techbee.jtx.JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
+            put(JtxContract.JtxICalObject.SUMMARY, "summary")
+            put(JtxContract.JtxICalObject.COMPONENT, JtxContract.JtxICalObject.Component.VJOURNAL.name)
+            put(JtxContract.JtxICalObject.UID, "BBB")
+            put(JtxContract.JtxICalObject.ICALOBJECT_COLLECTIONID, defaultCollectionId)
         }
-        val childUri = mContentResolver?.insert(at.techbee.jtx.JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), childCV)
+        val childUri = mContentResolver?.insert(JtxContract.JtxICalObject.CONTENT_URI.asSyncAdapter(defaultTestAccount), childCV)
 
         // link one of them to the other with PARENT reltype
         val parentRelCV = ContentValues().apply {
-            put(at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID, childUri?.lastPathSegment)
-            put(at.techbee.jtx.JtxContract.JtxRelatedto.TEXT, "AAA")
-            put(at.techbee.jtx.JtxContract.JtxRelatedto.RELTYPE, at.techbee.jtx.JtxContract.JtxRelatedto.Reltype.PARENT.name)
+            put(JtxContract.JtxRelatedto.ICALOBJECT_ID, childUri?.lastPathSegment)
+            put(JtxContract.JtxRelatedto.TEXT, "AAA")
+            put(JtxContract.JtxRelatedto.RELTYPE, JtxContract.JtxRelatedto.Reltype.PARENT.name)
         }
         mContentResolver?.insert(JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount), parentRelCV)
 
         // check child to parent
         mContentResolver?.query(
-            at.techbee.jtx.JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount),
-            arrayOf(at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID, at.techbee.jtx.JtxContract.JtxRelatedto.TEXT, at.techbee.jtx.JtxContract.JtxRelatedto.RELTYPE),
-            "${at.techbee.jtx.JtxContract.JtxRelatedto.ICALOBJECT_ID} = ?",
+            JtxContract.JtxRelatedto.CONTENT_URI.asSyncAdapter(defaultTestAccount),
+            arrayOf(JtxContract.JtxRelatedto.ICALOBJECT_ID, JtxContract.JtxRelatedto.TEXT, JtxContract.JtxRelatedto.RELTYPE),
+            "${JtxContract.JtxRelatedto.ICALOBJECT_ID} = ?",
             arrayOf(childUri?.lastPathSegment),
             null
         ).use {
@@ -861,7 +861,7 @@ class SyncContentProviderTest {
                 it?.getString(1)
             )   // TEXT (UID)
             assertEquals(
-                at.techbee.jtx.JtxContract.JtxRelatedto.Reltype.PARENT.name,
+                JtxContract.JtxRelatedto.Reltype.PARENT.name,
                 it?.getString(2)
             )
         }

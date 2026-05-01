@@ -24,47 +24,45 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import at.bitfire.ical4android.util.TimeApiExtensions.toLocalDate
-import at.techbee.jtx.JtxContract
 import at.techbee.jtx.R
+import at.techbee.jtx.contract.JtxContract
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.UiUtil.asDayOfWeek
 import kotlinx.parcelize.Parcelize
-import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.DateList
-import net.fortuna.ical4j.model.DateTime
 import net.fortuna.ical4j.model.Period
-import net.fortuna.ical4j.model.PeriodList
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.Recur
-import net.fortuna.ical4j.model.Recur.Frequency
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import net.fortuna.ical4j.model.TemporalAdapter
 import net.fortuna.ical4j.model.component.VJournal
 import net.fortuna.ical4j.model.component.VToDo
-import net.fortuna.ical4j.model.parameter.Value
 import net.fortuna.ical4j.model.property.DtStart
 import net.fortuna.ical4j.model.property.ExDate
 import net.fortuna.ical4j.model.property.RDate
 import net.fortuna.ical4j.model.property.RRule
 import net.fortuna.ical4j.model.property.RecurrenceId
+import net.fortuna.ical4j.transform.recurrence.Frequency
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.text.ParseException
+import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
+import java.time.temporal.Temporal
 import java.util.Locale
 import java.util.TimeZone
 import java.util.UUID
 import kotlin.math.absoluteValue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
-import kotlin.time.Duration.Companion.hours
 
 
 /** The name of the the table for IcalObjects.
@@ -636,15 +634,11 @@ data class ICalObject(
                 return null
 
             return when {
-                dtstartTimezone == TZ_ALLDAY -> DtStart(Date(dtstart)).value
-                dtstartTimezone.isNullOrEmpty() -> DtStart(DateTime(dtstart)).value
-                else -> {
-                    val timezone = TimeZoneRegistryFactory.getInstance().createRegistry()
-                        .getTimeZone(dtstartTimezone)
-                    val withTimezone = DtStart(DateTime(dtstart))
-                    withTimezone.timeZone = timezone
-                    withTimezone.value + withTimezone.parameters
-                }
+                dtstartTimezone == TZ_ALLDAY -> DtStart<LocalDate>(Instant.ofEpochMilli(dtstart).atZone(ZoneId.of("UTC")).toLocalDate()).value
+                dtstartTimezone.isNullOrEmpty() -> DtStart<LocalDateTime>(Instant.ofEpochMilli(dtstart).atZone(ZoneId.systemDefault()).toLocalDateTime()).value
+                else -> DtStart<ZonedDateTime>(Instant.ofEpochMilli(dtstart).atZone(ZoneId.of(dtstartTimezone))).let {
+                        it.value + it.getParameters().toString()
+                    }
             }
         }
 
@@ -830,10 +824,9 @@ data class ICalObject(
         }
 
         fun getAsRecurId(datetime: Long, recuridTimezone: String?) = when {
-            recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> Date(datetime).toString()
-            recuridTimezone == TimeZone.getTimeZone("UTC").id -> DateTime(datetime).apply { this.isUtc = true }.toString()
-            recuridTimezone.isNullOrEmpty() -> DateTime(datetime).apply { this.isUtc = false }.toString()
-            else -> DateTime(datetime).apply { this.timeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(recuridTimezone) }.toString()
+            recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> TemporalAdapter(Instant.ofEpochMilli(datetime).atZone(ZoneId.of("UTC")).toLocalDate()).toString()
+            recuridTimezone.isNullOrEmpty() -> TemporalAdapter(Instant.ofEpochMilli(datetime).atZone(ZoneId.systemDefault()).toLocalDateTime()).toString()
+            else -> TemporalAdapter(Instant.ofEpochMilli(datetime).atZone(ZoneId.of(recuridTimezone))).toString()
         }
     }
 
@@ -962,12 +955,12 @@ data class ICalObject(
     /**
      * @return a Recur Object based on the given rrule or null
      */
-    fun getRecur(): Recur? {
+    fun getRecur(): Recur<Temporal>? {
         if(this.rrule.isNullOrEmpty())
             return null
 
         return try {
-            Recur(this.rrule)
+            Recur<Temporal>(this.rrule)
         } catch (e: ParseException) {
             Log.w("getRrule", "Illegal representation of UNTIL\n$e")
             null
@@ -977,167 +970,108 @@ data class ICalObject(
         }
     }
 
+    private fun buildProperties(): List<Property> {
+        val props = mutableListOf<Property>()
+
+        dtstart?.let { props.add(DtStart(DateTimeUtils.toZonedDateTime(it, dtstartTimezone))) }
+        rrule?.let { props.add(RRule<ZonedDateTime>(it)) }
+        recurid?.let {
+            val zdt = TemporalAdapter.parse<ZonedDateTime>(recurid).temporal
+            props.add(RecurrenceId(zdt))
+        }
+        rdate?.let { str ->
+            val dates = JtxContract.getLongListFromString(str)
+                .map { DateTimeUtils.toZonedDateTime(it, dtstartTimezone) }
+            props.add(RDate(DateList(dates)))
+        }
+        exdate?.let { str ->
+            val dates = JtxContract.getLongListFromString(str)
+                .map { DateTimeUtils.toZonedDateTime(it, dtstartTimezone) }
+            props.add(ExDate(DateList(dates)))
+        }
+
+        return props
+    }
+
+    private fun buildPeriod(
+        start: ZonedDateTime,
+        frequency: Frequency
+    ): Period<ZonedDateTime> {
+
+        val from = when (frequency) {
+            Frequency.SECONDLY -> start.minusHours(1)
+            Frequency.MINUTELY -> start.minusDays(1)
+            Frequency.HOURLY   -> start.minusDays(30)
+            Frequency.DAILY,
+            Frequency.WEEKLY   -> start.minusYears(1)
+            Frequency.MONTHLY  -> start.minusYears(10)
+            Frequency.YEARLY   -> start.minusYears(100)
+        }
+
+        val to = when (frequency) {
+            Frequency.SECONDLY -> start.plusHours(1)
+            Frequency.MINUTELY -> start.plusDays(1)
+            Frequency.HOURLY   -> start.plusDays(30)
+            Frequency.DAILY,
+            Frequency.WEEKLY   -> start.plusYears(1)
+            Frequency.MONTHLY  -> start.plusYears(10)
+            Frequency.YEARLY   -> start.plusYears(100)
+        }
+
+        return Period(from, to)
+    }
+
+    private fun normalizeRruleForAllDay() {
+        if (rrule == null)
+            return
+
+        val untilRegex = Regex("UNTIL=(\\d{8})$")
+        val match = untilRegex.find(rrule!!) ?: return
+
+        val date = match.groupValues[1]
+
+        // Convert DATE → end-of-day DATE-TIME in UTC
+        val zdt = LocalDate.parse(date, java.time.format.DateTimeFormatter.BASIC_ISO_DATE)
+            .atTime(23, 59, 59)
+            .atZone(ZoneId.systemDefault())
+
+        val untilUtc = zdt.withZoneSameInstant(ZoneId.of("UTC"))
+
+        val formatted = untilUtc.format(java.time.format.DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'"))
+
+        this.rrule = rrule!!.replace(untilRegex, "UNTIL=$formatted")
+    }
+
     fun getInstancesFromRrule(): List<Long> {
         if (rrule.isNullOrEmpty() || dtstart == null)
             return emptyList()
 
-        try {
-            val calComponent = when (component) {
-                JtxContract.JtxICalObject.Component.VTODO.name -> VToDo(true /* generates DTSTAMP */)
-                JtxContract.JtxICalObject.Component.VJOURNAL.name -> VJournal(true /* generates DTSTAMP */)
+        normalizeRruleForAllDay()
+
+        return try {
+            val component = when (component) {
+                JtxContract.JtxICalObject.Component.VTODO.name -> VToDo(true)
+                JtxContract.JtxICalObject.Component.VJOURNAL.name -> VJournal(true)
                 else -> return emptyList()
             }
-            val props = calComponent.properties
 
-            dtstart?.let {
-                when {
-                    dtstartTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> props += DtStart(Date(it))
-                    dtstartTimezone == TimeZone.getTimeZone("UTC").id -> props += DtStart(DateTime(it).apply {
-                        this.isUtc = true
-                    })
-                    dtstartTimezone.isNullOrEmpty() -> props += DtStart(DateTime(it).apply {
-                        this.isUtc = false
-                    })
-                    else -> {
-                        val timezone = TimeZoneRegistryFactory.getInstance().createRegistry()
-                            .getTimeZone(dtstartTimezone)
-                        val withTimezone = DtStart(DateTime(it))
-                        withTimezone.timeZone = timezone
-                        props += withTimezone
-                    }
-                }
-            }
+            component.propertyList = component.propertyList.addAll(buildProperties())
 
-            rrule?.let { rrule ->
-                props += RRule(rrule)
-            }
-            recurid?.let { recurid ->
-                props += when {
-                    recuridTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> RecurrenceId(Date(recurid))
-                    recuridTimezone == TimeZone.getTimeZone("UTC").id -> RecurrenceId(DateTime(recurid).apply { this.isUtc = true })
-                    recuridTimezone.isNullOrEmpty() -> RecurrenceId(DateTime(recurid).apply { this.isUtc = false })
-                    else -> RecurrenceId(DateTime(recurid, TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(recuridTimezone)))
-                }
-            }
+            val dtStartProp = component.getProperty<DtStart<ZonedDateTime>>(Property.DTSTART).orElseThrow()
+            val rRuleProp = component.getProperty<RRule<ZonedDateTime>>(Property.RRULE).orElseThrow()
 
-            rdate?.let { rdateString ->
+            val start = dtStartProp.date
+            val frequency = rRuleProp.recur.frequency
 
-                when {
-                    dtstartTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> {
-                        val dateListDate = DateList(Value.DATE)
-                        JtxContract.getLongListFromString(rdateString).forEach {
-                            dateListDate.add(Date(it))
-                        }
-                        props += RDate(dateListDate)
+            val period = buildPeriod(start, frequency)
 
-                    }
-                    dtstartTimezone == TimeZone.getTimeZone("UTC").id -> {
-                        val dateListDateTime = DateList(Value.DATE_TIME)
-                        JtxContract.getLongListFromString(rdateString).forEach {
-                            dateListDateTime.add(DateTime(it).apply {
-                                this.isUtc = true
-                            })
-                        }
-                        props += RDate(dateListDateTime)
-                    }
-                    dtstartTimezone.isNullOrEmpty() -> {
-                        val dateListDateTime = DateList(Value.DATE_TIME)
-                        JtxContract.getLongListFromString(rdateString).forEach {
-                            dateListDateTime.add(DateTime(it).apply {
-                                this.isUtc = false
-                            })
-                        }
-                        props += RDate(dateListDateTime)
-                    }
-                    else -> {
-                        val dateListDateTime = DateList(Value.DATE_TIME)
-                        val timezone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(dtstartTimezone)
-                        JtxContract.getLongListFromString(rdateString).forEach {
-                            val withTimezone = DateTime(it)
-                            withTimezone.timeZone = timezone
-                            dateListDateTime.add(DateTime(withTimezone))
-                        }
-                        props += RDate(dateListDateTime)
-                    }
-                }
-            }
+            val result: Set<Period<ZonedDateTime>> = component.calculateRecurrenceSet(period)
 
-            exdate?.let { exdateString ->
+            result.map { it.start.toInstant().toEpochMilli() }
 
-                when {
-                    dtstartTimezone == JtxContract.JtxICalObject.TZ_ALLDAY -> {
-                        val dateListDate = DateList(Value.DATE)
-                        JtxContract.getLongListFromString(exdateString).forEach {
-                            dateListDate.add(Date(it))
-                        }
-                        props += ExDate(dateListDate)
-
-                    }
-                    dtstartTimezone == TimeZone.getTimeZone("UTC").id -> {
-                        val dateListDateTime = DateList(Value.DATE_TIME)
-                        JtxContract.getLongListFromString(exdateString).forEach {
-                            dateListDateTime.add(DateTime(it).apply {
-                                this.isUtc = true
-                            })
-                        }
-                        props += ExDate(dateListDateTime)
-                    }
-                    dtstartTimezone.isNullOrEmpty() -> {
-                        val dateListDateTime = DateList(Value.DATE_TIME)
-                        JtxContract.getLongListFromString(exdateString).forEach {
-                            dateListDateTime.add(DateTime(it).apply {
-                                this.isUtc = false
-                            })
-                        }
-                        props += ExDate(dateListDateTime)
-                    }
-                    else -> {
-                        val dateListDateTime = DateList(Value.DATE_TIME)
-                        val timezone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(dtstartTimezone)
-                        JtxContract.getLongListFromString(exdateString).forEach {
-                            val withTimezone = DateTime(it)
-                            withTimezone.timeZone = timezone
-                            dateListDateTime.add(DateTime(withTimezone))
-                        }
-                        props += ExDate(dateListDateTime)
-                    }
-                }
-            }
-
-            val from = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
-                when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
-                    Frequency.SECONDLY -> it - (1).hours.inWholeMilliseconds
-                    Frequency.MINUTELY -> it - (1).days.inWholeMilliseconds
-                    Frequency.HOURLY -> it - (30).days.inWholeMilliseconds
-                    Frequency.DAILY -> it - (365).days.inWholeMilliseconds
-                    Frequency.WEEKLY -> it - (365).days.inWholeMilliseconds
-                    Frequency.MONTHLY -> it - (3650).days.inWholeMilliseconds
-                    Frequency.YEARLY -> it - (36500).days.inWholeMilliseconds
-                    else -> it - (365).days.inWholeMilliseconds
-                }
-            })
-            val to = DateTime(props.getProperty<DtStart>(Property.DTSTART).date.time.let {
-                when (props.getProperty<RRule>(Property.RRULE).recur.frequency) {
-                    Frequency.SECONDLY -> it + (1).hours.inWholeMilliseconds
-                    Frequency.MINUTELY -> it + (1).days.inWholeMilliseconds
-                    Frequency.HOURLY -> it + (30).days.inWholeMilliseconds
-                    Frequency.DAILY -> it + (365).days.inWholeMilliseconds
-                    Frequency.WEEKLY -> it + (365).days.inWholeMilliseconds
-                    Frequency.MONTHLY -> it + (3650).days.inWholeMilliseconds
-                    Frequency.YEARLY -> it + (36500).days.inWholeMilliseconds
-                    else -> it + (365).days.inWholeMilliseconds
-                }
-            })
-            val period = Period(from, to)
-
-            val list: PeriodList = calComponent.calculateRecurrenceSet(period)
-            list.forEach {
-                Log.d("PeriodStart", it.rangeStart.toString())
-            }
-            return list.map { it.rangeStart.time }
-        } catch (e: IllegalArgumentException) {
-            Log.d("IllegalArgument", e.stackTraceToString())
-            return emptyList()
+        } catch (e: Exception) {
+            Log.d("RecurrenceError", e.stackTraceToString())
+            emptyList()
         }
     }
 
@@ -1215,9 +1149,9 @@ data class ICalObject(
         if (this.recurid != null)
             recurInfo += context.getString(R.string.view_share_part_of_series) + System.lineSeparator()
 
-        val recur: Recur
+        val recur: Recur<Temporal>
         try {
-            recur = Recur(this.rrule)
+            recur = Recur<Temporal>(this.rrule)
         } catch (_: Exception) {
             return if(recurInfo.isEmpty())
                 null

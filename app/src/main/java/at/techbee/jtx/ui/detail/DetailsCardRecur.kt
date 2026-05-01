@@ -52,6 +52,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import at.bitfire.synctools.util.AndroidTimeUtils.toTimestamp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
@@ -62,17 +63,19 @@ import at.techbee.jtx.ui.reusable.elements.HeadlineWithIcon
 import at.techbee.jtx.util.DateTimeUtils
 import at.techbee.jtx.util.DateTimeUtils.requireTzId
 import at.techbee.jtx.util.UiUtil.asDayOfWeek
-import net.fortuna.ical4j.model.Date
 import net.fortuna.ical4j.model.Month
 import net.fortuna.ical4j.model.MonthList
 import net.fortuna.ical4j.model.NumberList
 import net.fortuna.ical4j.model.Recur
-import net.fortuna.ical4j.model.Recur.Frequency
 import net.fortuna.ical4j.model.WeekDay
 import net.fortuna.ical4j.model.WeekDayList
+import net.fortuna.ical4j.transform.recurrence.Frequency
 import java.time.DayOfWeek
 import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZonedDateTime
+import java.time.temporal.Temporal
 import java.util.Locale
 import kotlin.math.absoluteValue
 
@@ -86,7 +89,7 @@ fun DetailsCardRecur(
     seriesElement: ICalObject?,
     isEditMode: Boolean,
     hasChildren: Boolean,
-    onRecurUpdated: (Recur?) -> Unit,
+    onRecurUpdated: (Recur<Temporal>?) -> Unit,
     goToDetail: (itemId: Long, editMode: Boolean, list: List<Long>) -> Unit,
     unlinkFromSeries: (instances: List<ICalObject>, series: ICalObject?, deleteAfterUnlink: Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -131,11 +134,11 @@ fun DetailsCardRecur(
         listOf(WeekDay.SU, WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA)
 
 
-    fun buildRRule(): Recur? {
+    fun buildRRule(): Recur<Temporal>? {
         if(frequency == null)
             return null
         else {
-            val updatedRRule = Recur.Builder().apply {
+            val updatedRRule = Recur.Builder<Temporal>().apply {
                 if(interval != null && interval!! > 1)
                     interval(interval!!)
                 until?.let { until(it) }
@@ -171,12 +174,12 @@ fun DetailsCardRecur(
 
     if (showDatepicker) {
         DatePickerDialog(
-            datetime = until?.time ?: icalObject.dtstart ?: System.currentTimeMillis(),
+            datetime = until?.toTimestamp() ?: icalObject.dtstart ?: System.currentTimeMillis(),
             timezone = TZ_ALLDAY,
             dateOnly = true,
             allowNull = false,
             onConfirm = { datetime, _ ->
-                datetime?.let { until = Date(it) }
+                datetime?.let { until = LocalDate.ofInstant(Instant.ofEpochMilli(it), ZoneId.of("UTC")) }
                 onRecurUpdated(buildRRule())
             },
             onDismiss = { showDatepicker = false }
@@ -804,7 +807,7 @@ fun DetailsCardRecur(
                                 DropdownMenuItem(
                                     onClick = {
                                         count = null
-                                        until = Date(icalObject.dtstart ?: System.currentTimeMillis())
+                                        until = LocalDate.ofInstant(Instant.ofEpochMilli(icalObject.dtstart?: System.currentTimeMillis()),  ZoneId.of("UTC"))
                                         endsExpanded = false
                                         onRecurUpdated(buildRRule())
                                     },
@@ -857,7 +860,7 @@ fun DetailsCardRecur(
                             label = {
                                 Text(
                                     DateTimeUtils.convertLongToFullDateString(
-                                        until?.time,
+                                        until?.toTimestamp(),
                                         TZ_ALLDAY
                                     )
                                 )
@@ -1067,7 +1070,7 @@ fun DetailsCardRecur_Preview() {
     MaterialTheme {
 
         val recur = Recur
-            .Builder()
+            .Builder<Temporal>()
             .count(5)
             .frequency(Frequency.WEEKLY)
             .interval(2)
@@ -1108,7 +1111,7 @@ fun DetailsCardRecur_Preview_edit() {
     MaterialTheme {
 
         val recur = Recur
-            .Builder()
+            .Builder<Temporal>()
             .count(5)
             .frequency(Frequency.WEEKLY)
             .interval(2)

@@ -10,7 +10,7 @@ package at.techbee.jtx.database
 
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.ui.settings.DropdownSettingOption
-import net.fortuna.ical4j.model.Recur
+import net.fortuna.ical4j.transform.recurrence.Frequency
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -307,7 +307,7 @@ class ICalObjectTest {
             this.rrule = "FREQ=YEARLY;COUNT=3;INTERVAL=2"
         }
         val recur = item.getRecur()
-        assertEquals(Recur.Frequency.YEARLY, recur?.frequency)
+        assertEquals(Frequency.YEARLY, recur?.frequency)
         assertEquals(3, recur?.count)
         assertEquals(2, recur?.interval)
     }

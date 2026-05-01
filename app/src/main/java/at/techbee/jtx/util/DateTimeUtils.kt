@@ -269,6 +269,17 @@ object DateTimeUtils {
             ZonedDateTime.ofInstant(Instant.ofEpochMilli(datetime), requireTzId(timezone)).withZoneSameInstant(ZoneId.systemDefault())
     }
 
+
+    fun toZonedDateTime(epochMillis: Long, tz: String?): ZonedDateTime {
+        val instant = Instant.ofEpochMilli(epochMillis)
+
+        return when {
+            tz == TZ_ALLDAY -> instant.atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(ZoneId.of("UTC"))
+            tz.isNullOrEmpty() -> instant.atZone(ZoneId.systemDefault())
+            else -> instant.atZone(ZoneId.of(tz))
+        }
+    }
+
     /*
     fun getDateWithoutTime(date: Long?, timezone: String?): Long? = date?.let {
         ZonedDateTime
