@@ -22,10 +22,14 @@ import at.techbee.jtx.contract.JtxContract
 import at.techbee.jtx.contract.JtxContract.asSyncAdapter
 import net.fortuna.ical4j.data.CalendarOutputter
 import net.fortuna.ical4j.model.Calendar
+import net.fortuna.ical4j.model.ComponentList
+import net.fortuna.ical4j.model.Property
+import net.fortuna.ical4j.model.PropertyList
+import net.fortuna.ical4j.model.component.CalendarComponent
 import net.fortuna.ical4j.model.component.VJournal
 import net.fortuna.ical4j.model.component.VToDo
 import net.fortuna.ical4j.model.property.ProdId
-import net.fortuna.ical4j.model.property.Version
+import net.fortuna.ical4j.model.property.immutable.ImmutableVersion
 import java.io.OutputStream
 import java.io.Reader
 
@@ -63,10 +67,7 @@ object Ical4androidUtil {
     ): Boolean {
 
         val collection = getCollection(account, context, collectionId) ?: return false
-
-        val ical = Calendar()
-        ical.properties += Version.VERSION_2_0
-        ical.properties +=  prodId
+        val calendarComponentList = mutableListOf<CalendarComponent>()
 
         iCalObjectIds.forEach { iCalObjectId ->
             val uri = JtxContract.JtxICalObject.CONTENT_URI
@@ -82,13 +83,18 @@ object Ical4androidUtil {
                     val jtxIcalObject = JtxICalObject(collection)
                     jtxIcalObject.populateFromContentValues(cursor.toContentValues())
                     val singleICS = jtxIcalObject.getICalendarFormat(prodId)
-                    singleICS?.components?.forEach { component ->
+                    singleICS?.componentList?.all?.forEach { component ->
                         if(component is VToDo || component is VJournal)
-                            ical.components += component
+                            calendarComponentList.add(component)
                     }
                 }
             }
         }
+
+        val ical = Calendar(
+            PropertyList(listOf<Property>(ImmutableVersion.VERSION_2_0, prodId)),
+            ComponentList(calendarComponentList)
+        )
 
         //Ical4Android.checkThreadContextClassLoader()
         try {
