@@ -59,7 +59,7 @@
     <string name="navigation_drawer_privacy_policy">"Privacybeleid"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Achterstallig"</string>
-    <string name="list_due_shortly">"Binnenkort te betalen"</string>
+    <string name="list_due_shortly">"Vervalt binnenkort"</string>
     <string name="list_due_today">"Vervalt vandaag"</string>
     <string name="list_due_tomorrow">"Vervalt Morgen"</string>
     <string name="list_due_within_7_days">"Vervalt in 7 dagen"</string>

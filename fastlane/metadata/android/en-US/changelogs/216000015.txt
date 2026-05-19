@@ -1,0 +1,3 @@
+- Markdown support for checkboxes
+- Fixed wrong sorting for categories
+- Version updates

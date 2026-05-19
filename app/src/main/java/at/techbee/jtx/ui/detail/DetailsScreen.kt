@@ -322,7 +322,11 @@ fun DetailsScreen(
                 goBack = {
                     navigateUp = true
                 },     // goBackRequestedByTopBar is handled in DetailScreenContent.kt
-                detailTopAppBarMode = detailViewModel.settingsStateHolder.detailTopAppBarMode.value,
+                detailTopAppBarMode = when(detailViewModel.settingsStateHolder.detailTopAppBarMode.value) {
+                    DetailTopAppBarMode.ADD_SUBTASK -> if(collection.value?.supportsVTODO == true) DetailTopAppBarMode.ADD_SUBTASK else if (collection?.value?.supportsVJOURNAL == true) DetailTopAppBarMode.ADD_SUBNOTE else null
+                    DetailTopAppBarMode.ADD_SUBNOTE -> if(collection.value?.supportsVJOURNAL == true) DetailTopAppBarMode.ADD_SUBNOTE else if (collection?.value?.supportsVTODO == true) DetailTopAppBarMode.ADD_SUBTASK else null
+                    null -> null
+                },
                 onAddSubnote = { subnoteText -> newSubnoteTextToProcess = subnoteText },
                 onAddSubtask = { subtaskText -> newSubtaskTextToProcess = subtaskText },
                 actions = {
@@ -331,44 +335,48 @@ fun DetailsScreen(
                     OverflowMenu(menuExpanded = menuExpanded) {
 
                         Text(stringResource(R.string.details_app_bar_behaviour), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 8.dp))
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(id = R.string.detail_top_app_bar_quick_add_subtask),
-                                    color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
-                                )
-                            },
-                            onClick = {
-                                detailViewModel.settingsStateHolder.setDetailTopAppBarMode(DetailTopAppBarMode.ADD_SUBTASK)
-                                menuExpanded.value = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.AddTask,
-                                    contentDescription = null,
-                                    tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    text = stringResource(id = R.string.detail_top_app_bar_quick_add_subnote),
-                                    color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
-                                )
-                            },
-                            onClick = {
-                                detailViewModel.settingsStateHolder.setDetailTopAppBarMode(DetailTopAppBarMode.ADD_SUBNOTE)
-                                menuExpanded.value = false
-                            },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Outlined.NoteAdd,
-                                    contentDescription = null,
-                                    tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        )
+                        if(collection.value?.readonly == false && collection.value?.supportsVTODO == true) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(id = R.string.detail_top_app_bar_quick_add_subtask),
+                                        color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                    )
+                                },
+                                onClick = {
+                                    detailViewModel.settingsStateHolder.setDetailTopAppBarMode(DetailTopAppBarMode.ADD_SUBTASK)
+                                    menuExpanded.value = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.AddTask,
+                                        contentDescription = null,
+                                        tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBTASK) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            )
+                        }
+                        if(collection.value?.readonly == false && collection.value?.supportsVJOURNAL == true) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(id = R.string.detail_top_app_bar_quick_add_subnote),
+                                        color = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else Color.Unspecified
+                                    )
+                                },
+                                onClick = {
+                                    detailViewModel.settingsStateHolder.setDetailTopAppBarMode(DetailTopAppBarMode.ADD_SUBNOTE)
+                                    menuExpanded.value = false
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.AutoMirrored.Outlined.NoteAdd,
+                                        contentDescription = null,
+                                        tint = if (detailViewModel.settingsStateHolder.detailTopAppBarMode.value == DetailTopAppBarMode.ADD_SUBNOTE) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                    )
+                                }
+                            )
+                        }
 
                         HorizontalDivider()
 
