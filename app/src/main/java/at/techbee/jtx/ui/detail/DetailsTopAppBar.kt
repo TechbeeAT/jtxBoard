@@ -46,7 +46,7 @@ enum class DetailTopAppBarMode { ADD_SUBTASK, ADD_SUBNOTE }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsTopAppBar(
-    detailTopAppBarMode: DetailTopAppBarMode = ADD_SUBTASK,
+    detailTopAppBarMode: DetailTopAppBarMode?,
     readonly: Boolean,
     goBack: () -> Unit,
     onAddSubtask: (String) -> Unit,
@@ -62,7 +62,7 @@ fun DetailsTopAppBar(
                 onValueChange = {
                     textFieldText = it
                 },
-                enabled = !readonly,
+                enabled = !readonly && detailTopAppBarMode != null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
@@ -79,6 +79,7 @@ fun DetailsTopAppBar(
                     when(it) {
                         ADD_SUBTASK -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
                         ADD_SUBNOTE -> Text(stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
+                        null -> Unit
                     }
                 }
                     },
@@ -100,6 +101,7 @@ fun DetailsTopAppBar(
                                     when(detailTopAppBarMode) {
                                         ADD_SUBTASK -> onAddSubtask(textFieldText)
                                         ADD_SUBNOTE -> onAddSubnote(textFieldText)
+                                        null -> Unit
                                     }
                                 }
                                 textFieldText = ""
@@ -108,6 +110,7 @@ fun DetailsTopAppBar(
                                     when(it) {
                                         ADD_SUBTASK -> Icon(Icons.Outlined.AddTask, stringResource(id = R.string.detail_top_app_bar_quick_add_subtask))
                                         ADD_SUBNOTE -> Icon(Icons.AutoMirrored.Outlined.NoteAdd, stringResource(id = R.string.detail_top_app_bar_quick_add_subnote))
+                                        null -> Unit
                                     }
                                 }
                             }
@@ -121,6 +124,7 @@ fun DetailsTopAppBar(
                         when(detailTopAppBarMode) {
                             ADD_SUBTASK -> onAddSubtask(textFieldText)
                             ADD_SUBNOTE -> onAddSubnote(textFieldText)
+                            null -> Unit
                         }
                     }
                     textFieldText = ""
@@ -137,6 +141,7 @@ fun DetailsTopAppBar_Preview_withSubtitle() {
         Scaffold(
             topBar = {
                 DetailsTopAppBar(
+                    detailTopAppBarMode = ADD_SUBTASK,
                     readonly = false,
                     goBack = { },
                     onAddSubnote = {},
