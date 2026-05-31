@@ -98,4 +98,30 @@ class InteractiveMarkdownTest {
         assertEquals(MarkdownSegment.CheckboxItem(0, "Task 1", false), segments[0])
         assertEquals(MarkdownSegment.CheckboxItem(1, "Task 2", true), segments[1])
     }
+
+    @Test
+    fun `filterCheckedCheckboxes removes checked items and keeps everything else`() {
+        val content = """
+            # Heading
+            - [ ] Task 1
+            - [x] Task 2
+            - [X] Task 3
+            Some text
+              - [ ] Nested open
+              - [x] Nested done
+            End.
+        """.trimIndent()
+
+        val result = filterCheckedCheckboxes(content)
+
+        val expected = """
+            # Heading
+            - [ ] Task 1
+            Some text
+              - [ ] Nested open
+            End.
+        """.trimIndent()
+
+        assertEquals(expected, result)
+    }
 }

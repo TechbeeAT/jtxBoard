@@ -76,6 +76,7 @@ fun ListScreenGrid(
     scrollOnceId: MutableLiveData<Long?>,
     settingLinkProgressToSubtasks: Boolean,
     markdownEnabled: Boolean,
+    isExcludeDone: Boolean = false,
     player: MediaPlayer?,
     isListDragAndDropEnabled: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -138,6 +139,7 @@ fun ListScreenGrid(
                     selected = selectedEntries.contains(iCal4ListRelObject.iCal4List.id),
                     progressUpdateDisabled = settingLinkProgressToSubtasks && currentSubtasks.isNotEmpty(),
                     markdownEnabled = markdownEnabled,
+                    hideDoneCheckboxes = isExcludeDone,
                     player = player,
                     modifier = Modifier
                         .fillMaxWidth()

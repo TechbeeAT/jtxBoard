@@ -78,7 +78,20 @@ fun InteractiveMarkdown(
     }
 }
 
-private val checkboxLineRegex = Regex("""^(\s*)-\s*\[([ xX])]\s*(.*)$""")
+internal val checkboxLineRegex = Regex("""^(\s*)-\s*\[([ xX])]\s*(.*)$""")
+
+/**
+ * Filters out lines containing checked checkboxes from the given content.
+ *
+ * @param content The Markdown content to filter
+ * @return The filtered content with checked checkbox lines removed
+ */
+fun filterCheckedCheckboxes(content: String): String {
+    return content.split('\n').filter { line ->
+        val match = checkboxLineRegex.matchEntire(line)
+        !(match != null && match.groupValues[2].equals("x", ignoreCase = true))
+    }.joinToString("\n")
+}
 
 sealed interface MarkdownSegment {
     data class MarkdownText(val content: String) : MarkdownSegment
