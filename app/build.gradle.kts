@@ -15,7 +15,6 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.kotlin.parcelize)
@@ -76,6 +75,7 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
+        resValues = true
     }
 
 
@@ -168,9 +168,6 @@ configurations {
         // exclude modules which are in conflict with system libraries
         exclude(module = "commons-logging")
         exclude(group = "org.json", module = "json")
-
-        // Groovy requires SDK 26+, and it's not required, so exclude it
-        exclude(group = "org.codehaus.groovy")
     }
 }
 
