@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationManagerCompat
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceTheme
@@ -26,7 +27,9 @@ import androidx.glance.LocalGlanceId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.currentState
+import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.unit.ColorProvider
 import at.techbee.jtx.ListWidgetConfigActivity
 import at.techbee.jtx.MainActivity2
@@ -216,6 +219,14 @@ class ListWidget : GlanceAppWidget() {
                                     settingKeepStatusProgressCompletedInSync = keepInSync,
                                     settingLinkProgressToSubtasks = linkProgress
                                 )
+
+                                // Trigger a state update to force Glance to re-run provideGlance
+                                updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { prefs ->
+                                    prefs.toMutablePreferences().apply {
+                                        this[longPreferencesKey("last_widget_update")] = System.currentTimeMillis()
+                                    }
+                                }
+
                                 ListWidget().update(context, glanceId)
                             }
 
