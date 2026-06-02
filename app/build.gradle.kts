@@ -33,6 +33,10 @@ try {
     logger.log(LogLevel.WARN, "Could not load keystore properties from local file: ${e.message}")
 }
 
+kotlin {
+    jvmToolchain(21)
+}
+
 android {
     namespace = "at.techbee.jtx"
     compileSdk = 36
@@ -61,10 +65,6 @@ android {
         buildConfigField("String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: keystoreProperties["crowdin.apikey"]?.toString()) + "\"")
         //buildConfigField("String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GH_CONTRIBUTORS_API_KEY") ?: providers.gradleProperty("githubcontributors.apikey") ) + "\"")
         resValue("string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: keystoreProperties["google.geo.apikey"]?.toString() ?: "")
-    }
-
-    kotlin {
-        jvmToolchain(21) // Or your desired consistent JVM version
     }
 
     compileOptions {
