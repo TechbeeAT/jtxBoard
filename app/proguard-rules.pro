@@ -61,6 +61,9 @@
 -dontwarn org.conscrypt.Conscrypt
 -dontwarn org.conscrypt.ConscryptHostnameVerifier
 
+-dontwarn com.github.benmanes.caffeine.**
+-dontwarn java.time.zone.ZoneRulesProvider
+
 -dontwarn com.github.erosb.jsonsKema.IJsonValue
 -dontwarn com.github.erosb.jsonsKema.JsonParser
 -dontwarn com.github.erosb.jsonsKema.JsonValue
