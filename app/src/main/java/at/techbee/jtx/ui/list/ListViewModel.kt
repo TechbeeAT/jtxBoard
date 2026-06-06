@@ -394,7 +394,7 @@ open class ListViewModel(application: Application, val module: Module) : Android
 
             scrollOnceId.postValue(newId)
 
-            val triggerInPastButNotDone = (alarm?.triggerTime?:0L) <= System.currentTimeMillis()
+            val triggerInPastButNotDone = (alarm?.triggerTime?:Long.MAX_VALUE) <= System.currentTimeMillis()
                         && icalObject.percent != 100
                         && icalObject.status != Status.COMPLETED.status
 

@@ -460,8 +460,8 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             }
 
             val triggerInPastButNotDone =
-                mutableAlarms.any { alarm -> (alarm.triggerTime?:0L) <= System.currentTimeMillis() }
-                        && mutableAlarms.none  { alarm -> (alarm.triggerTime?:0L) > System.currentTimeMillis() }
+                mutableAlarms.any { alarm -> (alarm.triggerTime?:Long.MAX_VALUE) <= System.currentTimeMillis() }
+                        && mutableAlarms.none  { alarm -> (alarm.triggerTime?:Long.MIN_VALUE) > System.currentTimeMillis() }
                         && it.percent != 100
                         && it.status != Status.COMPLETED.status
 
