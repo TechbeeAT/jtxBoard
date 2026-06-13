@@ -124,4 +124,58 @@ class InteractiveMarkdownTest {
 
         assertEquals(expected, result)
     }
+
+    @Test
+    fun `filterCheckedCheckboxes handles CRLF line endings correctly`() {
+        // CRLF line endings (\r\n) are common in synced iCalendar descriptions
+        val content = "# Heading\r\n- [ ] Task 1\r\n- [x] Task 2\r\n- [X] Task 3\r\nSome text\r\n  - [ ] Nested open\r\n  - [x] Nested done\r\nEnd."
+
+        val result = filterCheckedCheckboxes(content)
+
+        val expected = "# Heading\n- [ ] Task 1\nSome text\n  - [ ] Nested open\nEnd."
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `filterCheckedCheckboxes handles multiple list markers correctly`() {
+        val content = """
+            - [x] Checked dash
+            * [x] Checked star
+            + [x] Checked plus
+            - [ ] Unchecked dash
+            * [ ] Unchecked star
+            + [ ] Unchecked plus
+        """.trimIndent()
+
+        val result = filterCheckedCheckboxes(content)
+
+        val expected = """
+            - [ ] Unchecked dash
+            * [ ] Unchecked star
+            + [ ] Unchecked plus
+        """.trimIndent()
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `updateCheckboxState preserves original list markers`() {
+        val content = """
+            - [ ] Dash task
+            * [x] Star task
+            + [ ] Plus task
+        """.trimIndent()
+
+        val result1 = updateCheckboxState(content, 0, true)
+        val result2 = updateCheckboxState(result1, 1, false)
+
+        val expected = """
+            - [x] Dash task
+            * [ ] Star task
+            + [ ] Plus task
+        """.trimIndent()
+
+        assertEquals(expected, result2)
+    }
 }
