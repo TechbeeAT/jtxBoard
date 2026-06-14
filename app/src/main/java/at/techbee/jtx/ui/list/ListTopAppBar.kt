@@ -87,7 +87,7 @@ fun ListTopAppBar(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(4.dp)
+                    .padding(start = 4.dp, top = 4.dp, bottom = 4.dp, end = 16.dp)
                     .clip(RoundedCornerShape(32.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -131,8 +131,7 @@ fun ListTopAppBar(
                             coroutineScope.launch {
                                 if(drawerState.isClosed) drawerState.open() else drawerState.close()
                             }
-                        },
-                        modifier = Modifier.padding(start = 4.dp)
+                        }
                     ) {
                         Crossfade(targetState = drawerState, label = "NavigationDrawerState") {
                             when (it.targetValue) {
