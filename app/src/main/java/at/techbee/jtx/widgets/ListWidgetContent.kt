@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceModifier
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
+import androidx.glance.action.Action
 import androidx.glance.appwidget.components.CircleIconButton
 import androidx.glance.appwidget.components.Scaffold
 import androidx.glance.appwidget.components.TitleBar
@@ -52,23 +53,15 @@ fun ListWidgetContent(
     entryTextColor: ColorProvider,
     entryTextCancelledColor: ColorProvider,
     entryHeaderTextColor: ColorProvider,
-    onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
+    onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Action,
     onOpenWidgetConfig: () -> Unit,
     onAddNew: () -> Unit,
     onOpenFilteredList: () -> Unit
 ) {
 
     val context = LocalContext.current
-    val sortedList = ICal4ListRel.getSortedList(
-        initialList = list,
-        orderBy = listWidgetConfig.orderBy,
-        sortOrder = listWidgetConfig.sortOrder,
-        orderBy2 = listWidgetConfig.orderBy2,
-        sortOrder2 = listWidgetConfig.sortOrder2,
-        module = listWidgetConfig.module
-    )
     val groupedList = ICal4ListRel.getGroupedList(
-        sortedList = sortedList,
+        sortedList = list,
         groupBy = listWidgetConfig.groupBy,
         sortOrder = listWidgetConfig.sortOrder,
         module = listWidgetConfig.module,

@@ -19,6 +19,7 @@ import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
+import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.CheckBox
 import androidx.glance.appwidget.CheckboxDefaults
@@ -54,7 +55,7 @@ fun ListEntry(
     headerTextColor: ColorProvider,
     checkboxPosition: CheckboxPosition,
     showDescription: Boolean,
-    onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Unit,
+    onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Action,
     modifier: GlanceModifier = GlanceModifier
 ) {
 
@@ -90,7 +91,7 @@ fun ListEntry(
             if (obj.module == Module.TODO.name && checkboxPosition == CheckboxPosition.START && !obj.isReadOnly){
                 CheckBox(
                     checked = checked,
-                    onCheckedChange = { onCheckedChange(obj.id, checked) },
+                    onCheckedChange = onCheckedChange(obj.id, checked),
                     colors = if(colorChanged) CheckboxDefaults.colors(textColor.getColor(context), textColor.getColor(context)) else CheckboxDefaults.colors()
                 )
             }
@@ -213,7 +214,7 @@ fun ListEntry(
             if (obj.module == Module.TODO.name && checkboxPosition == CheckboxPosition.END && !obj.isReadOnly) {
                 CheckBox(
                     checked = checked,
-                    onCheckedChange = { onCheckedChange(obj.id, checked) },
+                    onCheckedChange = onCheckedChange(obj.id, checked),
                     colors = if(colorChanged) CheckboxDefaults.colors(textColor.getColor(context), textColor.getColor(context)) else CheckboxDefaults.colors()
                 )
             }

@@ -14,7 +14,6 @@ import android.content.Intent
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationManagerCompat
@@ -23,9 +22,12 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
 import androidx.glance.GlanceTheme
-import androidx.glance.LocalGlanceId
+import androidx.glance.action.ActionParameters
+import androidx.glance.action.actionParametersOf
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.action.ActionCallback
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.currentState
@@ -46,11 +48,56 @@ import at.techbee.jtx.ui.settings.SettingsStateHolder
 import at.techbee.jtx.util.SyncUtil
 import at.techbee.jtx.util.UiUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 const val MAX_WIDGET_ENTRIES = 50
+
+class ToggleTaskAction : ActionCallback {
+    override suspend fun onAction(
+        context: Context,
+        glanceId: GlanceId,
+        parameters: ActionParameters
+    ) {
+        val iCalObjectId = parameters[itemIdKey] ?: return
+        val checked = parameters[isCheckedKey] ?: return
+
+        val database = ICalDatabase.getInstance(context).iCalDatabaseDao()
+        val settingsStateHolder = SettingsStateHolder(context)
+        val keepInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value
+        val linkProgress = settingsStateHolder.settingLinkProgressToSubtasks.value
+
+        withContext(Dispatchers.IO) {
+            database.updateProgress(
+                id = iCalObjectId,
+                newPercent = if (checked) null else 100,
+                settingKeepStatusProgressCompletedInSync = keepInSync,
+                settingLinkProgressToSubtasks = linkProgress
+            )
+
+            if (!checked) {
+                NotificationManagerCompat.from(context).cancel(iCalObjectId.toInt())
+                database.setAlarmNotification(iCalObjectId, false)
+            }
+            NotificationPublisher.scheduleNextNotifications(context)
+
+            SyncUtil.notifyContentObservers(context)
+
+            // Trigger a state update to force Glance to re-run provideGlance
+            updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { prefs ->
+                prefs.toMutablePreferences().apply {
+                    this[longPreferencesKey("last_widget_update")] = System.currentTimeMillis()
+                }
+            }
+            ListWidget().update(context, glanceId)
+        }
+    }
+
+    companion object {
+        val itemIdKey = ActionParameters.Key<Long>("iCalObjectId")
+        val isCheckedKey = ActionParameters.Key<Boolean>("checked")
+    }
+}
 
 class ListWidget : GlanceAppWidget() {
 
@@ -67,14 +114,14 @@ class ListWidget : GlanceAppWidget() {
 
             val state = currentState<Preferences>()
             val listWidgetConfig = remember(state) {
-                state[filterConfig]?.let {
+                (state[filterConfig]?.let {
                     Json.decodeFromString<ListWidgetConfig>(it)
-                } ?: ListWidgetConfig()
+                } ?: ListWidgetConfig()).apply {
+                    // legacy handling
+                    if (checkboxPositionEnd)
+                        checkboxPosition = CheckboxPosition.END
+                }
             }
-
-            // legacy handling
-            if(listWidgetConfig.checkboxPositionEnd)
-                listWidgetConfig.checkboxPosition = CheckboxPosition.END
 
             val listQuery = remember(listWidgetConfig) {
                 ICal4List.constructQuery(
@@ -172,9 +219,6 @@ class ListWidget : GlanceAppWidget() {
                 module = Module.TODO
             )
 
-            val scope = rememberCoroutineScope()
-            val glanceId = LocalGlanceId.current
-
             GlanceTheme {
 
                 ListWidgetContent(
@@ -207,38 +251,12 @@ class ListWidget : GlanceAppWidget() {
                         else
                             ColorProvider(if(UiUtil.isDarkColor(Color(listWidgetConfig.widgetColorEntries?:Color.White.toArgb()))) Color.White else Color.Black),
                     onCheckedChange = { iCalObjectId, checked ->
-                        val settingsStateHolder = SettingsStateHolder(context)
-                        val keepInSync = settingsStateHolder.settingKeepStatusProgressCompletedInSync.value
-                        val linkProgress = settingsStateHolder.settingLinkProgressToSubtasks.value
-
-                        scope.launch {
-                            withContext(Dispatchers.IO) {
-                                database.updateProgress(
-                                    id = iCalObjectId,
-                                    newPercent = if(checked) null else 100,
-                                    settingKeepStatusProgressCompletedInSync = keepInSync,
-                                    settingLinkProgressToSubtasks = linkProgress
-                                )
-
-                                // Trigger a state update to force Glance to re-run provideGlance
-                                updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { prefs ->
-                                    prefs.toMutablePreferences().apply {
-                                        this[longPreferencesKey("last_widget_update")] = System.currentTimeMillis()
-                                    }
-                                }
-
-                                ListWidget().update(context, glanceId)
-                            }
-
-                            withContext(Dispatchers.IO) {
-                                if (!checked) {
-                                    NotificationManagerCompat.from(context).cancel(iCalObjectId.toInt())
-                                    database.setAlarmNotification(iCalObjectId, false)
-                                }
-                                NotificationPublisher.scheduleNextNotifications(context)
-                            }
-                            SyncUtil.notifyContentObservers(context)
-                        }
+                        actionRunCallback<ToggleTaskAction>(
+                            actionParametersOf(
+                                ToggleTaskAction.itemIdKey to iCalObjectId,
+                                ToggleTaskAction.isCheckedKey to checked
+                            )
+                        )
                     },
                     onOpenWidgetConfig = {
                         val intent = Intent(context, ListWidgetConfigActivity::class.java).apply {
