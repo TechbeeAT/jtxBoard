@@ -65,7 +65,7 @@ import at.techbee.jtx.database.views.ICal4List
     views = [
         ICal4List::class,
         CollectionsView::class],
-    version = 40,
+    version = 41,
     exportSchema = true,
     autoMigrations = [
         AutoMigration (from = 2, to = 3, spec = ICalDatabase.AutoMigration2to3::class),
@@ -105,6 +105,7 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 37, to = 38),  // view udpate
         AutoMigration (from = 38, to = 39),  // new column isAlarmNotificationActive + migration spec to remove indices
         AutoMigration (from = 39, to = 40),  // new column syncId in ICalCollection
+        AutoMigration (from = 40, to = 41),  // view udpate
     ]
 )
 @TypeConverters(Converters::class)
