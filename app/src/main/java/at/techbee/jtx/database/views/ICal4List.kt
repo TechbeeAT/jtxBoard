@@ -206,10 +206,10 @@ data class ICal4List(
     @ColumnInfo(name = COLUMN_COMPLETED_TIMEZONE) var completedTimezone: String?,
     @ColumnInfo(name = COLUMN_DURATION) var duration: String?,
 
-    @ColumnInfo(name = COLUMN_CREATED) var created: Long,
+    @ColumnInfo(name = COLUMN_CREATED) var created: Long?,
     @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long,
-    @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long,
-    @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long,
+    @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long?,
+    @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long?,
     @ColumnInfo(index = true, name = COLUMN_UID) var uid: String?,
     @ColumnInfo(name = COLUMN_RRULE) var rrule: String?,
     @ColumnInfo(name = COLUMN_RECURID) var recurid: String?,
