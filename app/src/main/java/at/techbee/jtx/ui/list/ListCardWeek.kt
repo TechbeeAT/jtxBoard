@@ -33,6 +33,7 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.components.filterCheckedCheckboxes
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import kotlin.time.Duration.Companion.days
 
@@ -42,7 +43,8 @@ fun ListCardWeek(
     iCalObject: ICal4List,
     selected: Boolean,
     modifier: Modifier = Modifier,
-    isDueDate: Boolean = false
+    isDueDate: Boolean = false,
+    hideDoneCheckboxes: Boolean = false
 ) {
     Card(
         colors = CardDefaults.elevatedCardColors(
@@ -63,10 +65,11 @@ fun ListCardWeek(
                 "✔"
             else if (isDueDate) "❗"
             else ""
-            text += if(iCalObject.summary?.isNotBlank() == true) iCalObject.summary!!.trim() else iCalObject.description ?: ""
+            val content = if(iCalObject.summary?.isNotBlank() == true) iCalObject.summary!!.trim() else iCalObject.description ?: ""
+            text += if (hideDoneCheckboxes) filterCheckedCheckboxes(content) else content
 
             Text(
-                text = text,
+                text = text.trim(),
                 textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,

@@ -230,6 +230,7 @@ fun ListScreenList(
                             progressIncrement = settingProgressIncrement.getProgressStepKeyAsInt(),
                             linkProgressToSubtasks = settingLinkProgressToSubtasks,
                             markdownEnabled = markdownEnabled,
+                            hideDoneCheckboxes = listSettings.isExcludeDone.value,
                             onClick = onClick,
                             onLongClick = onLongClick,
                             onProgressChanged = onProgressChanged,
