@@ -1,0 +1,3 @@
+- Fixed issue with instant notification when creating a new task
+- Updates in widget
+- Version updates
