@@ -511,7 +511,7 @@ object JtxContract {
          * Purpose:  This property specifies the date and time that the calendar information
          * was created by the calendar user agent in the calendar store and is stored as UNIX timestamp (milliseconds).
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.1]
-         * Type: [Long]
+         * Type: [Long?]
          */
         const val CREATED = "created"
 
@@ -533,7 +533,7 @@ object JtxContract {
          * with the calendar component was last revised in the calendar store.
          * It is saved as UNIX timestamp (milliseconds).
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.3]
-         * Type: [Long]
+         * Type: [Long?]
          */
         const val LAST_MODIFIED = "lastmodified"
 
@@ -541,7 +541,7 @@ object JtxContract {
          * Purpose:  This property defines the revision sequence number of the calendar component within a sequence of revisions.
          * If no sequence is present, it is automatically initialized with 0
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.4]
-         * Type: [Long]
+         * Type: [Long?]
          */
         const val SEQUENCE = "sequence"
 

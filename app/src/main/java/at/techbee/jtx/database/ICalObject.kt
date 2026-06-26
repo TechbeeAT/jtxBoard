@@ -499,10 +499,10 @@ data class ICalObject(
      The following properties specify change management information in  calendar components.
      https://tools.ietf.org/html/rfc5545#section-3.8.7
      */
-    @ColumnInfo(name = COLUMN_CREATED) var created: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.1
+    @ColumnInfo(name = COLUMN_CREATED) var created: Long? = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.1
     @ColumnInfo(name = COLUMN_DTSTAMP) var dtstamp: Long = System.currentTimeMillis(),   // see https://tools.ietf.org/html/rfc5545#section-3.8.7.2
-    @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
-    @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long = 0,                             // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
+    @ColumnInfo(name = COLUMN_LAST_MODIFIED) var lastModified: Long? = System.currentTimeMillis(), // see https://tools.ietf.org/html/rfc5545#section-3.8.7.3
+    @ColumnInfo(name = COLUMN_SEQUENCE) var sequence: Long? = 0L,                             // increase on every change (+1), see https://tools.ietf.org/html/rfc5545#section-3.8.7.4
 
     @ColumnInfo(name = COLUMN_RRULE)  var rrule: String? = null,    //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.3
     @ColumnInfo(name = COLUMN_EXDATE) var exdate: String? = null,   //only for recurring events, see https://tools.ietf.org/html/rfc5545#section-3.8.5.1
@@ -905,7 +905,7 @@ data class ICalObject(
         else
             throw IllegalArgumentException("Unsupported component: ${this.component}. Supported components: ${Component.entries.toTypedArray()}.")
 
-        if(recurid != null && sequence <= 0)
+        if(recurid != null && (sequence?:0L) <= 0L)
             sequence = 1     // mark changed instances with a sequence if missing!
 
         return this
@@ -947,7 +947,7 @@ data class ICalObject(
      */
     fun makeDirty() {
         lastModified = System.currentTimeMillis()
-        sequence += 1
+        sequence = (sequence?:0L) + 1L
         dirty = true
     }
 

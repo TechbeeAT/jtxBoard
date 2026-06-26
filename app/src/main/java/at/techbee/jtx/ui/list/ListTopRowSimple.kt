@@ -230,7 +230,7 @@ fun ListTopRowSimple(
             )
         }
 
-        AnimatedVisibility(ical4List.rrule != null || (ical4List.recurid != null && ical4List.sequence == 0L)) {
+        AnimatedVisibility(ical4List.rrule != null || (ical4List.recurid != null && (ical4List.sequence?:0L) == 0L)) {
             Icon(
                 imageVector = Icons.Outlined.EventRepeat,
                 contentDescription = stringResource(id = R.string.list_item_recurring),
@@ -238,7 +238,7 @@ fun ListTopRowSimple(
             )
         }
 
-        AnimatedVisibility(ical4List.recurid != null && ical4List.sequence > 0L) {
+        AnimatedVisibility(ical4List.recurid != null && (ical4List.sequence?:0L) > 0L) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_recur_exception),
                 contentDescription = stringResource(id = R.string.list_item_recurring),

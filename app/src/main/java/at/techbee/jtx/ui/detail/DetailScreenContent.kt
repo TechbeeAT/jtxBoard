@@ -223,7 +223,7 @@ fun DetailScreenContent(
     }
 
     // Update some fields in the background that might have changed (e.g. by creating a copy)
-    if ((observedICalObject.value?.sequence ?: 0) > iCalObject.sequence) {
+    if ((observedICalObject.value?.sequence ?: 0L) > (iCalObject.sequence?:0L)) {
         iCalObject.status = observedICalObject.value?.status
         iCalObject.percent = observedICalObject.value?.percent
         iCalObject.completed = observedICalObject.value?.completed
