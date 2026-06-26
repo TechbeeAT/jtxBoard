@@ -67,7 +67,7 @@ class ICalObjectTest {
         //assertNotNull(task.dtstart)
         //assertNull(task.completed)
         assertNotNull(task.lastModified)
-        assertEquals(2, task.sequence)
+        assertEquals(2L, task.sequence)
         assertEquals(true, task.dirty)
     }
 
@@ -83,7 +83,7 @@ class ICalObjectTest {
         //assertNotNull(task.dtstart)
         //assertNull(task.completed)
         assertNotNull(task.lastModified)
-        assertEquals(1, task.sequence)
+        assertEquals(1L, task.sequence)
         assertEquals(true, task.dirty)
     }
 
@@ -99,7 +99,7 @@ class ICalObjectTest {
         //assertNotNull(task.dtstart)
         //assertNotNull(task.completed)
         assertNotNull(task.lastModified)
-        assertEquals(1, task.sequence)
+        assertEquals(1L, task.sequence)
         assertEquals(true, task.dirty)
     }
 
