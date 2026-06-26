@@ -250,6 +250,7 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
     testImplementation(libs.room.testing)
     testImplementation(libs.androidx.arch.core.testing)
     testImplementation(libs.androidx.test.core)
