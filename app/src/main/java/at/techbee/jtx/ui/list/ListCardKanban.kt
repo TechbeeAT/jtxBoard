@@ -37,6 +37,7 @@ import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.reusable.components.filterCheckedCheckboxes
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.util.UiUtil.ellipsize
@@ -52,6 +53,7 @@ fun ListCardKanban(
     markdownEnabled: Boolean,
     selected: Boolean,
     player: MediaPlayer?,
+    hideDoneCheckboxes: Boolean = false,
     modifier: Modifier = Modifier,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
@@ -112,11 +114,14 @@ fun ListCardKanban(
                 )
 
             if (iCalObject.description?.isNotBlank() == true) {
+                val descriptionContent = iCalObject.description?.trim() ?: ""
+                val filteredContent = if (hideDoneCheckboxes) filterCheckedCheckboxes(descriptionContent) else descriptionContent
+
                 if(markdownEnabled && iCalObject.status != Status.CANCELLED.status)
-                    Markdown(content = iCalObject.description?.trim()?.ellipsize(100) ?: "",)
+                    Markdown(content = filteredContent.ellipsize(100))
                 else
                     Text(
-                        text = iCalObject.description?.trim() ?: "",
+                        text = descriptionContent.ellipsize(100),
                         maxLines = 4,
                         textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         overflow = TextOverflow.Ellipsis

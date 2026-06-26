@@ -75,6 +75,7 @@ fun ListScreenWeek(
     list: List<ICal4ListRel>,
     selectedEntries: SnapshotStateList<Long>,
     scrollOnceId: MutableLiveData<Long?>,
+    isExcludeDone: Boolean = false,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
 ) {
@@ -123,6 +124,7 @@ fun ListScreenWeek(
                     day = day.date,
                     list = list,
                     selectedEntries = selectedEntries,
+                    isExcludeDone = isExcludeDone,
                     onClick = onClick,
                     onLongClick = onLongClick
                 )
@@ -194,6 +196,7 @@ fun Day(
     day: LocalDate,
     list: List<ICal4ListRel>,
     selectedEntries: SnapshotStateList<Long>,
+    isExcludeDone: Boolean = false,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit
 ) {
@@ -242,6 +245,7 @@ fun Day(
                         ), DateTimeUtils.requireTzId(iCal4ListRel.iCal4List.dueTimezone)
                     ).atStartOfDay(),
                     selected = selectedEntries.contains(iCal4ListRel.iCal4List.id),
+                    hideDoneCheckboxes = isExcludeDone,
                     modifier = Modifier
                         .combinedClickable(
                             onClick = {

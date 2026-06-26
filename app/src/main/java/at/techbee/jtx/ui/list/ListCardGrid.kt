@@ -40,6 +40,7 @@ import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
+import at.techbee.jtx.ui.reusable.components.filterCheckedCheckboxes
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.util.UiUtil.ellipsize
@@ -56,6 +57,7 @@ fun ListCardGrid(
     progressUpdateDisabled: Boolean,
     markdownEnabled: Boolean,
     player: MediaPlayer?,
+    hideDoneCheckboxes: Boolean = false,
     modifier: Modifier = Modifier,
     dragHandle:@Composable () -> Unit = { },
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -142,16 +144,19 @@ fun ListCardGrid(
             }
 
             if (iCalObject.description?.isNotBlank() == true) {
+                val descriptionContent = iCalObject.description?.trim() ?: ""
+                val filteredContent = if (hideDoneCheckboxes) filterCheckedCheckboxes(descriptionContent) else descriptionContent
+
                 if(markdownEnabled && iCalObject.status != Status.CANCELLED.status)
                     Markdown(
-                        content = iCalObject.description?.trim()?.ellipsize(150) ?: "",
+                        content = filteredContent.ellipsize(150),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)
                     )
                 else
                     Text(
-                        text = iCalObject.description?.trim() ?: "",
+                        text = descriptionContent.ellipsize(150),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,

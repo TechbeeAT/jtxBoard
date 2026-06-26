@@ -57,6 +57,7 @@ import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.locals.ExtendedStatus
 import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
+import at.techbee.jtx.ui.reusable.components.filterCheckedCheckboxes
 import at.techbee.jtx.ui.reusable.cards.SubtaskCardCompact
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.reusable.elements.DragHandle
@@ -76,6 +77,7 @@ fun ListCardCompact(
     selected: List<Long>,
     player: MediaPlayer?,
     isSubtaskDragAndDropEnabled: Boolean,
+    hideDoneCheckboxes: Boolean = false,
     modifier: Modifier = Modifier,
     isSubtasksExpandedDefault: Boolean,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -154,8 +156,11 @@ fun ListCardCompact(
                         )
                     }
 
+                    val summaryDescriptionContent = iCalObject.summary?.trim() ?: iCalObject.description?.trim() ?: ""
+                    val filteredContent = if (hideDoneCheckboxes) filterCheckedCheckboxes(summaryDescriptionContent) else summaryDescriptionContent
+
                     Text(
-                        text = iCalObject.summary?.trim() ?: iCalObject.description?.trim() ?: "",
+                        text = filteredContent.trim(),
                         textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,

@@ -134,6 +134,7 @@ fun ListScreen(
                 scrollOnceId = listViewModel.scrollOnceId,
                 settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                 markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
+                isExcludeDone = listViewModel.listSettings.isExcludeDone.value,
                 player = listViewModel.mediaPlayer,
                 onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                 onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
@@ -181,6 +182,7 @@ fun ListScreen(
                 scrollOnceId = listViewModel.scrollOnceId,
                 settingLinkProgressToSubtasks = settingsStateHolder.settingLinkProgressToSubtasks.value,
                 markdownEnabled = listViewModel.listSettings.markdownEnabled.value,
+                isExcludeDone = listViewModel.listSettings.isExcludeDone.value,
                 player = listViewModel.mediaPlayer,
                 onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                 onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
@@ -194,6 +196,7 @@ fun ListScreen(
                 list = sortedList,
                 selectedEntries = listViewModel.selectedEntries,
                 scrollOnceId = listViewModel.scrollOnceId,
+                isExcludeDone = listViewModel.listSettings.isExcludeDone.value,
                 onClick = { itemId, ical4list, isReadOnly -> processOnClick(itemId, ical4list, isReadOnly) },
                 onLongClick = { itemId, ical4list -> processOnLongClick(itemId, ical4list) },
             )

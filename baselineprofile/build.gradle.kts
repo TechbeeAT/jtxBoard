@@ -8,7 +8,7 @@ android {
     compileSdk = 36
 
     kotlin {
-        jvmToolchain(21) // Or your desired consistent JVM version
+        jvmToolchain(25) // Or your desired consistent JVM version
     }
 
     defaultConfig {

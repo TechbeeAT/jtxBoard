@@ -78,7 +78,20 @@ fun InteractiveMarkdown(
     }
 }
 
-private val checkboxLineRegex = Regex("""^(\s*)-\s*\[([ xX])]\s*(.*)$""")
+internal val checkboxLineRegex = Regex("""^(\s*)([-*+])\s*\[([ xX])]\s*(.*?)\r?$""")
+
+/**
+ * Filters out lines containing checked checkboxes from the given content.
+ *
+ * @param content The Markdown content to filter
+ * @return The filtered content with checked checkbox lines removed
+ */
+fun filterCheckedCheckboxes(content: String): String {
+    return content.lines().filter { line ->
+        val match = checkboxLineRegex.matchEntire(line)
+        !(match != null && match.groupValues[3].equals("x", ignoreCase = true))
+    }.joinToString("\n")
+}
 
 sealed interface MarkdownSegment {
     data class MarkdownText(val content: String) : MarkdownSegment
@@ -101,15 +114,15 @@ fun parseMarkdownSegments(content: String): List<MarkdownSegment> {
         markdownLines.clear()
     }
 
-    content.split('\n').forEachIndexed { index, line ->
+    content.lines().forEachIndexed { index, line ->
         val match = checkboxLineRegex.matchEntire(line)
         if (match != null) {
             flushMarkdownLines()
             segments.add(
                 MarkdownSegment.CheckboxItem(
                     lineIndex = index,
-                    text = match.groupValues[3],
-                    isChecked = match.groupValues[2].equals("x", ignoreCase = true)
+                    text = match.groupValues[4],
+                    isChecked = match.groupValues[3].equals("x", ignoreCase = true)
                 )
             )
         } else {
@@ -127,13 +140,14 @@ fun updateCheckboxState(
     lineIndex: Int,
     newState: Boolean
 ): String {
-    val lines = originalContent.split('\n').toMutableList()
+    val lines = originalContent.lines().toMutableList()
     if (lineIndex !in lines.indices) return originalContent
 
     val match = checkboxLineRegex.matchEntire(lines[lineIndex]) ?: return originalContent
     val indentation = match.groupValues[1]
-    val textContent = match.groupValues[3]
-    lines[lineIndex] = "$indentation- [${if (newState) "x" else " "}] $textContent"
+    val marker = match.groupValues[2]
+    val textContent = match.groupValues[4]
+    lines[lineIndex] = "$indentation$marker [${if (newState) "x" else " "}] $textContent"
 
     return lines.joinToString("\n")
 }

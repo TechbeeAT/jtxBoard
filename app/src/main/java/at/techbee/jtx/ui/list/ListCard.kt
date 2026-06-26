@@ -73,6 +73,7 @@ import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
+import at.techbee.jtx.ui.reusable.components.filterCheckedCheckboxes
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
@@ -113,6 +114,7 @@ fun ListCard(
     markdownEnabled: Boolean,
     isSubtaskDragAndDropEnabled: Boolean,
     isSubnoteDragAndDropEnabled: Boolean,
+    hideDoneCheckboxes: Boolean = false,
     onClick: (itemId: Long, list: List<ICal4List>, isReadOnly: Boolean) -> Unit,
     onLongClick: (itemId: Long, list: List<ICal4List>) -> Unit,
     onProgressChanged: (itemId: Long, newPercent: Int) -> Unit,
@@ -149,16 +151,19 @@ fun ListCard(
 
 
     @Composable
-    fun getFormattedDescription() {
+    fun getFormattedDescription(hideDoneCheckboxes: Boolean = false) {
+        val descriptionContent = iCalObject.description?.trim() ?: ""
+        val filteredContent = if (hideDoneCheckboxes) filterCheckedCheckboxes(descriptionContent) else descriptionContent
+
         return if(markdownEnabled && iCalObject.status != Status.CANCELLED.status)
             Markdown(
-                content = iCalObject.description?.trim()?.ellipsize(300) ?: "",
+                content = filteredContent.ellipsize(300),
                 imageTransformer = Coil3ImageTransformerImpl,
                 modifier = Modifier.fillMaxWidth()
             )
         else
             Text(
-                text = iCalObject.description?.trim() ?: "",
+                text = descriptionContent.ellipsize(300),
                 maxLines = 6,
                 overflow = TextOverflow.Ellipsis,
                 textDecoration = summaryDescriptionTextDecoration,
@@ -260,7 +265,7 @@ fun ListCard(
                                 modifier = Modifier.weight(1f)
                             )
                         } else if (iCalObject.description?.isNotBlank() == true) {
-                            getFormattedDescription()
+                            getFormattedDescription(hideDoneCheckboxes)
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
                         }
@@ -280,7 +285,7 @@ fun ListCard(
                     }
 
                     if(iCalObject.summary?.isNotBlank() == true && iCalObject.description?.isNotBlank() == true) {
-                        getFormattedDescription()
+                        getFormattedDescription(hideDoneCheckboxes)
                     }
 
 

@@ -195,6 +195,7 @@ fun ListScreenCompact(
                             player = player,
                             isSubtaskDragAndDropEnabled = isSubtaskDragAndDropEnabled,
                             isSubtasksExpandedDefault = isSubtasksExpandedDefault,
+                            hideDoneCheckboxes = listSettings.isExcludeDone.value,
                             dragHandle = {
                                 if(isListDragAndDropEnabled)
                                     DragHandleLazy(this)
