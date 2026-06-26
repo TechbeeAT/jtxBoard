@@ -314,7 +314,7 @@ object JtxContract {
         /**
          * Purpose:  Defines the radius for a geofence in meters
          * This is put into an extended property in the iCalendar-file
-         * Type: [String]
+         * Type: [Int]
          */
         const val GEOFENCE_RADIUS = "geofenceRadius"
 
@@ -349,7 +349,7 @@ object JtxContract {
          * This property is split in the fields [GEO_LAT] for the latitude
          * and [GEO_LONG] for the longitude coordinates using the WGS84 ellipsoid.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.6]
-         * Type: [Float]
+         * Type: [Double]
          */
         const val GEO_LAT = "geolat"
 
@@ -365,7 +365,7 @@ object JtxContract {
         /**
          * Purpose:  This property defines the intended venue for the activity defined by a calendar component.
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.1.7]
-         * Type: [Double]
+         * Type: [String]
          */
         const val LOCATION = "location"
 
@@ -489,7 +489,7 @@ object JtxContract {
          * The property value is the original value of the "DTSTART" property
          * of the recurrence instance, ie. a DATE or DATETIME value e.g. "20211101T160000".
          * Must be null for non-recurring and original events from which recurring events are derived.
-         * Type: [String?]
+         * Type: [String]
          */
         const val RECURID_TIMEZONE = "recuridtimezone"
 
@@ -541,7 +541,7 @@ object JtxContract {
          * Purpose:  This property defines the revision sequence number of the calendar component within a sequence of revisions.
          * If no sequence is present, it is automatically initialized with 0
          * See [https://tools.ietf.org/html/rfc5545#section-3.8.7.4]
-         * Type: [Int]
+         * Type: [Long]
          */
         const val SEQUENCE = "sequence"
 
@@ -1360,6 +1360,7 @@ object JtxContract {
         /**
          * This property contains a CSV-list of attendees as Uris
          * e.g. "mailto:contact@techbee.at,mailto:jtx@techbee.at"
+         * Type: [String]
          */
         const val ATTENDEE = "attendee"
 
