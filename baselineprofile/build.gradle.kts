@@ -5,15 +5,15 @@ plugins {
 
 android {
     namespace = "at.techbee.jtx.baselineprofile"
-    compileSdk = 36
+    compileSdk = 37
 
     kotlin {
-        jvmToolchain(25) // Or your desired consistent JVM version
+        jvmToolchain(21) // Or your desired consistent JVM version
     }
 
     defaultConfig {
         minSdk = 28
-        targetSdk = 36
+        targetSdk = 37
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
