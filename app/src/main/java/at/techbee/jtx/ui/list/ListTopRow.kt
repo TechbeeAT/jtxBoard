@@ -102,8 +102,8 @@ fun ListTopRow(
 
         AnimatedVisibility(ical4List.rrule != null || ical4List.recurid != null) {
             ListBadge(
-                icon = if(ical4List.rrule != null || (ical4List.recurid != null && ical4List.sequence == 0L)) Icons.Outlined.EventRepeat else null,
-                iconRes = if(ical4List.recurid != null && ical4List.sequence > 0L) R.drawable.ic_recur_exception else null,
+                icon = if(ical4List.rrule != null || (ical4List.recurid != null && (ical4List.sequence?:0L) == 0L)) Icons.Outlined.EventRepeat else null,
+                iconRes = if(ical4List.recurid != null && ((ical4List.sequence ?: 0L) > 0L)) R.drawable.ic_recur_exception else null,
                 iconDesc = stringResource(id = R.string.list_item_recurring),
                 isAccessibilityMode = isAccessibilityMode,
                 modifier = Modifier.padding(vertical = 2.dp)
