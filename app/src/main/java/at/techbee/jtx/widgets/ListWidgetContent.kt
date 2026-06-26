@@ -255,7 +255,7 @@ fun ListWidgetContent(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = context.getString(R.string.widget_list_no_entries_found),
+                        text = context.getString(R.string.widget_list_nothing_here),
                         style = TextStyle(
                             color = textColor,
                             fontSize = 14.sp,
