@@ -9,10 +9,10 @@
 
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/widget_list_description"
-    android:minWidth="180dp"
+    android:minWidth="50dp"
     android:minHeight="50dp"
     android:resizeMode="horizontal|vertical"
-    android:targetCellWidth="4"
+    android:targetCellWidth="3"
     android:targetCellHeight="2"
     android:widgetCategory="home_screen"
     android:configure="at.techbee.jtx.ListWidgetConfigActivity"
