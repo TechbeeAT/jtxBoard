@@ -11,7 +11,7 @@ package at.techbee.jtx.ui.detail
 import android.app.Application
 import android.content.ActivityNotFoundException
 import android.content.Context
-import android.database.sqlite.SQLiteConstraintException
+import android.database.SQLException
 import android.media.MediaPlayer
 import android.net.Uri
 import android.util.Log
@@ -278,7 +278,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
             try {
                 databaseDao.update(icalObject)
                 withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
-            } catch (e: SQLiteConstraintException) {
+            } catch (e: SQLException) {
                 Log.d("SQLConstraint", "Corrupted ID: $icalObjectId")
                 Log.d("SQLConstraint", e.stackTraceToString())
                 withContext(Dispatchers.Main) { changeState.value = DetailChangeState.SQLERROR }

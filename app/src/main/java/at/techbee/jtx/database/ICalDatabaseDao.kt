@@ -9,7 +9,7 @@
 package at.techbee.jtx.database
 
 import android.database.Cursor
-import android.database.sqlite.SQLiteConstraintException
+import android.database.SQLException
 import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
@@ -944,7 +944,7 @@ interface ICalDatabaseDao {
                     val newICalObject = getICalObjectByIdSync(newId)
                     if (newICalObject?.rrule != null)
                         recreateRecurring(newICalObject)
-                } catch (e: SQLiteConstraintException) {
+                } catch (e: SQLException) {
                     Log.w("SQLConstraint", "Corrupted ID: $iCalObjectId")
                     Log.w("SQLConstraint", e.stackTraceToString())
                 }
@@ -1111,7 +1111,7 @@ interface ICalDatabaseDao {
                     updateProgressOfParents(it.id, it.uid, settingKeepStatusProgressCompletedInSync)
                 }
             }
-        } catch (e: SQLiteConstraintException) {
+        } catch (e: SQLException) {
             Log.d("SQLConstraint", "Corrupted ID: $id")
             Log.d("SQLConstraint", e.stackTraceToString())
         }
@@ -1297,55 +1297,40 @@ interface ICalDatabaseDao {
             val instanceId = insertICalObjectSync(instance.property)
 
             instance.categories?.forEach {
-                it.categoryId = 0L
-                it.icalObjectId = instanceId
-                insertCategorySync(it)
+                insertCategorySync(it.copy(categoryId = 0L, icalObjectId = instanceId))
             }
             instance.comments?.forEach {
-                it.commentId = 0L
-                it.icalObjectId = instanceId
-                insertCommentSync(it)
+                insertCommentSync(it.copy(commentId = 0L, icalObjectId = instanceId))
             }
             instance.attachments?.forEach {
-                it.attachmentId = 0L
-                it.icalObjectId = instanceId
-                insertAttachmentSync(it)
+                insertAttachmentSync(it.copy(attachmentId = 0L, icalObjectId = instanceId))
             }
-            instance.organizer.apply {
-                this?.organizerId = 0L
-                this?.icalObjectId = instanceId
-                this?.let { insertOrganizerSync(it) }
+            instance.organizer?.let {
+                insertOrganizerSync(it.copy(organizerId = 0L, icalObjectId = instanceId))
             }
             instance.attendees?.forEach {
-                it.attendeeId = 0L
-                it.icalObjectId = instanceId
-                insertAttendeeSync(it)
+                insertAttendeeSync(it.copy(attendeeId = 0L, icalObjectId = instanceId))
             }
             instance.resources?.forEach {
-                it.resourceId = 0L
-                it.icalObjectId = instanceId
-                insertResourceSync(it)
+                insertResourceSync(it.copy(resourceId = 0L, icalObjectId = instanceId))
             }
             instance.relatedto?.forEach {
-                it.relatedtoId = 0L
-                it.icalObjectId = instanceId
-                insertRelatedtoSync(it)
+                insertRelatedtoSync(it.copy(relatedtoId = 0L, icalObjectId = instanceId))
             }
             instance.alarms?.forEach {
                 if (it.triggerRelativeDuration != null) {    // only relative alarms are considered
-                    it.alarmId = 0L
-                    it.icalObjectId = instanceId
+                    val alarmCopy = it.copy(alarmId = 0L, icalObjectId = instanceId)
 
                     try {
-                        val dur = Duration.parse(it.triggerRelativeDuration!!)
-                        if (it.triggerRelativeTo == AlarmRelativeTo.END.name) {
-                            it.triggerTime = instance.property.due!! + dur.inWholeMilliseconds
-                            it.triggerTimezone = instance.property.dueTimezone
+                        val dur = Duration.parse(alarmCopy.triggerRelativeDuration!!)
+                        if (alarmCopy.triggerRelativeTo == AlarmRelativeTo.END.name) {
+                            alarmCopy.triggerTime = instance.property.due!! + dur.inWholeMilliseconds
+                            alarmCopy.triggerTimezone = instance.property.dueTimezone
                         } else {
-                            it.triggerTime = instance.property.dtstart!! + dur.inWholeMilliseconds
-                            it.triggerTimezone = instance.property.dtstartTimezone
+                            alarmCopy.triggerTime = instance.property.dtstart!! + dur.inWholeMilliseconds
+                            alarmCopy.triggerTimezone = instance.property.dtstartTimezone
                         }
-                        insertAlarmSync(it)
+                        insertAlarmSync(alarmCopy)
                     } catch (e: IllegalArgumentException) {
                         Log.w(
                             "DurationParsing",
@@ -1521,7 +1506,7 @@ interface ICalDatabaseDao {
                 newId
             else
                 null
-        } catch (e: SQLiteConstraintException) {
+        } catch (e: SQLException) {
             Log.d("SQLConstraint", e.stackTraceToString())
             return null
         }
@@ -1589,7 +1574,7 @@ interface ICalDatabaseDao {
                     text = parentUID
                 )
             )
-        } catch (e: SQLiteConstraintException) {
+        } catch (e: SQLException) {
             Log.d("SQLConstraint", e.stackTraceToString())
             return false
         }
@@ -1672,7 +1657,7 @@ interface ICalDatabaseDao {
                 update(icalObject)
                 makeSeriesDirty(icalObject.uid)
                 recreateRecurring(icalObject)
-            } catch (e: SQLiteConstraintException) {
+            } catch (e: SQLException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
             Log.d("SQLConstraint", e.stackTraceToString())
         }
@@ -1811,7 +1796,7 @@ interface ICalDatabaseDao {
             }
             return newId
 
-        } catch (e: SQLiteConstraintException) {
+        } catch (e: SQLException) {
             Log.d("SQLConstraint", "Corrupted ID: ${icalObject.id}")
             Log.d("SQLConstraint", e.stackTraceToString())
             return null

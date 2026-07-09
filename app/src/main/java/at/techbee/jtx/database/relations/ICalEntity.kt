@@ -109,18 +109,18 @@ data class ICalEntity(
 
         val newEntity = ICalEntity()
         newEntity.property = property.copy()
-        newEntity.attendees = attendees?.toList()     // using toList() to create a copy of the list
-        newEntity.categories = categories?.toList()
+        newEntity.attendees = attendees?.map { it.copy(attendeeId = 0L, icalObjectId = 0L) }
+        newEntity.categories = categories?.map { it.copy(categoryId = 0L, icalObjectId = 0L) }
         if(newModule == Module.TODO) {
-            newEntity.alarms = alarms?.toList()
-            newEntity.resources = resources?.toList()
+            newEntity.alarms = alarms?.map { it.copy(alarmId = 0L, icalObjectId = 0L) }
+            newEntity.resources = resources?.map { it.copy(resourceId = 0L, icalObjectId = 0L) }
         }
-        newEntity.attachments = attachments?.toList()
-        newEntity.relatedto = relatedto?.toList()
+        newEntity.attachments = attachments?.map { it.copy(attachmentId = 0L, icalObjectId = 0L) }
+        newEntity.relatedto = relatedto?.map { it.copy(relatedtoId = 0L, icalObjectId = 0L) }
         newEntity.ICalCollection = ICalCollection?.copy()
-        newEntity.comments = comments?.toList()
-        newEntity.organizer = organizer?.copy()
-        newEntity.unknown = unknown?.toList()
+        newEntity.comments = comments?.map { it.copy(commentId = 0L, icalObjectId = 0L) }
+        newEntity.organizer = organizer?.copy(organizerId = 0L, icalObjectId = 0L)
+        newEntity.unknown = unknown?.map { it.copy(unknownId = 0L, icalObjectId = 0L) }
 
         return newEntity.apply {
 
@@ -170,17 +170,6 @@ data class ICalEntity(
                 if(Status.valuesFor(Module.TODO).none { it.status == property.status })
                     property.status = Status.NEEDS_ACTION.status
             }
-
-            // reset the ids of all list properties to make sure that they get inserted as new ones
-            attachments?.forEach { it.attachmentId = 0L }
-            attendees?.forEach { it.attendeeId = 0L }
-            categories?.forEach { it.categoryId = 0L }
-            comments?.forEach { it.commentId = 0L }
-            organizer?.organizerId = 0L
-            relatedto?.forEach { it.relatedtoId = 0L }
-            resources?.forEach { it.resourceId = 0L }
-            alarms?.forEach { it.alarmId = 0L }
-            unknown?.forEach { it.unknownId = 0L }
         }
     }
 
