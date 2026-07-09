@@ -97,29 +97,32 @@ object JtxContract {
      * This function takes a string and tries to parse it to a list of XProperty.
      * This is the counterpart of getJsonStringFromXProperties(...)
      * @param [string] that should be parsed
-     * @return The list of XProperty parsed from the string
+     * @return A PropertyList containing the XProperty instances parsed from the string
      */
     fun getXPropertyListFromJson(string: String): PropertyList {
-        val propertyList = PropertyList()
+        if (string.isBlank()) {
+            return PropertyList()
+        }
 
-        if (string.isBlank())
-            return propertyList
-
-        try {
-            val jsonObject = JSONObject(string)
-            for (i in 0 until jsonObject.length()) {
-                val names = jsonObject.names() ?: break
-                val propertyName = names[i]?.toString() ?: break
-                val propertyValue = jsonObject.getString(propertyName).toString()
-                if (propertyName.isNotBlank() && propertyValue.isNotBlank()) {
-                    val prop = XProperty(propertyName, propertyValue)
-                    propertyList.add(prop)
+        return try {
+            val properties = buildList {
+                val jsonObject = JSONObject(string)
+                for (i in 0 until jsonObject.length()) {
+                    val names = jsonObject.names() ?: break
+                    val propertyName = names[i]?.toString() ?: break
+                    val propertyValue = jsonObject.getString(propertyName).toString()
+                    if (propertyName.isNotBlank() && propertyValue.isNotBlank()) {
+                        val prop = XProperty(propertyName, propertyValue)
+                        add(prop)
+                    }
                 }
             }
+
+            PropertyList(properties)
         } catch (e: NullPointerException) {
             logger.log(Level.WARNING, "Error parsing x-property-list $string", e)
+            PropertyList()
         }
-        return propertyList
     }
 
 
