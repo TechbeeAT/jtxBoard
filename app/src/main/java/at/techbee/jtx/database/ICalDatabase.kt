@@ -105,7 +105,6 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 37, to = 38),  // view udpate
         AutoMigration (from = 38, to = 39),  // new column isAlarmNotificationActive + migration spec to remove indices
         AutoMigration (from = 39, to = 40),  // new column syncId in ICalCollection
-        AutoMigration (from = 40, to = 41),  // created and lastModified made nullable in ICalObject
     ]
 )
 @TypeConverters(Converters::class)
@@ -170,6 +169,97 @@ abstract class ICalDatabase : RoomDatabase() {
             }
         }
 
+        // made created, lastmodified and sequence nullable in ICalObject (replaces the former AutoMigration(40, 41))
+        private val MIGRATION_40_41 = object : Migration(40, 41) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""
+                    CREATE TABLE IF NOT EXISTS `icalobject_new` (
+                        `_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `module` TEXT NOT NULL,
+                        `component` TEXT NOT NULL,
+                        `summary` TEXT,
+                        `description` TEXT,
+                        `dtstart` INTEGER,
+                        `dtstarttimezone` TEXT,
+                        `dtend` INTEGER,
+                        `dtendtimezone` TEXT,
+                        `status` TEXT,
+                        `xstatus` TEXT,
+                        `classification` TEXT,
+                        `url` TEXT,
+                        `contact` TEXT,
+                        `geolat` REAL,
+                        `geolong` REAL,
+                        `location` TEXT,
+                        `locationaltrep` TEXT,
+                        `geofenceRadius` INTEGER,
+                        `percent` INTEGER,
+                        `priority` INTEGER,
+                        `due` INTEGER,
+                        `duetimezone` TEXT,
+                        `completed` INTEGER,
+                        `completedtimezone` TEXT,
+                        `duration` TEXT,
+                        `uid` TEXT NOT NULL,
+                        `created` INTEGER,
+                        `dtstamp` INTEGER NOT NULL,
+                        `lastmodified` INTEGER,
+                        `sequence` INTEGER,
+                        `rrule` TEXT,
+                        `exdate` TEXT,
+                        `rdate` TEXT,
+                        `recurid` TEXT,
+                        `recuridtimezone` TEXT,
+                        `rstatus` TEXT,
+                        `color` INTEGER,
+                        `collectionId` INTEGER NOT NULL,
+                        `dirty` INTEGER NOT NULL,
+                        `deleted` INTEGER NOT NULL,
+                        `filename` TEXT,
+                        `etag` TEXT,
+                        `scheduletag` TEXT,
+                        `flags` INTEGER,
+                        `subtasksExpanded` INTEGER,
+                        `subnotesExpanded` INTEGER,
+                        `parentsExpanded` INTEGER,
+                        `attachmentsExpanded` INTEGER,
+                        `sortIndex` INTEGER,
+                        `isAlarmNotificationActive` INTEGER NOT NULL DEFAULT 0,
+                        FOREIGN KEY(`collectionId`) REFERENCES `collection`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                """.trimIndent())
+
+                db.execSQL("""
+                    INSERT INTO `icalobject_new` (
+                        `_id`, `module`, `component`, `summary`, `description`, `dtstart`, `dtstarttimezone`,
+                        `dtend`, `dtendtimezone`, `status`, `xstatus`, `classification`, `url`, `contact`,
+                        `geolat`, `geolong`, `location`, `locationaltrep`, `geofenceRadius`, `percent`,
+                        `priority`, `due`, `duetimezone`, `completed`, `completedtimezone`, `duration`,
+                        `uid`, `created`, `dtstamp`, `lastmodified`, `sequence`, `rrule`, `exdate`, `rdate`,
+                        `recurid`, `recuridtimezone`, `rstatus`, `color`, `collectionId`, `dirty`, `deleted`,
+                        `filename`, `etag`, `scheduletag`, `flags`, `subtasksExpanded`, `subnotesExpanded`,
+                        `parentsExpanded`, `attachmentsExpanded`, `sortIndex`, `isAlarmNotificationActive`
+                    )
+                    SELECT
+                        `_id`, `module`, `component`, `summary`, `description`, `dtstart`, `dtstarttimezone`,
+                        `dtend`, `dtendtimezone`, `status`, `xstatus`, `classification`, `url`, `contact`,
+                        `geolat`, `geolong`, `location`, `locationaltrep`, `geofenceRadius`, `percent`,
+                        `priority`, `due`, `duetimezone`, `completed`, `completedtimezone`, `duration`,
+                        `uid`, `created`, `dtstamp`, `lastmodified`, `sequence`, `rrule`, `exdate`, `rdate`,
+                        `recurid`, `recuridtimezone`, `rstatus`, `color`, `collectionId`, `dirty`, `deleted`,
+                        `filename`, `etag`, `scheduletag`, `flags`, `subtasksExpanded`, `subnotesExpanded`,
+                        `parentsExpanded`, `attachmentsExpanded`, `sortIndex`, `isAlarmNotificationActive`
+                    FROM `icalobject`
+                """.trimIndent())
+
+                db.execSQL("DROP TABLE `icalobject`")
+                db.execSQL("ALTER TABLE `icalobject_new` RENAME TO `icalobject`")
+
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_icalobject__id` ON `icalobject` (`_id`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_icalobject_collectionId` ON `icalobject` (`collectionId`)")
+            }
+        }
+
         @Volatile
         private var INSTANCE: ICalDatabase? = null
 
@@ -206,7 +296,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31, MIGRATION_40_41)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about
