@@ -105,7 +105,6 @@ import at.techbee.jtx.database.views.ICal4List
         AutoMigration (from = 37, to = 38),  // view udpate
         AutoMigration (from = 38, to = 39),  // new column isAlarmNotificationActive + migration spec to remove indices
         AutoMigration (from = 39, to = 40),  // new column syncId in ICalCollection
-        AutoMigration (from = 40, to = 41),  // created and lastModified made nullable in ICalObject
     ]
 )
 @TypeConverters(Converters::class)
@@ -170,6 +169,34 @@ abstract class ICalDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_40_41 = object : Migration(40, 41) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // 1. Clean up orphaned icalobjects that reference non-existent collectionIds.
+                // This is necessary because the subsequent table recreation logic will fail
+                // if foreign key violations exist.
+                db.execSQL("DELETE FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ICALOBJECT_COLLECTIONID NOT IN (SELECT $COLUMN_COLLECTION_ID FROM $TABLE_NAME_COLLECTION)")
+
+                // 2. Perform the schema changes previously handled by AutoMigration 40->41:
+                // Make `created` and `lastModified` columns nullable in `icalobject`.
+                db.execSQL("DROP VIEW IF EXISTS `ical4list`")
+                db.execSQL("DROP VIEW IF EXISTS `collectionsView`")
+
+                db.execSQL("CREATE TABLE IF NOT EXISTS `_new_icalobject` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `module` TEXT NOT NULL, `component` TEXT NOT NULL, `summary` TEXT, `description` TEXT, `dtstart` INTEGER, `dtstarttimezone` TEXT, `dtend` INTEGER, `dtendtimezone` TEXT, `status` TEXT, `xstatus` TEXT, `classification` TEXT, `url` TEXT, `contact` TEXT, `geolat` REAL, `geolong` REAL, `location` TEXT, `locationaltrep` TEXT, `geofenceRadius` INTEGER, `percent` INTEGER, `priority` INTEGER, `due` INTEGER, `duetimezone` TEXT, `completed` INTEGER, `completedtimezone` TEXT, `duration` TEXT, `uid` TEXT NOT NULL, `created` INTEGER, `dtstamp` INTEGER NOT NULL, `lastmodified` INTEGER, `sequence` INTEGER, `rrule` TEXT, `exdate` TEXT, `rdate` TEXT, `recurid` TEXT, `recuridtimezone` TEXT, `rstatus` TEXT, `color` INTEGER, `collectionId` INTEGER NOT NULL, `dirty` INTEGER NOT NULL, `deleted` INTEGER NOT NULL, `filename` TEXT, `etag` TEXT, `scheduletag` TEXT, `flags` INTEGER, `subtasksExpanded` INTEGER, `subnotesExpanded` INTEGER, `parentsExpanded` INTEGER, `attachmentsExpanded` INTEGER, `sortIndex` INTEGER, `isAlarmNotificationActive` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`collectionId`) REFERENCES `collection`(`_id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+
+                db.execSQL("INSERT INTO `_new_icalobject` (`_id`,`module`,`component`,`summary`,`description`,`dtstart`,`dtstarttimezone`,`dtend`,`dtendtimezone`,`status`,`xstatus`,`classification`,`url`,`contact`,`geolat`,`geolong`,`location`,`locationaltrep`,`geofenceRadius`,`percent`,`priority`,`due`,`duetimezone`,`completed`,`completedtimezone`,`duration`,`uid`,`created`,`dtstamp`,`lastmodified`,`sequence`,`rrule`,`exdate`,`rdate`,`recurid`,`recuridtimezone`,`rstatus`,`color`,`collectionId`,`dirty`,`deleted`,`filename`,`etag`,`scheduletag`,`flags`,`subtasksExpanded`,`subnotesExpanded`,`parentsExpanded`,`attachmentsExpanded`,`sortIndex`,`isAlarmNotificationActive`) SELECT `_id`,`module`,`component`,`summary`,`description`,`dtstart`,`dtstarttimezone`,`dtend`,`dtendtimezone`,`status`,`xstatus`,`classification`,`url`,`contact`,`geolat`,`geolong`,`location`,`locationaltrep`,`geofenceRadius`,`percent`,`priority`,`due`,`duetimezone`,`completed`,`completedtimezone`,`duration`,`uid`,`created`,`dtstamp`,`lastmodified`,`sequence`,`rrule`,`exdate`,`rdate`,`recurid`,`recuridtimezone`,`rstatus`,`color`,`collectionId`,`dirty`,`deleted`,`filename`,`etag`,`scheduletag`,`flags`,`subtasksExpanded`,`subnotesExpanded`,`parentsExpanded`,`attachmentsExpanded`,`sortIndex`,`isAlarmNotificationActive` FROM `icalobject`")
+
+                db.execSQL("DROP TABLE `icalobject`")
+                db.execSQL("ALTER TABLE `_new_icalobject` RENAME TO `icalobject`")
+
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_icalobject__id` ON `icalobject` (`_id`)")
+                db.execSQL("CREATE INDEX IF NOT EXISTS `index_icalobject_collectionId` ON `icalobject` (`collectionId`)")
+
+                // Re-create views
+                db.execSQL("CREATE VIEW `ical4list` AS SELECT DISTINCT main_icalobject._id, main_icalobject.module, main_icalobject.component, main_icalobject.summary, main_icalobject.description, main_icalobject.location, main_icalobject.geolat, main_icalobject.geolong, main_icalobject.url, main_icalobject.contact, main_icalobject.dtstart, main_icalobject.dtstarttimezone, main_icalobject.dtend, main_icalobject.dtendtimezone, main_icalobject.status, main_icalobject.xstatus, main_icalobject.classification, main_icalobject.percent, main_icalobject.priority, main_icalobject.due, main_icalobject.duetimezone, main_icalobject.completed, main_icalobject.completedtimezone, main_icalobject.duration, main_icalobject.created, main_icalobject.dtstamp, main_icalobject.lastmodified, main_icalobject.sequence, main_icalobject.uid, main_icalobject.rrule, main_icalobject.recurid, collection.color as colorCollection, main_icalobject.color as colorItem, main_icalobject.collectionId, collection.accountname, collection.displayname, main_icalobject.deleted, CASE WHEN collection.accounttype = 'LOCAL' THEN 0 WHEN main_icalobject.recurid IS NOT NULL THEN (SELECT series.dirty FROM icalobject series WHERE series.recurid IS NULL AND series.uid = main_icalobject.uid) ELSE main_icalobject.dirty END as uploadPending, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'JOURNAL' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfJournal, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'NOTE' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfNote, CASE WHEN main_icalobject._id IN (SELECT sub_rel.icalObjectId FROM relatedto sub_rel INNER JOIN icalobject sub_ical on sub_rel.text = sub_ical.uid AND sub_ical.module = 'TODO' AND sub_rel.reltype = 'PARENT') THEN 1 ELSE 0 END as isChildOfTodo, (SELECT group_concat(sub.text, '|||') FROM (SELECT * FROM category ORDER BY text) as sub WHERE main_icalobject._id = sub.icalObjectId) as categories, (SELECT group_concat(sub.text, '|||') FROM (SELECT * FROM resource ORDER BY text) as sub WHERE main_icalobject._id = sub.icalObjectId) as resources, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.icalObjectId AND sub_icalobject.component = 'VTODO' AND sub_relatedto.text = main_icalobject.uid AND sub_relatedto.reltype = 'PARENT' AND sub_icalobject.deleted = 0 AND sub_icalobject.rrule IS NULL) as numSubtasks, (SELECT count(*) FROM icalobject sub_icalobject INNER JOIN relatedto sub_relatedto ON sub_icalobject._id = sub_relatedto.icalObjectId AND sub_icalobject.component = 'VJOURNAL' AND sub_relatedto.text = main_icalobject.uid AND sub_relatedto.reltype = 'PARENT' AND sub_icalobject.deleted = 0 AND sub_icalobject.rrule IS NULL) as numSubnotes, (SELECT count(*) FROM attachment WHERE icalObjectId = main_icalobject._id  ) as numAttachments, (SELECT count(*) FROM attendee WHERE icalObjectId = main_icalobject._id  ) as numAttendees, (SELECT count(*) FROM comment WHERE icalObjectId = main_icalobject._id  ) as numComments, (SELECT count(*) FROM relatedto WHERE icalObjectId = main_icalobject._id  ) as numRelatedTodos, (SELECT count(*) FROM resource WHERE icalObjectId = main_icalobject._id  ) as numResources, (SELECT count(*) FROM alarm WHERE icalObjectId = main_icalobject._id  ) as numAlarms, (SELECT uri FROM attachment WHERE icalObjectId = main_icalobject._id AND (fmttype LIKE 'audio/%' OR fmttype LIKE 'video/%') LIMIT 1 ) as audioAttachment, collection.readonly as isReadOnly, main_icalobject.subtasksExpanded, main_icalobject.subnotesExpanded, main_icalobject.parentsExpanded, main_icalobject.attachmentsExpanded, main_icalobject.sortIndex FROM icalobject main_icalobject INNER JOIN collection collection ON main_icalobject.collectionId = collection._id WHERE main_icalobject.deleted = 0 AND (main_icalobject.rrule IS NULL OR (main_icalobject.dtstart IS NULL AND main_icalobject.rrule IS NOT NULL))")
+                db.execSQL("CREATE VIEW `collectionsView` AS SELECT _id, url, displayname, description, owner, ownerdisplayname, color, supportsVEVENT, supportsVTODO, supportsVJOURNAL, accountname, accounttype, syncversion, readonly, lastsync, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'JOURNAL' AND deleted = 0) as numJournals, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'NOTE' AND deleted = 0) as numNotes, (SELECT count(*) FROM icalobject WHERE icalobject.collectionId = collection._id AND module = 'TODO' AND deleted = 0) as numTodos FROM collection")
+            }
+        }
+
         @Volatile
         private var INSTANCE: ICalDatabase? = null
 
@@ -206,7 +233,7 @@ abstract class ICalDatabase : RoomDatabase() {
                             ICalDatabase::class.java,
                             "jtx_database"
                     )
-                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31)
+                        .addMigrations(MIGRATION_1_2, MIGRATION_12_13, MIGRATION_18_19, MIGRATION_30_31, MIGRATION_40_41)
 
                         // Wipes and rebuilds instead of migrating if no Migration object.
                         // Migration is not part of this lesson. You can learn more about

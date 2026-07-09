@@ -15,7 +15,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.UriMatcher
 import android.database.Cursor
-import android.database.sqlite.SQLiteConstraintException
+import android.database.SQLException
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.util.Log
@@ -247,7 +247,15 @@ class SyncContentProvider : ContentProvider() {
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query prepared: $queryString")
         //Log.println(Log.INFO, "SyncContentProvider", "Delete Query args prepared: ${args.joinToString(separator = ", ")}")
 
-        database.executeRAW(deleteQuery)
+        try {
+            database.executeRAW(deleteQuery)
+        } catch (e: SQLException) {
+            Log.e(
+                "SQLException",
+                "The given delete caused a SQLException. This delete is skipped.\nUri: $uri\n$e"
+            )
+            return 0
+        }
 
         Attachment.scheduleCleanupJob(context!!)    // cleanup possible old Attachments
         if(sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM)
@@ -298,10 +306,9 @@ class SyncContentProvider : ContentProvider() {
         // TODO: Make sure that only the items within the collection of the given account are considered
         getAccountFromUri(uri)     // here this is used also for validation
 
-        var id: Long? = null
+        var id: Long?
 
         try {
-
             when (sUriMatcher.match(uri)) {
                 CODE_ICALOBJECTS_DIR -> id =
                     ICalObject.fromContentValues(values)?.let { database.insertICalObjectSync(it) }
@@ -340,49 +347,51 @@ class SyncContentProvider : ContentProvider() {
 
                 else -> throw java.lang.IllegalArgumentException("Unknown URI: $uri")
             }
-        } catch (e: SQLiteConstraintException) {
-            Log.e(
-                "ConstraintException",
-                "The given insert caused a SQLiteConstraintException. This entry is skipped.\nUri: $uri\nValues:${values.toString()}\n$e"
+
+            if (id == null)
+                return null
+
+            if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
+                createEmptyFileForAttachment(id)
+
+            if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
+                && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true)
             )
-        }
-
-        if (context == null)
-            return null
-
-        if (id == null)
-            return null
-
-        Log.println(Log.INFO, "newContentUri", ContentUris.withAppendedId(uri, id).toString())
-
-        if (sUriMatcher.match(uri) == CODE_ATTACHMENT_DIR)
-            createEmptyFileForAttachment(id)
-
-        if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
-            && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true)
-        )
-            database.getRecurringToPopulate(id)?.let {
-                database.recreateRecurring(it)
-            }
-
-        if (sUriMatcher.match(uri) == CODE_ALARM_DIR) {
-            val alarm = database.getAlarmSync(id) ?: return null
-            val iCalObject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return null
-
-            alarm.triggerRelativeDuration?.let { durString ->
-                try {
-                    val duration = Duration.parse(durString)
-                    alarm.updateDuration(
-                        dur = duration,
-                        alarmRelativeTo = try { alarm.triggerRelativeTo?.let { AlarmRelativeTo.valueOf(it) } } catch(_: IllegalArgumentException) { null },
-                        referenceDate = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.due ?: System.currentTimeMillis() else iCalObject.dtstart ?: System.currentTimeMillis(),
-                        referenceTimezone = if(alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.dueTimezone else iCalObject.dtstartTimezone
-                    )
-                } catch (e: java.lang.IllegalArgumentException) {
-                    Log.w("Duration", "Illegal Duration detected\n${e.stackTraceToString()}")
+                database.getRecurringToPopulate(id)?.let {
+                    database.recreateRecurring(it)
                 }
+
+            if (sUriMatcher.match(uri) == CODE_ALARM_DIR) {
+                val alarm = database.getAlarmSync(id) ?: return null
+                val iCalObject = database.getICalObjectByIdSync(alarm.icalObjectId) ?: return null
+
+                alarm.triggerRelativeDuration?.let { durString ->
+                    try {
+                        val duration = Duration.parse(durString)
+                        alarm.updateDuration(
+                            dur = duration,
+                            alarmRelativeTo = try {
+                                alarm.triggerRelativeTo?.let { AlarmRelativeTo.valueOf(it) }
+                            } catch (_: IllegalArgumentException) {
+                                null
+                            },
+                            referenceDate = if (alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.due
+                                ?: System.currentTimeMillis() else iCalObject.dtstart
+                                ?: System.currentTimeMillis(),
+                            referenceTimezone = if (alarm.triggerRelativeTo == AlarmRelativeTo.END.name) iCalObject.dueTimezone else iCalObject.dtstartTimezone
+                        )
+                    } catch (e: java.lang.IllegalArgumentException) {
+                        Log.w("Duration", "Illegal Duration detected\n${e.stackTraceToString()}")
+                    }
+                }
+                database.updateAlarm(alarm)
             }
-            database.updateAlarm(alarm)
+        } catch (e: SQLException) {
+            Log.e(
+                "SQLException",
+                "The given insert caused a SQLException. This entry is skipped.\nUri: $uri\nValues:${values.toString()}\n$e"
+            )
+            return null
         }
 
         if(sUriMatcher.match(uri) == CODE_ALARM_DIR || sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR)
@@ -624,7 +633,15 @@ class SyncContentProvider : ContentProvider() {
 
         // TODO: find a solution to efficiently return the actual count of updated rows (the return value of the RAW-query doesn't work)
         //val count = database.updateRAW(updateQuery)
-        database.executeRAW(updateQuery)
+        try {
+            database.executeRAW(updateQuery)
+        } catch (e: SQLException) {
+            Log.e(
+                "SQLException",
+                "The given update caused a SQLException. This update is skipped.\nUri: $uri\nValues:${values.toString()}\n$e"
+            )
+            return 0
+        }
 
         //Remove alarms if obsolete
         if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
@@ -651,6 +668,11 @@ class SyncContentProvider : ContentProvider() {
                 }
             } catch (e: NumberFormatException) {
                 throw  java.lang.IllegalArgumentException("Could not convert path segment to Long: $uri\n$e")
+            } catch (e: SQLException) {
+                Log.e(
+                    "SQLException",
+                    "The recurring update caused a SQLException. This update is skipped.\nUri: $uri\n$e"
+                )
             }
         }
 
