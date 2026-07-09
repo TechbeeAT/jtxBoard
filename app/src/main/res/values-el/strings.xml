@@ -636,6 +636,7 @@
     <string name="widget_list_configuration_pro_info">"Αγοράστε το πακέτο Pro για να ενεργοποιήσετε περαιτέρω επιλογές διαμόρφωσης."</string>
     <string name="widget_list_configuration_checkbox_position">"Θέση πλαισίου ελέγχου"</string>
     <string name="widget_list_no_entries_found">"Δεν βρέθηκαν καταχωρήσεις που να ταιριάζουν με τα κριτήρια φίλτρου σας"</string>
+    <string name="widget_list_nothing_here">"Δεν βρέθηκε τίποτα"</string>
     <string name="widget_list_view_settings">"Προβολή ρυθμίσεων"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Προσοχή: Προς το παρόν μόνο ένα επίπεδο ιεραρχίας υποστηρίζεται στο γραφικό στοιχείο. Για να δείτε τις καταχωρήσεις των χαμηλότερων επιπέδων, χρησιμοποιήστε την επίπεδη προβολή."</string>
     <string name="widget_list_maximum_entries_reached">"Επιτεύχθηκε μέγιστος αριθμός καταχωρήσεων στο widget (%1$d)."</string>
