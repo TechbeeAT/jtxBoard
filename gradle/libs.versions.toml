@@ -32,7 +32,7 @@ kotlinxSerializationJson = "1.11.0"
 # see https://github.com/google/ksp/releases for version numbers
 ksp = "2.3.9"
 libphonenumber = "9.0.34"
-mapsCompose = "8.3.0"
+mapsCompose = "8.3.1"
 mikepenz-aboutLibraries = "15.0.3"
 mikepenz-markdown = "0.43.0"
 mockitoCore = "5.23.0"
