@@ -60,7 +60,8 @@ baselineprofile = "1.5.0-alpha07"
 
 [libraries]
 amazon-appstore-sdk = { module = "com.amazon.device:amazon-appstore-sdk", version.ref = "amazonAppstoreSdk" }
-android-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "android-desugaring" }
+# _nio flavor required by the synctools library (davx5-ose); it is a superset of the base variant
+android-desugaring = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "android-desugaring" }
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
