@@ -41,6 +41,8 @@ playServicesLocation = "21.4.0"
 playServicesMaps = "20.0.0"
 profileinstaller = "1.4.1"
 reorderable = "3.1.0"
+# synctools is provided by the davx5-ose Git submodule via a Gradle composite build
+# (see settings.gradle.kts). Keep this tag in sync with the submodule's checked-out commit.
 synctools = "v4.5.17.1-ose"
 uiTextGoogleFonts = "1.11.4"
 robolectric = "4.16.1"
