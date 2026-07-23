@@ -10,6 +10,7 @@ package at.techbee.jtx.util
 
 import android.icu.text.MessageFormat
 import android.util.Log
+import androidx.core.text.util.LocalePreferences
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import java.time.DateTimeException
 import java.time.DayOfWeek
@@ -186,10 +187,43 @@ object DateTimeUtils {
 
 
     /**
+     * Determines the first day of the week for the current device.
+     *
+     * In contrast to [WeekFields.of] (which only derives the week start from the language/region
+     * of the locale, e.g. en-US -> Sunday), this respects the user's system setting under
+     * "Regional preferences -> First day of week" (available since Android 13). That setting is
+     * exposed through the locale's "-u-fw-" unicode extension, which is read by
+     * [LocalePreferences.getFirstDayOfWeek]. If the user did not override the setting, it falls
+     * back to the locale's default (ICU) value.
+     *
+     * @return the first [DayOfWeek] of the week for the local device
+     */
+    fun getLocalizedFirstDayOfWeek(): DayOfWeek = when (LocalePreferences.getFirstDayOfWeek()) {
+        LocalePreferences.FirstDayOfWeek.MONDAY -> DayOfWeek.MONDAY
+        LocalePreferences.FirstDayOfWeek.TUESDAY -> DayOfWeek.TUESDAY
+        LocalePreferences.FirstDayOfWeek.WEDNESDAY -> DayOfWeek.WEDNESDAY
+        LocalePreferences.FirstDayOfWeek.THURSDAY -> DayOfWeek.THURSDAY
+        LocalePreferences.FirstDayOfWeek.FRIDAY -> DayOfWeek.FRIDAY
+        LocalePreferences.FirstDayOfWeek.SATURDAY -> DayOfWeek.SATURDAY
+        LocalePreferences.FirstDayOfWeek.SUNDAY -> DayOfWeek.SUNDAY
+        else -> WeekFields.of(Locale.getDefault()).firstDayOfWeek  // fallback if the value is unknown/DEFAULT
+    }
+
+    /**
      * @return true if the first day of the week is monday for the local device, else false
      */
     fun isLocalizedWeekstartMonday() =
-        WeekFields.of(Locale.getDefault()).firstDayOfWeek == DayOfWeek.MONDAY
+        getLocalizedFirstDayOfWeek() == DayOfWeek.MONDAY
+
+    /**
+     * @return [WeekFields] that use the device's first day of the week (respecting the
+     * "Regional preferences -> First day of week" system setting, see [getLocalizedFirstDayOfWeek])
+     * while keeping the locale's minimal days in the first week for week numbering.
+     */
+    fun getLocalizedWeekFields(): WeekFields = WeekFields.of(
+        getLocalizedFirstDayOfWeek(),
+        WeekFields.of(Locale.getDefault()).minimalDaysInFirstWeek
+    )
 
 
     fun addLongToCSVString(listAsString: String?, value: Long?): String? {
