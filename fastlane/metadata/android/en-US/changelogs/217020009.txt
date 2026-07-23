@@ -1,0 +1,2 @@
+- Version and stability updates
+- Hide checked markdown checkboxes in task list when filtering done tasks
