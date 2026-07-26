@@ -23,7 +23,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import at.bitfire.ical4android.util.TimeApiExtensions.toLocalDate
+import at.bitfire.synctools.util.TimeApiExtensions.toLocalDate
 import at.techbee.jtx.R
 import at.techbee.jtx.contract.JtxContract
 import at.techbee.jtx.ui.settings.DropdownSettingOption

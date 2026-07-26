@@ -41,7 +41,9 @@ playServicesLocation = "21.4.0"
 playServicesMaps = "20.0.0"
 profileinstaller = "1.4.1"
 reorderable = "3.1.0"
-synctools = "b5d43f5712"
+# synctools is provided by the davx5-ose Git submodule via a Gradle composite build
+# (see settings.gradle.kts). Keep this tag in sync with the submodule's checked-out commit.
+synctools = "v4.5.17.1-ose"
 uiTextGoogleFonts = "1.11.4"
 robolectric = "4.16.1"
 room = "2.8.4"
@@ -58,7 +60,8 @@ baselineprofile = "1.5.0-alpha07"
 
 [libraries]
 amazon-appstore-sdk = { module = "com.amazon.device:amazon-appstore-sdk", version.ref = "amazonAppstoreSdk" }
-android-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "android-desugaring" }
+# _nio flavor required by the synctools library (davx5-ose); it is a superset of the base variant
+android-desugaring = { module = "com.android.tools:desugar_jdk_libs_nio", version.ref = "android-desugaring" }
 androidx-activityCompose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
@@ -113,7 +116,7 @@ room-base = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
-synctools = { module = "com.github.bitfireat:synctools", version.ref = "synctools" }
+synctools = { group = "com.github.bitfireat.davx5-ose", name = "synctools", version.ref = "synctools" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 
 # gplay and managed build variants
@@ -138,4 +141,3 @@ kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", vers
 android-test = { id = "com.android.test", version.ref = "android-agp" }
 baselineprofile = { id = "androidx.baselineprofile", version.ref = "baselineprofile" }
 #huawei-agconnect = { id = "com.huawei.agconnect", version.ref = "huawei" }
-
