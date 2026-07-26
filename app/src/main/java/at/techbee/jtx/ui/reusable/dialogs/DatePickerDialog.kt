@@ -28,6 +28,7 @@ import androidx.compose.material.icons.outlined.TravelExplore
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,7 +39,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,6 +50,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -104,19 +105,26 @@ fun DatePickerDialog(
         ?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
         ?: minDate
 
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000),
-        selectableDates = object: SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                return if (allowedDates.isNotEmpty())
-                    allowedDates.any {
-                        utcTimeMillis == it.toLocalDate().atStartOfDay().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()
-                    }
-                else
-                    true
+    // Material3's DatePicker derives the first day of the week from WeekFields.of(locale), which
+    // ignores the system "first day of week" setting. Pass a locale that reflects that setting
+    // (see DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek) so the calendar starts on the right day.
+    val configuration = LocalConfiguration.current
+    val datePickerState = remember(configuration) {
+        DatePickerState(
+            locale = DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek(configuration.locales[0]),
+            initialSelectedDateMillis = initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000),
+            selectableDates = object: SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    return if (allowedDates.isNotEmpty())
+                        allowedDates.any {
+                            utcTimeMillis == it.toLocalDate().atStartOfDay().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()
+                        }
+                    else
+                        true
+                }
             }
-        }
-    )
+        )
+    }
     val timePickerState = rememberTimePickerState(initialZonedDateTime?.hour?:0, initialZonedDateTime?.minute?:0)
     val showTabs = !dateOnly || allowNull
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { if(showTabs) 3 else 1 })

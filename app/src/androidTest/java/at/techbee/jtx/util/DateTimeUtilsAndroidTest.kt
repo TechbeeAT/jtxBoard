@@ -10,10 +10,15 @@ package at.techbee.jtx.util
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import at.techbee.jtx.util.DateTimeUtils.isLocalizedWeekstartMonday
+import at.techbee.jtx.util.DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek
+import at.techbee.jtx.util.DateTimeUtils.getLocalizedDaysOfWeek
+import at.techbee.jtx.util.DateTimeUtils.getLocalizedFirstDayOfWeek
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.DayOfWeek
+import java.time.temporal.WeekFields
 import java.util.Locale
 
 
@@ -21,17 +26,110 @@ import java.util.Locale
 @SmallTest
 class DateTimeUtilsAndroidTest {
 
+    private val defaultLocale: Locale = Locale.getDefault()
 
-    @Test
-    fun isLocalizedWeekstartMonday_GERMAN() {
-        Locale.setDefault(Locale.GERMAN)
-        assertEquals(true, isLocalizedWeekstartMonday())
+    @After
+    fun tearDown() {
+        Locale.setDefault(defaultLocale)
     }
 
     @Test
-    fun isLocalizedWeekstartMonday_US() {
+    fun getLocalizedFirstDayOfWeek_GERMAN() {
+        Locale.setDefault(Locale.GERMAN)
+        assertEquals(DayOfWeek.MONDAY, getLocalizedFirstDayOfWeek())
+    }
+
+    @Test
+    fun getLocalizedFirstDayOfWeek_US() {
         Locale.setDefault(Locale.US)
-        assertEquals(false, isLocalizedWeekstartMonday())
+        assertEquals(DayOfWeek.SUNDAY, getLocalizedFirstDayOfWeek())
+    }
+
+    @Test
+    fun getLocalizedFirstDayOfWeek_US_withFirstDayOfWeekOverrideMonday() {
+        // Emulates the "Regional preferences -> First day of week = Monday" system setting,
+        // which is exposed as the "-u-fw-mon" unicode extension on the default locale.
+        Locale.setDefault(Locale.forLanguageTag("en-US-u-fw-mon"))
+        assertEquals(DayOfWeek.MONDAY, getLocalizedFirstDayOfWeek())
+    }
+
+    @Test
+    fun getLocalizedFirstDayOfWeek_GERMAN_withFirstDayOfWeekOverrideSunday() {
+        Locale.setDefault(Locale.forLanguageTag("de-DE-u-fw-sun"))
+        assertEquals(DayOfWeek.SUNDAY, getLocalizedFirstDayOfWeek())
+    }
+
+    @Test
+    fun getLocalizedDaysOfWeek_GERMAN_startsWithMonday() {
+        Locale.setDefault(Locale.GERMAN)
+        assertEquals(
+            listOf(
+                DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY,
+                DayOfWeek.FRIDAY, DayOfWeek.SATURDAY, DayOfWeek.SUNDAY
+            ),
+            getLocalizedDaysOfWeek()
+        )
+    }
+
+    @Test
+    fun getLocalizedDaysOfWeek_US_startsWithSunday() {
+        Locale.setDefault(Locale.US)
+        assertEquals(
+            listOf(
+                DayOfWeek.SUNDAY, DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY,
+                DayOfWeek.THURSDAY, DayOfWeek.FRIDAY, DayOfWeek.SATURDAY
+            ),
+            getLocalizedDaysOfWeek()
+        )
+    }
+
+    @Test
+    fun getLocalizedDaysOfWeek_US_withFirstDayOfWeekOverrideSaturday() {
+        Locale.setDefault(Locale.forLanguageTag("en-US-u-fw-sat"))
+        assertEquals(
+            listOf(
+                DayOfWeek.SATURDAY, DayOfWeek.SUNDAY, DayOfWeek.MONDAY, DayOfWeek.TUESDAY,
+                DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY
+            ),
+            getLocalizedDaysOfWeek()
+        )
+    }
+
+    // The DatePicker workaround has to produce a locale whose WeekFields.of(...) resolves to the
+    // device's first day of the week, because that is how Material3 derives it.
+
+    @Test
+    fun getLocaleForLocalizedFirstDayOfWeek_US_weekFieldsStartSunday() {
+        Locale.setDefault(Locale.US)
+        val locale = getLocaleForLocalizedFirstDayOfWeek()
+        assertEquals(DayOfWeek.SUNDAY, WeekFields.of(locale).firstDayOfWeek)
+    }
+
+    @Test
+    fun getLocaleForLocalizedFirstDayOfWeek_GERMAN_weekFieldsStartMonday() {
+        Locale.setDefault(Locale.GERMAN)
+        val locale = getLocaleForLocalizedFirstDayOfWeek()
+        assertEquals(DayOfWeek.MONDAY, WeekFields.of(locale).firstDayOfWeek)
+    }
+
+    @Test
+    fun getLocaleForLocalizedFirstDayOfWeek_US_withOverrideMonday_weekFieldsStartMonday() {
+        Locale.setDefault(Locale.forLanguageTag("en-US-u-fw-mon"))
+        val locale = getLocaleForLocalizedFirstDayOfWeek()
+        assertEquals(DayOfWeek.MONDAY, WeekFields.of(locale).firstDayOfWeek)
+    }
+
+    @Test
+    fun getLocaleForLocalizedFirstDayOfWeek_GERMAN_withOverrideSunday_weekFieldsStartSunday() {
+        Locale.setDefault(Locale.forLanguageTag("de-DE-u-fw-sun"))
+        val locale = getLocaleForLocalizedFirstDayOfWeek()
+        assertEquals(DayOfWeek.SUNDAY, WeekFields.of(locale).firstDayOfWeek)
+    }
+
+    @Test
+    fun getLocaleForLocalizedFirstDayOfWeek_keepsLanguage() {
+        Locale.setDefault(Locale.forLanguageTag("de-DE-u-fw-sun"))
+        assertEquals("de", getLocaleForLocalizedFirstDayOfWeek().language)
     }
 
 }

@@ -32,7 +32,6 @@ import at.techbee.jtx.util.DateTimeUtils
 import java.time.Instant
 import java.time.ZonedDateTime
 import java.time.format.TextStyle
-import java.time.temporal.WeekFields
 import java.util.Locale
 
 
@@ -194,7 +193,7 @@ data class ICal4ListRel(
                             val date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(ical4ListRel.iCal4List.dtstartTimezone)).toLocalDate()
                             context.getString(
                                 R.string.week_number_year,
-                                date[WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()],
+                                date[DateTimeUtils.getLocalizedWeekFields().weekOfWeekBasedYear()],
                                 date.year
                             )
                         }
@@ -229,7 +228,7 @@ data class ICal4ListRel(
                             val date = ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(ical4ListRel.iCal4List.dueTimezone)).toLocalDate()
                             context.getString(
                                 R.string.week_number_year,
-                                date[WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear()],
+                                date[DateTimeUtils.getLocalizedWeekFields().weekOfWeekBasedYear()],
                                 date.year
                             )
                         }

@@ -84,7 +84,7 @@ fun ListScreenWeek(
     val currentMonth = remember(currentDate) { currentDate.yearMonth }
     val startMonth = remember(currentDate) { currentMonth.minusMonths(500) }
     val endMonth = remember(currentDate) { currentMonth.plusMonths(500) }
-    val daysOfWeek = remember { daysOfWeek() }
+    val daysOfWeek = remember { daysOfWeek(firstDayOfWeek = DateTimeUtils.getLocalizedFirstDayOfWeek()) }
 
     val scrollId by scrollOnceId.observeAsState(null)
     val weekState = rememberWeekCalendarState(
