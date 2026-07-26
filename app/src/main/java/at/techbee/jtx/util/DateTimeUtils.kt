@@ -230,17 +230,23 @@ object DateTimeUtils {
     )
 
     /**
-     * Material3's DatePicker/DateRangePicker derive their first day of the week from
-     * WeekFields.of(locale), which only looks at the language/region of the locale and ignores the
-     * "Regional preferences -> First day of week" system setting (the locale's "-u-fw-" unicode
-     * extension). As those composables offer no way to set the first day of the week directly, this
-     * returns a locale, based on [baseLocale], whose region makes WeekFields.of(...) resolve to
-     * [getLocalizedFirstDayOfWeek]. Only the region is changed, so the language (and therefore the
-     * month/weekday names) of [baseLocale] is preserved.
+     * Material3's DatePicker/DateRangePicker derive their first day of the week solely from
+     * `WeekFields.of(locale).firstDayOfWeek`, which only looks at the language/region of the locale
+     * and ignores the "Regional preferences -> First day of week" system setting (the locale's
+     * "-u-fw-" unicode extension). As those composables offer no way to set the first day of the
+     * week directly, this returns a locale, based on [baseLocale], whose region makes
+     * WeekFields.of(...) resolve to [getLocalizedFirstDayOfWeek]. Only the region is changed, so the
+     * language (and therefore the month/weekday names) of [baseLocale] is preserved.
+     *
+     * Limitation: `WeekFields.of(...)` can only ever yield a first day of the week that some region
+     * actually uses, and worldwide that is only Monday, Friday, Saturday or Sunday. If the user
+     * picks Tuesday, Wednesday or Thursday (Android allows any day), Material3's picker cannot
+     * represent it, so this falls back to [baseLocale] and the picker keeps the locale's default
+     * first day. Components that render the week themselves (see [getLocalizedDaysOfWeek]) are not
+     * affected by this and honour any first day.
      *
      * @return the adjusted locale, or [baseLocale] unchanged if it already starts the week on the
-     * desired day, or if that day cannot be represented by a region (WeekFields only knows Monday,
-     * Friday, Saturday and Sunday as first days of the week).
+     * desired day, or if that day cannot be represented by a region (see the limitation above).
      */
     fun getLocaleForLocalizedFirstDayOfWeek(baseLocale: Locale = Locale.getDefault()): Locale {
         val firstDayOfWeek = getLocalizedFirstDayOfWeek()
@@ -252,7 +258,7 @@ object DateTimeUtils {
             DayOfWeek.FRIDAY -> "MV"
             DayOfWeek.SATURDAY -> "SA"
             DayOfWeek.SUNDAY -> "US"
-            else -> return baseLocale
+            else -> return baseLocale   // Tue/Wed/Thu: no region uses these, Material3 can't show them
         }
         return Locale.Builder().setLocale(baseLocale).setRegion(region).build()
     }
