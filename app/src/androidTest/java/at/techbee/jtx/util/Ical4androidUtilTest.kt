@@ -143,8 +143,13 @@ class Ical4androidUtilTest {
                 "SUMMARY:Second entry\n" +
                 "END:VTODO\n" +
                 "END:VCALENDAR\n"
+        // Note: synctools' iCalendar parser (CalendarUidSplitter) collapses components that share
+        // the same UID and RECURRENCE-ID within a single iCalendar, keeping the one with the highest
+        // SEQUENCE (per RFC 5545). The duplicate VTODO above is therefore merged into a single object
+        // during parsing, so 2 objects are added and none is skipped. Skipping still applies when
+        // re-importing an entry that already exists in the collection with an equal/lower SEQUENCE.
         val num = Ical4androidUtil.insertFromReader(defaultTestAccount, context, defaultCollectionId!!, ics.reader())
         assertEquals(2, num.first)
-        assertEquals(1, num.second)
+        assertEquals(0, num.second)
     }
 }

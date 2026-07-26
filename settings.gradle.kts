@@ -29,5 +29,16 @@ dependencyResolutionManagement {
     }
 }
 
+// Consume the synctools library from the davx5-ose submodule as a Gradle composite build
+// instead of a (currently unavailable) jitpack artifact. The explicit dependency substitution
+// keeps only the :synctools project (and davx5-ose's build-logic) configured, and maps the
+// coordinate declared in the version catalog (libs.synctools) to the local project.
+includeBuild("davx5-ose") {
+    dependencySubstitution {
+        substitute(module("com.github.bitfireat.davx5-ose:synctools"))
+            .using(project(":synctools"))
+    }
+}
+
 include(":app")
 include(":baselineprofile")
