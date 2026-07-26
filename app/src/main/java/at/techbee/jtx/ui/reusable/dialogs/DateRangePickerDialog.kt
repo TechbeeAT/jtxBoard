@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,9 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,19 +42,14 @@ fun DateRangePickerDialog(
     onDismiss: () -> Unit
 ) {
 
-    // Material3's DateRangePicker takes the first day of the week from the locale that is active
-    // when its state is created, and that derivation ignores the system "first day of week"
-    // setting. Create the state under a configuration whose locale reflects that setting (see
-    // DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek) so the calendar starts on the right day.
+    // Material3's DateRangePicker derives the first day of the week from WeekFields.of(locale),
+    // which ignores the system "first day of week" setting. Pass a locale that reflects that
+    // setting (see DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek) so the calendar starts on
+    // the right day.
     val configuration = LocalConfiguration.current
-    val firstDayOfWeekConfiguration = remember(configuration) {
-        Configuration(configuration).apply {
-            setLocale(DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek(configuration.locales[0]))
-        }
-    }
-    lateinit var dateRangePickerState: DateRangePickerState
-    CompositionLocalProvider(LocalConfiguration provides firstDayOfWeekConfiguration) {
-        dateRangePickerState = rememberDateRangePickerState(
+    val dateRangePickerState = remember(configuration) {
+        DateRangePickerState(
+            locale = DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek(configuration.locales[0]),
             initialSelectedStartDateMillis = dateRangeStart,
             initialSelectedEndDateMillis = dateRangeEnd
         )

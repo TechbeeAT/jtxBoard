@@ -8,7 +8,6 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
-import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -40,10 +39,8 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -108,19 +105,13 @@ fun DatePickerDialog(
         ?.let { ZonedDateTime.ofInstant(Instant.ofEpochMilli(it), DateTimeUtils.requireTzId(timezone)) }
         ?: minDate
 
-    // Material3's DatePicker takes the first day of the week from the locale that is active when
-    // its state is created, and that derivation ignores the system "first day of week" setting.
-    // Create the state under a configuration whose locale reflects that setting (see
-    // DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek) so the calendar starts on the right day.
+    // Material3's DatePicker derives the first day of the week from WeekFields.of(locale), which
+    // ignores the system "first day of week" setting. Pass a locale that reflects that setting
+    // (see DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek) so the calendar starts on the right day.
     val configuration = LocalConfiguration.current
-    val firstDayOfWeekConfiguration = remember(configuration) {
-        Configuration(configuration).apply {
-            setLocale(DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek(configuration.locales[0]))
-        }
-    }
-    lateinit var datePickerState: DatePickerState
-    CompositionLocalProvider(LocalConfiguration provides firstDayOfWeekConfiguration) {
-        datePickerState = rememberDatePickerState(
+    val datePickerState = remember(configuration) {
+        DatePickerState(
+            locale = DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek(configuration.locales[0]),
             initialSelectedDateMillis = initialZonedDateTime?.toInstant()?.toEpochMilli()?.plus(initialZonedDateTime.offset.totalSeconds*1000),
             selectableDates = object: SelectableDates {
                 override fun isSelectableDate(utcTimeMillis: Long): Boolean {
