@@ -218,7 +218,6 @@ dependencies {
     ksp(libs.room.compiler)
 
     // bitfire libraries
-    implementation(libs.synctools)
 
     // third-party libs
     implementation(libs.mikepenz.aboutLibraries)

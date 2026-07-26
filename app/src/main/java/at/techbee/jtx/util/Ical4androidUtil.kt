@@ -10,25 +10,19 @@ package at.techbee.jtx.util
 
 import android.accounts.Account
 import android.content.Context
-import android.content.Entity
 import android.util.Log
-import at.bitfire.synctools.icalendar.CalendarUidSplitter
-import at.bitfire.synctools.icalendar.ICalendarParser
-import at.bitfire.synctools.mapping.jtx.JtxObjectBuilder
-import at.bitfire.synctools.mapping.jtx.JtxObjectHandler
-import at.bitfire.synctools.mapping.jtx.handler.AndroidAttachmentFetcher
-import at.bitfire.synctools.storage.jtx.JtxCollection
-import at.bitfire.synctools.storage.jtx.JtxCollectionProvider
-import at.bitfire.synctools.storage.jtx.JtxObjectAndExceptions
-import at.bitfire.synctools.storage.jtx.JtxRecurringCollection
-import at.techbee.jtx.contract.JtxContract
+import androidx.core.net.toUri
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.database.ICalDatabaseDao
+import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.data.CalendarOutputter
 import net.fortuna.ical4j.model.Calendar
-import net.fortuna.ical4j.model.Component
 import net.fortuna.ical4j.model.ComponentList
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.PropertyList
 import net.fortuna.ical4j.model.component.CalendarComponent
+import net.fortuna.ical4j.model.component.VJournal
+import net.fortuna.ical4j.model.component.VToDo
 import net.fortuna.ical4j.model.property.ProdId
 import net.fortuna.ical4j.model.property.immutable.ImmutableVersion
 import java.io.OutputStream
@@ -36,6 +30,16 @@ import java.io.Reader
 import java.io.StringWriter
 import java.io.Writer
 
+/**
+ * Local iCalendar (.ics) import/export for jtx Board.
+ *
+ * The VJOURNAL/VTODO mapping lives in [ICalendarMapping]; this object only handles reading/writing
+ * the jtx Board database (via [ICalDatabaseDao]) and assembling/parsing the iCalendar. It no longer
+ * depends on any external sync library.
+ *
+ * The [account] parameters are kept for source compatibility with existing callers, but are unused:
+ * a collection is uniquely identified by its [collectionId].
+ */
 object Ical4androidUtil {
 
     private const val TAG = "Ical4AndroidUtil"
@@ -43,47 +47,25 @@ object Ical4androidUtil {
     private val prodId = ProdId("+//IDN techbee.at//jtx Board")
 
     /**
-     * @param [account] to look up
-     * @param [context] to get the content provider client
-     * @param [collectionId] to look up
-     * @return a string with all the jtx objects of the collection as iCalendar (or null on error).
+     * @return a string with all jtx objects of the collection as iCalendar (or `null` on error).
      */
     fun getICSFormatForCollectionFromProvider(account: Account, context: Context?, collectionId: Long): String? {
-        val client = context?.contentResolver?.acquireContentProviderClient(JtxContract.AUTHORITY) ?: return null
-        try {
-            val collection = JtxCollectionProvider(account, client).getCollection(collectionId) ?: return null
-            val handler = jtxObjectHandler(collection)
-
-            // gather all main jtx objects of the collection (exceptions are exported with their main object)
-            val mainIds = mutableListOf<Long>()
-            collection.iterateJtxObjectRows(
-                arrayOf(JtxContract.JtxICalObject.ID),
-                "${JtxContract.JtxICalObject.RECURID} IS NULL",
-                null
-            ) { row -> row.getAsLong(JtxContract.JtxICalObject.ID)?.let { mainIds += it } }
-
-            val components = mutableListOf<CalendarComponent>()
-            mainIds.forEach { mainId -> components += componentsForObject(collection, handler, mainId) }
-
-            val writer = StringWriter()
-            writeComponents(components, writer)
-            return writer.toString()
+        context ?: return null
+        val dao = ICalDatabase.getInstance(context).iCalDatabaseDao()
+        return try {
+            val components = dao.getICalObjectIdsByCollectionSync(collectionId)
+                .mapNotNull { loadComponent(dao, context, it) }
+            StringWriter().also { writeComponents(components, it) }.toString()
         } catch (e: Exception) {
             Log.w(TAG, e.stackTraceToString())
-            return null
-        } finally {
-            client.close()
+            null
         }
     }
 
-
     /**
-     * @param [account] to look up
-     * @param [context] to get the content provider client
-     * @param [collectionId] to look up
-     * @param [iCalObjectIds] to look up
-     * @param [os] the output stream where the ics should be written to
-     * @return true if the ics was written successfully to the os, false otherwise
+     * Writes the given jtx objects as a single iCalendar to [os].
+     *
+     * @return true if the ics was written successfully, false otherwise
      */
     fun writeICSFormatFromProviderToOS(
         account: Account,
@@ -92,30 +74,21 @@ object Ical4androidUtil {
         iCalObjectIds: List<Long>,
         os: OutputStream
     ): Boolean {
-        val client = context?.contentResolver?.acquireContentProviderClient(JtxContract.AUTHORITY) ?: return false
-        try {
-            val collection = JtxCollectionProvider(account, client).getCollection(collectionId) ?: return false
-            val handler = jtxObjectHandler(collection)
-
-            val components = mutableListOf<CalendarComponent>()
-            iCalObjectIds.forEach { iCalObjectId ->
-                components += componentsForObject(collection, handler, iCalObjectId)
-            }
-
+        context ?: return false
+        val dao = ICalDatabase.getInstance(context).iCalDatabaseDao()
+        return try {
+            val components = iCalObjectIds.mapNotNull { loadComponent(dao, context, it) }
             writeComponents(components, os)
-            return true
+            true
         } catch (e: Exception) {
             Log.w(TAG, e.stackTraceToString())
-            return false
-        } finally {
-            client.close()
+            false
         }
     }
 
     /**
-     * @param [account] to look up
-     * @param [context]
-     * @param [collectionId] where the parsed items should be inserted
+     * Parses the iCalendar from [reader] and inserts the contained jtx objects into the collection.
+     *
      * @return A pair with <number of added entries, number of skipped entries>
      */
     fun insertFromReader(
@@ -124,122 +97,80 @@ object Ical4androidUtil {
         collectionId: Long,
         reader: Reader
     ): Pair<Int, Int> {
-        val client = context?.contentResolver?.acquireContentProviderClient(JtxContract.AUTHORITY) ?: return Pair(0, 0)
+        context ?: return Pair(0, 0)
+        val dao = ICalDatabase.getInstance(context).iCalDatabaseDao()
+
+        var numAdded = 0
+        var numSkipped = 0
         try {
-            val collection = JtxCollectionProvider(account, client).getCollection(collectionId) ?: return Pair(0, 0)
-            val recurringCollection = JtxRecurringCollection(collection)
+            val calendar = CalendarBuilder().build(reader)
+            val components = calendar.getComponents<CalendarComponent>()
+                .filter { it is VToDo || it is VJournal }
 
-            val calendar = ICalendarParser().parse(reader)
-            val splitter = CalendarUidSplitter<CalendarComponent>()
-            val associatedComponents =
-                splitter.associateByUid(calendar, Component.VJOURNAL).values +
-                        splitter.associateByUid(calendar, Component.VTODO).values
+            components.forEach { component ->
+                val parsed = parseICalComponent(component) ?: return@forEach
+                val iCalObject = parsed.iCalObject.apply {
+                    this.collectionId = collectionId
+                    dirty = true          // imported entries need to be synchronized
+                    deleted = false
+                }
 
-            var numAdded = 0
-            var numSkipped = 0
-
-            associatedComponents.forEach { component ->
-                // exceptions can't be imported without their main object
-                if (component.main == null)
-                    return@forEach
-
-                val builtObject = JtxObjectBuilder(
-                    collectionId = collection.id,
-                    fileName = null,
-                    eTag = null,
-                    scheduleTag = null,
-                    flags = 0
-                ).build(component)
-
-                val mainValues = builtObject.main.entity.entityValues
-                val uid = mainValues.getAsString(JtxContract.JtxICalObject.UID)
-                val newSequence = mainValues.getAsInteger(JtxContract.JtxICalObject.SEQUENCE) ?: 0
-
-                // Check if UID already exists. If yes, check sequence and delete (to insert) or skip entry.
-                if (uid != null) {
-                    val foundRow = collection.findJtxObjectRow(
-                        arrayOf(JtxContract.JtxICalObject.ID, JtxContract.JtxICalObject.SEQUENCE),
-                        "${JtxContract.JtxICalObject.UID} = ? AND ${JtxContract.JtxICalObject.RECURID} IS NULL",
-                        arrayOf(uid)
-                    )
-                    if (foundRow != null) {
-                        val foundSequence = foundRow.getAsInteger(JtxContract.JtxICalObject.SEQUENCE) ?: 0
-                        if (newSequence > foundSequence) {
-                            foundRow.getAsLong(JtxContract.JtxICalObject.ID)?.let { foundId ->
-                                recurringCollection.deleteJtxObjectAndExceptions(foundId)
-                            }
-                        } else {
-                            numSkipped += 1
-                            return@forEach
-                        }
+                // Check if UID already exists. If yes, check sequence and delete (to re-insert) or skip.
+                val existing = dao.getICalObjectByUidSync(iCalObject.uid)
+                if (existing != null) {
+                    if ((iCalObject.sequence ?: 0L) > (existing.sequence ?: 0L)) {
+                        dao.deleteICalObjectsbyId(existing.id)
+                    } else {
+                        numSkipped += 1
+                        return@forEach
                     }
                 }
 
-                // mark as dirty so that the imported entry gets synchronized
-                mainValues.put(JtxContract.JtxICalObject.DIRTY, true)
-
-                recurringCollection.addJtxEntityAndExceptions(builtObject)
+                val newId = dao.insertICalObjectSync(iCalObject)
+                parsed.categories.forEach { it.icalObjectId = newId; dao.insertCategorySync(it) }
+                parsed.comments.forEach { it.icalObjectId = newId; dao.insertCommentSync(it) }
+                parsed.resources.forEach { it.icalObjectId = newId; dao.insertResourceSync(it) }
+                parsed.attendees.forEach { it.icalObjectId = newId; dao.insertAttendeeSync(it) }
+                parsed.organizer?.let { it.icalObjectId = newId; dao.insertOrganizerSync(it) }
+                parsed.relatedto.forEach {
+                    it.icalObjectId = newId
+                    it.linkedICalObjectId = it.text?.let { uid -> dao.getICalObjectByUidSync(uid)?.id }
+                    dao.insertRelatedtoSync(it)
+                }
+                parsed.attachments.forEach { it.icalObjectId = newId; dao.insertAttachmentSync(it) }
+                parsed.alarms.forEach { it.icalObjectId = newId; dao.insertAlarmSync(it) }
+                parsed.unknowns.forEach { it.icalObjectId = newId; dao.insertUnknownSync(it) }
                 numAdded += 1
             }
-
-            return Pair(numAdded, numSkipped)
         } catch (e: Exception) {
             Log.w(TAG, e.stackTraceToString())
-            return Pair(0, 0)
-        } finally {
-            client.close()
         }
+        return Pair(numAdded, numSkipped)
     }
 
 
-    /**
-     * @return a [JtxObjectHandler] that maps jtx objects of the given [collection] to iCalendar components.
-     */
-    private fun jtxObjectHandler(collection: JtxCollection) = JtxObjectHandler(
-        prodId = prodId,
-        attachmentFetcher = AndroidAttachmentFetcher(collection.client, collection.account)
-    )
-
-    /**
-     * Maps a main jtx object (and its recurrence exceptions) to iCalendar components.
-     *
-     * @param [mainId] ID of a jtx object; recurrence exception rows (RECURID set) are skipped as they
-     * are exported together with their main object.
-     * @return the mapped iCalendar components (main component followed by its exceptions), or an empty
-     * list if the object can't be found or mapped.
-     */
-    private fun componentsForObject(
-        collection: JtxCollection,
-        handler: JtxObjectHandler,
-        mainId: Long
-    ): List<CalendarComponent> {
-        val main = collection.getJtxObject(mainId) ?: return emptyList()
-
-        // skip recurrence exceptions – they are exported with their main object
-        if (main.entityValues.getAsString(JtxContract.JtxICalObject.RECURID) != null)
-            return emptyList()
-
-        val uid = main.entityValues.getAsString(JtxContract.JtxICalObject.UID)
-        val exceptions = mutableListOf<Entity>()
-        if (uid != null) {
-            val exceptionIds = mutableListOf<Long>()
-            collection.iterateJtxObjectRows(
-                arrayOf(JtxContract.JtxICalObject.ID),
-                "${JtxContract.JtxICalObject.UID} = ? AND ${JtxContract.JtxICalObject.RECURID} IS NOT NULL AND ${JtxContract.JtxICalObject.SEQUENCE} > 0",
-                arrayOf(uid)
-            ) { row -> row.getAsLong(JtxContract.JtxICalObject.ID)?.let { exceptionIds += it } }
-            exceptionIds.forEach { exceptionId ->
-                collection.getJtxObject(exceptionId)?.let { exceptions += it }
+    /** Loads a jtx object with all its sub-entities and maps it to a [VJournal]/[VToDo]. */
+    private fun loadComponent(dao: ICalDatabaseDao, context: Context, id: Long): CalendarComponent? {
+        val iCalObject = dao.getICalObjectByIdSync(id) ?: return null
+        return iCalObject.toICalComponent(
+            categories = dao.getCategoriesSync(id),
+            comments = dao.getCommentsSync(id),
+            resources = dao.getResourcesSync(id),
+            attendees = dao.getAttendeesSync(id),
+            organizer = dao.getOrganizerSync(id),
+            relatedto = dao.getRelatedtoSync(id),
+            attachments = dao.getAttachmentsSync(id),
+            alarms = dao.getAlarmsSync(id),
+            unknowns = dao.getUnknownSync(id),
+            readAttachmentBytes = { uri ->
+                try {
+                    context.contentResolver.openInputStream(uri.toUri())?.use { it.readBytes() }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Could not read attachment $uri: ${e.message}")
+                    null
+                }
             }
-        }
-
-        return try {
-            val result = handler.mapToCalendarComponents(JtxObjectAndExceptions(main, exceptions))
-            listOfNotNull(result.associatedComponents.main) + result.associatedComponents.exceptions
-        } catch (e: Exception) {
-            Log.w(TAG, e.stackTraceToString())
-            emptyList()
-        }
+        )
     }
 
     private fun buildCalendar(components: List<CalendarComponent>): Calendar =
