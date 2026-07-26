@@ -8,25 +8,31 @@
 
 package at.techbee.jtx.ui.reusable.dialogs
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DateRangePicker
+import androidx.compose.material3.DateRangePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import at.techbee.jtx.R
+import at.techbee.jtx.util.DateTimeUtils
 import kotlin.time.Duration.Companion.days
 
 
@@ -39,10 +45,23 @@ fun DateRangePickerDialog(
     onDismiss: () -> Unit
 ) {
 
-    val dateRangePickerState = rememberDateRangePickerState(
-        initialSelectedStartDateMillis = dateRangeStart,
-        initialSelectedEndDateMillis = dateRangeEnd
-    )
+    // Material3's DateRangePicker takes the first day of the week from the locale that is active
+    // when its state is created, and that derivation ignores the system "first day of week"
+    // setting. Create the state under a configuration whose locale reflects that setting (see
+    // DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek) so the calendar starts on the right day.
+    val configuration = LocalConfiguration.current
+    val firstDayOfWeekConfiguration = remember(configuration) {
+        Configuration(configuration).apply {
+            setLocale(DateTimeUtils.getLocaleForLocalizedFirstDayOfWeek(configuration.locales[0]))
+        }
+    }
+    lateinit var dateRangePickerState: DateRangePickerState
+    CompositionLocalProvider(LocalConfiguration provides firstDayOfWeekConfiguration) {
+        dateRangePickerState = rememberDateRangePickerState(
+            initialSelectedStartDateMillis = dateRangeStart,
+            initialSelectedEndDateMillis = dateRangeEnd
+        )
+    }
 
     AlertDialog(
         properties = DialogProperties(usePlatformDefaultWidth = false),   // Workaround due to Google Issue: https://issuetracker.google.com/issues/194911971?pli=1

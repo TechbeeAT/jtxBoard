@@ -229,6 +229,34 @@ object DateTimeUtils {
         WeekFields.of(Locale.getDefault()).minimalDaysInFirstWeek
     )
 
+    /**
+     * Material3's DatePicker/DateRangePicker derive their first day of the week from
+     * WeekFields.of(locale), which only looks at the language/region of the locale and ignores the
+     * "Regional preferences -> First day of week" system setting (the locale's "-u-fw-" unicode
+     * extension). As those composables offer no way to set the first day of the week directly, this
+     * returns a locale, based on [baseLocale], whose region makes WeekFields.of(...) resolve to
+     * [getLocalizedFirstDayOfWeek]. Only the region is changed, so the language (and therefore the
+     * month/weekday names) of [baseLocale] is preserved.
+     *
+     * @return the adjusted locale, or [baseLocale] unchanged if it already starts the week on the
+     * desired day, or if that day cannot be represented by a region (WeekFields only knows Monday,
+     * Friday, Saturday and Sunday as first days of the week).
+     */
+    fun getLocaleForLocalizedFirstDayOfWeek(baseLocale: Locale = Locale.getDefault()): Locale {
+        val firstDayOfWeek = getLocalizedFirstDayOfWeek()
+        if (WeekFields.of(baseLocale).firstDayOfWeek == firstDayOfWeek)
+            return baseLocale
+        // representative regions whose CLDR week data uses the respective day as first day of week
+        val region = when (firstDayOfWeek) {
+            DayOfWeek.MONDAY -> "GB"
+            DayOfWeek.FRIDAY -> "MV"
+            DayOfWeek.SATURDAY -> "SA"
+            DayOfWeek.SUNDAY -> "US"
+            else -> return baseLocale
+        }
+        return Locale.Builder().setLocale(baseLocale).setRegion(region).build()
+    }
+
 
     fun addLongToCSVString(listAsString: String?, value: Long?): String? {
 
