@@ -210,10 +210,14 @@ object DateTimeUtils {
     }
 
     /**
-     * @return true if the first day of the week is monday for the local device, else false
+     * @return the seven [DayOfWeek]s of the week, ordered starting with the device's first day of
+     * the week (respecting the "Regional preferences -> First day of week" system setting, see
+     * [getLocalizedFirstDayOfWeek]).
      */
-    fun isLocalizedWeekstartMonday() =
-        getLocalizedFirstDayOfWeek() == DayOfWeek.MONDAY
+    fun getLocalizedDaysOfWeek(): List<DayOfWeek> {
+        val firstDayOfWeek = getLocalizedFirstDayOfWeek()
+        return (0L until 7L).map { firstDayOfWeek.plus(it) }
+    }
 
     /**
      * @return [WeekFields] that use the device's first day of the week (respecting the

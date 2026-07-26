@@ -80,6 +80,20 @@ import java.util.Locale
 import kotlin.math.absoluteValue
 
 
+/**
+ * @return the ical4j [WeekDay] that corresponds to this [DayOfWeek]
+ */
+private fun DayOfWeek.toICal4jWeekDay(): WeekDay = when (this) {
+    DayOfWeek.MONDAY -> WeekDay.MO
+    DayOfWeek.TUESDAY -> WeekDay.TU
+    DayOfWeek.WEDNESDAY -> WeekDay.WE
+    DayOfWeek.THURSDAY -> WeekDay.TH
+    DayOfWeek.FRIDAY -> WeekDay.FR
+    DayOfWeek.SATURDAY -> WeekDay.SA
+    DayOfWeek.SUNDAY -> WeekDay.SU
+}
+
+
 @SuppressLint("LocalContextGetResourceValueCall")
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -128,10 +142,7 @@ fun DetailsCardRecur(
     var showDetachSingleFromSeriesDialog by rememberSaveable { mutableStateOf(false) }
     var showDetachAllFromSeriesDialog by rememberSaveable { mutableStateOf(false) }
 
-    val weekdays = if (DateTimeUtils.isLocalizedWeekstartMonday())
-        listOf(WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA, WeekDay.SU)
-    else
-        listOf(WeekDay.SU, WeekDay.MO, WeekDay.TU, WeekDay.WE, WeekDay.TH, WeekDay.FR, WeekDay.SA)
+    val weekdays = DateTimeUtils.getLocalizedDaysOfWeek().map { it.toICal4jWeekDay() }
 
 
     fun buildRRule(): Recur<Temporal>? {
