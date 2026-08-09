@@ -641,6 +641,7 @@
     <string name="widget_list_configuration_pro_info">"請購買專業版套件以啟用更多設定選項。"</string>
     <string name="widget_list_configuration_checkbox_position">"核取方塊位置"</string>
     <string name="widget_list_no_entries_found">"未找到符合篩選條件的項目"</string>
+    <string name="widget_list_nothing_here">"這裡什麼都沒有"</string>
     <string name="widget_list_view_settings">"查看設定"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"注意：目前小工具僅支援一層階層。若要檢視更下層的項目，請改用平面檢視。"</string>
     <string name="widget_list_maximum_entries_reached">"已達小工具的項目數量上限（%1$d）。"</string>
