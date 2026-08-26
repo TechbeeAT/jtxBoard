@@ -355,7 +355,10 @@ class SyncContentProvider : ContentProvider() {
                 createEmptyFileForAttachment(id)
 
             if (sUriMatcher.match(uri) == CODE_ICALOBJECTS_DIR
-                && (values?.containsKey(COLUMN_RRULE) == true || values?.containsKey(COLUMN_RDATE) == true || values?.containsKey(COLUMN_EXDATE) == true)
+                && (values?.containsKey(COLUMN_RRULE) == true ||
+                        values?.containsKey(COLUMN_RDATE) == true ||
+                        values?.containsKey(COLUMN_EXDATE) == true ||
+                        values?.containsKey(COLUMN_RECURID) == true)
             )
                 database.getRecurringToPopulate(id)?.let {
                     database.recreateRecurring(it)
@@ -656,10 +659,12 @@ class SyncContentProvider : ContentProvider() {
 
 
         // updates on recurring instances through bulk updates should not occur, only updates on single items will update the recurring instances
-        if (sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM && (values.containsKey(COLUMN_RRULE) || values.containsKey(
-                COLUMN_RDATE
-            ) || values.containsKey(COLUMN_EXDATE))
-        ) {
+        if (sUriMatcher.match(uri) == CODE_ICALOBJECT_ITEM &&
+            (values.containsKey(COLUMN_RRULE) ||
+                    values.containsKey(COLUMN_RDATE) ||
+                    values.containsKey(COLUMN_EXDATE) ||
+                    values.containsKey(COLUMN_RECURID))
+           ) {
             try {
                 val id: Long = uri.lastPathSegment?.toLong()
                     ?: throw NumberFormatException("Last path segment was null")
