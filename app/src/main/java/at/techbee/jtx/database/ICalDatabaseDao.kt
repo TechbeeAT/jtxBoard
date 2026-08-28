@@ -47,6 +47,10 @@ import at.techbee.jtx.database.properties.COLUMN_CATEGORY_ICALOBJECT_ID
 import at.techbee.jtx.database.properties.COLUMN_CATEGORY_TEXT
 import at.techbee.jtx.database.properties.COLUMN_COMMENT_ICALOBJECT_ID
 import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_ORGANIZER_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.COLUMN_UNKNOWN_ICALOBJECT_ID
+import at.techbee.jtx.database.properties.TABLE_NAME_ORGANIZER
+import at.techbee.jtx.database.properties.TABLE_NAME_UNKNOWN
 import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_RELTYPE
 import at.techbee.jtx.database.properties.COLUMN_RELATEDTO_TEXT
 import at.techbee.jtx.database.properties.COLUMN_RESOURCE_ICALOBJECT_ID
@@ -359,6 +363,21 @@ interface ICalDatabaseDao {
 
     @Query("SELECT * FROM $TABLE_NAME_ALARM WHERE $COLUMN_ALARM_ICALOBJECT_ID = :iCalObjectId")
     fun getAlarmsSync(iCalObjectId: Long): List<Alarm>
+
+    @Query("SELECT * FROM $TABLE_NAME_ORGANIZER WHERE $COLUMN_ORGANIZER_ICALOBJECT_ID = :iCalObjectId LIMIT 1")
+    fun getOrganizerSync(iCalObjectId: Long): Organizer?
+
+    @Query("SELECT * FROM $TABLE_NAME_RELATEDTO WHERE $COLUMN_RELATEDTO_ICALOBJECT_ID = :iCalObjectId")
+    fun getRelatedtoSync(iCalObjectId: Long): List<Relatedto>
+
+    @Query("SELECT * FROM $TABLE_NAME_UNKNOWN WHERE $COLUMN_UNKNOWN_ICALOBJECT_ID = :iCalObjectId")
+    fun getUnknownSync(iCalObjectId: Long): List<Unknown>
+
+    @Query("SELECT $COLUMN_ID FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_ICALOBJECT_COLLECTIONID = :collectionId")
+    fun getICalObjectIdsByCollectionSync(collectionId: Long): List<Long>
+
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_UID = :uid AND $COLUMN_RECURID IS NULL LIMIT 1")
+    fun getICalObjectByUidSync(uid: String): ICalObject?
 
     /**
      * Returns a list of (distinct) ICalObjects that have an active alarm

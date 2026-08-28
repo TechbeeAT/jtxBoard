@@ -143,6 +143,8 @@ class Ical4androidUtilTest {
                 "SUMMARY:Second entry\n" +
                 "END:VTODO\n" +
                 "END:VCALENDAR\n"
+        // The second VTODO shares the UID of the first; on import it is recognised as an already
+        // existing entry with an equal SEQUENCE and therefore skipped.
         val num = Ical4androidUtil.insertFromReader(defaultTestAccount, context, defaultCollectionId!!, ics.reader())
         assertEquals(2, num.first)
         assertEquals(1, num.second)

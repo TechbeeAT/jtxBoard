@@ -52,7 +52,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import at.bitfire.synctools.util.AndroidTimeUtils.toTimestamp
+import at.techbee.jtx.util.toTimestamp
 import at.techbee.jtx.R
 import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
