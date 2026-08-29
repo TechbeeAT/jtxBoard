@@ -996,6 +996,14 @@ data class ICalObject(
     private fun buildPeriod(
         start: ZonedDateTime,
         frequency: Frequency
+    ): Period<ZonedDateTime> = when (val window = RecurrenceWindow.current) {
+        is RecurrenceWindow.Legacy -> legacyPeriod(start, frequency)
+        is RecurrenceWindow.AroundToday -> periodAroundToday(start, frequency, window)
+    }
+
+    private fun legacyPeriod(
+        start: ZonedDateTime,
+        frequency: Frequency
     ): Period<ZonedDateTime> {
 
         val from = when (frequency) {
@@ -1019,6 +1027,29 @@ data class ICalObject(
         }
 
         return Period(from, to)
+    }
+
+    private fun periodAroundToday(
+        start: ZonedDateTime,
+        frequency: Frequency,
+        window: RecurrenceWindow.AroundToday
+    ): Period<ZonedDateTime> {
+
+        // A series starting in the future would materialise nothing, and the list hides a series
+        // that has an RRULE and a DTSTART in favour of its instances - so it would vanish.
+        val now = ZonedDateTime.now(start.zone)
+        val reference = if (start.isAfter(now)) start else now
+
+        return when (frequency) {
+            // Three months of a SECONDLY rule is millions of rows wherever the window sits.
+            Frequency.SECONDLY -> Period(reference.minusHours(1), reference.plusHours(1))
+            Frequency.MINUTELY -> Period(reference.minusDays(1), reference.plusDays(1))
+            Frequency.HOURLY   -> Period(reference.minusDays(30), reference.plusDays(30))
+            else -> Period(
+                reference.minusMonths(window.monthsBack),
+                reference.plusMonths(window.monthsAhead)
+            )
+        }
     }
 
     private fun normalizeRruleForAllDay() {

@@ -1229,6 +1229,16 @@ interface ICalDatabaseDao {
     suspend fun makeSeriesDirty(uid: String, lastModified: Long = System.currentTimeMillis())
 
 
+    @Query("SELECT * FROM $TABLE_NAME_ICALOBJECT WHERE $COLUMN_RRULE IS NOT NULL AND $COLUMN_RECURID IS NULL AND $COLUMN_DELETED = 0")
+    fun getAllSeriesSync(): List<ICalObject>
+
+    /**
+     * Rebuilds the instances of every series, needed when the recurrence window changes. Instances
+     * are inserted with dirty = false and changed ones are kept, so nothing is uploaded.
+     */
+    @Transaction
+    fun recreateAllRecurring() = getAllSeriesSync().forEach { recreateRecurring(it) }
+
     @Transaction
     fun recreateRecurring(iCalObject: ICalObject) {
 
