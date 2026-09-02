@@ -17,6 +17,10 @@ enum class DropdownSettingOption(
     val key: String,
     @StringRes val text: Int
 ) {
+    RECUR_WINDOW_LEGACY("recur_window_legacy", R.string.settings_recur_window_legacy),
+    RECUR_WINDOW_1_MONTH("recur_window_1_month", R.string.settings_recur_window_1_month),
+    RECUR_WINDOW_3_MONTHS("recur_window_3_months", R.string.settings_recur_window_3_months),
+    RECUR_WINDOW_1_YEAR("recur_window_1_year", R.string.settings_recur_window_1_year),
     THEME_SYSTEM("system", R.string.settings_select_theme_system),
     THEME_LIGHT("light", R.string.settings_select_theme_light),
     THEME_DARK("dark", R.string.settings_select_theme_dark),
