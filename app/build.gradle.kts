@@ -163,7 +163,11 @@ ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
+val testShared = configurations.create("testShared")
 configurations {
+    testImplementation.get().extendsFrom(testShared)
+    androidTestImplementation.get().extendsFrom(testShared)
+
     configureEach {
         // exclude modules which are in conflict with system libraries
         exclude(module = "commons-logging")
@@ -227,74 +231,48 @@ dependencies {
     implementation(libs.mikepenz.multiplatform.markdown.renderer.code)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.colorpicker.compose)  // Compose Color Picker
-    implementation(libs.osmdroid.android) //Open Street Maps
+    implementation(libs.osmdroid.android) //OpenStreetMap
     implementation (libs.calendar.compose)
     implementation (libs.reorderable)
 
-
-    // for tests
-    androidTestImplementation(libs.androidx.arch.core.testing)
-    androidTestImplementation(libs.androidx.test.core)
-    androidTestImplementation(libs.androidx.test.junit)
-    androidTestImplementation(libs.androidx.test.rules)
-    androidTestImplementation(libs.androidx.test.runner)
-    androidTestImplementation(libs.androidx.work.testing)
+    // instrumented-only tests
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.room.testing)
-    androidTestImplementation(libs.androidx.test.core)
-    androidTestImplementation(libs.androidx.test.junit)
     androidTestImplementation(libs.androidx.arch.core.testing)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.androidx.test.junit) // Required -- JUnit 4 framework
+
     androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.work.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.test.rules)
 
-    // Testing
+    // local-only tests
     testImplementation(libs.junit)
-    testImplementation(libs.robolectric)
     testImplementation(libs.room.testing)
     testImplementation(libs.androidx.arch.core.testing)
     testImplementation(libs.androidx.test.core)
-    // Required -- JUnit 4 framework
-    testImplementation(libs.androidx.test.junit)
+    testImplementation(libs.androidx.test.junit) // Required -- JUnit 4 framework
+
+    testImplementation(libs.robolectric)
     testImplementation(libs.mockito.core)
+
+    // build variants (flavors)
+    "gplayImplementation"(libs.android.billing)
+    "gplayImplementation"(libs.android.review)
+    "gplayImplementation"(libs.maps.compose)
+    "gplayImplementation"(libs.play.services.maps)
+    "gplayImplementation"(libs.play.services.location)
+
+    "amazonImplementation"(libs.amazon.appstore.sdk)
+    "amazonImplementation"(libs.maps.compose)
+    "amazonImplementation"(libs.play.services.maps)
+    "amazonImplementation"(libs.play.services.location)
+
+    /*
+    "huaweiImplementation"(libs.huawei.iap)
+    "huaweiImplementation"(libs.huawei.agcp)
+    */
 }
-
-// build variants (flavors)
-val gplayImplementation by configurations {
-    dependencies {
-        implementation(libs.android.billing)
-        implementation(libs.android.review)
-
-        // Google Maps
-        implementation(libs.maps.compose)
-        implementation(libs.play.services.maps)
-        implementation(libs.play.services.location)
-    }
-}
-
-val amazonImplementation by configurations {
-    dependencies {
-        // Amazon billing & maps support
-        implementation(libs.amazon.appstore.sdk)
-        implementation(libs.maps.compose)
-        implementation(libs.play.services.maps)
-        implementation(libs.play.services.location)
-    }
-}
-
-val oseImplementation by configurations {
-    dependencies {
-    }
-}
-
-/*
-val huaweiImplementation by configurations {
-    dependencies {
-        implementation(libs.huawei.iap)
-        implementation(libs.huawei.agcp)
-    }
-}
-
- */
 
 
