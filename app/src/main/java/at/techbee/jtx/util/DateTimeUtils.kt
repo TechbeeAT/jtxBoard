@@ -322,9 +322,38 @@ object DateTimeUtils {
     }
 
     /**
+     * jtx stores all-day dates as midnight UTC, while dates with a time are stored as the epoch
+     * milliseconds of the actual instant. Day based filters therefore need two different
+     * boundaries for one and the same day, this one is the boundary for all-day entries.
+     *
+     * @param date the day of which the beginning should be returned, today by default
+     * @return the beginning of the given day in UTC as epoch milliseconds
+     */
+    fun getStartOfDayUTCAsLong(date: LocalDate = LocalDate.now()): Long =
+        date.atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli()
+
+    /**
+     * Counterpart of [getStartOfDayUTCAsLong] for entries that are stored as a real instant
+     * (i.e. everything that is not an all-day entry).
+     *
+     * @param date the day of which the beginning should be returned, today by default
+     * @return the beginning of the given day in the local timezone as epoch milliseconds
+     */
+    fun getStartOfDayLocalAsLong(date: LocalDate = LocalDate.now()): Long =
+        date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+    /**
+     * @param utcMidnight a value that was stored as midnight UTC (all-day entries as well as the
+     * values that are delivered by the date (range) pickers)
+     * @return the [LocalDate] that this value represents
+     */
+    fun getLocalDateFromUTCMidnight(utcMidnight: Long): LocalDate =
+        Instant.ofEpochMilli(utcMidnight).atZone(ZoneId.of("UTC")).toLocalDate()
+
+    /**
      * @return the current day as Long (the hour, minute, second and millisecond of the current datetime is set to 0)
      */
-    fun getTodayAsLong() = LocalDate.now().atStartOfDay().atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()
+    fun getTodayAsLong() = getStartOfDayUTCAsLong()
 
     /**
      * @param datetime as Long

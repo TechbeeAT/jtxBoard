@@ -65,6 +65,7 @@ import at.techbee.jtx.database.COLUMN_URL
 import at.techbee.jtx.database.Classification
 import at.techbee.jtx.database.Component
 import at.techbee.jtx.database.ICalCollection.Factory.LOCAL_ACCOUNT_TYPE
+import at.techbee.jtx.database.ICalObject.Companion.TZ_ALLDAY
 import at.techbee.jtx.database.Module
 import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.TABLE_NAME_COLLECTION
@@ -92,8 +93,8 @@ import at.techbee.jtx.database.properties.TABLE_NAME_RELATEDTO
 import at.techbee.jtx.database.properties.TABLE_NAME_RESOURCE
 import at.techbee.jtx.ui.list.AnyAllNone
 import at.techbee.jtx.util.DateTimeUtils
+import java.time.LocalDate
 import java.util.UUID
-import kotlin.time.Duration.Companion.days
 
 const val VIEW_NAME_ICAL4LIST = "ical4list"
 
@@ -309,6 +310,57 @@ data class ICal4List(
                 isReadOnly = true
             )
 
+        /**
+         * jtx stores all-day entries as midnight UTC, while entries with a time are stored as the
+         * epoch milliseconds of the actual instant. Filtering both with the same UTC based
+         * boundaries makes entries of the neighbouring day slip into the filter on every device
+         * that is not set to UTC, so the boundaries have to be calculated for each of the two
+         * cases separately.
+         *
+         * @param dateColumn the column with the date(-time) to filter, e.g. [COLUMN_DTSTART]
+         * @param timezoneColumn the column with the timezone of [dateColumn], e.g. [COLUMN_DTSTART_TIMEZONE]
+         * @param from the first day of the filtered range (inclusive) or null for no lower boundary
+         * @param until the last day of the filtered range (inclusive) or null for no upper boundary
+         * @return the condition to add to the query
+         */
+        private fun getDayRangeFilter(
+            dateColumn: String,
+            timezoneColumn: String,
+            from: LocalDate?,
+            until: LocalDate?
+        ): String {
+            fun boundaries(startOfDay: (LocalDate) -> Long): String {
+                val conditions = mutableListOf<String>()
+                from?.let { conditions.add("$dateColumn >= ${startOfDay(it)}") }
+                until?.let { conditions.add("$dateColumn < ${startOfDay(it.plusDays(1))}") }
+                return if (conditions.isEmpty()) "$dateColumn IS NOT NULL" else conditions.joinToString(separator = " AND ")
+            }
+
+            return "(CASE WHEN $timezoneColumn = '$TZ_ALLDAY' " +
+                    "THEN ${boundaries(DateTimeUtils::getStartOfDayUTCAsLong)} " +
+                    "ELSE ${boundaries(DateTimeUtils::getStartOfDayLocalAsLong)} END)"
+        }
+
+        /**
+         * All-day entries have no time, they are therefore compared against the beginning of today
+         * (in UTC, see [getDayRangeFilter]) instead of the current time. An all-day entry of today
+         * is consequently neither in the past nor in the future.
+         *
+         * @return the condition that the given date(-time) lies before now
+         */
+        private fun getBeforeNowFilter(dateColumn: String, timezoneColumn: String) =
+            "(CASE WHEN $timezoneColumn = '$TZ_ALLDAY' " +
+                    "THEN $dateColumn < ${DateTimeUtils.getStartOfDayUTCAsLong()} " +
+                    "ELSE $dateColumn < ${System.currentTimeMillis()} END)"
+
+        /**
+         * @return the condition that the given date(-time) lies after now, see [getBeforeNowFilter]
+         */
+        private fun getAfterNowFilter(dateColumn: String, timezoneColumn: String) =
+            "(CASE WHEN $timezoneColumn = '$TZ_ALLDAY' " +
+                    "THEN $dateColumn >= ${DateTimeUtils.getStartOfDayUTCAsLong(LocalDate.now().plusDays(1))} " +
+                    "ELSE $dateColumn > ${System.currentTimeMillis()} END)"
+
         fun constructQuery(
             modules: List<Module>,
             searchCategories: List<String> = emptyList(),
@@ -470,27 +522,29 @@ data class ICal4List(
             if (isExcludeDone)
                 queryString += "AND $COLUMN_PERCENT IS NOT 100 AND ($COLUMN_STATUS IS NULL OR $COLUMN_STATUS NOT IN ('${Status.COMPLETED.status}', '${Status.CANCELLED.status}')) "
 
+            val today = LocalDate.now()
+
             val dateQuery = mutableListOf<String>()
             if (isFilterStartInPast)
-                dateQuery.add("$COLUMN_DTSTART < ${System.currentTimeMillis()}")
+                dateQuery.add(getBeforeNowFilter(COLUMN_DTSTART, COLUMN_DTSTART_TIMEZONE))
             if (isFilterStartToday)
-                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds - 1}")
+                dateQuery.add(getDayRangeFilter(COLUMN_DTSTART, COLUMN_DTSTART_TIMEZONE, today, today))
             if (isFilterStartTomorrow)
-                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds - 1}")
+                dateQuery.add(getDayRangeFilter(COLUMN_DTSTART, COLUMN_DTSTART_TIMEZONE, today.plusDays(1), today.plusDays(1)))
             if (isFilterStartWithin7Days)
-                dateQuery.add("$COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (8).days.inWholeMilliseconds - 1}")
+                dateQuery.add(getDayRangeFilter(COLUMN_DTSTART, COLUMN_DTSTART_TIMEZONE, today, today.plusDays(7)))
             if (isFilterStartFuture)
-                dateQuery.add("$COLUMN_DTSTART > ${System.currentTimeMillis()}")
+                dateQuery.add(getAfterNowFilter(COLUMN_DTSTART, COLUMN_DTSTART_TIMEZONE))
             if (isFilterOverdue)
-                dateQuery.add("$COLUMN_DUE < ${System.currentTimeMillis()}")
+                dateQuery.add(getBeforeNowFilter(COLUMN_DUE, COLUMN_DUE_TIMEZONE))
             if (isFilterDueToday)
-                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds - 1}")
+                dateQuery.add(getDayRangeFilter(COLUMN_DUE, COLUMN_DUE_TIMEZONE, today, today))
             if (isFilterDueTomorrow)
-                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong() + (1).days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (2).days.inWholeMilliseconds - 1}")
+                dateQuery.add(getDayRangeFilter(COLUMN_DUE, COLUMN_DUE_TIMEZONE, today.plusDays(1), today.plusDays(1)))
             if (isFilterDueWithin7Days)
-                dateQuery.add("$COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong()} AND ${DateTimeUtils.getTodayAsLong() + (8).days.inWholeMilliseconds - 1}")
+                dateQuery.add(getDayRangeFilter(COLUMN_DUE, COLUMN_DUE_TIMEZONE, today, today.plusDays(7)))
             if (isFilterDueFuture)
-                dateQuery.add("$COLUMN_DUE > ${System.currentTimeMillis()}")
+                dateQuery.add(getAfterNowFilter(COLUMN_DUE, COLUMN_DUE_TIMEZONE))
             if (isFilterNoDatesSet)
                 dateQuery.add("$COLUMN_DTSTART IS NULL AND $COLUMN_DUE IS NULL AND $COLUMN_COMPLETED IS NULL ")
             if (isFilterNoStartDateSet)
@@ -503,21 +557,21 @@ data class ICal4List(
             if (dateQuery.isNotEmpty())
                 queryString += " AND (${dateQuery.joinToString(separator = " OR ")}) "
 
-            // DATE RANGE
+            // DATE RANGE (the date pickers deliver the selected days as midnight UTC)
             if(filterStartRangeStart != null || filterStartRangeEnd != null)
-                queryString += " AND ($COLUMN_DTSTART BETWEEN ${filterStartRangeStart?:Long.MIN_VALUE} AND ${filterStartRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
+                queryString += " AND ${getDayRangeFilter(COLUMN_DTSTART, COLUMN_DTSTART_TIMEZONE, filterStartRangeStart?.let { DateTimeUtils.getLocalDateFromUTCMidnight(it) }, filterStartRangeEnd?.let { DateTimeUtils.getLocalDateFromUTCMidnight(it) })} "
             if(filterDueRangeStart != null || filterDueRangeEnd != null)
-                queryString += " AND ($COLUMN_DUE BETWEEN ${filterDueRangeStart?:Long.MIN_VALUE} AND ${filterDueRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
+                queryString += " AND ${getDayRangeFilter(COLUMN_DUE, COLUMN_DUE_TIMEZONE, filterDueRangeStart?.let { DateTimeUtils.getLocalDateFromUTCMidnight(it) }, filterDueRangeEnd?.let { DateTimeUtils.getLocalDateFromUTCMidnight(it) })} "
             if(filterCompletedRangeStart != null || filterCompletedRangeEnd != null)
-                queryString += " AND ($COLUMN_COMPLETED BETWEEN ${filterCompletedRangeStart?:Long.MIN_VALUE} AND ${filterCompletedRangeEnd?.let { it + (1).days.inWholeMilliseconds-1 }?:Long.MAX_VALUE})"
+                queryString += " AND ${getDayRangeFilter(COLUMN_COMPLETED, COLUMN_COMPLETED_TIMEZONE, filterCompletedRangeStart?.let { DateTimeUtils.getLocalDateFromUTCMidnight(it) }, filterCompletedRangeEnd?.let { DateTimeUtils.getLocalDateFromUTCMidnight(it) })} "
 
             // DAY RANGE
             if(filterStartDayRangeStart != 0 || filterStartDayRangeEnd != 0)
-                queryString += " AND ($COLUMN_DTSTART BETWEEN ${DateTimeUtils.getTodayAsLong() + filterStartDayRangeStart.days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (filterStartDayRangeEnd+1).days.inWholeMilliseconds - 1})"
+                queryString += " AND ${getDayRangeFilter(COLUMN_DTSTART, COLUMN_DTSTART_TIMEZONE, today.plusDays(filterStartDayRangeStart.toLong()), today.plusDays(filterStartDayRangeEnd.toLong()))} "
             if(filterDueDayRangeStart != 0 || filterDueDayRangeEnd != 0)
-                queryString += " AND ($COLUMN_DUE BETWEEN ${DateTimeUtils.getTodayAsLong() + filterDueDayRangeStart.days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (filterDueDayRangeEnd+1).days.inWholeMilliseconds - 1})"
+                queryString += " AND ${getDayRangeFilter(COLUMN_DUE, COLUMN_DUE_TIMEZONE, today.plusDays(filterDueDayRangeStart.toLong()), today.plusDays(filterDueDayRangeEnd.toLong()))} "
             if(filterCompletedDayRangeStart != 0 || filterCompletedDayRangeEnd != 0)
-                queryString += " AND ($COLUMN_COMPLETED BETWEEN ${DateTimeUtils.getTodayAsLong() + filterCompletedDayRangeStart.days.inWholeMilliseconds} AND ${DateTimeUtils.getTodayAsLong() + (filterCompletedDayRangeEnd+1).days.inWholeMilliseconds - 1})"
+                queryString += " AND ${getDayRangeFilter(COLUMN_COMPLETED, COLUMN_COMPLETED_TIMEZONE, today.plusDays(filterCompletedDayRangeStart.toLong()), today.plusDays(filterCompletedDayRangeEnd.toLong()))} "
 
             //CLASSIFICATION
             if (searchClassification.isNotEmpty()) {
@@ -581,7 +635,7 @@ data class ICal4List(
             if (searchSettingShowOneRecurEntryInFuture) {
                 queryString += "AND ($VIEW_NAME_ICAL4LIST.$COLUMN_RECURID IS NULL " +
                         "OR $VIEW_NAME_ICAL4LIST.$COLUMN_DTSTART <= " +
-                        "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_UID = $VIEW_NAME_ICAL4LIST.$COLUMN_UID AND recurList.$COLUMN_RECURID IS NOT NULL AND recurList.$COLUMN_DTSTART >= ${DateTimeUtils.getTodayAsLong()} )) "
+                        "(SELECT MIN(recurList.$COLUMN_DTSTART) FROM $TABLE_NAME_ICALOBJECT as recurList WHERE recurList.$COLUMN_UID = $VIEW_NAME_ICAL4LIST.$COLUMN_UID AND recurList.$COLUMN_RECURID IS NOT NULL AND ${getDayRangeFilter("recurList.$COLUMN_DTSTART", "recurList.$COLUMN_DTSTART_TIMEZONE", today, null)} )) "
             }
 
             queryString += "ORDER BY $COLUMN_LAST_MODIFIED DESC "
