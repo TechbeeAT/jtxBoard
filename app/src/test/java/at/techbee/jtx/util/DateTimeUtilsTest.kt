@@ -16,6 +16,8 @@ import at.techbee.jtx.util.DateTimeUtils.getLongListfromCSVString
 import at.techbee.jtx.util.DateTimeUtils.getTodayAsLong
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.time.LocalDate
+import java.util.TimeZone
 
 
 class DateTimeUtilsTest {
@@ -79,6 +81,25 @@ class DateTimeUtilsTest {
     // Tests that require the system timezone are currently not possible
     //@Test fun getDateWithoutTime_test_TZ_UTC() = assertEquals(1642550400000, getDateWithoutTime(1642590117816, "UTC"))
     //@Test fun getDateWithoutTime_TZ_Vienna() = assertEquals(1642546800000, getDateWithoutTime(1642590117816, "Europe/Vienna"))
+
+    @Test fun getStartOfDayUTCAsLong_isMidnightUTC() {
+        val startOfDay = DateTimeUtils.getStartOfDayUTCAsLong(LocalDate.of(2024, 3, 15))
+        assertEquals(1710460800000L, startOfDay)   // 2024-03-15T00:00:00Z
+    }
+
+    @Test fun getStartOfDayLocalAsLong_isMidnightInTheLocalTimezone() {
+        val defaultTimeZone = TimeZone.getDefault()
+        try {
+            TimeZone.setDefault(TimeZone.getTimeZone("Australia/Adelaide"))   // +10:30 on that day
+            val startOfDay = DateTimeUtils.getStartOfDayLocalAsLong(LocalDate.of(2024, 3, 15))
+            assertEquals(1710460800000L - (10.5 * 60 * 60 * 1000).toLong(), startOfDay)
+        } finally {
+            TimeZone.setDefault(defaultTimeZone)
+        }
+    }
+
+    @Test fun getLocalDateFromUTCMidnight_test() =
+        assertEquals(LocalDate.of(2024, 3, 15), DateTimeUtils.getLocalDateFromUTCMidnight(1710460800000L))
 
     @Test fun getMinutesSecondsFormatted_seconds_only_single() = assertEquals("00:05", DateTimeUtils.getMinutesSecondsFormatted(5))
     @Test fun getMinutesSecondsFormatted_seconds_only_double() = assertEquals("00:55", DateTimeUtils.getMinutesSecondsFormatted(55))
