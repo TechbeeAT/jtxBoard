@@ -387,6 +387,12 @@
     <string name="settings_export_error">"An error occurred while exporting settings"</string>
     <string name="more">"More"</string>
     <string name="navigation_drawer_buypro">"Buy Pro"</string>
+    <string name="settings_recur_window">"Occurrences of recurring entries"</string>
+    <string name="settings_recur_window_sub">"Which single occurrences of a series are created. From the start of the series reaches one year ahead for daily and weekly rules, ten years for monthly and a hundred for yearly - so a weekly series that began more than a year ago only gets occurrences from its first year, and none around today."</string>
+    <string name="settings_recur_window_legacy">"From the start of the series"</string>
+    <string name="settings_recur_window_1_month">"Around today (1 month)"</string>
+    <string name="settings_recur_window_3_months">"Around today (3 months)"</string>
+    <string name="settings_recur_window_1_year">"Around today (1 year)"</string>
     <string name="settings_select_theme">"Select theme"</string>
     <string name="settings_select_theme_dark">"Dark"</string>
     <string name="settings_select_theme_light">"Light"</string>

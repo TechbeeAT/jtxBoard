@@ -75,6 +75,8 @@ import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_FONT
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_MAPS_PROVIDER
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROGRESS_STEP
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_PROTECT_BIOMETRIC
+import at.techbee.jtx.database.ICalDatabase
+import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_RECUR_WINDOW
 import at.techbee.jtx.ui.settings.DropdownSetting.SETTING_THEME
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_ACCESSIBILITY_MODE
 import at.techbee.jtx.ui.settings.SwitchSetting.SETTING_AUTO_EXPAND_ATTACHMENTS
@@ -703,6 +705,19 @@ fun SettingsScreen(
                         onToggle = { expandOrCollapse(SettingsScreenSection.ITEM_LIST) },
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        DropdownSettingElement(
+                            setting = SETTING_RECUR_WINDOW,
+                            selected = settingsStateHolder.settingRecurWindow.value,
+                            onSelectionChanged = { selection ->
+                                settingsStateHolder.settingRecurWindow.value = selection
+                                SETTING_RECUR_WINDOW.saveSetting(selection, settingsStateHolder.prefs)
+                                settingsStateHolder.applyRecurrenceWindow()
+                                // The stored instances were materialised for the previous window.
+                                scope.launch(Dispatchers.IO) {
+                                    ICalDatabase.getInstance(context).iCalDatabaseDao().recreateAllRecurring()
+                                }
+                            }
+                        )
                         SwitchSettingElement(
                             setting = SETTING_AUTO_EXPAND_SUBTASKS,
                             checked = settingsStateHolder.settingAutoExpandSubtasks,
