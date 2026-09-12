@@ -15,19 +15,19 @@ import org.junit.Test
 class ListWidgetContentTest {
 
     @Test
-    fun calculateWidgetDescriptionMaxLines_singleEntryUsesWholeHeight() {
-        assertEquals(20, calculateWidgetDescriptionMaxLines(heightForDescriptions = 320.dp, numEntriesWithDescription = 1, descriptionLineHeight = 16.dp))
+    fun calculateWidgetDescriptionMaxLines_entryWithDescriptionUsesRemainingHeight() {
+        assertEquals(20, calculateWidgetDescriptionMaxLines(heightForDescriptions = 320.dp, numEntries = 2, numEntriesWithDescription = 1, descriptionLineHeight = 16.dp))
     }
 
     @Test
     fun calculateWidgetDescriptionMaxLines_heightIsSharedBetweenEntries() {
-        assertEquals(6, calculateWidgetDescriptionMaxLines(heightForDescriptions = 320.dp, numEntriesWithDescription = 3, descriptionLineHeight = 16.dp))
+        assertEquals(6, calculateWidgetDescriptionMaxLines(heightForDescriptions = 320.dp, numEntries = 3, numEntriesWithDescription = 3, descriptionLineHeight = 16.dp))
     }
 
     @Test
     fun calculateWidgetDescriptionMaxLines_notEnoughSpace() {
-        assertEquals(MIN_WIDGET_DESCRIPTION_LINES, calculateWidgetDescriptionMaxLines(heightForDescriptions = 40.dp, numEntriesWithDescription = 10, descriptionLineHeight = 16.dp))
-        assertEquals(MIN_WIDGET_DESCRIPTION_LINES, calculateWidgetDescriptionMaxLines(heightForDescriptions = (-100).dp, numEntriesWithDescription = 10, descriptionLineHeight = 16.dp))
+        assertEquals(MIN_WIDGET_DESCRIPTION_LINES, calculateWidgetDescriptionMaxLines(heightForDescriptions = 40.dp, numEntries = 10, numEntriesWithDescription = 10, descriptionLineHeight = 16.dp))
+        assertEquals(MIN_WIDGET_DESCRIPTION_LINES, calculateWidgetDescriptionMaxLines(heightForDescriptions = (-100).dp, numEntries = 10, numEntriesWithDescription = 10, descriptionLineHeight = 16.dp))
     }
 
     @Test
@@ -54,6 +54,11 @@ class ListWidgetContentTest {
 
     @Test
     fun calculateWidgetDescriptionMaxLines_noEntriesWithDescription() {
-        assertEquals(MIN_WIDGET_DESCRIPTION_LINES, calculateWidgetDescriptionMaxLines(heightForDescriptions = 320.dp, numEntriesWithDescription = 0, descriptionLineHeight = 16.dp))
+        assertEquals(MIN_WIDGET_DESCRIPTION_LINES, calculateWidgetDescriptionMaxLines(heightForDescriptions = 320.dp, numEntries = 2, numEntriesWithDescription = 0, descriptionLineHeight = 16.dp))
+    }
+
+    @Test
+    fun calculateWidgetDescriptionMaxLines_singleEntryIsNotLimited() {
+        assertEquals(Int.MAX_VALUE, calculateWidgetDescriptionMaxLines(heightForDescriptions = 40.dp, numEntries = 1, numEntriesWithDescription = 1, descriptionLineHeight = 16.dp))
     }
 }

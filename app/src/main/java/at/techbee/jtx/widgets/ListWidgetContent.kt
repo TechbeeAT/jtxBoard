@@ -82,19 +82,26 @@ fun estimateWidgetTextLines(text: String?, fontSize: Dp, width: Dp): Int {
  *
  * The result is a heuristic based on estimated heights. If it overestimates, the list
  * simply becomes scrollable.
+ * If only a single entry is shown, its description is not limited at all, such that the
+ * whole description can be read by scrolling.
  *
  * @param heightForDescriptions the estimated height of the widget that remains for all
  * descriptions, i.e. the widget height minus the title bar, paddings, group headers and
  * the parts of the entries other than the description
+ * @param numEntries number of shown entries (including subtasks and subnotes)
  * @param numEntriesWithDescription number of shown entries that display a description
  * @param descriptionLineHeight estimated height of one line of the description
- * @return the maximum number of description lines per entry, at least [MIN_WIDGET_DESCRIPTION_LINES]
+ * @return the maximum number of description lines per entry, at least [MIN_WIDGET_DESCRIPTION_LINES],
+ * or [Int.MAX_VALUE] if only a single entry is shown
  */
 fun calculateWidgetDescriptionMaxLines(
     heightForDescriptions: Dp,
+    numEntries: Int,
     numEntriesWithDescription: Int,
     descriptionLineHeight: Dp
 ): Int {
+    if (numEntries == 1)
+        return Int.MAX_VALUE
     if (numEntriesWithDescription <= 0 || descriptionLineHeight <= 0.dp)
         return MIN_WIDGET_DESCRIPTION_LINES
     val lines = heightForDescriptions / numEntriesWithDescription / descriptionLineHeight
@@ -173,6 +180,7 @@ fun ListWidgetContent(
             heightOfEntriesWithoutDescription
     val descriptionMaxLines = calculateWidgetDescriptionMaxLines(
         heightForDescriptions = heightForDescriptions,
+        numEntries = shownEntries.size,
         numEntriesWithDescription = if (listWidgetConfig.showDescription) shownEntries.count { !it.iCal4List.description.isNullOrEmpty() } else 0,
         descriptionLineHeight = 12.sp.lineHeightInDp()
     )
