@@ -1,0 +1,4 @@
+- Zeitzonen-Behandlung der Datumsfilter in der Liste korrigiert
+- Der erste Tag der Woche folgt nun der Systemeinstellung
+- Fehlerhaftes Neuanlegen wiederkehrender Aufgaben bei Änderung der Recurrence-ID behoben
+- Versions- und Stabilitäts-Updates
