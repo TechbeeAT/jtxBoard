@@ -1,0 +1,4 @@
+- Fixed timezone handling of the date filters in the list
+- The first day of the week now follows the system setting
+- Fixed recreation of recurring tasks when the recurrence-id changes
+- Version and stability updates
