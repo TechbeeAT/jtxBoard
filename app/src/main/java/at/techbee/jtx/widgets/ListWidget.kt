@@ -26,6 +26,7 @@ import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
@@ -104,6 +105,9 @@ class ListWidget : GlanceAppWidget() {
     companion object {
         val filterConfig = stringPreferencesKey("filter_config")
     }
+
+    // Exact size is needed to let the entries use the available space of the widget
+    override val sizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
