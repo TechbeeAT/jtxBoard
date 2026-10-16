@@ -123,7 +123,27 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
         const val PREFS_DETAIL_TODOS = "prefsDetailTodos"
     }
 
-    fun load(icalObjectId: Long, isAuthenticated: Boolean) {
+    /**
+     * @param force set by internal callers that legitimately re-bind the session to another
+     * id (currently only [moveToNewCollection] after the row was copied to a new collection).
+     *
+     * Guard against stale re-loads: the navigation route keeps carrying the id that was
+     * current at navigation time, and the destination lambda in MainActivity2 re-executes
+     * load() with it on every recomposition. After a collection move the session has moved
+     * on to the new row's id, while the route id refers to the deleted (or marked-deleted)
+     * original — re-binding to it would revert the ViewModel to the old identity and turn a
+     * subsequent "discard" into a silent no-op, leaving a blank entry behind.
+     */
+    fun load(icalObjectId: Long, isAuthenticated: Boolean, force: Boolean = false) {
+        if (!force) {
+            // never re-bind to a different id than the one this session already loaded
+            if (mainICalObjectId != null && mainICalObjectId != icalObjectId)
+                return
+            // skip redundant same-id reloads (e.g. sync-triggered recompositions):
+            // they would clobber unsaved in-memory state and reset the changeState
+            if (icalObjectId == mainICalObjectId && mutableICalObject != null)
+                return
+        }
         mainICalObjectId = icalObjectId
         _isAuthenticated = isAuthenticated
         immediateAlarmTriggeredOnce = false
@@ -357,7 +377,7 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
                     }
                     return@launch
                 }
-                load(newId, _isAuthenticated)
+                load(newId, _isAuthenticated, force = true)
             }
             withContext(Dispatchers.Main) { changeState.value = DetailChangeState.CHANGESAVED }
 
@@ -529,15 +549,27 @@ class DetailViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * Deletes the current entry with its children
      */
-    fun delete() = deleteById(icalObjectId = mainICalObjectId!!, mainICalObjectDeleted = true)
+    // delete the entry that is actually shown on screen (mutableICalObject), not the id kept
+    // in mainICalObjectId: after a collection move the two can diverge (e.g. a stale reload
+    // reverted mainICalObjectId to the deleted original), and deleteById on a deleted id is
+    // a silent no-op that would leave the blank moved entry behind
+    fun delete() = deleteById(icalObjectId = mutableICalObject?.id ?: mainICalObjectId!!, mainICalObjectDeleted = true)
 
     /**
      * Delete function for subtasks and subnotes
      * @param [icalObjectId] of the subtask/subnote to be deleted
      */
     fun deleteById(icalObjectId: Long, mainICalObjectDeleted: Boolean = false) {
+        // The state must be switched to LOADING synchronously (all callers are UI
+        // callbacks on the main thread): if it were only set inside the coroutine
+        // below, the recomposition triggered by confirming the delete dialog
+        // (showDeleteDialog = false + navigateUp = true, while the deletion itself
+        // is still pending) could observe the previous state (UNCHANGED) and re-run
+        // the back-handler's discard heuristic on the not-yet-deleted object —
+        // re-opening the dialog that was just confirmed. (The Cancel path is
+        // covered by resetting navigateUp in DetailsScreen.)
+        changeState.value = DetailChangeState.LOADING
         viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) { changeState.value = DetailChangeState.LOADING }
             databaseDao.deleteICalObject(icalObjectId)
             withContext(Dispatchers.Main) {
                 changeState.value = DetailChangeState.CHANGESAVED
