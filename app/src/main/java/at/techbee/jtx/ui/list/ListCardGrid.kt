@@ -156,7 +156,7 @@ fun ListCardGrid(
                     )
                 else
                     Text(
-                        text = descriptionContent.ellipsize(150),
+                        text = filteredContent.ellipsize(150),
                         maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
