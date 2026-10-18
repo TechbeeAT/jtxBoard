@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App title and fragment titles -->
-    <string name="app_permission_label">"jtx Board synchronizuje Dzienniki, Notatki i Zadania"</string>
+    <string name="app_permission_label">"jtx Board synchronizuje dziennik, notatki i zadania"</string>
     <string name="app_permission_desc">"synchronizuj zawartość jtx Board z innymi aplikacjami jak DAVx⁵"</string>
     <!-- Reusable links in different contexts -->
     <!-- Global Strings -->
     <string name="save">"Zapisz"</string>
-    <string name="update">"Zaktualizuj"</string>
+    <string name="update">"Uaktualnij"</string>
     <string name="cancel">"Anuluj"</string>
     <string name="ok">"OK"</string>
     <string name="delete">"Usuń"</string>
@@ -22,9 +22,9 @@
     <string name="location_permission_denied">"Brak dostępu do lokalizacji"</string>
     <string name="permissions">"Uprawnienia"</string>
     <string name="current_location">"Bieżące położenie"</string>
-    <string name="toolbar_text_add_journal">"Dodaj Dziennik"</string>
-    <string name="toolbar_text_add_note">"Dodaj Notatkę"</string>
-    <string name="toolbar_text_add_task">"Dodaj Zadanie"</string>
+    <string name="toolbar_text_add_journal">"Dodaj wpis w dzienniku"</string>
+    <string name="toolbar_text_add_note">"Dodaj notatkę"</string>
+    <string name="toolbar_text_add_task">"Dodaj zadanie"</string>
     <string name="toast_sync_requested">"Zażądano synchronizacji"</string>
     <string name="default_local_collection_name">"Lokalne"</string>
     <string name="default_local_account_name">"Lokalne"</string>
@@ -49,14 +49,14 @@
     <string name="navigation_drawer_board">"Tablica"</string>
     <string name="navigation_drawer_synchronization">"Synchronizacja"</string>
     <string name="navigation_drawer_about">"O programie / Licencja"</string>
-    <string name="navigation_drawer_subtitle">"dzienniki, notatki i zadania"</string>
+    <string name="navigation_drawer_subtitle">"dziennik, notatki i zadania"</string>
     <string name="navigation_drawer_settings">"Ustawienia"</string>
     <string name="navigation_drawer_news_updates">"Wieści i uaktualnienia"</string>
     <string name="navigation_drawer_external_links">"Odnośniki zewnętrzne"</string>
     <string name="navigation_drawer_website">"Strona domowa"</string>
     <string name="navigation_drawer_support">"Wsparcie"</string>
     <string name="navigation_drawer_donate">"Darowizna"</string>
-    <string name="navigation_drawer_privacy_policy">"Polityka Prywatności"</string>
+    <string name="navigation_drawer_privacy_policy">"Polityka prywatności"</string>
     <!-- fragment_ical_list -->
     <string name="list_due_overdue">"Zaległe"</string>
     <string name="list_due_shortly">"Zakończenie przypada wkrótce"</string>
@@ -67,11 +67,11 @@
     <string name="list_due_on_weekday">"Zakończenie dnia %s"</string>
     <string name="list_start_past">"Zaczęte w przeszłości"</string>
     <string name="list_start_shortly">"Rozpoczyna się wkrótce"</string>
-    <string name="list_start_today">"Planowany start dzisiaj"</string>
-    <string name="list_start_tomorrow">"Start jutro"</string>
-    <string name="list_start_inXhours">"Planowany start za %d godzin"</string>
-    <string name="list_start_on_weekday">"Planowany start za %s"</string>
-    <string name="list_tabitem_journals">"Dzienniki"</string>
+    <string name="list_start_today">"Planowany rozpoczęcie dzisiaj"</string>
+    <string name="list_start_tomorrow">"Rozpoczęcie jutro"</string>
+    <string name="list_start_inXhours">"Planowany rozpoczęcie za %d godzin"</string>
+    <string name="list_start_on_weekday">"Planowany rozpoczęcie za %s"</string>
+    <string name="list_tabitem_journals">"Dziennik"</string>
     <string name="list_tabitem_notes">"Notatki"</string>
     <string name="list_tabitem_todos">"Zadania"</string>
     <string name="list_expand">"Rozwiń"</string>
@@ -84,7 +84,7 @@
     <string name="list_scroll_to_top">"Przewiń na górę"</string>
     <!-- fragment_ical_view -->
     <string name="view_fragment_audio_permission">"Uprawnienie Aplikacji"</string>
-    <string name="view_fragment_audio_permission_message">"jtx Board potrzebuje uprawnienia do nagrywania audio lub do korzystania z funkcji mowa-tekst. Proszę udzielić pozwolenia, by korzystać z tej funkcji."</string>
+    <string name="view_fragment_audio_permission_message">"jtx Board potrzebuje uprawnienia do nagrywania dźwięku lub do korzystania z funkcji mowa-tekst. Udziel uprawnienia, aby móc z tego korzystać."</string>
     <string name="view_reccurrence_note_is_exception">"Ten element jest wyjątkiem dla wpisu cyklicznego."</string>
     <string name="view_feedback_linked_notes">"Ocena / Podpięte notatki"</string>
     <string name="view_subtask_of">"Podzadanie"</string>
@@ -108,9 +108,9 @@
     <string name="edit_datepicker_dialog_select_date">"Wybierz datę"</string>
     <string name="edit_date_range_picker_dialog_select_date_range">"Wybierz zakres dat"</string>
     <string name="edit_day_range_picker_dialog_select_day_range">"Wybierz zakres dni"</string>
-    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"Data w"</string>
-    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"oraz"</string>
-    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"dzień/dni"</string>
+    <string name="edit_day_range_picker_dialog_DATE_WITHIN">"Data między"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_AND_x">"a"</string>
+    <string name="edit_day_range_picker_dialog_date_within_x_and_x_DAYS">"dniem/dniami"</string>
     <string name="edit_datepicker_dialog_add_time">"Dodaj czas"</string>
     <string name="edit_datepicker_dialog_edit_time">"Edytuj czas"</string>
     <string name="edit_datepicker_dialog_add_timezone">"Dodaj strefę czasową"</string>
@@ -135,22 +135,22 @@
     <string name="about_thanks_ffg">"Szczególne podziękowania dla FFG za ich zaufanie i wsparcie finansowe w realizacji tego projektu."</string>
     <!-- menus -->
     <string name="menu_list_gotodate">"Przejdź do daty"</string>
-    <string name="menu_list_quick_journal">"Szybki dziennik"</string>
+    <string name="menu_list_quick_journal">"Szybki wpis w dzienniku"</string>
     <string name="menu_list_quick_note">"Szybka notatka"</string>
     <string name="menu_list_quick_todo">"Szybkie zadanie"</string>
     <string name="menu_view_share_ics">"Udostępnij jako .ics"</string>
-    <string name="menu_view_copy_as_journal">"Skopiuj jako Dziennik"</string>
-    <string name="menu_view_copy_as_todo">"Skopiuj jako Zadanie"</string>
-    <string name="menu_view_copy_as_note">"Skopiuj jako Notatkę"</string>
+    <string name="menu_view_copy_as_journal">"Skopiuj jako wpis dziennika"</string>
+    <string name="menu_view_copy_as_todo">"Skopiuj jako zadanie"</string>
+    <string name="menu_view_copy_as_note">"Skopiuj jako notatkę"</string>
     <string name="menu_view_copy_item">"Utwórz kopię"</string>
     <string name="notification_channel_alarms_name">"Alarmy"</string>
     <string name="notification_channel_geofences_name">"Geofensy"</string>
     <!-- Shortcuts -->
-    <string name="shortcut_addJournal_longLabel">"Dodaj Dziennik"</string>
-    <string name="shortcut_addNote_longLabel">"Dodaj Notatkę"</string>
+    <string name="shortcut_addJournal_longLabel">"Dodaj wpis w dzienniku"</string>
+    <string name="shortcut_addNote_longLabel">"Dodaj notatkę"</string>
     <string name="shortcut_addTodo_longLabel">"Dodaj zadanie"</string>
     <!-- Settings fragment -->
-    <string name="settings_list">"Ustawienia listy przedmiotów"</string>
+    <string name="settings_list">"Ustawienia listy elementóœ"</string>
     <string name="settings_show_progress_for_subtasks">Pokaż postęp podzadań</string>
     <string name="settings_show_progress_for_maintasks">Pokaż postęp dla zadań głównych</string>
     <string name="settings_app">"Ustawienia aplikacji"</string>
@@ -168,7 +168,7 @@
     <string name="sync_more_about_sync_app">"Więcej o %1$s"</string>
     <string name="sync_download_sync_app">"Pobierz %1$s"</string>
     <string name="sync_button_add_account_in_sync_app">"Dodaj konto w %1$s"</string>
-    <string name="sync_toast_intent_open_sync_app_failed">"Nie udało się otworzyć %1$s, proszę otworzyć aplikację ręcznie."</string>
+    <string name="sync_toast_intent_open_sync_app_failed">"Nie udało się otworzyć %1$s, spróbuj otworzyć aplikację ręcznie."</string>
     <!-- Donate fragment -->
     <string name="donate_header_developer_note">"Cześć, jestem Patrick, twórca jtx Board. Praca nad tą darmową aplikacją kosztuje mnie wiele wysiłku. Jeżeli lubisz moją aplikację, wyślij mi trochę miłości i wesprzyj projekt niewielką dotacją!"</string>
     <string name="donate_thank_you">"Dziękujemy!"</string>
@@ -182,8 +182,8 @@
     <string name="about_translations_basic_info">"jtx Board to aplikacja o otwartym źródle, która docenia uczestnictwo i wkład społeczności open source. Na tej stronie chcielibyśmy wyróżnić wysiłki naszych tłumaczy."</string>
     <string name="about_translations_contribution_info">"Jeśli chcesz edytować/dodawać tłumaczenia lub dodawać nowe języki do tej aplikacji, możesz dołączyć do projektu jtx Board na platformie tłumaczeniowej Crowdin:"</string>
     <string name="about_translations_contribution_button">"Dołącz do POEditor.com"</string>
-    <string name="list_welcome_entry_journal_summary">"Gratulacje, to Twój pierwszy wpis dziennika :-)"</string>
-    <string name="list_welcome_entry_journal_description">"Dzienniki mogą być używane do przypisywania notatek do konkretnej daty. Użyj tej funkcji na przykład dla protokołów, relacji ze spotkań, codziennych wpisów itd. Jeśli edytujesz ten wpis, zobaczysz opcje dodawania kategorii, uczestników, załączników, … Możesz usunąć ten wpis, kiedy tylko chcesz!"</string>
+    <string name="list_welcome_entry_journal_summary">"Gratulacje, to Twój pierwszy wpis w dzienniku :-)"</string>
+    <string name="list_welcome_entry_journal_description">"Wpisy w dzienniku mogą być używane do przypisywania notatek do konkretnej daty. Użyj tej funkcji na przykład dla protokołów, relacji ze spotkań, codziennych wpisów itd. Jeśli edytujesz ten wpis, zobaczysz opcje dodawania kategorii, uczestników, załączników, … Możesz usunąć ten wpis, kiedy tylko chcesz!"</string>
     <string name="list_welcome_entry_note_summary">"Gratulacje, to Twoja pierwsza notatka :-)"</string>
     <string name="list_welcome_entry_note_description">"Notatki to tradycyjne notatki, które nie są związane z konkretną datą. Tak jak do Dzienników, możesz dodawać załączniki, uczestników i więcej podczas edycji lub dodawania wpisu. W ten sposób możesz również dodawać podzadania do każdego wpisu, niezależnie od tego, czy jest to dziennik, notatka czy zadanie!"</string>
     <string name="list_welcome_entry_todo_summary">"Gratulacje, to Twoje pierwsze zadanie :-)"</string>
@@ -194,7 +194,7 @@
     <string name="save_and_close">"Zapisz i zamknij"</string>
     <string name="list_quickadd_add_audio_attachment">"Nagraj załącznik dźwiękowy"</string>
     <!-- Permissions -->
-    <string name="intent_dialog_title">"Dodać zawartość do dziennika, notatki czy zadania?"</string>
+    <string name="intent_dialog_title">"Dodać zawartość do wpisu w dzienniku, notatki czy zadania?"</string>
     <string name="add">"Dodaj"</string>
     <string name="edit">"Edytuj"</string>
     <string name="reset">"Zresetuj"</string>
@@ -221,7 +221,7 @@
     <string name="alarms_hours">"Godzina(-ny)"</string>
     <string name="alarms_days">"Dzień/Dni"</string>
     <!-- fragment_collections -->
-    <string name="collections_journals_num">"Dzienniki: %1$s"</string>
+    <string name="collections_journals_num">"Dziennik: %1$s"</string>
     <!-- Fuzzy -->
     <string name="collections_notes_num">"Notatki: %1$s"</string>
     <string name="collections_tasks_num">"Zadania: %1$s"</string>
@@ -230,7 +230,7 @@
     <string name="collections_dialog_add_local_collection_title">"Dodaj lokalny zbiór"</string>
     <string name="collections_dialog_edit_local_collection_title">"Edytuj lokalny zbiór"</string>
     <string name="collections_dialog_delete_local_title">"Usunąć \"%1$s\"?"</string>
-    <string name="collections_dialog_delete_local_message">"Usunięcie kolekcji spowoduje również usunięcie wszystkich dzienników, notatek i zadań w tej kolekcji. Tej operacji nie można cofnąć. Czy na pewno chcesz kontynuować?"</string>
+    <string name="collections_dialog_delete_local_message">"Usunięcie zbioru spowoduje również usunięcie wszystkich wpisów w dzienniku, notatek i zadań w tym zbiorze. Nie będzie można cofnąć tego działania. Czy na pewno chcesz kontynuować?"</string>
     <string name="menu_collections_add_local">"Dodaj lokalny zbiór"</string>
     <string name="navigation_drawer_website_news">"Wieści i uwagi do wydania"</string>
     <string name="color">"Kolor"</string>
@@ -303,9 +303,9 @@
     <string name="summary">"Tytuł"</string>
     <string name="description">"Opis"</string>
     <string name="search">"Poszukaj"</string>
-    <string name="search_journals">Poszukaj dzienników</string>
-    <string name="search_notes">Poszukaj notatek</string>
-    <string name="search_todos">Poszukaj zadań</string>
+    <string name="search_journals">Poszukaj wpisu w dzienniku</string>
+    <string name="search_notes">Poszukaj notatki</string>
+    <string name="search_todos">Poszukaj zadania</string>
     <string name="filter">"Filtr"</string>
     <string name="visibility">"Widoczność"</string>
     <string name="order">"Kolejność"</string>
@@ -325,7 +325,7 @@
     <string name="view_share_part_of_series">"Ten wpis jest częścią serii."</string>
     <string name="view_share_repeats">"Ten wpis powtarza się co"</string>
     <string name="collections_dialog_move_title">"Przenieś wszystkie wpisy z \"%1$s\" do"</string>
-    <string name="collection_dialog_move_info">"Uwaga: Można wybrać tylko zbiory z możliwością zapisu i zbiory z obsługą tych samych komponentów (dzienniki, notatki, zadania)."</string>
+    <string name="collection_dialog_move_info">"Uwaga: Można wybrać tylko zbiory z możliwością zapisu i zbiory z obsługą tych samych komponentów (dziennik, notatki, zadania)."</string>
     <string name="menu_collections_popup_move_entries">"Przenieś wpisy"</string>
     <string name="setting_no_time">"Brak czasu"</string>
     <string name="list_no_dates_set">"Bez ustawionej daty"</string>
@@ -336,8 +336,8 @@
     <string name="filter_order_by">"Uporządkuj wg"</string>
     <string name="filter_asc">"Rosnąco"</string>
     <string name="filter_desc">"Malejąco"</string>
-    <string name="filter_created">"Utworzenie"</string>
-    <string name="filter_last_modified">"Ostatnia zmiana"</string>
+    <string name="filter_created">"Czas utworzenia"</string>
+    <string name="filter_last_modified">"Czas ostatniej zmiany"</string>
     <string name="filter_no_category">Bez kategorii</string>
     <string name="filter_no_resource">Bez zasobów</string>
     <string name="filter_subtasks_order_by">Uporządkuj podzadania wg</string>
@@ -349,8 +349,9 @@
     <string name="collections_snackbar_select_collection_for_ics_import">"Dotknij zbioru, do którego dodać wpis/wpisy!"</string>
     <string name="collections_snackbar_x_items_added">"%1$d dodano, %2$d pominięto. (Wyłącznie przypadki powtarzających się wpisów.)"</string>
     <string name="collections_toast_x_items_added">"Dodano %1$d wpisów!"</string>
-    <string name="menu_collection_popup_import_from_ics">"Importuj z .ics"</string>
-    <string name="menu_collection_popup_import_from_textfile">"Zaimportuj z pliku tekstowego"</string>
+    <string name="menu_collection_popup_import_from_ics">"Zaimportuj z .ics"</string>
+    <string name="menu_collection_popup_import_from_textfile">"Zaimportuj z pliku tekstowego
++"</string>
     <string name="notification_done">"Zrobione"</string>
     <string name="notification_add_1h">"+ 1 godzina"</string>
     <string name="notification_add_1d">"+ 1 dzień"</string>
@@ -407,7 +408,7 @@ Dziękujemy!"</string>
     <string name="menu_list_viewmode_list">"Widok listy"</string>
     <string name="menu_list_viewmode_grid">"Widok siatki"</string>
     <string name="settings_modules">"Włączone moduły"</string>
-    <string name="settings_modules_enable_journals">"Dzienniki"</string>
+    <string name="settings_modules_enable_journals">"Dziennik"</string>
     <string name="settings_modules_enable_notes">"Notatki"</string>
     <string name="settings_modules_enable_tasks">"Zadania"</string>
     <string name="settings_default_expand_subtasks">"Domyślnie rozwijaj podzadania na liście"</string>
@@ -432,8 +433,8 @@ Dziękujemy!"</string>
     <string name="status_classification_priority">"Stan/Klasyfikacja/Priorytet"</string>
     <string name="timezone">"Strefa czasowa"</string>
     <string name="not_set2">"Nieustawione"</string>
-    <string name="invert_selection">"Odwróć zaznaczenie"</string>
-    <string name="clear_selection">"Wyczyść zaznaczenie"</string>
+    <string name="invert_selection">"Odwróć zaznaczone"</string>
+    <string name="clear_selection">"Wyczyść zaznaczone"</string>
     <string name="preferences">"Ustawienia"</string>
     <string name="revert">"Przywróć"</string>
     <string name="audio_play">"Odtwórz"</string>
@@ -516,7 +517,7 @@ Dziękujemy!"</string>
     <string name="menu_list_viewmode_compact">"Widok zwarty"</string>
     <string name="menu_list_viewmode_kanban">"Widok Kanban"</string>
     <string name="menu_list_viewmode_week">"Widok tygodnia"</string>
-    <string name="settings_tasks">"Ustawienia Zadań"</string>
+    <string name="settings_tasks">"Ustawienia zadań"</string>
     <string name="settings_alarms">"Ustawienia alarmu"</string>
     <string name="settings_tasks_status_progress">"Ustawienia zadań (stan/postęp)"</string>
     <string name="settings_sync">"Ustawienia synchronizacji"</string>
@@ -547,7 +548,7 @@ Dziękujemy!"</string>
     <string name="settings_keep_status_progress_completed_in_sync">"Synchronizuj stan, postęp oraz stopień ukończenia"</string>
     <string name="settings_attention_experimental_feature">"Uwaga: może jeszcze nie działać właściwie"</string>
     <string name="settings_create_with_current_location">"Nowe wpisy twórz z podpiętym położeniem"</string>
-    <string name="settings_create_with_current_location_sub">"Proszę udzielić dostępu do swojego położenia podczas korzystania z tej aplikacji, aby korzystać z tej funkcji."</string>
+    <string name="settings_create_with_current_location_sub">"Udziel dostępu do swojego położenia podczas korzystania z tej aplikacji, aby móc z tego korzystać."</string>
     <string name="settings_sticky_alarms">"Przyklejone alarmy"</string>
     <string name="settings_sticky_alarms_sub">"Powiadamiaj do czasu wykonania lub odroczenia"</string>
     <string name="settings_fullscreen_alarms">"Alarmy pełnoekranowe"</string>
@@ -565,14 +566,14 @@ Dziękujemy!"</string>
     <string name="menu_view_share_mail">"Udostępnij poprzez E-Mail"</string>
     <string name="menu_view_copy_to_clipboard">"Skopiuj do schowka"</string>
     <string name="menu_view_copy_to_clipboard_copied">"Skopiowano"</string>
-    <string name="menu_view_convert_to_journal">"Przekształć na dziennik"</string>
+    <string name="menu_view_convert_to_journal">"Przekształć na wpis w dzienniku"</string>
     <string name="menu_view_convert_to_note">"Przekształć na notatkę"</string>
     <string name="menu_view_convert_to_task">"Przekształć na zadanie"</string>
     <string name="settings_select_language">"Wybierz język"</string>
     <string name="settings_select_language_system">"Domyślny systemowy"</string>
     <string name="filter_special">"Filtry szczególne"</string>
     <string name="filter_presets">"Filtry z nastaw"</string>
-    <string name="filter_presets_edit_info">"Proszę dodać/zaktualizować/usunąć nastawy filtrów z menu filtrów w widoku listy."</string>
+    <string name="filter_presets_edit_info">"Dodaj/uaktulanij/usuń nastawy filtrów z menu filtrów w widoku listy."</string>
     <string name="filter_any">"Dowolne"</string>
     <string name="filter_all">"Wszystkie"</string>
     <string name="filter_none">"Brak"</string>
@@ -640,6 +641,7 @@ Dziękujemy!"</string>
     <string name="widget_list_configuration_pro_info">"Aby móc korzystać z dalszych ustawień, kup pakiet pro."</string>
     <string name="widget_list_configuration_checkbox_position">"Położenie pola zaznaczanego"</string>
     <string name="widget_list_no_entries_found">"Nie znaleziono wpisów spełniających kryteria filtrowania"</string>
+    <string name="widget_list_nothing_here">"Nic tu nie ma"</string>
     <string name="widget_list_view_settings">"Ustawienia widoku"</string>
     <string name="widget_list_configuration_only_one_hierarchy_layer_supported">"Uwaga: Obecnie tylko jeden poziom hierarchii jest obsługiwany w elemencie interfejsu. Aby zobaczyć wpisy na niższych poziomach, użyj płaskiego widoku."</string>
     <string name="widget_list_maximum_entries_reached">"Osiągnięto graniczną liczbę wpisów w elemencie interfejsu (%1$d)."</string>
@@ -654,9 +656,9 @@ Dziękujemy!"</string>
     <string name="widget_list_show_description">"Pokaż opis"</string>
     <string name="settings_select_theme_true_dark">"Prawdziwy ciemny (AMOLED)"</string>
     <string name="settings_select_theme_contrast">"Kontrast (e-Ink)"</string>
-    <string name="settings_journals">"Ustawienia dzienników"</string>
+    <string name="settings_journals">"Ustawienia dziennika"</string>
     <string name="settings_notes">"Ustawienia notatek"</string>
-    <string name="settings_default_journals_date">"Ustaw domyślną datę/czas dla dzienników"</string>
+    <string name="settings_default_journals_date">"Ustaw domyślną datę/czas dla wpisów w dzienniku"</string>
     <string name="settings_default_journals_date_previous_day">"Poprzedni dzień"</string>
     <string name="settings_default_journals_date_current_day">"Bieżący dzień"</string>
     <string name="settings_default_journals_date_current_hour">"Bieżąca godzina"</string>
@@ -678,7 +680,7 @@ Dziękujemy!"</string>
     <string name="preset_categories">"Kategorie nastawy"</string>
     <string name="preset_resources">"Zasoby nastawy"</string>
     <string name="extended_statuses">"Rozszerzone stany"</string>
-    <string name="extended_statuses_for_journals">"… dla dzienników"</string>
+    <string name="extended_statuses_for_journals">"… dla wpisów w dzienniku"</string>
     <string name="extended_statuses_for_notes">"… dla notatek"</string>
     <string name="extended_statuses_for_tasks">"… dla zadań"</string>
     <string name="extended_status_attention">"Uwaga: Rozszerzone stany nie są zgodne z innymi aplikacjami, mimo to mapują się do standardowych stanów. Inne aplikacje będą wyświetlać tylko standardowe stany."</string>
