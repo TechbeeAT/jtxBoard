@@ -38,7 +38,7 @@ fun InteractiveMarkdown(
     modifier: Modifier = Modifier
 ) {
     val segments = remember(content) {
-        parseMarkdownSegments(content)
+        moveCheckedCheckboxesToBottom(parseMarkdownSegments(content))
     }
 
     val checkboxStates = remember(content) {
@@ -133,6 +133,35 @@ fun parseMarkdownSegments(content: String): List<MarkdownSegment> {
     flushMarkdownLines()
 
     return segments
+}
+
+/**
+ * Reorders each run of consecutive checkbox items so that unchecked items come
+ * first and checked items last, keeping the relative order within each group.
+ * Only the display order changes; lineIndex still points to the original line.
+ */
+fun moveCheckedCheckboxesToBottom(segments: List<MarkdownSegment>): List<MarkdownSegment> {
+    val result = mutableListOf<MarkdownSegment>()
+    val run = mutableListOf<MarkdownSegment.CheckboxItem>()
+
+    fun flushRun() {
+        val (checked, unchecked) = run.partition { it.isChecked }
+        result.addAll(unchecked)
+        result.addAll(checked)
+        run.clear()
+    }
+
+    segments.forEach { segment ->
+        if (segment is MarkdownSegment.CheckboxItem) {
+            run.add(segment)
+        } else {
+            flushRun()
+            result.add(segment)
+        }
+    }
+    flushRun()
+
+    return result
 }
 
 fun updateCheckboxState(
