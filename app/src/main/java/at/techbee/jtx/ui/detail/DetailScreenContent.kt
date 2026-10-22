@@ -163,15 +163,23 @@ fun DetailScreenContent(
     val allWriteableCollections = allWriteableCollectionsLive.observeAsState(emptyList())
 
     var timeout by remember { mutableStateOf(false) }
-    LaunchedEffect(timeout, iCalObject) {
-        if (iCalObject == null && !timeout) {
+    LaunchedEffect(timeout, iCalObject, collection) {
+        if ((iCalObject == null || collection == null) && !timeout) {
             delay((10).seconds)
             timeout = true
         }
     }
 
-    // item was not loaded yet or was deleted in the background
-    if (iCalObject == null && timeout) {
+    /*
+     * The entry was not loaded yet (or was deleted in the background).
+     * The collection must be awaited here as well, not only the iCalObject: it comes from a
+     * LiveData that is assigned after the entry itself was read, so it arrives a frame later.
+     * Composing the LazyColumn below without it would emit the collection card as an empty item at
+     * index 0, which makes the LazyColumn anchor on the second item. Once the collection card then
+     * gets its real height, the screen sits scrolled down by exactly that height and the collection
+     * selector is hidden.
+     */
+    if (iCalObject == null || collection == null) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -179,22 +187,15 @@ fun DetailScreenContent(
                 .fillMaxSize()
                 .padding(24.dp)
         ) {
-            Text(stringResource(id = R.string.sorry), style = MaterialTheme.typography.displayMedium)
-            Text(stringResource(id = R.string.details_entry_could_not_be_loaded), textAlign = TextAlign.Center)
-            Button(onClick = { goBack() }) {
-                Text(stringResource(id = R.string.back))
+            if (timeout) {
+                Text(stringResource(id = R.string.sorry), style = MaterialTheme.typography.displayMedium)
+                Text(stringResource(id = R.string.details_entry_could_not_be_loaded), textAlign = TextAlign.Center)
+                Button(onClick = { goBack() }) {
+                    Text(stringResource(id = R.string.back))
+                }
+            } else {
+                CircularProgressIndicator()
             }
-        }
-        return
-    } else if (iCalObject == null) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp)
-        ) {
-            CircularProgressIndicator()
         }
         return
     }
@@ -327,9 +328,6 @@ fun DetailScreenContent(
 
             when(detailsScreenSection) {
                 DetailsScreenSection.COLLECTION -> {
-                    if(collection == null)
-                        return@items
-
                     DetailsCardCollections(
                         iCalObject = iCalObject,
                         isEditMode = isEditMode.value,
@@ -388,7 +386,7 @@ fun DetailScreenContent(
                         SelectionContainer(modifier = detailElementModifier) {
                             ElevatedCard(
                                 onClick = {
-                                    if (collection?.readonly == false)
+                                    if (!collection.readonly)
                                         isEditMode.value = true
                                 },
                                 modifier = Modifier
@@ -538,7 +536,7 @@ fun DetailScreenContent(
                                 iCalObjectId = iCalObject.id,
                                 progress = iCalObject.percent,
                                 status = iCalObject.status,
-                                isReadOnly = collection?.readonly == true || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
+                                isReadOnly = collection.readonly || (linkProgressToSubtasks && subtasks.value.isNotEmpty()),
                                 sliderIncrement = sliderIncrement,
                                 onProgressChanged = { itemId, newPercent ->
                                     iCalObject.setUpdatedProgress(
@@ -655,7 +653,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.SUBTASKS -> {
-                    if(subtasks.value.isNotEmpty() || (isEditMode.value && collection?.supportsVTODO == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
+                    if(subtasks.value.isNotEmpty() || (isEditMode.value && collection.supportsVTODO && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBTASKS] != false || showAllOptions))) {
                         DetailsCardSubtasks(
                             subtasks = subtasks.value,
                             isEditMode = isEditMode,
@@ -695,7 +693,7 @@ fun DetailScreenContent(
                     }
                 }
                 DetailsScreenSection.SUBNOTES -> {
-                    if(subnotes.value.isNotEmpty() || (isEditMode.value && collection?.supportsVJOURNAL == true && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
+                    if(subnotes.value.isNotEmpty() || (isEditMode.value && collection.supportsVJOURNAL && (detailSettings.detailSetting[DetailSettingsOption.ENABLE_SUBNOTES] == true || showAllOptions))) {
                         DetailsCardSubnotes(
                             subnotes = subnotes.value,
                             isEditMode = isEditMode,
@@ -834,7 +832,7 @@ fun DetailScreenContent(
                         DetailsCardAttachments(
                             attachments = attachments,
                             isEditMode = isEditMode.value,
-                            isRemoteCollection = collection?.accountType != LOCAL_ACCOUNT_TYPE,
+                            isRemoteCollection = collection.accountType != LOCAL_ACCOUNT_TYPE,
                             player = player,
                             onAttachmentsUpdated = {
                                 changeState.value = DetailViewModel.DetailChangeState.CHANGEUNSAVED

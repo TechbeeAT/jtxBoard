@@ -44,8 +44,8 @@ android {
         applicationId = "at.techbee.jtx"
         minSdk = 24
         targetSdk = 37
-        versionCode = 217030002
-        versionName = "2.17.03-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
+        versionCode = 217040002
+        versionName = "2.17.04-beta01"      // keep -release as a suffix also for release, build flavor adds the suffix e.g. .gplay (e.g. 1.00.00-rc0.gplay)
         buildConfigField("String", "versionCodename", "\"Be kind. \uD83C\uDF08\"")
         multiDexEnabled = true
         vectorDrawables.useSupportLibrary = true
@@ -54,6 +54,10 @@ android {
         testOptions {
             unitTests.isIncludeAndroidResources = true
             unitTests.isReturnDefaultValues = true
+            unitTests.all {
+                // Robolectric reflects into jdk.internal.access (FileDescriptor interceptor), which is blocked on JDK 17+
+                it.jvmArgs("--add-opens=java.base/jdk.internal.access=ALL-UNNAMED")
+            }
         }
 
 
