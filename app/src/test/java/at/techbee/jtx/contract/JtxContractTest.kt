@@ -11,11 +11,8 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-// Can be removed once Robolectric supports SDK 37
-@Config(sdk = [36])
 class JtxContractTest {
 
     // region getXPropertyListFromJson() tests

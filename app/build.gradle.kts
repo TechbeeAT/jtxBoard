@@ -54,6 +54,10 @@ android {
         testOptions {
             unitTests.isIncludeAndroidResources = true
             unitTests.isReturnDefaultValues = true
+            unitTests.all {
+                // Robolectric reflects into jdk.internal.access (FileDescriptor interceptor), which is blocked on JDK 17+
+                it.jvmArgs("--add-opens=java.base/jdk.internal.access=ALL-UNNAMED")
+            }
         }
 
 
