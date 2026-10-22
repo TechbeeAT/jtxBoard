@@ -47,6 +47,16 @@ import at.techbee.jtx.database.Status
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.ui.list.CheckboxPosition
 
+/**
+ * @return true if the row with the meta information (dates, priority, status, classification)
+ * in the [ListEntry] is not empty. Keep in sync with the conditions in [ListEntry].
+ */
+fun ICal4List.hasWidgetMetaInfo() = dtstart != null
+        || (due != null && status != Status.CANCELLED.status)
+        || priority in 1..9
+        || (status != null && status != Status.FINAL.status) || xstatus != null
+        || (classification != null && classification != Classification.PUBLIC.classification)
+
 @Composable
 fun ListEntry(
     obj: ICal4List,
@@ -55,6 +65,7 @@ fun ListEntry(
     headerTextColor: ColorProvider,
     checkboxPosition: CheckboxPosition,
     showDescription: Boolean,
+    descriptionMaxLines: Int = MIN_WIDGET_DESCRIPTION_LINES,
     onCheckedChange: (iCalObjectId: Long, checked: Boolean) -> Action,
     modifier: GlanceModifier = GlanceModifier
 ) {
@@ -204,7 +215,7 @@ fun ListEntry(
                     if (!obj.description.isNullOrEmpty() && showDescription)
                         Text(
                             obj.description!!,
-                            maxLines = 2,
+                            maxLines = descriptionMaxLines,
                             style = textStyleDescription,
                             modifier = GlanceModifier.fillMaxWidth()
                         )
