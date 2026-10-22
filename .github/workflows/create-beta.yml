@@ -68,5 +68,5 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.google_play_service_account_json }}
           packageName: at.techbee.jtx
           releaseFiles: app/build/outputs/bundle/gplayRelease/*.aab
-          track: internal
+          track: beta
           status: completed
