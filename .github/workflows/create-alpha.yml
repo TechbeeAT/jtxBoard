@@ -60,5 +60,5 @@ jobs:
           releaseFiles: app/build/outputs/bundle/gplayRelease/*.aab
           mappingFile: app/build/outputs/mapping/gplayRelease/mapping.txt
           whatsNewDirectory: whatsnew
-          track: alpha
+          tracks: internal
           status: completed
