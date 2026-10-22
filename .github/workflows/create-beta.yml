@@ -52,6 +52,25 @@ jobs:
       - name: Copy OSE apk to root
         run: cp app/build/outputs/apk/ose/release/app-ose-release.apk jtxBoard-${{ github.ref_name }}.apk
 
+      - name: Commit fastlane changelog for this version code
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          VERSION_CODE=$(grep -oP 'versionCode = \K[0-9]+' app/build.gradle.kts)
+          CHANGELOG=fastlane/metadata/android/en-US/changelogs/$VERSION_CODE.txt
+          git fetch --depth=1 origin "$DEFAULT_BRANCH"
+          git worktree add "$RUNNER_TEMP/default-branch" FETCH_HEAD
+          cp whatsnew/whatsnew-en-US "$RUNNER_TEMP/default-branch/$CHANGELOG"
+          cd "$RUNNER_TEMP/default-branch"
+          git add "$CHANGELOG"
+          if git diff --cached --quiet; then
+            echo "$CHANGELOG is already up to date"
+          else
+            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "Add changelog for version code $VERSION_CODE"
+            git push origin HEAD:"$DEFAULT_BRANCH"
+          fi
+
       - name: Create Github release
         uses: softprops/action-gh-release@v3.0.3
         with:
@@ -62,19 +81,6 @@ jobs:
           generate_release_notes: true
           fail_on_unmatched_files: true
 
-      - name: Prepare release notes for Google Play
-        id: whatsnew
-        run: |
-          VERSION_CODE=$(grep -oP 'versionCode = \K[0-9]+' app/build.gradle.kts)
-          CHANGELOG=fastlane/metadata/android/en-US/changelogs/$VERSION_CODE.txt
-          if [ -f "$CHANGELOG" ]; then
-            mkdir -p whatsnew
-            cp "$CHANGELOG" whatsnew/whatsnew-en-US
-            echo "dir=whatsnew" >> $GITHUB_OUTPUT
-          else
-            echo "::warning::No changelog found at $CHANGELOG, uploading without release notes"
-          fi
-
       - name: Upload jtxBoard-gplay to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
@@ -82,6 +88,6 @@ jobs:
           packageName: at.techbee.jtx
           releaseFiles: app/build/outputs/bundle/gplayRelease/*.aab
           mappingFile: app/build/outputs/mapping/gplayRelease/mapping.txt
-          whatsNewDirectory: ${{ steps.whatsnew.outputs.dir }}
+          whatsNewDirectory: whatsnew
           track: beta
           status: completed
