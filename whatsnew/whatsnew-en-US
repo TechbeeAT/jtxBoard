@@ -1,0 +1,4 @@
+- Ticked checkboxes are now hidden in the list when completed tasks are hidden
+- Fixed the detail view opening scrolled past the collection selector
+- Updated translations
+- Library and stability updates
