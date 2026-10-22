@@ -121,7 +121,7 @@ fun ListCardKanban(
                     Markdown(content = filteredContent.ellipsize(100))
                 else
                     Text(
-                        text = descriptionContent.ellipsize(100),
+                        text = filteredContent.ellipsize(100),
                         maxLines = 4,
                         textDecoration = if (iCalObject.status == Status.CANCELLED.status) TextDecoration.LineThrough else null,
                         overflow = TextOverflow.Ellipsis

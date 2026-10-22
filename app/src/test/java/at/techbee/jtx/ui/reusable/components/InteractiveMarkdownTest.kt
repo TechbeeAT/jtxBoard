@@ -178,4 +178,39 @@ class InteractiveMarkdownTest {
 
         assertEquals(expected, result2)
     }
+
+    @Test
+    fun moveCheckedCheckboxesToBottom_reordersWithinRun() {
+        val content = """
+            Intro
+            - [x] A
+            - [ ] B
+            - [x] C
+            - [ ] D
+            Middle
+            - [x] E
+            - [ ] F
+        """.trimIndent()
+
+        val result = moveCheckedCheckboxesToBottom(parseMarkdownSegments(content))
+        val order = result.map {
+            when (it) {
+                is MarkdownSegment.MarkdownText -> it.content
+                is MarkdownSegment.CheckboxItem -> it.text
+            }
+        }
+
+        assertEquals(listOf("Intro", "B", "D", "A", "C", "Middle", "F", "E"), order)
+    }
+
+    @Test
+    fun moveCheckedCheckboxesToBottom_keepsOriginalLineIndex() {
+        val content = "- [x] A\n- [ ] B"
+        val result = moveCheckedCheckboxesToBottom(parseMarkdownSegments(content))
+        val first = result[0] as MarkdownSegment.CheckboxItem
+
+        assertEquals("B", first.text)
+        assertEquals(1, first.lineIndex)
+        assertEquals("- [x] A\n- [x] B", updateCheckboxState(content, first.lineIndex, true))
+    }
 }

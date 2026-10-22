@@ -163,7 +163,7 @@ fun ListCard(
             )
         else
             Text(
-                text = descriptionContent.ellipsize(300),
+                text = filteredContent.ellipsize(300),
                 maxLines = 6,
                 overflow = TextOverflow.Ellipsis,
                 textDecoration = summaryDescriptionTextDecoration,
