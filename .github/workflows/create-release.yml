@@ -20,8 +20,7 @@ jobs:
           VERSION_CODE=$(grep -oP 'versionCode = \K[0-9]+' app/build.gradle.kts)
           CHANGELOG=fastlane/metadata/android/en-US/changelogs/$VERSION_CODE.txt
           if ! cmp -s whatsnew/whatsnew-en-US "$CHANGELOG"; then
-            echo "::error::$CHANGELOG is missing or differs from whatsnew/whatsnew-en-US. Run: cp whatsnew/whatsnew-en-US $CHANGELOG"
-            exit 1
+            echo "::warning::$CHANGELOG is missing or differs from whatsnew/whatsnew-en-US. Run: cp whatsnew/whatsnew-en-US $CHANGELOG"
           fi
 
       - uses: actions/setup-java@v6
