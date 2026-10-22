@@ -147,7 +147,12 @@ fun DetailsScreen(
                             && detailViewModel.mutableICalObject?.summary == null
                             && detailViewModel.mutableICalObject?.description == null) && detailViewModel.mutableAttachments.isEmpty()
                 ) {
+                    // navigateUp must be reset here, otherwise the when-block re-evaluates on
+                    // every recomposition while the dialog is open and re-shows it immediately
+                    // after Cancel was pressed (bottom-bar delete path does not have this issue
+                    // because navigateUp is false there)
                     showDeleteDialog = true
+                    navigateUp = false
                 } else if(!detailViewModel.mutableICalObject?.rrule.isNullOrEmpty())  {
                     navController.popBackStack(NavigationDrawerDestination.BOARD.name, false)
                     navigateUp = false

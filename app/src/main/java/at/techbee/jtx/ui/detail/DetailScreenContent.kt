@@ -223,19 +223,25 @@ fun DetailScreenContent(
         it.accountType == LOCAL_ACCOUNT_TYPE || isProPurchased.value            // filter remote collections if pro was not purchased
     }
 
-    // Update some fields in the background that might have changed (e.g. by creating a copy)
-    if ((observedICalObject.value?.sequence ?: 0L) > (iCalObject.sequence?:0L)) {
-        iCalObject.status = observedICalObject.value?.status
-        iCalObject.percent = observedICalObject.value?.percent
-        iCalObject.completed = observedICalObject.value?.completed
-        iCalObject.completedTimezone = observedICalObject.value?.completedTimezone
-        iCalObject.sequence = observedICalObject.value?.sequence ?: 0
-        iCalObject.recurid = observedICalObject.value?.recurid
-        iCalObject.uid = observedICalObject.value?.uid!!
+    // Update some fields in the background that might have changed (e.g. by progress updates
+    // or a sync). This must be guarded by id: observedICalObject tracks the row for the id
+    // the object had at the last recomposition, and observeAsState() keeps delivering the
+    // previous LiveData's last value until the new emission arrives. Right after a
+    // collection move (where load(newId, force = true) swapped the in-memory object to the
+    // new row), that stale value is the deleted original — writing its id/uid/collectionId
+    // (or sequence) back here would revert the identity and turn a subsequent "discard"
+    // into a no-op delete of the already-deleted original row.
+    observedICalObject.value?.takeIf { it.id == iCalObject.id }?.let { observed ->
+        if ((observed.sequence ?: 0L) > (iCalObject.sequence ?: 0L)) {
+            iCalObject.status = observed.status
+            iCalObject.percent = observed.percent
+            iCalObject.completed = observed.completed
+            iCalObject.completedTimezone = observed.completedTimezone
+            iCalObject.sequence = observed.sequence
+            iCalObject.recurid = observed.recurid
+            iCalObject.uid = observed.uid
+        }
     }
-    observedICalObject.value?.id?.let { iCalObject.id = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
-    observedICalObject.value?.uid?.let { iCalObject.uid = it }   //  the icalObjectId might also have changed (when moving the entry to a new collection)!
-    observedICalObject.value?.collectionId?.let { iCalObject.collectionId = it }   //  the collectionId might also have changed (when moving the entry to a new collection)!
 
     var showAllOptions by rememberSaveable { mutableStateOf(false) }
 
