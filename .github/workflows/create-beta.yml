@@ -62,11 +62,26 @@ jobs:
           generate_release_notes: true
           fail_on_unmatched_files: true
 
+      - name: Prepare release notes for Google Play
+        id: whatsnew
+        run: |
+          VERSION_CODE=$(grep -oP 'versionCode = \K[0-9]+' app/build.gradle.kts)
+          CHANGELOG=fastlane/metadata/android/en-US/changelogs/$VERSION_CODE.txt
+          if [ -f "$CHANGELOG" ]; then
+            mkdir -p whatsnew
+            cp "$CHANGELOG" whatsnew/whatsnew-en-US
+            echo "dir=whatsnew" >> $GITHUB_OUTPUT
+          else
+            echo "::warning::No changelog found at $CHANGELOG, uploading without release notes"
+          fi
+
       - name: Upload jtxBoard-gplay to Google Play
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.google_play_service_account_json }}
           packageName: at.techbee.jtx
           releaseFiles: app/build/outputs/bundle/gplayRelease/*.aab
+          mappingFile: app/build/outputs/mapping/gplayRelease/mapping.txt
+          whatsNewDirectory: ${{ steps.whatsnew.outputs.dir }}
           track: beta
           status: completed
