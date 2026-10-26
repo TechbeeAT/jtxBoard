@@ -31,7 +31,7 @@ kotlinx-coroutines = "1.11.0"
 kotlinxSerializationJson = "1.12.0"
 # see https://github.com/google/ksp/releases for version numbers
 ksp = "2.3.12"
-libphonenumber = "9.0.41"
+libphonenumber = "9.0.42"
 mapsCompose = "9.0.1"
 mikepenz-aboutLibraries = "15.3.0"
 mikepenz-markdown = "0.46.0"
