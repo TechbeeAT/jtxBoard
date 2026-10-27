@@ -151,7 +151,7 @@ fun ListCard(
 
 
     @Composable
-    fun getFormattedDescription(hideDoneCheckboxes: Boolean = false) {
+    fun getFormattedDescription(hideDoneCheckboxes: Boolean = false, modifier: Modifier = Modifier.fillMaxWidth()) {
         val descriptionContent = iCalObject.description?.trim() ?: ""
         val filteredContent = if (hideDoneCheckboxes) filterCheckedCheckboxes(descriptionContent) else descriptionContent
 
@@ -159,7 +159,7 @@ fun ListCard(
             Markdown(
                 content = filteredContent.ellipsize(300),
                 imageTransformer = Coil3ImageTransformerImpl,
-                modifier = Modifier.fillMaxWidth()
+                modifier = modifier
             )
         else
             Text(
@@ -167,7 +167,7 @@ fun ListCard(
                 maxLines = 6,
                 overflow = TextOverflow.Ellipsis,
                 textDecoration = summaryDescriptionTextDecoration,
-                modifier = Modifier.fillMaxWidth()
+                modifier = modifier
             )
     }
 
@@ -265,7 +265,7 @@ fun ListCard(
                                 modifier = Modifier.weight(1f)
                             )
                         } else if (iCalObject.description?.isNotBlank() == true) {
-                            getFormattedDescription(hideDoneCheckboxes)
+                            getFormattedDescription(hideDoneCheckboxes, Modifier.weight(1f))
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
                         }
