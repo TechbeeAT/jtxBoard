@@ -1,0 +1,8 @@
+- Dänische Übersetzung hinzugefügt
+- Abgehakte Checkboxen in der Liste ausgeblendet, wenn erledigte Aufgaben ausgeblendet sind
+- Abgehakte Checkboxen in der Detailansicht nach offenen angezeigt
+- Behoben: leerer Eintrag nach Ändern der Collection eines neuen Eintrags
+- Behoben: Detailansicht öffnete sich unterhalb der Collection-Auswahl
+- Behoben: Checkbox in der Liste bei Aufgaben ohne Zusammenfassung verdrängt
+- Übersetzungen aktualisiert
+- Bibliotheks- und Stabilitätsupdates

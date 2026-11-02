@@ -1,0 +1,8 @@
+- Added Danish translation
+- Ticked checkboxes are now hidden in the list when completed tasks are hidden
+- Ticked checkboxes are now shown after open ones in the detail view
+- Fixed a blank entry being left behind when changing the collection of a new entry
+- Fixed the detail view opening scrolled past the collection selector
+- Fixed the checkbox being pushed off-screen in the list for tasks without summary
+- Updated translations
+- Library and stability updates
