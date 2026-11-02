@@ -1,0 +1,2 @@
+- Added Danish translation
+- Library and stability updates
