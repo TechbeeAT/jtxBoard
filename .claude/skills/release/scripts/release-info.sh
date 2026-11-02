@@ -46,7 +46,6 @@ fi
 # Make sure all tags are known locally.
 git fetch --tags --quiet origin 2>/dev/null || echo "WARNING: could not fetch tags from origin, using local tags" >&2
 
-release_tag_re='^v[0-9]+\.[0-9]{2}\.[0-9]{2}(-(alpha|beta)[0-9]+)?$'
 production_re='^v[0-9]+\.[0-9]{2}\.[0-9]{2}$'
 
 version_name="$base_version${given_suffix:+-$given_suffix$given_number}"
@@ -64,26 +63,11 @@ else
   (( version_code > current_code )) || version_code=$((current_code + 1))
 fi
 
-# Determine the base tag for the release notes:
-# the last tag of the same channel, unless a production release happened after it,
-# in which case the last production release is used.
-last_production=$(git tag -l --sort=-creatordate | grep -E "$production_re" | head -1 || true)
-[[ -n "$last_production" ]] || die "no production release tag found"
-if [[ "$channel" == production ]]; then
-  base_tag="$last_production"
-  base_reason="last production release"
-else
-  last_channel=$(git tag -l --sort=-creatordate | grep -E "$release_tag_re" | grep -E -- "-$suffix[0-9]+$" | head -1 || true)
-  if [[ -n "$last_channel" ]] && \
-     [[ $(git log -1 --format=%ct "$last_channel") -gt $(git log -1 --format=%ct "$last_production") ]] && \
-     git merge-base --is-ancestor "$last_production" "$last_channel"; then
-    base_tag="$last_channel"
-    base_reason="last $channel release (newer than last production release $last_production)"
-  else
-    base_tag="$last_production"
-    base_reason="no $channel release since last production release"
-  fi
-fi
+# Determine the base tag for the release notes: always the last production release,
+# so notes for internal/beta releases are cumulative since the last production release.
+base_tag=$(git tag -l --sort=-creatordate | grep -E "$production_re" | head -1 || true)
+[[ -n "$base_tag" ]] || die "no production release tag found"
+base_reason="last production release"
 
 echo "CHANNEL=$channel"
 echo "TAG=$tag"
