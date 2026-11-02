@@ -61,11 +61,6 @@ android {
         }
 
 
-        //don't forget to update locales_config.xml when changing the languages!
-        //def locales = ["en", "de", "cs", "el", "es", "fr", "it", "nl", "ru", "zh", "ca", "ja", "zh-rTW", "hu", "vi", "sv"]
-        //buildConfigField "String[]", "TRANSLATION_ARRAY", "new String[]{\""+locales.join("\",\"")+"\"}"
-        //resourceConfigurations += locales
-
         buildConfigField("String", "CROWDIN_API_KEY", "\"" + (System.getenv("CROWDIN_API_KEY") ?: keystoreProperties["crowdin.apikey"]?.toString()) + "\"")
         //buildConfigField("String", "GITHUB_CONTRIBUTORS_API_KEY", "\"" + (System.getenv("GH_CONTRIBUTORS_API_KEY") ?: providers.gradleProperty("githubcontributors.apikey") ) + "\"")
         resValue("string", "google_geo_api_key", System.getenv("GOOGLE_GEO_API_KEY") ?: keystoreProperties["google.geo.apikey"]?.toString() ?: "")
