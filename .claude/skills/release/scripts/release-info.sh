@@ -2,8 +2,9 @@
 # Works out everything needed for a new jtx Board release.
 #
 # Usage: release-info.sh <version> <channel>
-#   version: X.YY.ZZ (e.g. 2.17.05) or a full name with suffix (2.17.05-beta02)
-#   channel: internal | beta | production
+#   version: the exact version name, e.g. 2.17.05 (production), 2.17.05-alpha01 (internal)
+#            or 2.17.05-beta02 (beta)
+#   channel: internal | beta | production (must match the version suffix)
 #
 # Prints KEY=value lines (TAG, VERSION_NAME, VERSION_CODE, CURRENT_VERSION_NAME,
 # CURRENT_VERSION_CODE, BASE_TAG, BASE_REASON) followed by the commits since BASE_TAG.
@@ -36,9 +37,10 @@ else
 fi
 base_version="$major.$minor.$patch"
 
-if [[ -n "$given_suffix" && "$given_suffix" != "$suffix" ]]; then
-  expected="no suffix"; [[ -n "$suffix" ]] && expected="-$suffix"
-  die "version suffix '-$given_suffix' does not match channel '$channel' (expected $expected)"
+if [[ "$given_suffix" != "$suffix" ]]; then
+  given="no suffix (a production release)"; [[ -n "$given_suffix" ]] && given="suffix '-$given_suffix'"
+  expected="no suffix"; [[ -n "$suffix" ]] && expected="a '-${suffix}NN' suffix, e.g. $base_version-${suffix}01"
+  die "version '$version' has $given, but channel '$channel' needs $expected"
 fi
 
 # Make sure all tags are known locally.
@@ -47,15 +49,7 @@ git fetch --tags --quiet origin 2>/dev/null || echo "WARNING: could not fetch ta
 release_tag_re='^v[0-9]+\.[0-9]{2}\.[0-9]{2}(-(alpha|beta)[0-9]+)?$'
 production_re='^v[0-9]+\.[0-9]{2}\.[0-9]{2}$'
 
-# Determine the tag/version name.
-if [[ -z "$suffix" ]]; then
-  version_name="$base_version"
-elif [[ -n "$given_number" ]]; then
-  version_name="$base_version-$suffix$given_number"
-else
-  last_n=$(git tag -l "v$base_version-$suffix*" | sed -nE "s/^v$base_version-$suffix([0-9]+)$/\1/p" | sort -n | tail -1)
-  version_name=$(printf '%s-%s%02d' "$base_version" "$suffix" $((10#${last_n:-0} + 1)))
-fi
+version_name="$base_version${given_suffix:+-$given_suffix$given_number}"
 tag="v$version_name"
 git rev-parse -q --verify "refs/tags/$tag" >/dev/null && die "tag $tag already exists"
 

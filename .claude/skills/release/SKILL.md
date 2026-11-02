@@ -1,12 +1,22 @@
 ---
 name: release
-description: Create a new jtx Board release for the internal, beta or production channel. Takes a version number (e.g. 2.17.05 or 2.17.05-beta02) and a release channel, bumps versionName/versionCode, writes release notes for GitHub, Google Play and F-Droid from the changes since the last release of that channel (or since the last production release), commits, tags and pushes. Use when the user asks to release, publish, ship or tag a new version / alpha / beta / internal / production build.
+description: Prepare a new jtx Board release for the internal, beta or production channel. Takes a version number (e.g. 2.17.05, 2.17.05-alpha01, 2.17.05-beta02) and a release channel, bumps versionName/versionCode, writes release notes for GitHub, Google Play and F-Droid from the changes since the last release of that channel (or since the last production release), and opens a pull request against develop. Does not tag; the user merges and tags manually. Use when the user asks to release, publish, ship or prepare a new version / alpha / beta / internal / production build.
 argument-hint: <version> <internal|beta|production>
 ---
 
 # Create a jtx Board release
 
 Input: a **version number** and a **release channel**. If either is missing, ask for it.
+
+The version number is taken **exactly as given** — it is never auto-numbered:
+
+- `2.17.05` → production release `v2.17.05`
+- `2.17.05-alpha01` → internal release `v2.17.05-alpha01`
+- `2.17.05-beta02` → beta release `v2.17.05-beta02`
+
+The channel must match the suffix; if it doesn't (e.g. `2.17.05` with channel `beta`), tell the user and ask which one they meant.
+
+The skill prepares everything in a **pull request against `develop`**. It does **not** create or push a tag: the user reviews and merges the PR and then tags the merge commit manually, which starts the release workflow.
 
 ## How releases work in this repo
 
@@ -16,7 +26,7 @@ Input: a **version number** and a **release channel**. If either is missing, ask
 | `beta`       | `vX.YY.ZZ-betaNN`   | `.github/workflows/create-beta.yml`    | GitHub pre-release + Google Play `internal,beta`  |
 | `production` | `vX.YY.ZZ`          | `.github/workflows/create-release.yml` | GitHub release + Google Play `internal,beta,production` |
 
-Pushing the tag is what starts the build and the upload. Release notes live in:
+Pushing the tag (done manually by the user after merging the PR) is what starts the build and the upload. Release notes live in:
 
 - **Google Play**: `whatsnew/whatsnew-en-US` (read by the upload action via `whatsNewDirectory: whatsnew`). Max **500 characters**.
 - **F-Droid**: `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`. Must be **byte-identical** to `whatsnew/whatsnew-en-US` (the workflows warn otherwise). Max 500 characters.
@@ -28,17 +38,21 @@ Version names/codes live in `app/build.gradle.kts` (`versionCode = ...`, `versio
 
 ### 1. Gather release info
 
-Run the helper from the repo root:
+First make sure you are on an up-to-date `develop` with a clean working tree (`git status --porcelain`, `git fetch origin develop`, `git checkout develop`, `git pull --ff-only origin develop`). If there are uncommitted changes or develop can't be fast-forwarded, tell the user and ask how to proceed.
+
+Then run the helper from the repo root:
 
 ```bash
 .claude/skills/release/scripts/release-info.sh <version> <channel>
 ```
 
-It accepts `2.17.05` (it then picks the next free `-alphaNN`/`-betaNN` number) or a full name like `2.17.05-beta02`, validates the suffix against the channel, refuses existing tags, and prints `TAG`, `VERSION_NAME`, `VERSION_CODE`, `BASE_TAG`, `BASE_REASON`, the current branch and the commits since `BASE_TAG`.
+The script takes the version exactly as given, checks that its suffix matches the channel, refuses existing tags, and prints `TAG`, `VERSION_NAME`, `VERSION_CODE`, `BASE_TAG`, `BASE_REASON`, the current branch and the commits since `BASE_TAG`.
 
 `BASE_TAG` is the last release of the **same channel**, unless the last **production** release is newer than it (or there is none) — then it is the last production release. For a production release it is always the previous production release.
 
-If the script fails, report the error to the user and stop. If `BRANCH` is not `develop`, or the working tree is not clean (`git status --porcelain`), tell the user and ask whether to continue.
+If the script fails, report the error to the user and stop.
+
+Then create the release branch from develop: `git checkout -b release/<VERSION_NAME>` (if it already exists locally or on origin, ask the user before reusing or replacing it).
 
 ### 2. Understand the changes
 
@@ -71,22 +85,36 @@ versionCode = <VERSION_CODE>
 versionName = "<VERSION_NAME>"
 ```
 
-### 5. Review with the user
-
-Show the user: tag, channel, version name/code, base tag (with `BASE_REASON`), the Google Play/F-Droid text with its character count, and the GitHub notes. **Wait for confirmation** before committing — pushing the tag publishes to Google Play and GitHub and cannot easily be undone. Apply any requested changes to the notes first.
-
-### 6. Commit, tag and push
+### 5. Commit, push and open a pull request
 
 ```bash
 git add app/build.gradle.kts whatsnew/whatsnew-en-US fastlane/metadata/android/en-US/changelogs/<VERSION_CODE>.txt .github/release-notes.md
 git commit -m "Release <VERSION_NAME>"
+git push -u origin release/<VERSION_NAME>
+```
+
+If the push fails because of the network, retry with backoff; never force-push.
+
+Open a pull request **into `develop`** (with `gh pr create --base develop --head release/<VERSION_NAME>` if `gh` works, otherwise the GitHub MCP `create_pull_request` tool):
+
+- Title: `Release <VERSION_NAME>`
+- Body:
+  - Channel, tag to create after merging (`<TAG>`), version name/code, and the base tag with `BASE_REASON`
+  - The Google Play / F-Droid text in a code block, with its character count (`/500`)
+  - The GitHub release notes
+  - The commands to tag after merging (see step 6)
+
+**Do not create or push any tag.**
+
+### 6. Report
+
+Give the user the PR link, a short summary (tag, channel, version code, base tag, Play/F-Droid character count), and the commands to run after reviewing and merging the PR. The tag must point at the commit on `develop` that contains the merged release changes (with squash merges this is the new squash commit, not the commit on the release branch):
+
+```bash
+git checkout develop
+git pull --ff-only origin develop
 git tag -a <TAG> -m "<TAG>"
-git push origin HEAD
 git push origin <TAG>
 ```
 
-Push the branch before the tag so the commit exists on the branch when the workflow runs. If a push fails because of the network, retry with backoff; if it is rejected (e.g. branch behind the remote), stop and tell the user — do not force-push and do not move existing tags.
-
-### 7. Report
-
-Tell the user the tag that was pushed, which workflow it triggers and which tracks it publishes to, and link the Actions run page (`https://github.com/TechbeeAT/jtxBoard/actions`).
+Mention which workflow the tag triggers and which tracks it publishes to (see the table above).
