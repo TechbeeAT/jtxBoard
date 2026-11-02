@@ -18,10 +18,13 @@ jobs:
       - name: Check fastlane changelog for this version code
         run: |
           VERSION_CODE=$(grep -oP 'versionCode = \K[0-9]+' app/build.gradle.kts)
-          CHANGELOG=fastlane/metadata/android/en-US/changelogs/$VERSION_CODE.txt
-          if ! cmp -s whatsnew/whatsnew-en-US "$CHANGELOG"; then
-            echo "::warning::$CHANGELOG is missing or differs from whatsnew/whatsnew-en-US. Run: cp whatsnew/whatsnew-en-US $CHANGELOG"
-          fi
+          for WHATSNEW in whatsnew/whatsnew-*; do
+            LOCALE=${WHATSNEW#whatsnew/whatsnew-}
+            CHANGELOG=fastlane/metadata/android/$LOCALE/changelogs/$VERSION_CODE.txt
+            if ! cmp -s "$WHATSNEW" "$CHANGELOG"; then
+              echo "::warning::$CHANGELOG is missing or differs from $WHATSNEW. Run: cp $WHATSNEW $CHANGELOG"
+            fi
+          done
 
       - uses: actions/setup-java@v6
         with:

@@ -1,6 +1,6 @@
 ---
 name: release
-description: Prepare a new jtx Board release for the internal, beta or production channel. Takes a version number (e.g. 2.17.05, 2.17.05-alpha01, 2.17.05-beta02) and a release channel, bumps versionName/versionCode, writes release notes for GitHub, Google Play and F-Droid cumulatively from all changes since the last production release, and opens a pull request against develop. Does not tag; the user merges and tags manually. Use when the user asks to release, publish, ship or prepare a new version / alpha / beta / internal / production build.
+description: Prepare a new jtx Board release for the internal, beta or production channel. Takes a version number (e.g. 2.17.05, 2.17.05-alpha01, 2.17.05-beta02) and a release channel, bumps versionName/versionCode, writes English and German release notes for Google Play and F-Droid plus English GitHub release notes, cumulatively from all changes since the last production release, and opens a pull request against develop. Does not tag; the user merges and tags manually. Use when the user asks to release, publish, ship or prepare a new version / alpha / beta / internal / production build.
 argument-hint: <version> <internal|beta|production>
 ---
 
@@ -28,9 +28,15 @@ The skill prepares everything in a **pull request against `develop`**. It does *
 
 Pushing the tag (done manually by the user after merging the PR) is what starts the build and the upload. Release notes live in:
 
-- **Google Play**: `whatsnew/whatsnew-en-US` (read by the upload action via `whatsNewDirectory: whatsnew`). Max **500 characters**.
-- **F-Droid**: `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt`. Must be **byte-identical** to `whatsnew/whatsnew-en-US` (the workflows warn otherwise). Max 500 characters.
-- **GitHub**: `.github/release-notes.md`, used as `body_path` of the GitHub release; GitHub's auto-generated PR list and contributors are appended below it.
+| Store                   | English (`en-US`)                                           | German (`de-DE`)                                            |
+|-------------------------|-------------------------------------------------------------|-------------------------------------------------------------|
+| Google Play             | `whatsnew/whatsnew-en-US`                                   | `whatsnew/whatsnew-de-DE`                                   |
+| F-Droid                 | `fastlane/metadata/android/en-US/changelogs/<versionCode>.txt` | `fastlane/metadata/android/de-DE/changelogs/<versionCode>.txt` |
+| GitHub                  | `.github/release-notes.md`                                  | — (English only)                                            |
+
+- **Google Play** reads every `whatsnew/whatsnew-<locale>` file via `whatsNewDirectory: whatsnew`. Max **500 characters** per language.
+- **F-Droid** reads `fastlane/metadata/android/<locale>/changelogs/<versionCode>.txt`. Each file must be **byte-identical** to the `whatsnew-<locale>` file of the same language (the workflows warn otherwise). Max 500 characters.
+- **GitHub** uses `.github/release-notes.md` as `body_path` of the GitHub release; GitHub's auto-generated PR list and contributors are appended below it.
 
 Version names/codes live in `app/build.gradle.kts` (`versionCode = ...`, `versionName = "..."`). Production releases have no suffix in `versionName` (e.g. `2.17.04`). Version codes are `MAJOR MINOR(2) PATCH(2) BUILD(4)`, e.g. `2.17.04-beta07` → `217040007`; the build counter just increments per release of the same version and the code must always increase.
 
@@ -65,11 +71,24 @@ For every commit in `BASE_TAG..HEAD`:
 
 Write for end users, in English, in the style of the existing notes (see `git log -p -- whatsnew/whatsnew-en-US` and `fastlane/metadata/android/en-US/changelogs/`): short `- ` bullet lines, starting with a verb or "Fixed …", no PR numbers, no technical jargon. Order: features/improvements, then fixes, then (if any) `- Updated translations` and `- Library and stability updates`. Leave out internal-only changes. A newly supported language is worth its own bullet (e.g. `- Added Danish translation`).
 
-**Google Play + F-Droid** (`whatsnew/whatsnew-en-US`):
+**Google Play + F-Droid, English** (`whatsnew/whatsnew-en-US`):
 - Plain text bullets only, no headings, no Markdown, no trailing newline (match the existing file).
 - **At most 500 characters** — check with `wc -m whatsnew/whatsnew-en-US`. If too long, merge or drop the least important bullets (keep fixes general, e.g. "Various bug fixes").
 - If there are no user-facing changes, use `- Library and stability updates`.
-- Then copy it exactly: `cp whatsnew/whatsnew-en-US fastlane/metadata/android/en-US/changelogs/<VERSION_CODE>.txt`.
+
+**Google Play + F-Droid, German** (`whatsnew/whatsnew-de-DE`):
+- A German version of the English notes with the **same bullets in the same order**. Translate the meaning naturally rather than word by word; don't add or drop items compared to English.
+- Address users formally (`Sie`), like the app's German strings in `app/src/main/res/values-de/strings.xml`. Use the terms the app uses there for UI elements (e.g. look up the German string for "collection", "checkbox", "detail view") so the notes match what users see.
+- Standard phrases: `- Übersetzungen aktualisiert`, `- Bibliotheks- und Stabilitätsupdates`, `- Fehler behoben: …` / `- Behoben: …`, a new language as e.g. `- Dänische Übersetzung hinzugefügt`.
+- Same format rules: plain text, no trailing newline, **at most 500 characters** (`wc -m whatsnew/whatsnew-de-DE`). German is usually longer than English — if it exceeds the limit, shorten the German wording first; only merge bullets if still necessary, and then shorten the English text the same way so both stay aligned.
+
+Then copy both exactly into the F-Droid changelogs (create the `de-DE` directory if needed):
+
+```bash
+cp whatsnew/whatsnew-en-US fastlane/metadata/android/en-US/changelogs/<VERSION_CODE>.txt
+mkdir -p fastlane/metadata/android/de-DE/changelogs
+cp whatsnew/whatsnew-de-DE fastlane/metadata/android/de-DE/changelogs/<VERSION_CODE>.txt
+```
 
 **GitHub** (`.github/release-notes.md`):
 - Markdown, no length limit. Start with `## What's new`, then the same bullets, optionally with a bit more detail per item and a `### Fixes` sub-section when there are many fixes. Issue references like `#1234` are fine here.
@@ -88,7 +107,10 @@ versionName = "<VERSION_NAME>"
 ### 5. Commit, push and open a pull request
 
 ```bash
-git add app/build.gradle.kts whatsnew/whatsnew-en-US fastlane/metadata/android/en-US/changelogs/<VERSION_CODE>.txt .github/release-notes.md
+git add app/build.gradle.kts whatsnew/whatsnew-en-US whatsnew/whatsnew-de-DE \
+  fastlane/metadata/android/en-US/changelogs/<VERSION_CODE>.txt \
+  fastlane/metadata/android/de-DE/changelogs/<VERSION_CODE>.txt \
+  .github/release-notes.md
 git commit -m "Release <VERSION_NAME>"
 git push -u origin release/<VERSION_NAME>
 ```
@@ -100,7 +122,7 @@ Open a pull request **into `develop`** (with `gh pr create --base develop --head
 - Title: `Release <VERSION_NAME>`
 - Body:
   - Channel, tag to create after merging (`<TAG>`), version name/code, and the base tag with `BASE_REASON`
-  - The Google Play / F-Droid text in a code block, with its character count (`/500`)
+  - The English and the German Google Play / F-Droid text, each in its own code block with its character count (`/500`)
   - The GitHub release notes
   - The commands to tag after merging (see step 6)
 
@@ -108,7 +130,7 @@ Open a pull request **into `develop`** (with `gh pr create --base develop --head
 
 ### 6. Report
 
-Give the user the PR link, a short summary (tag, channel, version code, base tag, Play/F-Droid character count), and the commands to run after reviewing and merging the PR. The tag must point at the commit on `develop` that contains the merged release changes (with squash merges this is the new squash commit, not the commit on the release branch):
+Give the user the PR link, a short summary (tag, channel, version code, base tag, English and German Play/F-Droid character counts), and the commands to run after reviewing and merging the PR. The tag must point at the commit on `develop` that contains the merged release changes (with squash merges this is the new squash commit, not the commit on the release branch):
 
 ```bash
 git checkout develop
