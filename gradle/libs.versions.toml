@@ -46,7 +46,7 @@ uiTextGoogleFonts = "1.11.4"
 robolectric = "4.17"
 room = "2.8.5"
 volley = "1.2.1"
-ktor = "3.6.0"
+ktor = "3.6.1"
 
 # gplay and managed build variants
 android-billing = "9.1.0"
