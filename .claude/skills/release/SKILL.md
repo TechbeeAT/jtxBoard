@@ -1,6 +1,6 @@
 ---
 name: release
-description: Prepare a new jtx Board release for the internal, beta or production channel. Takes a version number (e.g. 2.17.05, 2.17.05-alpha01, 2.17.05-beta02) and a release channel, bumps versionName/versionCode, writes release notes for GitHub, Google Play and F-Droid from the changes since the last release of that channel (or since the last production release), and opens a pull request against develop. Does not tag; the user merges and tags manually. Use when the user asks to release, publish, ship or prepare a new version / alpha / beta / internal / production build.
+description: Prepare a new jtx Board release for the internal, beta or production channel. Takes a version number (e.g. 2.17.05, 2.17.05-alpha01, 2.17.05-beta02) and a release channel, bumps versionName/versionCode, writes release notes for GitHub, Google Play and F-Droid cumulatively from all changes since the last production release, and opens a pull request against develop. Does not tag; the user merges and tags manually. Use when the user asks to release, publish, ship or prepare a new version / alpha / beta / internal / production build.
 argument-hint: <version> <internal|beta|production>
 ---
 
@@ -48,7 +48,7 @@ Then run the helper from the repo root:
 
 The script takes the version exactly as given, checks that its suffix matches the channel, refuses existing tags, and prints `TAG`, `VERSION_NAME`, `VERSION_CODE`, `BASE_TAG`, `BASE_REASON`, the current branch and the commits since `BASE_TAG`.
 
-`BASE_TAG` is the last release of the **same channel**, unless the last **production** release is newer than it (or there is none) — then it is the last production release. For a production release it is always the previous production release.
+`BASE_TAG` is always the **last production release**, for every channel. Release notes are therefore **cumulative**: an internal or beta release lists everything that changed since the last production release, not just since the previous alpha/beta, and the production release lists the same full set.
 
 If the script fails, report the error to the user and stop.
 
