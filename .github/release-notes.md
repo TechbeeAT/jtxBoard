@@ -1,0 +1,8 @@
+## What's new
+
+- Ticked checkboxes are now hidden in the list when completed tasks are hidden
+- Ticked checkboxes are now shown after open ones in the detail view
+- Fixed a blank entry being left behind when changing the collection of a new entry
+- Fixed the detail view opening scrolled past the collection selector
+- Updated translations
+- Library and stability updates
