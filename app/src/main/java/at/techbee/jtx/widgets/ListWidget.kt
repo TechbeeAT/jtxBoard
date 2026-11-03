@@ -178,7 +178,8 @@ class ListWidget : GlanceAppWidget() {
                 sortOrder = listWidgetConfig.sortOrder,
                 orderBy2 = listWidgetConfig.orderBy2,
                 sortOrder2 = listWidgetConfig.sortOrder2,
-                module = listWidgetConfig.module
+                module = listWidgetConfig.module,
+                groupBy = listWidgetConfig.groupBy
             )
 
             val subtasksQuery = remember(listWidgetConfig) {
