@@ -9,6 +9,7 @@
 - Fixed a blank entry being left behind when changing the collection of a new entry
 - Fixed the detail view opening scrolled past the collection selector
 - Fixed the checkbox being pushed off-screen in the list view for tasks without summary
+- Fixed sorting within groups when grouping by category or resource: the secondary sort order is now applied correctly (#2408)
 
 ### Other
 
