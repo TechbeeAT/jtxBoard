@@ -82,14 +82,17 @@ data class ICal4ListRel(
                 OrderBy.ACCOUNT -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.accountName ?: "" }
                 OrderBy.COLLECTION -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.collectionDisplayName ?: "" }
                 OrderBy.DRAG_AND_DROP -> compareBy { it.iCal4List.sortIndex}
-                OrderBy.CATEGORIES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.categories.sortedBy { it.text }.joinToString(separator = ",") } // Handle null categories and case-insensitive
-                OrderBy.RESOURCES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.resources.sortedBy { it.text }.joinToString(separator = ",") } // Handle null resources and case-insensitive
+                OrderBy.CATEGORIES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.categories.sortedBy { categories -> categories.text }.joinToString(separator = ",") { cat -> cat.text } } // Handle null categories and case-insensitive
+                OrderBy.RESOURCES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.resources.sortedBy { resources -> resources.text }.joinToString(separator = ",") { res -> res.text ?: "" } } // Handle null resources and case-insensitive
             }
         }
 
 
-        fun getSortedList(initialList: List<ICal4ListRel>, orderBy: OrderBy?, sortOrder: SortOrder, orderBy2: OrderBy?, sortOrder2: SortOrder, module: Module): List<ICal4ListRel> {
+        fun getSortedList(initialList: List<ICal4ListRel>, orderBy: OrderBy?, sortOrder: SortOrder, orderBy2: OrderBy?, sortOrder2: SortOrder, module: Module, groupBy: GroupBy? = null): List<ICal4ListRel> {
             // first apply a proper sort order, then group
+            // When grouping by category or resource, the groups already determine this order. Sorting by all categories/resources of an entry
+            // would put e.g. entries with "A" before entries with "A,B" within the group "A" and override the secondary sort order.
+            val orderBy = if((groupBy == GroupBy.CATEGORY && orderBy == OrderBy.CATEGORIES) || (groupBy == GroupBy.RESOURCE && orderBy == OrderBy.RESOURCES)) null else orderBy
 
             //var comparator: Comparator<ICal4ListRel>  = compareBy { it.iCal4List.module }
             var comparator: Comparator<ICal4ListRel>  =

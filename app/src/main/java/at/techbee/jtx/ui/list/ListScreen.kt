@@ -44,7 +44,8 @@ fun ListScreen(
         sortOrder = listViewModel.listSettings.sortOrder.value,
         orderBy2 = listViewModel.listSettings.orderBy2.value,
         sortOrder2 = listViewModel.listSettings.sortOrder2.value,
-        module = listViewModel.module
+        module = listViewModel.module,
+        groupBy = listViewModel.listSettings.groupBy.value
     )
     val groupedList = ICal4ListRel.getGroupedList(
         sortedList = sortedList,
