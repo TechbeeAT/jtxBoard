@@ -82,8 +82,8 @@ data class ICal4ListRel(
                 OrderBy.ACCOUNT -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.accountName ?: "" }
                 OrderBy.COLLECTION -> compareBy(String.CASE_INSENSITIVE_ORDER) { it.iCal4List.collectionDisplayName ?: "" }
                 OrderBy.DRAG_AND_DROP -> compareBy { it.iCal4List.sortIndex}
-                OrderBy.CATEGORIES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.categories.sortedBy { it.text }.joinToString(separator = ",") { it.text } } // Handle null categories and case-insensitive
-                OrderBy.RESOURCES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.resources.sortedBy { it.text }.joinToString(separator = ",") { it.text ?: "" } } // Handle null resources and case-insensitive
+                OrderBy.CATEGORIES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.categories.sortedBy { categories -> categories.text }.joinToString(separator = ",") { cat -> cat.text } } // Handle null categories and case-insensitive
+                OrderBy.RESOURCES -> compareBy(nullsLast(String.CASE_INSENSITIVE_ORDER)) { it.resources.sortedBy { resources -> resources.text }.joinToString(separator = ",") { res -> res.text ?: "" } } // Handle null resources and case-insensitive
             }
         }
 
