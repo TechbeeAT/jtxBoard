@@ -1,0 +1,9 @@
+- Dänische Übersetzung hinzugefügt
+- Abgehakte Checkboxen: in der Liste mit erledigten Aufgaben ausgeblendet, in der Detailansicht am Ende
+- Behoben: leerer Eintrag nach Collection-Wechsel
+- Behoben: Detailansicht öffnete unter der Collection-Auswahl
+- Behoben: verdrängte Checkbox bei Aufgaben ohne Zusammenfassung
+- Behoben: Sortierung in Kategorie-/Materialien-Gruppen
+- Behoben: Farbauswahl blockierte Scrollen
+- Übersetzungen aktualisiert
+- Bibliotheks- und Stabilitätsupdates
