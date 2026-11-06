@@ -11,12 +11,13 @@ package at.techbee.jtx.ui.reusable.elements
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
- import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -27,6 +28,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +49,6 @@ import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun ColorSelector(
     initialColorInt: Int?,
@@ -76,15 +77,15 @@ fun ColorSelector(
             val hexTextValueWithHashtag = hex?.let { if(it.startsWith("#")) it else "#$it" }
             val androidColor = android.graphics.Color.parseColor(hexTextValueWithHashtag)
             Color(androidColor)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             null
-        } catch (e: NullPointerException) {
+        } catch (_: NullPointerException) {
             null
         }
     }
 
     Column(
-        horizontalAlignment = Alignment.Start,
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier.verticalScroll(rememberScrollState())
     ) {
@@ -117,8 +118,13 @@ fun ColorSelector(
             )
         }
 
-        LazyRow {
-            items(defaultColors) { color ->
+        FlowRow(
+            horizontalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Center,
+            itemVerticalAlignment = Alignment.CenterVertically,
+            maxItemsInEachRow = 6
+        ) {
+            defaultColors.forEach { color ->
                 SmallFloatingActionButton(
                     modifier = Modifier
                         .padding(2.dp)
@@ -136,32 +142,34 @@ fun ColorSelector(
                             Icon(Icons.Outlined.FormatColorReset, null)
                     }
                 )
+
+                if(color == Color.Unspecified)
+                    VerticalDivider(modifier = Modifier.height(40.dp).padding(horizontal = 4.dp))
             }
-        }
 
-        if(additionalColors.isNotEmpty()) {
-            LazyRow {
-                items(additionalColors) { color ->
+            if(additionalColors.isNotEmpty())
+                VerticalDivider(modifier = Modifier.height(40.dp).padding(horizontal = 4.dp))
 
-                    SmallFloatingActionButton(
-                        modifier = Modifier
-                            .padding(2.dp)
-                            .border(
-                                2.dp,
-                                if (colorPickerController.selectedColor.value == color) MaterialTheme.colorScheme.primary else Color.Transparent,
-                                RoundedCornerShape(16.dp)
-                            ),
-                        containerColor = if (color == Color.Transparent) Color.White else color,
-                        onClick = {
-                            colorPickerController.selectByColor(color, true)
-                            hexTextValue = color.value.toHexString()
-                        },
-                        content = {
-                            if (color == Color.Transparent)
-                                Icon(Icons.Outlined.FormatColorReset, null)
-                        }
-                    )
-                }
+            additionalColors.forEach { color ->
+
+                SmallFloatingActionButton(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .border(
+                            2.dp,
+                            if (colorPickerController.selectedColor.value == color) MaterialTheme.colorScheme.primary else Color.Transparent,
+                            RoundedCornerShape(16.dp)
+                        ),
+                    containerColor = if (color == Color.Transparent) Color.White else color,
+                    onClick = {
+                        colorPickerController.selectByColor(color, true)
+                        hexTextValue = color.value.toHexString()
+                    },
+                    content = {
+                        if (color == Color.Transparent)
+                            Icon(Icons.Outlined.FormatColorReset, null)
+                    }
+                )
             }
         }
 
@@ -171,23 +179,23 @@ fun ColorSelector(
                 hexTextValue = colorEnvelope.color.toArgb().toHexString()
             },
             initialColor = initialColor,
-            modifier = Modifier.padding(14.dp).height(250.dp)
+            modifier = Modifier.padding(14.dp).size(250.dp)
         )
 
         BrightnessSlider(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(10.dp)
-                .height(35.dp),
+                .height(35.dp)
+                .width(250.dp),
             controller = colorPickerController,
             initialColor = initialColor
         )
 
         AlphaSlider(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(10.dp)
-                .height(35.dp),
+                .height(35.dp)
+                .width(250.dp),
             controller = colorPickerController,
             initialColor = initialColor
         )
@@ -202,7 +210,7 @@ fun ColorSelector(
             },
             isError = getColorFromHex(hexTextValue) == null,
             leadingIcon = { Icon(Icons.Outlined.Numbers, null) },
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
+            modifier = Modifier.width(250.dp).padding(16.dp)
         )
     }
 }
@@ -214,7 +222,7 @@ fun ColorSelectorRow_Preview() {
         ColorSelector(
             initialColorInt = Color.Cyan.toArgb(),
             colorPickerController = rememberColorPickerController(),
-            additionalColorsInt = listOf(Color.DarkGray.toArgb(), Color.Black.toArgb())
+            additionalColorsInt = listOf(Color.DarkGray.toArgb(), Color.Black.toArgb(), Color.Magenta.copy(red = 0.5f).toArgb())
         )
     }
 }
