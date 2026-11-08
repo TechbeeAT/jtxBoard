@@ -30,6 +30,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -63,6 +64,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
@@ -97,6 +99,7 @@ import at.techbee.jtx.util.DateTimeUtils
 import kotlinx.coroutines.delay
 import org.apache.commons.lang3.StringUtils
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -257,7 +260,7 @@ fun DetailScreenContent(
     // save 10 seconds after changed, then reset value
     if (changeState.value == DetailViewModel.DetailChangeState.CHANGEUNSAVED && detailSettings.detailSetting[DetailSettingsOption.ENABLE_AUTOSAVE] != false) {
         LaunchedEffect(changeState) {
-            delay((10).seconds.inWholeMilliseconds)
+            delay((10).seconds.inWholeMilliseconds.milliseconds)
             saveEntry(false)
         }
     }
@@ -406,7 +409,7 @@ fun DetailScreenContent(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(8.dp),
-                                        style = MaterialTheme.typography.titleMedium
+                                        style = MaterialTheme.typography.titleMedium.copy(textDirection = TextDirection.Content),
                                     )
 
                                 if (description.text.isNotBlank()) {
@@ -425,6 +428,7 @@ fun DetailScreenContent(
                                     else
                                         Text(
                                             text = description.text.trim(),
+                                            style = LocalTextStyle.current.copy(textDirection = TextDirection.Content),
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .padding(8.dp),
