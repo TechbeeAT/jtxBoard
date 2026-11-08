@@ -74,6 +74,7 @@ import at.techbee.jtx.ui.reusable.elements.DragHandle
 import at.techbee.jtx.ui.reusable.elements.ProgressElement
 import at.techbee.jtx.ui.reusable.elements.VerticalDateBlock
 import at.techbee.jtx.ui.reusable.components.filterCheckedCheckboxes
+import at.techbee.jtx.ui.reusable.components.rtlAwareMarkdownComponents
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
@@ -159,6 +160,7 @@ fun ListCard(
             Markdown(
                 content = filteredContent.ellipsize(300),
                 imageTransformer = Coil3ImageTransformerImpl,
+                components = rtlAwareMarkdownComponents,
                 modifier = modifier
             )
         else

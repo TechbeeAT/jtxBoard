@@ -57,6 +57,7 @@ fun InteractiveMarkdown(
                         Markdown(
                             content = segment.content,
                             imageTransformer = Coil3ImageTransformerImpl,
+                            components = rtlAwareMarkdownComponents,
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -208,7 +209,8 @@ fun InteractiveCheckboxItem(
             text = text,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.onSurface
-            )
+            ).withContentDirection(),
+            modifier = Modifier.weight(1f)
         )
     }
 }
