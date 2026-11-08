@@ -3,6 +3,7 @@
 - Added Danish translation, Danish can now be selected in the language settings
 - Ticked checkboxes are now hidden in the list when completed tasks are hidden
 - Ticked checkboxes are now shown after open ones in the detail view
+- Improved display of right-to-left text in the summary and description of the detail view (not yet when Markdown is enabled)
 
 ### Fixes
 
