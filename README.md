@@ -10,8 +10,7 @@
 <img src="https://github.com/TechbeeAT/jtxBoard/blob/develop/fastlane/metadata/android/en-US/images/featureGraphic.jpg" alt="jtx Board Banner with Screenshot" width="70%">
 
 > [!TIP]
-> **New from Techbee: [Spectacled](https://github.com/TechbeeAT/spectacled)** – open, standards-based journals, notes and tasks for **Android, iOS, Web and Desktop**, syncing directly over CalDAV without DAVx5.
-> It's in public beta: [download it](https://spectacled.techbee.at/download/) or [join the test](https://spectacled.techbee.at/want-to-help-me-build-spectacled/)!
+> **Also by Techbee: [Spectacled](https://github.com/TechbeeAT/spectacled)** – open, standards-based journals, notes and tasks for **Android, iOS, Web and Desktop**, syncing directly over CalDAV without DAVx5. Find out more at [spectacled.techbee.at](https://spectacled.techbee.at/).
 
 ## Get the most out of journals, notes & tasks
 Take the iCalendar standard to the next level: combine journals (VJOURNAL), notes (VJOURNAL) and tasks (VTODO) in one app and use DAVx5 to synchronize your entries with the CalDAV server of your choice!
