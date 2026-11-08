@@ -99,15 +99,16 @@ The APK is written to `app/build/outputs/apk/ose/debug/`.
 
 ### Flavors
 
-jtx Board provides different flavors:
+jtx Board provides the following flavors:
 - **gplay** is the flavor for the Google Play Store. It comes in a standard and a pro version. The pro version is paid and enables editing options for remote entries.
-- **huawei** is the flavor for the Huawei AppGallery. It comes in a standard and a pro version.
-- **amazon** is the flavor for the Amazon Appstore. It comes in a standard and a pro version.
-- **generic** (deprecated) was formerly used for other app stores. It contains only open source libraries and is meant to be paid before downloading.
 - **ose** is the open source edition. **If you would like to build the app from source, this is the recommended flavor.** It contains only open source libraries. Instead of an in-app purchase, this flavor shows an additional page for donations. As Google Maps is not open source, the ose flavor uses OpenStreetMap.
 
+> [!NOTE]
+> The **huawei** (Huawei AppGallery), **amazon** (Amazon Appstore) and **generic** flavors are deprecated and no longer maintained.
+
 ## Permissions
-jtx Board uses/requests the following permissions:
+<details>
+<summary>jtx Board uses/requests the following permissions</summary>
 
 | Permission | Why it is needed |
 |---|---|
@@ -122,6 +123,8 @@ jtx Board uses/requests the following permissions:
 | `SCHEDULE_EXACT_ALARM`, `USE_EXACT_ALARM` | Show a notification when an alarm is due |
 | `RECEIVE_BOOT_COMPLETED` | Restore notifications and geofences after a restart |
 | `ACCESS_BACKGROUND_LOCATION` | Trigger a notification for a geofence (gplay flavor only) |
+
+</details>
 
 ## License
 jtx Board is licensed under the [GNU General Public License v3.0](LICENSE.txt).
