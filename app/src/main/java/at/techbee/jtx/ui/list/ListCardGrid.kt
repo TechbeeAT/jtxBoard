@@ -41,6 +41,7 @@ import at.techbee.jtx.database.locals.StoredCategory
 import at.techbee.jtx.database.views.ICal4List
 import at.techbee.jtx.flavored.BillingManager
 import at.techbee.jtx.ui.reusable.components.filterCheckedCheckboxes
+import at.techbee.jtx.ui.reusable.components.rtlAwareMarkdownComponents
 import at.techbee.jtx.ui.reusable.elements.AudioPlaybackElement
 import at.techbee.jtx.ui.theme.jtxCardBorderStrokeWidth
 import at.techbee.jtx.util.UiUtil.ellipsize
@@ -150,6 +151,7 @@ fun ListCardGrid(
                 if(markdownEnabled && iCalObject.status != Status.CANCELLED.status)
                     Markdown(
                         content = filteredContent.ellipsize(150),
+                        components = rtlAwareMarkdownComponents,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 8.dp)
