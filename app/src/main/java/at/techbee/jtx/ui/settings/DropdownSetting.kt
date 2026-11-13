@@ -13,6 +13,7 @@ import android.os.Build
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Alarm
 import androidx.compose.material.icons.outlined.EditCalendar
+import androidx.compose.material.icons.outlined.EventRepeat
 import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.FontDownload
 import androidx.compose.material.icons.outlined.FormatPaint
@@ -34,6 +35,19 @@ enum class DropdownSetting(
     val options: List<DropdownSettingOption>,
     val default: DropdownSettingOption
 ) {
+    SETTING_RECUR_WINDOW(
+        key = "setting_recur_window",
+        icon = Icons.Outlined.EventRepeat,
+        title = R.string.settings_recur_window,
+        subtitle = R.string.settings_recur_window_sub,
+        options = listOf(
+            DropdownSettingOption.RECUR_WINDOW_LEGACY,
+            DropdownSettingOption.RECUR_WINDOW_1_MONTH,
+            DropdownSettingOption.RECUR_WINDOW_3_MONTHS,
+            DropdownSettingOption.RECUR_WINDOW_1_YEAR
+        ),
+        default = DropdownSettingOption.RECUR_WINDOW_LEGACY
+    ),
     SETTING_THEME(
         key = "settings_theme",
         icon = Icons.Outlined.FormatPaint,
