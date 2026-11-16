@@ -3,6 +3,7 @@ package at.techbee.jtx.ui.reusable.components
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.Locale
 
 class InteractiveMarkdownTest {
 
@@ -180,19 +181,24 @@ class InteractiveMarkdownTest {
     }
 
     @Test
-    fun moveCheckedCheckboxesToBottom_reordersWithinRun() {
+    fun moveCheckedCheckboxesToBottom_sortsEachGroupWithinRun() {
         val content = """
             Intro
-            - [x] A
-            - [ ] B
             - [x] C
             - [ ] D
-            Middle
-            - [x] E
+            - [x] A
+            - [ ] B
+
+            - [x] H
             - [ ] F
+            - [x] G
+            - [ ] E
+            Middle
+            - [x] I
+            - [ ] J
         """.trimIndent()
 
-        val result = moveCheckedCheckboxesToBottom(parseMarkdownSegments(content))
+        val result = moveCheckedCheckboxesToBottom(parseMarkdownSegments(content), Locale.ENGLISH)
         val order = result.map {
             when (it) {
                 is MarkdownSegment.MarkdownText -> it.content
@@ -200,17 +206,98 @@ class InteractiveMarkdownTest {
             }
         }
 
-        assertEquals(listOf("Intro", "B", "D", "A", "C", "Middle", "F", "E"), order)
+        assertEquals(
+            listOf("Intro", "B", "D", "A", "C", "", "E", "F", "G", "H", "Middle", "J", "I"),
+            order
+        )
     }
 
     @Test
     fun moveCheckedCheckboxesToBottom_keepsOriginalLineIndex() {
-        val content = "- [x] A\n- [ ] B"
-        val result = moveCheckedCheckboxesToBottom(parseMarkdownSegments(content))
+        val content = "- [x] A\n- [ ] D\n  * [ ] B"
+        val segments = parseMarkdownSegments(content)
+        val result = moveCheckedCheckboxesToBottom(segments, Locale.ENGLISH)
         val first = result[0] as MarkdownSegment.CheckboxItem
 
         assertEquals("B", first.text)
-        assertEquals(1, first.lineIndex)
-        assertEquals("- [x] A\n- [x] B", updateCheckboxState(content, first.lineIndex, true))
+        assertEquals(2, first.lineIndex)
+        val checkedContent = updateCheckboxState(content, first.lineIndex, true)
+        assertEquals("- [x] A\n- [ ] D\n  * [x] B", checkedContent)
+        assertEquals(
+            listOf("A", "D", "B"),
+            segments.filterIsInstance<MarkdownSegment.CheckboxItem>().map { it.text }
+        )
+
+        val checkedSegments = moveCheckedCheckboxesToBottom(parseMarkdownSegments(checkedContent), Locale.ENGLISH)
+        assertEquals(
+            listOf("D", "A", "B"),
+            checkedSegments.filterIsInstance<MarkdownSegment.CheckboxItem>().map { it.text }
+        )
+        val checkedB = checkedSegments.last() as MarkdownSegment.CheckboxItem
+        assertEquals(content, updateCheckboxState(checkedContent, checkedB.lineIndex, false))
+    }
+
+    @Test
+    fun moveCheckedCheckboxesToBottom_usesCzechCollationForBothGroups() {
+        val words = listOf("Žampiony", "Chléb", "Hrušky", "Čaj", "Cibule")
+        val expected = listOf("Cibule", "Čaj", "Hrušky", "Chléb", "Žampiony")
+        val content = listOf("x", " ").flatMap { state ->
+            words.map { "- [$state] $it" }
+        }.joinToString("\n")
+
+        val result = moveCheckedCheckboxesToBottom(
+            parseMarkdownSegments(content), Locale.forLanguageTag("cs-CZ")
+        ).filterIsInstance<MarkdownSegment.CheckboxItem>()
+
+        assertEquals(expected + expected, result.map { it.text })
+        assertEquals(List(5) { false } + List(5) { true }, result.map { it.isChecked })
+    }
+
+    @Test
+    fun moveCheckedCheckboxesToBottom_changesAlphabeticalOrderWithLocale() {
+        val segments = parseMarkdownSegments("- [ ] Öl\n- [ ] Zucchini\n- [ ] Äpple")
+        val german = moveCheckedCheckboxesToBottom(segments, Locale.GERMAN)
+        val swedish = moveCheckedCheckboxesToBottom(segments, Locale.forLanguageTag("sv-SE"))
+
+        assertEquals(
+            listOf("Äpple", "Öl", "Zucchini"),
+            german.filterIsInstance<MarkdownSegment.CheckboxItem>().map { it.text }
+        )
+        assertEquals(
+            listOf("Zucchini", "Äpple", "Öl"),
+            swedish.filterIsInstance<MarkdownSegment.CheckboxItem>().map { it.text }
+        )
+    }
+
+    @Test
+    fun moveCheckedCheckboxesToBottom_ignoresCaseAndKeepsEqualItemsStable() {
+        val content = """
+            - [x] bread
+            - [ ] bread
+            - [ ] Bread
+            - [ ] apples
+            - [ ] APPLES
+            - [x] Bread
+        """.trimIndent()
+
+        val result = moveCheckedCheckboxesToBottom(
+            parseMarkdownSegments(content), Locale.ENGLISH
+        ).filterIsInstance<MarkdownSegment.CheckboxItem>()
+
+        assertEquals(
+            listOf("apples", "APPLES", "bread", "Bread", "bread", "Bread"),
+            result.map { it.text }
+        )
+        assertEquals(listOf(3, 4, 1, 2, 0, 5), result.map { it.lineIndex })
+    }
+
+    @Test
+    fun moveCheckedCheckboxesToBottom_preservesEmptyAndNonChecklistContent() {
+        assertEquals(
+            emptyList<MarkdownSegment>(),
+            moveCheckedCheckboxesToBottom(emptyList(), Locale.ENGLISH)
+        )
+        val segments = parseMarkdownSegments("# Heading\n\nSome text")
+        assertEquals(segments, moveCheckedCheckboxesToBottom(segments, Locale.ENGLISH))
     }
 }
