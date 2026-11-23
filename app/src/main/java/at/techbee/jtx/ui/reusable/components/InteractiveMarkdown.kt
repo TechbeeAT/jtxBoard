@@ -16,9 +16,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.mikepenz.markdown.coil3.Coil3ImageTransformerImpl
 import com.mikepenz.markdown.m3.Markdown
+import java.text.Collator
+import java.util.Locale
 
 /**
  * Custom Markdown component that supports interactive checkboxes in checklists
@@ -37,11 +40,12 @@ fun InteractiveMarkdown(
     onContentChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val segments = remember(content) {
-        moveCheckedCheckboxesToBottom(parseMarkdownSegments(content))
+    val locale = LocalConfiguration.current.locales[0]
+    val segments = remember(content, locale) {
+        moveCheckedCheckboxesToBottom(parseMarkdownSegments(content), locale)
     }
 
-    val checkboxStates = remember(content) {
+    val checkboxStates = remember(segments) {
         segments.mapNotNull { segment ->
             (segment as? MarkdownSegment.CheckboxItem)?.let { mutableStateOf(it.isChecked) }
         }.toMutableList()
@@ -137,17 +141,22 @@ fun parseMarkdownSegments(content: String): List<MarkdownSegment> {
 
 /**
  * Reorders each run of consecutive checkbox items so that unchecked items come
- * first and checked items last, keeping the relative order within each group.
+ * first and checked items last, sorting each group alphabetically in the given
+ * locale, ignoring case. Items with equal sort keys keep their relative order.
  * Only the display order changes; lineIndex still points to the original line.
  */
-fun moveCheckedCheckboxesToBottom(segments: List<MarkdownSegment>): List<MarkdownSegment> {
+fun moveCheckedCheckboxesToBottom(
+    segments: List<MarkdownSegment>,
+    locale: Locale = Locale.getDefault()
+): List<MarkdownSegment> {
+    val collator = Collator.getInstance(locale).apply { strength = Collator.SECONDARY }
+    val comparator = compareBy<MarkdownSegment.CheckboxItem> { it.isChecked }
+        .thenComparator { first, second -> collator.compare(first.text, second.text) }
     val result = mutableListOf<MarkdownSegment>()
     val run = mutableListOf<MarkdownSegment.CheckboxItem>()
 
     fun flushRun() {
-        val (checked, unchecked) = run.partition { it.isChecked }
-        result.addAll(unchecked)
-        result.addAll(checked)
+        result.addAll(run.sortedWith(comparator))
         run.clear()
     }
 
