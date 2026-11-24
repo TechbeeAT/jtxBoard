@@ -105,4 +105,21 @@ class DateTimeUtilsTest {
     @Test fun getMinutesSecondsFormatted_seconds_only_double() = assertEquals("00:55", DateTimeUtils.getMinutesSecondsFormatted(55))
     @Test fun getMinutesSecondsFormatted_minutes_single() = assertEquals("01:15", DateTimeUtils.getMinutesSecondsFormatted(75))
     @Test fun getMinutesSecondsFormatted_minutes_double() = assertEquals("11:11", DateTimeUtils.getMinutesSecondsFormatted(671))
+
+    @Test fun getTimezoneLabelWithOffset_winter() = assertEquals(
+        "Europe/Vienna (UTC+01:00)",
+        DateTimeUtils.getTimezoneLabelWithOffset("Europe/Vienna", java.time.Instant.parse("2022-01-15T12:00:00Z"))
+    )
+    @Test fun getTimezoneLabelWithOffset_summer() = assertEquals(
+        "Europe/Vienna (UTC+02:00)",
+        DateTimeUtils.getTimezoneLabelWithOffset("Europe/Vienna", java.time.Instant.parse("2022-07-15T12:00:00Z"))
+    )
+    @Test fun getTimezoneLabelWithOffset_utc() = assertEquals(
+        "UTC (UTC+00:00)",
+        DateTimeUtils.getTimezoneLabelWithOffset("UTC", java.time.Instant.parse("2022-07-15T12:00:00Z"))
+    )
+    @Test fun getTimezoneLabelWithOffset_invalid() = assertEquals(
+        "Invalid/Zone",
+        DateTimeUtils.getTimezoneLabelWithOffset("Invalid/Zone")
+    )
 }

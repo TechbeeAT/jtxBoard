@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.util.DateTimeUtils
 import java.util.TimeZone
 
 
@@ -66,7 +67,7 @@ fun DropdownSettingTimezoneElement(
                 )
             }
             Text(
-                text = selected?.let { "${TimeZone.getTimeZone(it).id} (${TimeZone.getTimeZone(it).displayName})" } ?: stringResource(id = R.string.not_set2),
+                text = selected?.let { "${DateTimeUtils.getTimezoneLabelWithOffset(TimeZone.getTimeZone(it).id)} ${TimeZone.getTimeZone(it).displayName}" } ?: stringResource(id = R.string.not_set2),
                 style = MaterialTheme.typography.bodySmall
             )
         }
@@ -88,7 +89,7 @@ fun DropdownSettingTimezoneElement(
                     },
                     text = {
                         Text(
-                            text = option?.let { "${TimeZone.getTimeZone(option).id} (${TimeZone.getTimeZone(option).displayName})" } ?: stringResource(R.string.not_set2),
+                            text = option?.let { "${DateTimeUtils.getTimezoneLabelWithOffset(TimeZone.getTimeZone(option).id)} ${TimeZone.getTimeZone(option).displayName}" } ?: stringResource(R.string.not_set2),
                             modifier = Modifier
                                 .align(Alignment.Start)
                         )

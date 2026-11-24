@@ -304,6 +304,21 @@ object DateTimeUtils {
 
 
     /**
+     * Returns a label for a timezone id including its UTC offset at the given instant
+     * as known by the device's time zone database, e.g. "America/Edmonton (UTC-07:00)".
+     * Returns only the id if it cannot be parsed.
+     */
+    fun getTimezoneLabelWithOffset(timezoneId: String, instant: Instant = Instant.now()): String {
+        return try {
+            val offset = ZoneId.of(timezoneId).rules.getOffset(instant)
+            val offsetString = if (offset.totalSeconds == 0) "+00:00" else offset.id
+            "$timezoneId (UTC$offsetString)"
+        } catch (e: DateTimeException) {
+            timezoneId
+        }
+    }
+
+    /**
      * Gets a [ZoneId] from a String
      * @return ZoneId.systemDefault if the Timezone is not set or if it is an all-day event,
      * The ZoneId of the given String or "UTC" if the string could not be parsed
