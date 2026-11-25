@@ -31,6 +31,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import at.techbee.jtx.R
+import at.techbee.jtx.util.DateTimeUtils
 import java.util.*
 
 
@@ -65,7 +66,7 @@ fun TimezoneAutocompleteTextfield(
             items(items = timezonesFiltered)  { timezone ->
                 FilterChip(
                     selected = selectedTimezone == timezone,
-                    label = { Text(timezone) },
+                    label = { Text(DateTimeUtils.getTimezoneLabelWithOffset(timezone)) },
                     onClick = {
                         selectedTimezone = timezone
                         onTimezoneChanged(selectedTimezone)

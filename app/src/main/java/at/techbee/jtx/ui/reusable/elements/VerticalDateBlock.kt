@@ -30,6 +30,8 @@ import at.techbee.jtx.database.ICalObject
 import at.techbee.jtx.ui.settings.DropdownSettingOption
 import at.techbee.jtx.ui.theme.Typography
 import at.techbee.jtx.util.DateTimeUtils
+import java.util.Date
+import java.util.Locale
 import java.util.TimeZone
 
 
@@ -91,12 +93,11 @@ fun VerticalDateBlock(
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
-            if (timezone2show != ICalObject.TZ_ALLDAY && timezone2show?.isNotEmpty() == true && TimeZone.getTimeZone(
-                    timezone
-                ).getDisplayName(true, TimeZone.SHORT) != null
-            )
+            if (timezone2show != ICalObject.TZ_ALLDAY && timezone2show?.isNotEmpty() == true)
                 Text(
-                    TimeZone.getTimeZone(timezone2show).getDisplayName(true, TimeZone.SHORT),
+                    TimeZone.getTimeZone(timezone2show).let { tz ->
+                        tz.getDisplayName(tz.inDaylightTime(Date(datetime)), TimeZone.SHORT, Locale.getDefault())
+                    },
                     style = Typography.labelMedium,
                     fontStyle = FontStyle.Italic,
                     textAlign = TextAlign.Center
