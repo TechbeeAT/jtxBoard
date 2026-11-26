@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import at.techbee.jtx.database.Module
+import at.techbee.jtx.database.RecurrenceWindow
 import at.techbee.jtx.ui.detail.DetailTopAppBarMode
 
 class SettingsStateHolder(val context: Context) {
@@ -57,6 +58,7 @@ class SettingsStateHolder(val context: Context) {
     var settingKeepStatusProgressCompletedInSync = mutableStateOf(SwitchSetting.SETTING_KEEP_STATUS_PROGRESS_COMPLETED_IN_SYNC.getSetting(prefs))
     var settingProtectBiometric = mutableStateOf(DropdownSetting.SETTING_PROTECT_BIOMETRIC.getSetting(prefs))
     var settingDisplayTimezone = mutableStateOf(DropdownSetting.SETTING_DISPLAY_TIMEZONE.getSetting(prefs))
+    var settingRecurWindow = mutableStateOf(DropdownSetting.SETTING_RECUR_WINDOW.getSetting(prefs))
 
     var settingSetDefaultCurrentLocationJournals = mutableStateOf(SwitchSetting.SETTING_JOURNALS_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
     var settingSetDefaultCurrentLocationNotes = mutableStateOf(SwitchSetting.SETTING_NOTES_SET_DEFAULT_CURRENT_LOCATION.getSetting(prefs))
@@ -110,6 +112,21 @@ class SettingsStateHolder(val context: Context) {
             field = newValue
         }
      */
+
+    init {
+        applyRecurrenceWindow()
+    }
+
+    fun applyRecurrenceWindow() {
+        // A month of history keeps a recently missed occurrence visible.
+        RecurrenceWindow.current = when (settingRecurWindow.value) {
+            DropdownSettingOption.RECUR_WINDOW_1_MONTH -> RecurrenceWindow.AroundToday(monthsBack = 1, monthsAhead = 1)
+            DropdownSettingOption.RECUR_WINDOW_3_MONTHS -> RecurrenceWindow.AroundToday(monthsBack = 1, monthsAhead = 3)
+            DropdownSettingOption.RECUR_WINDOW_1_YEAR -> RecurrenceWindow.AroundToday(monthsBack = 1, monthsAhead = 12)
+            else -> RecurrenceWindow.Legacy
+        }
+    }
+
 }
 
 
