@@ -150,7 +150,7 @@
     <string name="shortcut_addNote_longLabel">"Dodaj notatkę"</string>
     <string name="shortcut_addTodo_longLabel">"Dodaj zadanie"</string>
     <!-- Settings fragment -->
-    <string name="settings_list">"Ustawienia listy elementóœ"</string>
+    <string name="settings_list">"Ustawienia listy elementów"</string>
     <string name="settings_show_progress_for_subtasks">Pokaż postęp podzadań</string>
     <string name="settings_show_progress_for_maintasks">Pokaż postęp dla zadań głównych</string>
     <string name="settings_app">"Ustawienia aplikacji"</string>
@@ -521,9 +521,9 @@ Dziękujemy!"</string>
     <string name="settings_alarms">"Ustawienia alarmu"</string>
     <string name="settings_tasks_status_progress">"Ustawienia zadań (stan/postęp)"</string>
     <string name="settings_sync">"Ustawienia synchronizacji"</string>
-    <string name="settings_default_start_date">"Ustaw domyślną datę rozpoczynania zadań"</string>
+    <string name="settings_default_start_date">"Ustaw domyślną datę rozpoczęcia zadania"</string>
     <string name="settings_default_start_timezone">"Ustaw domyślną początkową strefę czasową zadań"</string>
-    <string name="settings_default_due_date">"Ustaw domyślną datę kończenia zadań"</string>
+    <string name="settings_default_due_date">"Ustaw domyślną datę zakończenia zadania"</string>
     <string name="settings_default_due_timezone">"Ustaw domyślną końcową strefę czasową zadań"</string>
     <string name="settings_default_start_time">"Ustaw domyślny czas rozpoczynania zadań"</string>
     <string name="settings_default_due_time">"Ustaw domyślny czas kończenia zadań"</string>
